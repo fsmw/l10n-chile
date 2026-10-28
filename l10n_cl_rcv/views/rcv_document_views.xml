@@ -1,0 +1,338 @@
+<odoo>
+    <record id="view_rcv_document_search" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.document.search</field>
+        <field name="model">l10n.cl.rcv.document</field>
+        <field name="arch" type="xml">
+            <search string="Documentos RCV">
+                <field name="folio" />
+                <field name="issuer_vat" />
+                <field name="issuer_name" />
+                <field name="tax_period" />
+                <field name="document_type_code" />
+                <field name="reconciliation_state" />
+                <filter
+                    name="missing_in_odoo"
+                    string="Faltan en Odoo"
+                    domain="[('reconciliation_state', '=', 'missing')]"
+                />
+                <filter
+                    name="has_differences"
+                    string="Diferencias"
+                    domain="[('reconciliation_state', 'in', ['period_diff', 'amount_diff', 'duplicate', 'review'])]"
+                />
+                <filter
+                    name="indeterminate"
+                    string="Conciliación indeterminada"
+                    domain="[('reconciliation_state', '=', 'indeterminate')]"
+                />
+                <group expand="0" string="Agrupar por">
+                    <filter
+                        name="group_period"
+                        string="Período"
+                        domain="[]"
+                        context="{'group_by': 'tax_period'}"
+                    />
+                    <filter
+                        name="group_operation"
+                        string="Operación"
+                        domain="[]"
+                        context="{'group_by': 'operation'}"
+                    />
+                    <filter
+                        name="group_reconciliation"
+                        string="Conciliación"
+                        domain="[]"
+                        context="{'group_by': 'reconciliation_state'}"
+                    />
+                    <filter
+                        name="group_document_type"
+                        string="Tipo DTE"
+                        domain="[]"
+                        context="{'group_by': 'document_type_code'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_rcv_document_list" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.document.list</field>
+        <field name="model">l10n.cl.rcv.document</field>
+        <field name="arch" type="xml">
+            <list
+                string="Documentos RCV"
+                create="false"
+                decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review', 'indeterminate')"
+            >
+                <field name="tax_period" />
+                <field name="operation" />
+                <field name="document_type_code" />
+                <field name="folio" />
+                <field name="document_date" />
+                <field name="issuer_vat" />
+                <field name="issuer_name" />
+                <field name="net_amount" sum="Neto" />
+                <field name="exempt_amount" sum="Exento" />
+                <field name="vat_amount" sum="IVA recuperable" />
+                <field name="fiscal_vat_amount" sum="IVA fiscal" />
+                <field
+                    name="tax_allocation_state"
+                    widget="badge"
+                    decoration-success="tax_allocation_state == 'matched'"
+                    decoration-warning="tax_allocation_state == 'different'"
+                    decoration-info="tax_allocation_state == 'not_comparable'"
+                />
+                <field name="tax_allocation_note" optional="hide" />
+                <field
+                    name="tax_comparison_state"
+                    widget="badge"
+                    decoration-warning="tax_comparison_state == 'source_confirmed'"
+                    optional="hide"
+                />
+                <field name="total_amount" sum="Total" />
+                <field name="sii_state" />
+                <field
+                    name="reconciliation_state"
+                    widget="badge"
+                    decoration-success="reconciliation_state == 'matched'"
+                    decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                    decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review')"
+                    decoration-info="reconciliation_state in ('pending', 'indeterminate')"
+                />
+                <field name="move_id" optional="hide" />
+                <field name="automation_error" optional="hide" />
+                <field name="reconciliation_reason_code" optional="hide" />
+            </list>
+        </field>
+    </record>
+    <record id="view_rcv_document_kanban" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.document.kanban</field>
+        <field name="model">l10n.cl.rcv.document</field>
+        <field name="arch" type="xml">
+            <kanban
+                create="false"
+                default_order="tax_period desc, document_date desc, folio desc"
+                decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review', 'indeterminate')"
+            >
+                <field name="tax_period" />
+                <field name="operation" />
+                <field name="document_type_code" />
+                <field name="folio" />
+                <field name="document_date" />
+                <field name="issuer_vat" />
+                <field name="issuer_name" />
+                <field name="sii_state" />
+                <field name="currency_id" />
+                <field name="total_amount" />
+                <field name="reconciliation_state" />
+                <field name="tax_comparison_state" />
+                <field name="move_id" />
+                <templates>
+                    <t t-name="card">
+                        <div
+                            t-attf-class="oe_kanban_card o_rcv_document_card ps-2 border-start border-4 #{record.reconciliation_state.raw_value === 'matched' ? 'border-success' : ['missing', 'duplicate'].includes(record.reconciliation_state.raw_value) ? 'border-danger' : ['period_diff', 'amount_diff', 'review'].includes(record.reconciliation_state.raw_value) ? 'border-warning' : ['pending', 'indeterminate'].includes(record.reconciliation_state.raw_value) ? 'border-info' : 'border-secondary'}"
+                        >
+                            <div
+                                class="d-flex justify-content-between align-items-start gap-2"
+                            >
+                                <div>
+                                    <strong class="d-block">
+                                        <field name="document_type_code" /> · <field
+                                        name="folio"
+                                    />
+                                    </strong>
+                                    <small class="text-muted">
+                                        <field name="operation" /> · <field
+                                        name="tax_period"
+                                    />
+                                    </small>
+                                </div>
+                                <field
+                                    name="reconciliation_state"
+                                    widget="badge"
+                                    decoration-success="reconciliation_state == 'matched'"
+                                    decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                                    decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review')"
+                                    decoration-info="reconciliation_state in ('pending', 'indeterminate')"
+                                />
+                            </div>
+                            <div class="mt-2">
+                                <field name="issuer_name" class="d-block fw-bold" />
+                                <small class="text-muted">
+                                    <field name="issuer_vat" />
+                                </small>
+                            </div>
+                            <div class="mt-2 d-flex justify-content-between">
+                                <span class="text-muted">Fecha</span>
+                                <field name="document_date" />
+                            </div>
+                            <div
+                                class="mt-1 d-flex justify-content-between align-items-center"
+                            >
+                                <span class="text-muted">Total RCV</span>
+                                <strong>
+                                    <field
+                                        name="total_amount"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
+                                    />
+                                </strong>
+                            </div>
+                            <div
+                                class="mt-2 d-flex justify-content-between align-items-center"
+                            >
+                                <small
+                                    t-attf-class="#{['REGISTRO', 'Registro', 'registro'].includes(record.sii_state.raw_value) ? 'text-success' : ['PENDIENTE', 'Pendiente', 'pendiente'].includes(record.sii_state.raw_value) ? 'text-warning' : 'text-muted'}"
+                                >
+                                    SII: <field name="sii_state" />
+                                </small>
+                                <field
+                                    name="tax_comparison_state"
+                                    widget="badge"
+                                    decoration-success="tax_comparison_state == 'matched'"
+                                    decoration-danger="tax_comparison_state == 'different'"
+                                    decoration-warning="tax_comparison_state == 'source_confirmed'"
+                                    decoration-info="tax_comparison_state == 'not_comparable'"
+                                />
+                            </div>
+                            <div t-if="record.move_id.raw_value" class="mt-2">
+                                <small class="text-muted">Factura Odoo: <field
+                                    name="move_id"
+                                /></small>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_rcv_document_form" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.document.form</field>
+        <field name="model">l10n.cl.rcv.document</field>
+        <field name="arch" type="xml">
+            <form string="Documento RCV" create="false">
+                <header>
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Conciliar"
+                        groups="l10n_cl_rcv.group_rcv_manager"
+                    />
+                    <button
+                        name="action_link_move"
+                        type="object"
+                        string="Vincular factura"
+                        groups="l10n_cl_rcv.group_rcv_manager"
+                    />
+                    <button
+                        name="action_create_draft"
+                        type="object"
+                        string="Crear borrador"
+                        class="btn-primary"
+                        groups="l10n_cl_rcv.group_rcv_manager"
+                        invisible="operation != 'purchase' or reconciliation_state != 'missing'"
+                    />
+                    <field name="reconciliation_state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="company_id" />
+                            <field name="operation" />
+                            <field name="tax_period" />
+                            <field name="source" />
+                        </group>
+                        <group>
+                            <field name="document_type_code" />
+                            <field name="folio" />
+                            <field name="document_date" />
+                            <field name="sii_state" />
+                            <field name="move_id" />
+                        </group>
+                    </group>
+                    <group string="Automatización" invisible="not automation_error">
+                        <field name="automation_error" readonly="1" />
+                        <field name="reconciliation_reason_code" readonly="1" />
+                    </group>
+                    <group string="Emisor y contraparte">
+                        <group>
+                            <field name="issuer_vat" />
+                            <field name="issuer_name" />
+                        </group>
+                        <group>
+                            <field name="counterpart_vat" />
+                        </group>
+                    </group>
+                    <group string="Importes">
+                        <field name="currency_id" invisible="1" />
+                        <field name="net_amount" />
+                        <field name="exempt_amount" />
+                        <field name="vat_amount" />
+                        <field name="vat_not_recoverable" />
+                        <field name="common_vat" />
+                        <field name="fiscal_vat_amount" />
+                        <field name="total_amount" />
+                        <field name="tax_comparison_state" />
+                        <field name="tax_allocation_state" />
+                        <field
+                            name="tax_allocation_note"
+                            invisible="not tax_allocation_note"
+                        />
+                    </group>
+                    <notebook>
+                        <page string="Candidatos Odoo">
+                            <field name="candidate_move_ids" readonly="1" />
+                        </page>
+                        <page string="Historial">
+                            <field name="observation_ids" readonly="1">
+                                <list>
+                                    <field name="observed_at" />
+                                    <field name="tax_period" />
+                                    <field name="sii_state" />
+                                    <field name="net_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="vat_not_recoverable" />
+                                    <field name="common_vat" />
+                                    <field name="tax_breakdown_available" />
+                                    <field name="total_amount" />
+                                    <field name="source" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Decisiones automáticas">
+                            <field name="automatic_log_ids" readonly="1">
+                                <list>
+                                    <field name="create_date" />
+                                    <field name="rule_version" />
+                                    <field name="reason" />
+                                    <field name="decision_hash" />
+                                    <field name="decision_data" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_rcv_document" model="ir.actions.act_window">
+        <field name="name">Documentos RCV</field>
+        <field name="res_model">l10n.cl.rcv.document</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_rcv_document_search" />
+    </record>
+    <record id="action_rcv_reconcile_selected" model="ir.actions.server">
+        <field name="name">Conciliar seleccionados</field>
+        <field name="model_id" ref="model_l10n_cl_rcv_document" />
+        <field name="binding_model_id" ref="model_l10n_cl_rcv_document" />
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('l10n_cl_rcv.group_rcv_manager'))]" />
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_reconcile()
+        </field>
+    </record>
+</odoo>

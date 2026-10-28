@@ -1,0 +1,123 @@
+<odoo>
+    <record id="view_rcv_sync_search" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.sync.search</field>
+        <field name="model">l10n.cl.rcv.sync</field>
+        <field name="arch" type="xml">
+            <search string="Sincronizaciones RCV">
+                <field name="name" />
+                <field name="company_id" />
+                <field name="state" />
+                <field name="source" />
+                <filter
+                    name="pending"
+                    string="Pendientes"
+                    domain="[('state', 'in', ['queued', 'running', 'pending'])]"
+                />
+                <group expand="0" string="Agrupar por">
+                    <filter
+                        name="group_state"
+                        string="Estado"
+                        domain="[]"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        name="group_company"
+                        string="Compañía"
+                        domain="[]"
+                        context="{'group_by': 'company_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_rcv_sync_list" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.sync.list</field>
+        <field name="model">l10n.cl.rcv.sync</field>
+        <field name="arch" type="xml">
+            <list string="Sincronizaciones RCV">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="period_id" />
+                <field name="operation" />
+                <field name="source" />
+                <field name="scheduled_for" optional="hide" />
+                <field name="state" widget="badge" />
+                <field name="requested_by" />
+                <field name="started_at" />
+                <field name="finished_at" />
+                <field name="detail_count" />
+                <field name="error_code" />
+            </list>
+        </field>
+    </record>
+    <record id="view_rcv_sync_form" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.sync.form</field>
+        <field name="model">l10n.cl.rcv.sync</field>
+        <field name="arch" type="xml">
+            <form string="Sincronización RCV" create="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="company_id" />
+                            <field name="period_id" />
+                            <field name="operation" />
+                            <field name="source" />
+                            <field name="scheduled_for" />
+                        </group>
+                        <group>
+                            <field name="state" />
+                            <field name="requested_by" />
+                            <field name="started_at" />
+                            <field name="finished_at" />
+                            <field name="detail_count" />
+                            <field name="summary_count" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="error_code" />
+                        <field name="error_message" />
+                    </group>
+                    <group>
+                        <field name="response_hash" />
+                        <field name="source_file_id" />
+                    </group>
+                    <notebook>
+                        <page string="Cobertura por sección">
+                            <field name="section_ids" readonly="1">
+                                <list>
+                                    <field name="sii_state" />
+                                    <field name="state" widget="badge" />
+                                    <field name="document_type_codes" />
+                                    <field name="expected_document_count" />
+                                    <field name="observed_document_count" />
+                                    <field name="error_message" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Resumen">
+                            <field name="summary_ids" readonly="1">
+                                <list>
+                                    <field name="sii_state" />
+                                    <field name="document_type_code" />
+                                    <field name="document_type_name" />
+                                    <field name="document_count" />
+                                    <field name="net_amount" />
+                                    <field name="exempt_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="total_amount" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_rcv_sync" model="ir.actions.act_window">
+        <field name="name">Sincronizaciones RCV</field>
+        <field name="res_model">l10n.cl.rcv.sync</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rcv_sync_search" />
+    </record>
+</odoo>

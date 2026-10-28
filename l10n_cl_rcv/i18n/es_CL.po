@@ -1,0 +1,226 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_cl_rcv
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-24 00:00+0000\n"
+"PO-Revision-Date: 2026-09-24 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_CL\n"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__operation
+msgid "Operation"
+msgstr "Operación"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__tax_period
+msgid "Tax Period"
+msgstr "Período tributario"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__source
+msgid "Source"
+msgstr "Origen"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__document_type_code
+msgid "Document Type Code"
+msgstr "Código de tipo de documento"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__document_date
+msgid "Document Date"
+msgstr "Fecha del documento"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__sii_state
+msgid "Sii State"
+msgstr "Estado en el SII"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__move_id
+msgid "Move"
+msgstr "Documento contable relacionado"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__issuer_vat
+msgid "Issuer Vat"
+msgstr "RUT del emisor"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__issuer_name
+msgid "Issuer Name"
+msgstr "Nombre del emisor"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__counterpart_vat
+msgid "Counterpart Vat"
+msgstr "RUT de la contraparte"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__net_amount
+msgid "Net Amount"
+msgstr "Monto neto"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__exempt_amount
+msgid "Exempt Amount"
+msgstr "Monto exento"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__vat_amount
+msgid "Vat Amount"
+msgstr "Monto de IVA"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__tax_comparison_state
+msgid "Tax Comparison State"
+msgstr "Estado de comparación de impuestos"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__vat_not_recoverable
+msgid "Vat Not Recoverable"
+msgstr "IVA no recuperable"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__common_vat
+msgid "Common Vat"
+msgstr "IVA de uso común"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_document__total_amount
+msgid "Total Amount"
+msgstr "Monto total"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__rcv_net_amount
+msgid "Neto informado por el RCV"
+msgstr "Neto informado por el RCV"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__rcv_exempt_amount
+msgid "Exento informado por el RCV"
+msgstr "Exento informado por el RCV"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__rcv_vat_amount
+msgid "IVA informado por el RCV"
+msgstr "IVA informado por el RCV"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__rcv_total_amount
+msgid "Total informado por el RCV"
+msgstr "Total informado por el RCV"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__draft_untaxed_amount
+msgid "Neto propuesto"
+msgstr "Neto propuesto"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__draft_tax_amount
+msgid "Impuestos propuestos"
+msgstr "Impuestos propuestos"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__draft_total_amount
+msgid "Total propuesto"
+msgstr "Total propuesto"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__product_id
+msgid "Producto"
+msgstr "Producto"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__name
+msgid "Descripción"
+msgstr "Descripción"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__account_id
+msgid "Cuenta"
+msgstr "Cuenta"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__analytic_distribution
+msgid "Distribución analítica"
+msgstr "Distribución analítica"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__quantity
+msgid "Cantidad"
+msgstr "Cantidad"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__product_uom_id
+msgid "Unidad de medida"
+msgstr "Unidad de medida"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__price_unit
+msgid "Precio unitario"
+msgstr "Precio unitario"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__tax_ids
+msgid "Impuestos"
+msgstr "Impuestos"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__tax_treatment
+msgid "Tratamiento tributario"
+msgstr "Tratamiento tributario"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__tax_mapping_note
+msgid "Observación de impuestos"
+msgstr "Observación de impuestos"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Subtotal"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__new_partner_name
+msgid "Nombre del nuevo proveedor"
+msgstr "Nombre del nuevo proveedor"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard__line_ids
+msgid "Líneas de factura"
+msgstr "Líneas de factura"
+
+#. module: l10n_cl_rcv
+#: model:ir.model.fields,field_description:l10n_cl_rcv.field_l10n_cl_rcv_draft_wizard_line__sequence
+msgid "Secuencia"
+msgstr "Secuencia"

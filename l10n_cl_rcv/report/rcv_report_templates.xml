@@ -1,0 +1,126 @@
+<odoo>
+    <record id="action_report_rcv_period" model="ir.actions.report">
+        <field name="name">Libro RCV</field>
+        <field name="model">l10n.cl.rcv.period</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_rcv.report_rcv_period</field>
+        <field name="report_file">l10n_cl_rcv.report_rcv_period</field>
+        <field name="binding_model_id" ref="model_l10n_cl_rcv_period" />
+        <field name="binding_type">report</field>
+    </record>
+    <template id="report_rcv_period">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id" />
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Libro RCV - <span t-field="o.name" /></h2>
+                        <p>Compañía: <span t-field="o.company_id.name" /> · Fuente:
+                            <span t-field="o.current_sync_id.source" /> · Corte:
+                            <span t-field="o.last_sync_at" /> · Estado: <span
+                            t-field="o.state"
+                        /></p>
+                        <div
+                            t-if="o.state in ('partial', 'pending')"
+                            class="alert alert-warning"
+                        >
+                            La consulta está incompleta o pendiente. Los totales por documento no representan necesariamente el total fiscal.
+                        </div>
+                        <h3>Resumen por tipo</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Estado SII</th>
+                                    <th>Tipo</th>
+                                    <th>Documentos</th>
+                                    <th>Neto</th>
+                                    <th>Exento</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="o.current_sync_id.summary_ids"
+                                    t-as="line"
+                                >
+                                    <td>
+                                        <span t-field="line.sii_state" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_type_code" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_count" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.net_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.exempt_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.vat_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.total_amount" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Detalle</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>RUT emisor</th>
+                                    <th>Tipo</th>
+                                    <th>Neto</th>
+                                    <th>Exento</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                    <th>Conciliación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="o.current_sync_id.document_ids"
+                                    t-as="line"
+                                >
+                                    <td>
+                                        <span t-field="line.folio" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_date" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.issuer_vat" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_type_code" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.net_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.exempt_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.vat_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.total_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.reconciliation_state" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,175 @@
+<odoo>
+    <record id="view_rcv_period_search" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.period.search</field>
+        <field name="model">l10n.cl.rcv.period</field>
+        <field name="arch" type="xml">
+            <search string="Períodos RCV">
+                <field name="year" />
+                <field name="month" />
+                <field name="operation" />
+                <field name="state" />
+                <filter
+                    name="group_month"
+                    string="Mes"
+                    domain="[]"
+                    context="{'group_by': 'month'}"
+                />
+                <filter
+                    name="group_year"
+                    string="Año"
+                    domain="[]"
+                    context="{'group_by': 'year'}"
+                />
+                <filter
+                    name="group_operation"
+                    string="Operación"
+                    domain="[]"
+                    context="{'group_by': 'operation'}"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="view_rcv_period_list" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.period.list</field>
+        <field name="model">l10n.cl.rcv.period</field>
+        <field name="arch" type="xml">
+            <list
+                string="Períodos RCV"
+                decoration-danger="state == 'failed'"
+                decoration-warning="state in ('pending', 'partial')"
+                decoration-success="state == 'success'"
+            >
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="state" widget="badge" />
+                <field name="last_sync_at" />
+                <field name="document_count" />
+                <field name="summary_count" />
+                <button
+                    name="action_sync"
+                    type="object"
+                    string="Sincronizar"
+                    icon="fa-refresh"
+                    groups="l10n_cl_rcv.group_rcv_manager"
+                />
+            </list>
+        </field>
+    </record>
+    <record id="view_rcv_period_kanban" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.period.kanban</field>
+        <field name="model">l10n.cl.rcv.period</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column" default_group_by="operation">
+                <field name="name" />
+                <field name="year" />
+                <field name="month" />
+                <field name="operation" />
+                <field name="state" />
+                <field name="last_sync_at" />
+                <field name="document_count" />
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_card">
+                            <div class="d-flex justify-content-between">
+                                <strong>
+                                    <field name="name" />
+                                </strong>
+                                <field name="state" widget="badge" />
+                            </div>
+                            <div>Última actualización: <field
+                                name="last_sync_at"
+                            /></div>
+                            <div>Documentos: <field name="document_count" /></div>
+                            <div class="mt-2 d-flex gap-2">
+                                <button
+                                    name="action_open_documents"
+                                    type="object"
+                                    class="btn btn-primary btn-sm"
+                                    string="Entrar"
+                                />
+                                <button
+                                    name="action_sync"
+                                    type="object"
+                                    class="btn btn-secondary btn-sm"
+                                    string="Sincronizar"
+                                    groups="l10n_cl_rcv.group_rcv_manager"
+                                />
+                                <button
+                                    name="action_print_report"
+                                    type="object"
+                                    class="btn btn-link btn-sm"
+                                    icon="fa-download"
+                                    title="Descargar PDF"
+                                />
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="view_rcv_period_form" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.period.form</field>
+        <field name="model">l10n.cl.rcv.period</field>
+        <field name="arch" type="xml">
+            <form string="Período RCV">
+                <header>
+                    <button
+                        name="action_sync"
+                        type="object"
+                        string="Sincronizar"
+                        class="btn-primary"
+                        groups="l10n_cl_rcv.group_rcv_manager"
+                    />
+                    <button
+                        name="action_open_documents"
+                        type="object"
+                        string="Documentos"
+                    />
+                    <button
+                        name="action_export_csv"
+                        type="object"
+                        string="Exportar CSV"
+                    />
+                    <button
+                        name="action_print_report"
+                        type="object"
+                        string="Imprimir PDF"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="not_synced,pending,partial,success,failed"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="company_id" />
+                            <field name="operation" />
+                        </group>
+                        <group>
+                            <field name="year" />
+                            <field name="month" />
+                            <field name="last_sync_at" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Resumen actual">
+                            <field name="current_sync_id" readonly="1" />
+                            <field name="summary_count" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_rcv_period" model="ir.actions.act_window">
+        <field name="name">Períodos RCV</field>
+        <field name="res_model">l10n.cl.rcv.period</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_rcv_period_search" />
+        <field name="context">{'search_default_group_month': 1}</field>
+    </record>
+</odoo>
