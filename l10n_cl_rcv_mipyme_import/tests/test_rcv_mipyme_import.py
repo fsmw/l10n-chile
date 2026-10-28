@@ -3,15 +3,15 @@
 """Exercise the RCV button without sending requests to SII."""
 
 import base64
-import unittest
 from datetime import date
 from unittest.mock import patch
 
 from lxml import etree
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import tagged
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_cl_dte_mipyme_recovery.services.mipyme_adapter import (
     MipymeAdapterError,
     PortalChunk,
@@ -22,18 +22,15 @@ from odoo.addons.l10n_cl_dte_mipyme_recovery.services.recovery_service import (
 )
 from odoo.addons.l10n_cl_dte_mipyme_recovery.services.xml_dte import extract_candidates
 
-try:
-    from odoo.addons.l10n_cl_edi.tests.common import TestL10nClEdiCommon
-
-    HAS_DTE_LOCALIZATION = True
-except ImportError:  # l10n_cl_edi is an optional, non-OCA dependency.
-    TestL10nClEdiCommon = TransactionCase
-    HAS_DTE_LOCALIZATION = False
-
 
 @tagged("post_install", "-at_install")
-@unittest.skipUnless(HAS_DTE_LOCALIZATION, "requires l10n_cl_edi")
-class TestRcvMipymeImport(TestL10nClEdiCommon):
+class TestRcvMipymeImport(AccountTestInvoicingCommon):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country("cl")
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.sale_journal = cls.company_data["default_journal_sale"]
+
     def setUp(self):
         super().setUp()
         self.company = self.company_data["company"]
@@ -252,7 +249,7 @@ class TestRcvMipymeImport(TestL10nClEdiCommon):
             self.assertEqual(
                 retrieve.call_args.args[-2:], (date(2026, 8, 20), date(2026, 8, 20))
             )
-            if code in ("56", "111"):
+            if code in ("56", "111") and "l10n_cl_reference_ids" in move._fields:
                 self.assertEqual(move.l10n_cl_reference_ids.origin_doc_number, "12")
             if code in ("110", "111"):
                 self.assertEqual(move.partner_id.vat, "US-123456")
@@ -703,7 +700,8 @@ class TestRcvMipymeImport(TestL10nClEdiCommon):
         self.assertEqual(second.state, "draft")
 
     def _native_export(self, folio="366"):
-        self.sale_journal.l10n_cl_point_of_sale_type = "manual"
+        if "l10n_cl_point_of_sale_type" in self.sale_journal._fields:
+            self.sale_journal.l10n_cl_point_of_sale_type = "manual"
         customer = self.env["res.partner"].create(
             {
                 "name": "Native exporter customer",
@@ -870,7 +868,8 @@ class TestRcvMipymeImport(TestL10nClEdiCommon):
         self.assertEqual(action["res_model"], "l10n_cl.dte.recovery")
         self.assertEqual(recovery.error_code, "INVOICE_RECIPIENT_MISMATCH")
         self.assertFalse(recovery.move_id)
-        self.assertFalse(wrong_move.l10n_cl_dte_file)
+        if "l10n_cl_dte_file" in wrong_move._fields:
+            self.assertFalse(wrong_move.l10n_cl_dte_file)
 
     def test_operator_imports_without_general_recovery_write_access(self):
         operator = self.env["res.users"].create(
