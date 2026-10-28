@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_bcentral_rate_range_wizard" model="ir.actions.act_window">
+        <field name="name">Obtener Tasas</field>
+        <field name="res_model">l10n.cl.bcentral.rate.range.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field
+            name="context"
+        >{'active_model': 'res.currency', 'active_id': active_id, 'default_currency_id': active_id}</field>
+    </record>
+
+    <record id="view_currency_form_bcentral_rate_range" model="ir.ui.view">
+        <field name="name">res.currency.form.bcentral.rate.range</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/div[1]" position="before">
+                <header>
+                    <button
+                        name="%(action_bcentral_rate_range_wizard)d"
+                        type="action"
+                        string="Obtener Tasas"
+                        class="oe_highlight"
+                        groups="account.group_account_manager"
+                    />
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

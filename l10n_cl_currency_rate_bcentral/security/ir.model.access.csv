@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bcentral_rate_range_wizard_account_manager,l10n.cl.bcentral.rate.range.wizard account manager,model_l10n_cl_bcentral_rate_range_wizard,account.group_account_manager,1,1,1,1
+access_bcentral_config_admin,l10n.cl.bcentral.config admin,model_l10n_cl_bcentral_config,l10n_cl_currency_rate_bcentral.group_bcentral_admin,1,1,1,1
+access_bcentral_config_user,l10n.cl.bcentral.config user,model_l10n_cl_bcentral_config,l10n_cl_currency_rate_bcentral.group_bcentral_user,1,0,0,0
+access_bcentral_log_admin,l10n.cl.bcentral.log admin,model_l10n_cl_bcentral_log,l10n_cl_currency_rate_bcentral.group_bcentral_admin,1,1,1,1
+access_bcentral_log_user,l10n.cl.bcentral.log user,model_l10n_cl_bcentral_log,l10n_cl_currency_rate_bcentral.group_bcentral_user,1,0,0,0

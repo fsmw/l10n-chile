@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_dte_recovery_tree" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.recovery.list</field>
+        <field name="model">l10n_cl.dte.recovery</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false">
+                <field name="retrieved_at" />
+                <field name="company_id" />
+                <field name="issuer_rut" />
+                <field name="dte_type" />
+                <field name="folio" />
+                <field name="status" />
+                <field name="digest" />
+                <field name="move_id" />
+                <field name="recipient_partner_id" />
+            </list>
+        </field>
+    </record>
+    <record id="view_dte_recovery_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.recovery.form</field>
+        <field name="model">l10n_cl.dte.recovery</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="company_id" />
+                        <field name="issuer_rut" />
+                        <field name="dte_type" />
+                        <field name="folio" />
+                        <field name="date_from" />
+                        <field name="date_to" />
+                        <field name="source" />
+                        <field name="status" />
+                        <field name="error_code" />
+                        <field name="diagnostic" />
+                        <field name="digest" />
+                        <field name="retrieved_at" />
+                        <field name="user_id" />
+                        <field name="attachment_id" />
+                        <field name="move_id" />
+                        <field name="recipient_partner_id" />
+                        <field name="recipient_country_id" />
+                        <field name="recipient_resolution_source" />
+                        <field name="recipient_resolution_digest" />
+                        <field name="recipient_resolution_user_id" />
+                        <field name="recipient_resolution_date" />
+                        <field name="recipient_resolution_reason" />
+                        <field name="recipient_resolution_history" />
+                        <button
+                            name="action_open_recipient_resolution"
+                            type="object"
+                            string="Resolver receptor extranjero"
+                            invisible="status != 'review' or dte_type not in ['110', '111']"
+                        />
+                        <button
+                            name="action_import_to_odoo"
+                            type="object"
+                            string="Importar a Odoo"
+                            class="oe_highlight"
+                            invisible="move_id or status not in ['recovered', 'review']"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

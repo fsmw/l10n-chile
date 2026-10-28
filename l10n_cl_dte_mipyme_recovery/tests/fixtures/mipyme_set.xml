@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<SetDTE xmlns="http://www.sii.cl/SiiDte" ID="SET-TEST">
+    <DTE version="1.0">
+        <Documento ID="DTE-33-42">
+            <Encabezado>
+                <IdDoc>
+                    <TipoDTE>33</TipoDTE>
+                    <Folio>42</Folio>
+                    <FchEmis>2026-08-20</FchEmis>
+                </IdDoc>
+                <Emisor>
+                    <RUTEmisor>76543210-3</RUTEmisor>
+                    <RznSoc>Compa��a de prueba</RznSoc>
+                </Emisor>
+                <Receptor>
+                    <RUTRecep>76086428-5</RUTRecep>
+                </Receptor>
+            </Encabezado>
+            <Detalle>
+                <NmbItem>Servicio de prueba</NmbItem>
+            </Detalle>
+            <TED version="1.0">
+                <DD>
+                    <RE>76543210-3</RE>
+                    <TD>33</TD>
+                    <F>42</F>
+                </DD>
+            </TED>
+        </Documento>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo />
+            <SignatureValue>fixture</SignatureValue>
+        </Signature>
+    </DTE>
+    <DTE version="1.0">
+        <Documento ID="DTE-33-43">
+            <Encabezado>
+                <IdDoc>
+                    <TipoDTE>33</TipoDTE>
+                    <Folio>43</Folio>
+                    <FchEmis>2026-08-20</FchEmis>
+                </IdDoc>
+                <Emisor>
+                    <RUTEmisor>76543210-3</RUTEmisor>
+                    <RznSoc>Compa��a de prueba</RznSoc>
+                </Emisor>
+                <Receptor>
+                    <RUTRecep>76086428-5</RUTRecep>
+                </Receptor>
+            </Encabezado>
+            <TED version="1.0">
+                <DD>
+                    <RE>76543210-3</RE>
+                    <TD>33</TD>
+                    <F>43</F>
+                </DD>
+            </TED>
+        </Documento>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo />
+            <SignatureValue>fixture</SignatureValue>
+        </Signature>
+    </DTE>
+</SetDTE>

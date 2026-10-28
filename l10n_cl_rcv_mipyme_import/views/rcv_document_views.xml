@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_rcv_document_form_mipyme" model="ir.ui.view">
+        <field name="name">l10n.cl.rcv.document.form.mipyme</field>
+        <field name="model">l10n.cl.rcv.document</field>
+        <field name="inherit_id" ref="l10n_cl_rcv.view_rcv_document_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//form/header/button[@name='action_create_draft']"
+                position="after"
+            >
+                <field name="mipyme_import_available" invisible="1" />
+                <button
+                    name="action_import_from_mipyme"
+                    type="object"
+                    string="Importar desde MiPyme"
+                    class="btn-primary"
+                    groups="l10n_cl_rcv.group_rcv_manager"
+                    invisible="not mipyme_import_available"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

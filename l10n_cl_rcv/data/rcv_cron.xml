@@ -1,0 +1,20 @@
+<odoo noupdate="1">
+    <record id="ir_cron_rcv_process" model="ir.cron">
+        <field name="name">SII RCV: procesar sincronizaciones</field>
+        <field name="model_id" ref="model_l10n_cl_rcv_period" />
+        <field name="state">code</field>
+        <field name="code">model._cron_process_pending(limit=5)</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+    <record id="ir_cron_rcv_schedule_daily_purchases" model="ir.cron">
+        <field name="name">SII RCV: consultar compras diariamente</field>
+        <field name="model_id" ref="model_l10n_cl_rcv_period" />
+        <field name="state">code</field>
+        <field name="code">model._cron_schedule_daily_purchases()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

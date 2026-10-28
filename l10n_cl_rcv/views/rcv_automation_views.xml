@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_company_l10n_cl_rcv_form" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.cl.rcv</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="RCV SII"
+                    name="l10n_cl_rcv_automation"
+                    groups="account.group_account_manager"
+                    invisible="country_code != 'CL'"
+                >
+                    <group>
+                        <field name="l10n_cl_rcv_automation_enabled" />
+                        <field
+                            name="l10n_cl_rcv_service_user_id"
+                            domain="[('company_ids', 'in', id)]"
+                            required="l10n_cl_rcv_automation_enabled"
+                            invisible="not l10n_cl_rcv_automation_enabled"
+                        />
+                    </group>
+                    <div class="text-muted">
+                        Actívelo solo después de validar en QA que el usuario
+                        configurado puede consultar el detalle del RCV sin
+                        intervención manual.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

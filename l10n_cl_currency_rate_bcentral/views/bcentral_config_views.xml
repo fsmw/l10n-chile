@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_l10n_cl_bcentral_config_form" model="ir.ui.view">
+        <field name="name">l10n.cl.bcentral.config.form</field>
+        <field name="model">l10n.cl.bcentral.config</field>
+        <field name="arch" type="xml">
+            <form string="Bcentral Configuration">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_sync_manual"
+                            type="object"
+                            string="Sync Now"
+                            class="oe_highlight"
+                            icon="fa-refresh"
+                            help="Synchronize today's rates immediately."
+                        />
+                        <button
+                            name="action_backfill_current_year"
+                            type="object"
+                            string="Backfill Year"
+                            icon="fa-database"
+                            help="Backfill all rates from January 1st of the current year."
+                        />
+                    </div>
+                    <group>
+                        <group string="Company Settings">
+                            <field name="company_id" readonly="1" />
+                            <field name="active" readonly="1" />
+                            <field name="base_currency_id" />
+                        </group>
+                        <group string="Sync Status">
+                            <field name="last_sync_date" readonly="1" />
+                            <field name="last_sync_attempt" readonly="1" />
+                            <field name="sync_pending" readonly="1" />
+                            <field
+                                name="last_sync_status"
+                                readonly="1"
+                                decoration-success="last_sync_status == 'success'"
+                                decoration-warning="last_sync_status == 'partial'"
+                                decoration-danger="last_sync_status == 'failed'"
+                            />
+                            <field name="last_sync_error_date" readonly="1" />
+                            <field
+                                name="last_sync_error"
+                                readonly="1"
+                                invisible="not last_sync_error"
+                            />
+                        </group>
+                    </group>
+                    <group string="Currencies to Sync">
+                        <field name="sync_uf" readonly="1" />
+                        <field name="sync_usd" readonly="1" />
+                        <field name="sync_eur" readonly="1" />
+                        <field name="sync_utm" readonly="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_l10n_cl_bcentral_config_tree" model="ir.ui.view">
+        <field name="name">l10n.cl.bcentral.config.tree</field>
+        <field name="model">l10n.cl.bcentral.config</field>
+        <field name="arch" type="xml">
+            <list string="Bcentral Configurations">
+                <field name="company_id" />
+                <field name="active" />
+                <field name="sync_uf" />
+                <field name="sync_usd" />
+                <field name="sync_eur" />
+                <field name="sync_utm" />
+                <field name="last_sync_date" />
+                <field
+                    name="last_sync_status"
+                    decoration-success="last_sync_status == 'success'"
+                    decoration-warning="last_sync_status == 'partial'"
+                    decoration-danger="last_sync_status == 'failed'"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_l10n_cl_bcentral_config" model="ir.actions.act_window">
+        <field name="name">Bcentral Configurations</field>
+        <field name="res_model">l10n.cl.bcentral.config</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_bcentral_root"
+        name="Bcentral"
+        parent="base.menu_custom"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_bcentral_config"
+        name="Configurations"
+        parent="menu_bcentral_root"
+        action="action_l10n_cl_bcentral_config"
+        sequence="10"
+    />
+</odoo>

@@ -1,0 +1,15 @@
+{
+    "name": "BICE Bank Statement Import",
+    "version": "18.0.1.0.0",
+    "summary": "Import original BICE XLS bank statements",
+    "author": "Odoo Community Association (OCA), SMWLAB",
+    "website": "https://github.com/OCA/l10n-chile",
+    "category": "Accounting",
+    "license": "AGPL-3",
+    "depends": ["account_statement_import_sheet_file"],
+    "data": ["data/bice_sheet_mapping.xml"],
+    "installable": True,
+    "application": False,
+    "auto_install": False,
+    "development_status": "Beta",
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_dte_recovery_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.recovery.wizard.form</field>
+        <field name="model">l10n_cl.dte.recovery.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Recover Issued DTE from SII MiPyme">
+                <group invisible="recovery_id">
+                    <field name="company_id" />
+                    <field name="issuer_rut" />
+                    <field name="dte_type" />
+                    <field name="folio" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                </group>
+                <group string="Recovery result" invisible="not recovery_id">
+                    <button
+                        name="action_import_to_odoo"
+                        type="object"
+                        string="Importar a Odoo"
+                        class="btn-primary"
+                        confirm="El DTE ya está emitido en el SII. ¿Desea reconstruirlo como borrador sin reemitirlo?"
+                        invisible="move_id or needs_recipient_confirmation or result_status not in ['recovered', 'review']"
+                    />
+                    <field name="result_status" />
+                    <field name="result_message" />
+                    <field name="result_digest" />
+                    <field name="move_id" />
+                    <field name="evidence_url" widget="url" />
+                    <group
+                        string="Identidad del receptor extranjero"
+                        invisible="dte_type not in ['110', '111']"
+                    >
+                        <field name="recipient_foreign_id" />
+                        <field name="recipient_country_code" />
+                        <field name="resolved_country_id" />
+                        <field name="recipient_name" />
+                        <field name="candidate_partner_ids" widget="many2many_tags" />
+                        <field name="needs_recipient_confirmation" invisible="1" />
+                        <field
+                            name="selected_partner_id"
+                            invisible="not needs_recipient_confirmation"
+                        />
+                        <field
+                            name="resolution_reason"
+                            invisible="not needs_recipient_confirmation"
+                        />
+                        <button
+                            name="action_confirm_recipient"
+                            type="object"
+                            string="Confirmar cliente"
+                            class="btn-secondary"
+                            invisible="not needs_recipient_confirmation or not candidate_partner_ids"
+                        />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="action_recover"
+                        type="object"
+                        string="Recover"
+                        class="btn-primary"
+                        invisible="recovery_id"
+                    />
+                    <button string="Close" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_dte_mipyme_recovery_wizard" model="ir.actions.act_window">
+        <field name="name">Recover Issued DTE from SII MiPyme</field>
+        <field name="res_model">l10n_cl.dte.recovery.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

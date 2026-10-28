@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_move_form_rcv_reconciliation" model="ir.ui.view">
+        <field name="name">account.move.form.rcv.reconciliation</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="l10n_cl_rcv_reconciliation_state" readonly="1" />
+                <field name="l10n_cl_rcv_sync_id" readonly="1" />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_move_filter_rcv_reconciliation" model="ir.ui.view">
+        <field name="name">account.move.search.rcv.reconciliation</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator />
+                <filter
+                    name="rcv_not_in_sii"
+                    string="No observado en RCV"
+                    domain="[('l10n_cl_rcv_reconciliation_state', '=', 'not_in_sii')]"
+                />
+                <filter
+                    name="rcv_indeterminate"
+                    string="RCV incompleto"
+                    domain="[('l10n_cl_rcv_reconciliation_state', '=', 'indeterminate')]"
+                />
+                <filter
+                    name="rcv_matched"
+                    string="Observado en RCV"
+                    domain="[('l10n_cl_rcv_reconciliation_state', '=', 'matched')]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

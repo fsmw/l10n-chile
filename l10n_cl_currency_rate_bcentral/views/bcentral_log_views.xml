@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_l10n_cl_bcentral_log_tree" model="ir.ui.view">
+        <field name="name">l10n.cl.bcentral.log.tree</field>
+        <field name="model">l10n.cl.bcentral.log</field>
+        <field name="arch" type="xml">
+            <list
+                string="Sync Logs"
+                decoration-success="status=='success'"
+                decoration-danger="status=='failed'"
+            >
+                <field name="create_date" />
+                <field name="company_id" />
+                <field name="sync_date" />
+                <field name="currency_id" />
+                <field name="rate_value" />
+                <field name="status" />
+                <field name="error_message" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_cl_bcentral_log_search" model="ir.ui.view">
+        <field name="name">l10n.cl.bcentral.log.search</field>
+        <field name="model">l10n.cl.bcentral.log</field>
+        <field name="arch" type="xml">
+            <search string="Sync Logs">
+                <field name="company_id" />
+                <field name="currency_id" />
+                <field name="sync_date" />
+                <filter
+                    name="success"
+                    string="Success"
+                    domain="[('status', '=', 'success')]"
+                />
+                <filter
+                    name="failed"
+                    string="Failed"
+                    domain="[('status', '=', 'failed')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_by_company"
+                        string="Company"
+                        context="{'group_by': 'company_id'}"
+                    />
+                    <filter
+                        name="group_by_currency"
+                        string="Currency"
+                        context="{'group_by': 'currency_id'}"
+                    />
+                    <filter
+                        name="group_by_date"
+                        string="Sync Date"
+                        context="{'group_by': 'sync_date'}"
+                    />
+                    <filter
+                        name="group_by_status"
+                        string="Status"
+                        context="{'group_by': 'status'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_l10n_cl_bcentral_log" model="ir.actions.act_window">
+        <field name="name">Bcentral Sync Logs</field>
+        <field name="res_model">l10n.cl.bcentral.log</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem
+        id="menu_bcentral_log"
+        name="Sync Logs"
+        parent="menu_bcentral_root"
+        action="action_l10n_cl_bcentral_log"
+        sequence="20"
+    />
+</odoo>
