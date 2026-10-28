@@ -1,0 +1,29 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_rcv_mipyme_import
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Language: es_CL\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. module: l10n_cl_rcv_mipyme_import
+#: model:ir.module.module,shortdesc:l10n_cl_rcv_mipyme_import.module_l10n_cl_rcv_mipyme_import
+msgid "SMWLAB RCV MiPyme Sales Import"
+msgstr "Importación de ventas RCV desde MiPyme"
+
+#. module: l10n_cl_rcv_mipyme_import
+#: model_terms:ir.ui.view,arch_db:l10n_cl_rcv_mipyme_import.view_rcv_document_form_mipyme
+msgid "Importar desde MiPyme"
+msgstr "Importar desde MiPyme"
+
+#. module: l10n_cl_rcv_mipyme_import
+#: code:addons/l10n_cl_rcv_mipyme_import/models/rcv_document.py:0
+msgid "Factura recuperada desde MiPyme"
+msgstr "Factura recuperada desde MiPyme"
+
+#. module: l10n_cl_rcv_mipyme_import
+#: code:addons/l10n_cl_rcv_mipyme_import/models/rcv_document.py:0
+msgid "Resultado de recuperación MiPyme"
+msgstr "Resultado de recuperación MiPyme"
