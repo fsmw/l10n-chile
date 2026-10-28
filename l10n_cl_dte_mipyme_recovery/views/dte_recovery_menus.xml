@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_dte_mipyme_recovery" model="ir.actions.act_window">
+        <field name="name">Recovered MiPyme DTEs</field>
+        <field name="res_model">l10n_cl.dte.recovery</field>
+        <field name="view_mode">list,form</field>
+        <field name="groups_id" eval="[(4, ref('group_mipyme_recovery_manager'))]" />
+    </record>
+    <menuitem
+        id="menu_dte_mipyme_recovery"
+        name="Recover DTE from MiPyme"
+        parent="account.menu_finance_receivables"
+        action="action_dte_mipyme_recovery_wizard"
+        groups="l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_user"
+        sequence="25"
+    />
+    <menuitem
+        id="menu_dte_mipyme_recovery_history"
+        name="Recovered MiPyme DTEs"
+        parent="account.menu_finance_receivables"
+        action="action_dte_mipyme_recovery"
+        groups="l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_manager"
+        sequence="26"
+    />
+</odoo>

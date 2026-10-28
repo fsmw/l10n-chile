@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_move_form_mipyme_recovery" model="ir.ui.view">
+        <field name="name">account.move.form.mipyme.recovery</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_type']" position="after">
+                <field name="l10n_cl_mipyme_imported" invisible="1" />
+                <div
+                    class="text-warning"
+                    invisible="not l10n_cl_mipyme_imported or state != 'draft'"
+                >
+                    DTE recuperado desde SII: complete analítica, proyecto y centro de costo antes de confirmar.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

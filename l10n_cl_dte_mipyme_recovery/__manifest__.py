@@ -1,0 +1,21 @@
+{
+    "name": "MiPyme DTE Recovery",
+    "version": "18.0.1.0.0",
+    "category": "Accounting/Localizations/EDI",
+    "summary": "Recover issued Chilean DTE XML from SII MiPyme",
+    "author": "Odoo Community Association (OCA), SMWLAB",
+    "license": "AGPL-3",
+    "depends": ["account", "certificate", "l10n_cl"],
+    "data": [
+        "security/security.xml",
+        "security/ir.model.access.csv",
+        "views/dte_recovery_views.xml",
+        "wizard/dte_recovery_wizard_views.xml",
+        "views/account_move_views.xml",
+        "views/dte_recovery_menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+    "website": "https://github.com/OCA/l10n-chile",
+    "development_status": "Beta",
+}

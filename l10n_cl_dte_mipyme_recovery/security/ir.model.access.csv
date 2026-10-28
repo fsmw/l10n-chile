@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dte_recovery_user,dte recovery user,model_l10n_cl_dte_recovery,l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_user,1,0,1,0
+access_dte_recovery_manager,dte recovery manager,model_l10n_cl_dte_recovery,l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_manager,1,1,1,1
+access_dte_recovery_wizard_user,dte recovery wizard user,model_l10n_cl_dte_recovery_wizard,l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_user,1,1,1,1
