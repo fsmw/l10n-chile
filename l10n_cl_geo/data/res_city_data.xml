@@ -1,0 +1,1733 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="city_cl_cl01101" model="res.city">
+        <field name="name">Iquique</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01107" model="res.city">
+        <field name="name">Alto Hospicio</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01401" model="res.city">
+        <field name="name">Pozo Almonte</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01402" model="res.city">
+        <field name="name">Camiña</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01403" model="res.city">
+        <field name="name">Colchane</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01404" model="res.city">
+        <field name="name">Huara</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl01405" model="res.city">
+        <field name="name">Pica</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_01" />
+    </record>
+    <record id="city_cl_cl02101" model="res.city">
+        <field name="name">Antofagasta</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02102" model="res.city">
+        <field name="name">Mejillones</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02103" model="res.city">
+        <field name="name">Sierra Gorda</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02104" model="res.city">
+        <field name="name">Taltal</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02201" model="res.city">
+        <field name="name">Calama</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02202" model="res.city">
+        <field name="name">Ollague</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02203" model="res.city">
+        <field name="name">San Pedro de Atacama</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02301" model="res.city">
+        <field name="name">Tocopilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl02302" model="res.city">
+        <field name="name">María Elena</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_02" />
+    </record>
+    <record id="city_cl_cl03101" model="res.city">
+        <field name="name">Copiapó</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03102" model="res.city">
+        <field name="name">Caldera</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03103" model="res.city">
+        <field name="name">Tierra Amarilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03201" model="res.city">
+        <field name="name">Chañaral</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03202" model="res.city">
+        <field name="name">Diego de Almagro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03301" model="res.city">
+        <field name="name">Vallenar</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03302" model="res.city">
+        <field name="name">Alto del Carmen</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03303" model="res.city">
+        <field name="name">Freirina</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl03304" model="res.city">
+        <field name="name">Huasco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_03" />
+    </record>
+    <record id="city_cl_cl04101" model="res.city">
+        <field name="name">La Serena</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04102" model="res.city">
+        <field name="name">Coquimbo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04103" model="res.city">
+        <field name="name">Andacollo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04104" model="res.city">
+        <field name="name">La Higuera</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04105" model="res.city">
+        <field name="name">Paihuano</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04106" model="res.city">
+        <field name="name">Vicuña</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04201" model="res.city">
+        <field name="name">Illapel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04202" model="res.city">
+        <field name="name">Canela</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04203" model="res.city">
+        <field name="name">Los Vilos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04204" model="res.city">
+        <field name="name">Salamanca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04301" model="res.city">
+        <field name="name">Ovalle</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04302" model="res.city">
+        <field name="name">Combarbalá</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04303" model="res.city">
+        <field name="name">Monte Patria</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04304" model="res.city">
+        <field name="name">Punitaqui</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl04305" model="res.city">
+        <field name="name">Río Hurtado</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_04" />
+    </record>
+    <record id="city_cl_cl05101" model="res.city">
+        <field name="name">Valparaíso</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05102" model="res.city">
+        <field name="name">Casablanca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05103" model="res.city">
+        <field name="name">Concón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05104" model="res.city">
+        <field name="name">Juan Fernández</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05105" model="res.city">
+        <field name="name">Puchuncaví</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05106" model="res.city">
+        <field name="name">Quilpué</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05107" model="res.city">
+        <field name="name">Quintero</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05108" model="res.city">
+        <field name="name">Villa Alemana</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05109" model="res.city">
+        <field name="name">Viña del Mar</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05201" model="res.city">
+        <field name="name">Isla de Pascua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05301" model="res.city">
+        <field name="name">Los Andes</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05302" model="res.city">
+        <field name="name">Calle Larga</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05303" model="res.city">
+        <field name="name">Rinconada</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05304" model="res.city">
+        <field name="name">San Esteban</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05401" model="res.city">
+        <field name="name">La Ligua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05402" model="res.city">
+        <field name="name">Cabildo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05403" model="res.city">
+        <field name="name">Papudo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05404" model="res.city">
+        <field name="name">Petorca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05405" model="res.city">
+        <field name="name">Zapallar</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05501" model="res.city">
+        <field name="name">Quillota</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05502" model="res.city">
+        <field name="name">Calera</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05503" model="res.city">
+        <field name="name">Hijuelas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05504" model="res.city">
+        <field name="name">La Cruz</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05505" model="res.city">
+        <field name="name">Limache</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05506" model="res.city">
+        <field name="name">Nogales</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05507" model="res.city">
+        <field name="name">Olmué</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05601" model="res.city">
+        <field name="name">San Antonio</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05602" model="res.city">
+        <field name="name">Algarrobo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05603" model="res.city">
+        <field name="name">Cartagena</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05604" model="res.city">
+        <field name="name">El Quisco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05605" model="res.city">
+        <field name="name">El Tabo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05606" model="res.city">
+        <field name="name">Santo Domingo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05701" model="res.city">
+        <field name="name">San Felipe</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05702" model="res.city">
+        <field name="name">Catemu</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05703" model="res.city">
+        <field name="name">Llay Llay</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05704" model="res.city">
+        <field name="name">Panquehue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05705" model="res.city">
+        <field name="name">Putaendo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl05706" model="res.city">
+        <field name="name">Santa María</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_05" />
+    </record>
+    <record id="city_cl_cl06101" model="res.city">
+        <field name="name">Rancagua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06102" model="res.city">
+        <field name="name">Codegua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06103" model="res.city">
+        <field name="name">Coinco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06104" model="res.city">
+        <field name="name">Coltauco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06105" model="res.city">
+        <field name="name">Doñihue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06106" model="res.city">
+        <field name="name">Graneros</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06107" model="res.city">
+        <field name="name">Las Cabras</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06108" model="res.city">
+        <field name="name">Machalí</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06109" model="res.city">
+        <field name="name">Malloa</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06110" model="res.city">
+        <field name="name">Mostazal</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06111" model="res.city">
+        <field name="name">Olivar</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06112" model="res.city">
+        <field name="name">Peumo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06113" model="res.city">
+        <field name="name">Pichidegua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06114" model="res.city">
+        <field name="name">Quinta de Tilcoco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06115" model="res.city">
+        <field name="name">Rengo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06116" model="res.city">
+        <field name="name">Requinoa</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06117" model="res.city">
+        <field name="name">San Vicente</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06201" model="res.city">
+        <field name="name">Pichilemu</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06202" model="res.city">
+        <field name="name">La Estrella</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06203" model="res.city">
+        <field name="name">Litueche</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06204" model="res.city">
+        <field name="name">Marchihue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06205" model="res.city">
+        <field name="name">Navidad</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06206" model="res.city">
+        <field name="name">Paredones</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06301" model="res.city">
+        <field name="name">San Fernando</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06302" model="res.city">
+        <field name="name">Chépica</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06303" model="res.city">
+        <field name="name">Chimbarongo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06304" model="res.city">
+        <field name="name">Lolol</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06305" model="res.city">
+        <field name="name">Nancagua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06306" model="res.city">
+        <field name="name">Palmilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06307" model="res.city">
+        <field name="name">Peralillo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06308" model="res.city">
+        <field name="name">Placilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06309" model="res.city">
+        <field name="name">Pumanque</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl06310" model="res.city">
+        <field name="name">Santa Cruz</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_06" />
+    </record>
+    <record id="city_cl_cl07101" model="res.city">
+        <field name="name">Talca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07102" model="res.city">
+        <field name="name">Constitución</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07103" model="res.city">
+        <field name="name">Curepto</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07104" model="res.city">
+        <field name="name">Empedrado</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07105" model="res.city">
+        <field name="name">Maule</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07106" model="res.city">
+        <field name="name">Pelarco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07107" model="res.city">
+        <field name="name">Pencahue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07108" model="res.city">
+        <field name="name">Río Claro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07109" model="res.city">
+        <field name="name">San Clemente</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07110" model="res.city">
+        <field name="name">San Rafael</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07201" model="res.city">
+        <field name="name">Cauquenes</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07202" model="res.city">
+        <field name="name">Chanco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07203" model="res.city">
+        <field name="name">Pelluhue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07301" model="res.city">
+        <field name="name">Curicó</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07302" model="res.city">
+        <field name="name">Hualañé</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07303" model="res.city">
+        <field name="name">Licantén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07304" model="res.city">
+        <field name="name">Molina</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07305" model="res.city">
+        <field name="name">Rauco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07306" model="res.city">
+        <field name="name">Romeral</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07307" model="res.city">
+        <field name="name">Sagrada Familia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07308" model="res.city">
+        <field name="name">Teno</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07309" model="res.city">
+        <field name="name">Vichuquén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07401" model="res.city">
+        <field name="name">Linares</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07402" model="res.city">
+        <field name="name">Colbún</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07403" model="res.city">
+        <field name="name">Longaví</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07404" model="res.city">
+        <field name="name">Parral</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07405" model="res.city">
+        <field name="name">Retiro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07406" model="res.city">
+        <field name="name">San Javier</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07407" model="res.city">
+        <field name="name">Villa Alegre</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl07408" model="res.city">
+        <field name="name">Yerbas Buenas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_07" />
+    </record>
+    <record id="city_cl_cl08101" model="res.city">
+        <field name="name">Concepción</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08102" model="res.city">
+        <field name="name">Coronel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08103" model="res.city">
+        <field name="name">Chiguayante</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08104" model="res.city">
+        <field name="name">Florida</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08105" model="res.city">
+        <field name="name">Hualqui</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08106" model="res.city">
+        <field name="name">Lota</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08107" model="res.city">
+        <field name="name">Penco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08108" model="res.city">
+        <field name="name">San Pedro De La Paz</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08109" model="res.city">
+        <field name="name">Santa Juana</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08110" model="res.city">
+        <field name="name">Talcahuano</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08111" model="res.city">
+        <field name="name">Tomé</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08112" model="res.city">
+        <field name="name">Hualpén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08201" model="res.city">
+        <field name="name">Lebu</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08202" model="res.city">
+        <field name="name">Arauco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08203" model="res.city">
+        <field name="name">Cañete</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08204" model="res.city">
+        <field name="name">Contulmo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08205" model="res.city">
+        <field name="name">Curanilahue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08206" model="res.city">
+        <field name="name">Los Alamos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08207" model="res.city">
+        <field name="name">Tirua</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08301" model="res.city">
+        <field name="name">Los Angeles</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08302" model="res.city">
+        <field name="name">Antuco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08303" model="res.city">
+        <field name="name">Cabrero</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08304" model="res.city">
+        <field name="name">Laja</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08305" model="res.city">
+        <field name="name">Mulchén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08306" model="res.city">
+        <field name="name">Nacimiento</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08307" model="res.city">
+        <field name="name">Negrete</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08308" model="res.city">
+        <field name="name">Quilaco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08309" model="res.city">
+        <field name="name">Quilleco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08310" model="res.city">
+        <field name="name">San Rosendo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08311" model="res.city">
+        <field name="name">Santa Bárbara</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08312" model="res.city">
+        <field name="name">Tucapel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08313" model="res.city">
+        <field name="name">Yumbel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08314" model="res.city">
+        <field name="name">Alto Biobío</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_08" />
+    </record>
+    <record id="city_cl_cl08401" model="res.city">
+        <field name="name">Chillán</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08402" model="res.city">
+        <field name="name">Bulnes</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08403" model="res.city">
+        <field name="name">Cobquecura</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08404" model="res.city">
+        <field name="name">Coelemu</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08405" model="res.city">
+        <field name="name">Coihueco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08406" model="res.city">
+        <field name="name">Chillán Viejo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08407" model="res.city">
+        <field name="name">El Carmen</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08408" model="res.city">
+        <field name="name">Ninhue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08409" model="res.city">
+        <field name="name">Ñiquén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08410" model="res.city">
+        <field name="name">Pemuco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08411" model="res.city">
+        <field name="name">Pinto</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08412" model="res.city">
+        <field name="name">Portezuelo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08413" model="res.city">
+        <field name="name">Quillón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08414" model="res.city">
+        <field name="name">Quirihue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08415" model="res.city">
+        <field name="name">Ranquil</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08416" model="res.city">
+        <field name="name">San Carlos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08417" model="res.city">
+        <field name="name">San Fabián</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08418" model="res.city">
+        <field name="name">San Ignacio</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08419" model="res.city">
+        <field name="name">San Nicolás</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08420" model="res.city">
+        <field name="name">Trehuaco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl08421" model="res.city">
+        <field name="name">Yungay</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_16" />
+    </record>
+    <record id="city_cl_cl09101" model="res.city">
+        <field name="name">Temuco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09102" model="res.city">
+        <field name="name">Carahue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09103" model="res.city">
+        <field name="name">Cunco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09104" model="res.city">
+        <field name="name">Curarrehue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09105" model="res.city">
+        <field name="name">Freire</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09106" model="res.city">
+        <field name="name">Galvarino</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09107" model="res.city">
+        <field name="name">Gorbea</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09108" model="res.city">
+        <field name="name">Lautaro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09109" model="res.city">
+        <field name="name">Loncoche</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09110" model="res.city">
+        <field name="name">Melipeuco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09111" model="res.city">
+        <field name="name">Nueva Imperial</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09112" model="res.city">
+        <field name="name">Padre Las Casas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09113" model="res.city">
+        <field name="name">Perquenco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09114" model="res.city">
+        <field name="name">Pitrufquén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09115" model="res.city">
+        <field name="name">Pucón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09116" model="res.city">
+        <field name="name">Saavedra</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09117" model="res.city">
+        <field name="name">Teodoro Schmidt</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09118" model="res.city">
+        <field name="name">Toltén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09119" model="res.city">
+        <field name="name">Vilcún</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09120" model="res.city">
+        <field name="name">Villarrica</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09121" model="res.city">
+        <field name="name">Cholchol</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09201" model="res.city">
+        <field name="name">Angol</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09202" model="res.city">
+        <field name="name">Collipulli</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09203" model="res.city">
+        <field name="name">Curacautín</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09204" model="res.city">
+        <field name="name">Ercilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09205" model="res.city">
+        <field name="name">Lonquimay</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09206" model="res.city">
+        <field name="name">Los Sauces</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09207" model="res.city">
+        <field name="name">Lumaco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09208" model="res.city">
+        <field name="name">Purén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09209" model="res.city">
+        <field name="name">Renaico</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09210" model="res.city">
+        <field name="name">Traiguén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl09211" model="res.city">
+        <field name="name">Victoria</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_09" />
+    </record>
+    <record id="city_cl_cl10101" model="res.city">
+        <field name="name">Puerto Montt</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10102" model="res.city">
+        <field name="name">Calbuco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10103" model="res.city">
+        <field name="name">Cochamó</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10104" model="res.city">
+        <field name="name">Fresia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10105" model="res.city">
+        <field name="name">Frutillar</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10106" model="res.city">
+        <field name="name">Los Muermos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10107" model="res.city">
+        <field name="name">Llanquihue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10108" model="res.city">
+        <field name="name">Maullín</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10109" model="res.city">
+        <field name="name">Puerto Varas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10201" model="res.city">
+        <field name="name">Castro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10202" model="res.city">
+        <field name="name">Ancud</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10203" model="res.city">
+        <field name="name">Chonchi</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10204" model="res.city">
+        <field name="name">Curaco de Vélez</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10205" model="res.city">
+        <field name="name">Dalcahue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10206" model="res.city">
+        <field name="name">Puqueldón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10207" model="res.city">
+        <field name="name">Queilén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10208" model="res.city">
+        <field name="name">Quellón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10209" model="res.city">
+        <field name="name">Quemchi</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10210" model="res.city">
+        <field name="name">Quinchao</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10301" model="res.city">
+        <field name="name">Osorno</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10302" model="res.city">
+        <field name="name">Puerto Octay</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10303" model="res.city">
+        <field name="name">Purranque</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10304" model="res.city">
+        <field name="name">Puyehue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10305" model="res.city">
+        <field name="name">Río Negro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10306" model="res.city">
+        <field name="name">San Juan de la Costa</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10307" model="res.city">
+        <field name="name">San Pablo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10401" model="res.city">
+        <field name="name">Chaitén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10402" model="res.city">
+        <field name="name">Futaleufú</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10403" model="res.city">
+        <field name="name">Hualaihue</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl10404" model="res.city">
+        <field name="name">Palena</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_10" />
+    </record>
+    <record id="city_cl_cl11101" model="res.city">
+        <field name="name">Coihaique</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11102" model="res.city">
+        <field name="name">Lago Verde</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11201" model="res.city">
+        <field name="name">Aisén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11202" model="res.city">
+        <field name="name">Cisnes</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11203" model="res.city">
+        <field name="name">Guaitecas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11301" model="res.city">
+        <field name="name">Cochrane</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11302" model="res.city">
+        <field name="name">Ohiggins</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11303" model="res.city">
+        <field name="name">Tortel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11401" model="res.city">
+        <field name="name">Chile Chico</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl11402" model="res.city">
+        <field name="name">Río Ibáñez</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_11" />
+    </record>
+    <record id="city_cl_cl12101" model="res.city">
+        <field name="name">Punta Arenas</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12102" model="res.city">
+        <field name="name">Laguna Blanca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12103" model="res.city">
+        <field name="name">Río Verde</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12104" model="res.city">
+        <field name="name">San Gregorio</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12201" model="res.city">
+        <field name="name">Cabo de Hornos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12202" model="res.city">
+        <field name="name">Antártica</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12301" model="res.city">
+        <field name="name">Porvenir</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12302" model="res.city">
+        <field name="name">Primavera</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12303" model="res.city">
+        <field name="name">Timaukel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12401" model="res.city">
+        <field name="name">Natales</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl12402" model="res.city">
+        <field name="name">Torres del Paine</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_12" />
+    </record>
+    <record id="city_cl_cl13101" model="res.city">
+        <field name="name">Santiago</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13102" model="res.city">
+        <field name="name">Cerrillos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13103" model="res.city">
+        <field name="name">Cerro Navia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13104" model="res.city">
+        <field name="name">Conchalí</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13105" model="res.city">
+        <field name="name">El Bosque</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13106" model="res.city">
+        <field name="name">Estación Central</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13107" model="res.city">
+        <field name="name">Huechuraba</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13108" model="res.city">
+        <field name="name">Independencia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13109" model="res.city">
+        <field name="name">La Cisterna</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13110" model="res.city">
+        <field name="name">La Florida</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13111" model="res.city">
+        <field name="name">La Granja</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13112" model="res.city">
+        <field name="name">La Pintana</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13113" model="res.city">
+        <field name="name">La Reina</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13114" model="res.city">
+        <field name="name">Las Condes</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13115" model="res.city">
+        <field name="name">Lo Barnechea</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13116" model="res.city">
+        <field name="name">Lo Espejo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13117" model="res.city">
+        <field name="name">Lo Prado</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13118" model="res.city">
+        <field name="name">Macul</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13119" model="res.city">
+        <field name="name">Maipú</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13120" model="res.city">
+        <field name="name">Ñuñoa</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13121" model="res.city">
+        <field name="name">Pedro Aguirre Cerda</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13122" model="res.city">
+        <field name="name">Peñalolén</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13123" model="res.city">
+        <field name="name">Providencia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13124" model="res.city">
+        <field name="name">Pudahuel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13125" model="res.city">
+        <field name="name">Quilicura</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13126" model="res.city">
+        <field name="name">Quinta Normal</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13127" model="res.city">
+        <field name="name">Recoleta</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13128" model="res.city">
+        <field name="name">Renca</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13129" model="res.city">
+        <field name="name">San Joaquín</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13130" model="res.city">
+        <field name="name">San Miguel</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13131" model="res.city">
+        <field name="name">San Ramón</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13132" model="res.city">
+        <field name="name">Vitacura</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13201" model="res.city">
+        <field name="name">Puente Alto</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13202" model="res.city">
+        <field name="name">Pirque</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13203" model="res.city">
+        <field name="name">San José de Maipo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13301" model="res.city">
+        <field name="name">Colina</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13302" model="res.city">
+        <field name="name">Lampa</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13303" model="res.city">
+        <field name="name">Til til</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13401" model="res.city">
+        <field name="name">San Bernardo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13402" model="res.city">
+        <field name="name">Buin</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13403" model="res.city">
+        <field name="name">Calera de Tango</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13404" model="res.city">
+        <field name="name">Paine</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13501" model="res.city">
+        <field name="name">Melipilla</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13502" model="res.city">
+        <field name="name">Alhué</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13503" model="res.city">
+        <field name="name">Curacaví</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13504" model="res.city">
+        <field name="name">María Pinto</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13505" model="res.city">
+        <field name="name">San Pedro</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13601" model="res.city">
+        <field name="name">Talagante</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13602" model="res.city">
+        <field name="name">El Monte</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13603" model="res.city">
+        <field name="name">Isla de Maipo</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13604" model="res.city">
+        <field name="name">Padre Hurtado</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl13605" model="res.city">
+        <field name="name">Peñaflor</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_13" />
+    </record>
+    <record id="city_cl_cl14101" model="res.city">
+        <field name="name">Valdivia</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14102" model="res.city">
+        <field name="name">Corral</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14103" model="res.city">
+        <field name="name">Lanco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14104" model="res.city">
+        <field name="name">Los Lagos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14105" model="res.city">
+        <field name="name">Máfil</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14106" model="res.city">
+        <field name="name">Mariquina</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14107" model="res.city">
+        <field name="name">Paillaco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14108" model="res.city">
+        <field name="name">Panguipulli</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14201" model="res.city">
+        <field name="name">La Unión</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14202" model="res.city">
+        <field name="name">Futrono</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14203" model="res.city">
+        <field name="name">Lago Ranco</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl14204" model="res.city">
+        <field name="name">Río Bueno</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_14" />
+    </record>
+    <record id="city_cl_cl15101" model="res.city">
+        <field name="name">Arica</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_15" />
+    </record>
+    <record id="city_cl_cl15102" model="res.city">
+        <field name="name">Camarones</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_15" />
+    </record>
+    <record id="city_cl_cl15201" model="res.city">
+        <field name="name">Putre</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_15" />
+    </record>
+    <record id="city_cl_cl15202" model="res.city">
+        <field name="name">General Lagos</field>
+        <field name="country_id" ref="base.cl" />
+        <field name="state_id" ref="base.state_cl_15" />
+    </record>
+</odoo>
