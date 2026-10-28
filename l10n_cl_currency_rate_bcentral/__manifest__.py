@@ -1,0 +1,23 @@
+{
+    "name": "Bcentral Currency Sync",
+    "version": "18.0.1.0.0",
+    "category": "Accounting",
+    "summary": "Sync Chilean rates from Bcentral or Banco Central BDE",
+    "author": "Odoo Community Association (OCA), SMWLAB",
+    "website": "https://github.com/OCA/l10n-chile",
+    "license": "AGPL-3",
+    "depends": ["base", "account", "mail", "l10n_cl"],
+    "data": [
+        "security/security.xml",
+        "security/ir.model.access.csv",
+        "data/ir_cron.xml",
+        "views/res_config_settings_views.xml",
+        "views/bcentral_config_views.xml",
+        "views/bcentral_log_views.xml",
+        "views/res_currency_views.xml",
+        "wizard/bcentral_rate_range_wizard_views.xml",
+    ],
+    "installable": True,
+    "application": False,
+    "development_status": "Beta",
+}

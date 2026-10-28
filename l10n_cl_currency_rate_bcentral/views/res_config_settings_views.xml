@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="res_config_settings_view_bcentral" model="ir.ui.view">
+        <field name="name">res.config.settings.view.bcentral</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//block[@name='main_currency_setting_container']"
+                position="inside"
+            >
+                <field name="l10n_cl_bcentral_is_chilean" invisible="1" />
+                <setting
+                    id="l10n_cl_bcentral_setting"
+                    string="Bcentral"
+                    company_dependent="1"
+                    invisible="not l10n_cl_bcentral_is_chilean"
+                    help="Sincroniza UF, USD, EUR y UTM desde bcentral.cl para esta compañía."
+                >
+                    <field name="l10n_cl_bcentral_enabled" />
+                    <div class="content-group" invisible="not l10n_cl_bcentral_enabled">
+                        <div class="row mt16">
+                            <label
+                                for="l10n_cl_bcentral_interval"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="l10n_cl_bcentral_interval" />
+                        </div>
+                        <div class="row mt8">
+                            <label
+                                for="l10n_cl_bcentral_next_run"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="l10n_cl_bcentral_next_run" />
+                        </div>
+                        <div class="mt16">
+                            <label
+                                for="l10n_cl_bcentral_currency_ids"
+                                class="o_form_label"
+                            />
+                            <field
+                                name="l10n_cl_bcentral_currency_ids"
+                                widget="many2many_tags"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                domain="[('name', 'in', ['UF', 'USD', 'EUR', 'UTM'])]"
+                            />
+                        </div>
+                        <div class="mt16">
+                            <button
+                                name="action_l10n_cl_bcentral_sync"
+                                type="object"
+                                string="Sync now"
+                                class="btn-link"
+                                icon="fa-refresh"
+                            />
+                            <button
+                                name="action_l10n_cl_bcentral_backfill"
+                                type="object"
+                                string="Backfill current year"
+                                class="btn-link ms-3"
+                                icon="fa-database"
+                            />
+                        </div>
+                        <div class="mt16">
+                            <span class="o_form_label">Status</span>
+                            <div class="row mt8">
+                                <label
+                                    for="l10n_cl_bcentral_last_sync_date"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_last_sync_date"
+                                    readonly="1"
+                                />
+                            </div>
+                            <div class="row mt8">
+                                <label
+                                    for="l10n_cl_bcentral_last_sync_status"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_last_sync_status"
+                                    readonly="1"
+                                />
+                            </div>
+                            <div class="row mt8">
+                                <label
+                                    for="l10n_cl_bcentral_last_sync_attempt"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_last_sync_attempt"
+                                    readonly="1"
+                                />
+                            </div>
+                            <div class="row mt8">
+                                <label
+                                    for="l10n_cl_bcentral_sync_pending"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_sync_pending"
+                                    readonly="1"
+                                />
+                            </div>
+                            <div class="row mt8">
+                                <label
+                                    for="l10n_cl_bcentral_last_sync_error_date"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_last_sync_error_date"
+                                    readonly="1"
+                                />
+                            </div>
+                            <div
+                                class="row mt8"
+                                invisible="not l10n_cl_bcentral_last_sync_error"
+                            >
+                                <label
+                                    for="l10n_cl_bcentral_last_sync_error"
+                                    class="col-lg-4 o_light_label"
+                                />
+                                <field
+                                    name="l10n_cl_bcentral_last_sync_error"
+                                    readonly="1"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+                <setting
+                    id="l10n_cl_bcentral_bcentral_token_setting"
+                    string="Banco Central BDE"
+                    groups="base.group_system"
+                    invisible="not l10n_cl_bcentral_is_chilean"
+                    help="Token BDE compartido por esta instancia. Nunca se muestra al abrir los ajustes."
+                >
+                    <field
+                        name="l10n_cl_bcentral_bcentral_token_configured"
+                        invisible="1"
+                    />
+                    <field
+                        name="l10n_cl_bcentral_bcentral_token_expiry_warning"
+                        invisible="1"
+                    />
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label
+                                for="l10n_cl_bcentral_bcentral_token"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field
+                                name="l10n_cl_bcentral_bcentral_token"
+                                widget="password"
+                                placeholder="Pegar token para guardar o reemplazar"
+                            />
+                        </div>
+                        <div class="row mt8">
+                            <label
+                                for="l10n_cl_bcentral_bcentral_token_expiration"
+                                class="col-lg-4 o_light_label"
+                            />
+                            <field name="l10n_cl_bcentral_bcentral_token_expiration" />
+                        </div>
+                        <div
+                            class="text-warning mt8"
+                            invisible="not l10n_cl_bcentral_bcentral_token_expiry_warning"
+                        >
+                            El token vence pronto o ya venció. Renuévalo en Mi Cuenta del BDE y reemplázalo aquí.
+                        </div>
+                        <div class="mt16">
+                            <button
+                                name="action_l10n_cl_bcentral_test_bcentral"
+                                type="object"
+                                string="Probar conexión"
+                                class="btn-link"
+                                icon="fa-plug"
+                            />
+                            <span
+                                class="ms-3"
+                                invisible="not l10n_cl_bcentral_bcentral_token_configured"
+                            >Token configurado</span>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
