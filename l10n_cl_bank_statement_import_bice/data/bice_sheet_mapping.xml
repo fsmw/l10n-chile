@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record
+        id="bice_ttao_statement_mapping"
+        model="account.statement.import.sheet.mapping"
+    >
+        <field name="name">BICE XLS (TTAO)</field>
+        <field name="float_thousands_sep">none</field>
+        <field name="float_decimal_sep">dot</field>
+        <field name="file_encoding">windows-1252</field>
+        <field name="delimiter">comma</field>
+        <field name="quotechar">
+            &quot;
+        </field>
+        <field name="timestamp_format">%Y%m%d</field>
+        <field name="timestamp_column">FECHA</field>
+        <field name="amount_type">distinct_credit_debit</field>
+        <field name="amount_debit_column">CARGOS</field>
+        <field name="amount_credit_column">ABONOS</field>
+        <field name="description_column">DESCRIPCION</field>
+        <field name="reference_column">DOCUMENTO</field>
+        <field name="header_lines_skip_count">12</field>
+        <field name="footer_lines_skip_count">8</field>
+        <field name="amount_inverse_sign" eval="False" />
+        <field name="skip_empty_lines" eval="True" />
+    </record>
+</odoo>
