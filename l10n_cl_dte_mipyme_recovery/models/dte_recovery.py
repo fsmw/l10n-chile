@@ -981,10 +981,49 @@ class DteRecovery(models.Model):
             )
         return move
 
+    @staticmethod
+    def _normalize_currency_name(currency_name):
+        """Map an ISO currency code to the name used by the DTE XML."""
+        currency_dict = {
+            "AED": "DIRHAM",
+            "ARS": "PESO",
+            "AUD": "DOLAR AUST",
+            "BOB": "BOLIVIANO",
+            "BRL": "CRUZEIRO REAL",
+            "CAD": "DOLAR CAN",
+            "CHF": "FRANCO SZ",
+            "CLP": "PESO CL",
+            "CNY": "RENMINBI",
+            "COP": "PESO COL",
+            "ECS": "SUCRE",
+            "EUR": "EURO",
+            "GBP": "LIBRA EST",
+            "HKD": "DOLAR HK",
+            "INR": "RUPIA",
+            "JPY": "YEN",
+            "MXN": "PESO MEX",
+            "NOK": "CORONA NOR",
+            "NZD": "DOLAR NZ",
+            "PEN": "NUEVO SOL",
+            "PYG": "GUARANI",
+            "SEK": "CORONA SC",
+            "SGD": "DOLAR SIN",
+            "TWD": "DOLAR TAI",
+            "USD": "DOLAR USA",
+            "UYU": "PESO URUG",
+            "VEF": "BOLIVAR",
+            "ZAR": "RAND",
+        }
+        return currency_dict.get(currency_name, "OTRAS MONEDAS")
+
     def _currency_from_xml(self, data):
         if not data.currency_name:
             return self.company_id.currency_id
-        normalize = self.env["account.move"]._l10n_cl_normalize_currency_name
+        normalize = getattr(
+            self.env["account.move"],
+            "_l10n_cl_normalize_currency_name",
+            self._normalize_currency_name,
+        )
         currencies = self.env["res.currency"].search([("active", "=", True)])
         matches = currencies.filtered(
             lambda candidate: normalize(candidate.name) == data.currency_name.upper()
