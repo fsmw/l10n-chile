@@ -2,7 +2,9 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+from datetime import datetime
 
+import pytz
 from lxml import etree
 
 from odoo import _, api, fields, models
@@ -13,6 +15,10 @@ from ..services.incoming_dte_xml import validate_dte_element
 from ..services.sii_client import SiiDteClient, SiiTransportError
 
 OUTBOUND_DOCUMENT_CODES = {"33", "34", "39", "41", "56", "61"}
+# Receiver data the SII does not require for these documents.
+_DTE_NO_RECEIVER_ACTIVITY_CODES = frozenset({"39", "41", "110", "111", "112"})
+# Document types whose totals must not include taxes.
+_DTE_EXEMPT_DOCUMENT_CODES = frozenset({"34", "41", "110", "111", "112"})
 # States in which the SII already owns the DTE lifecycle: the local journal
 # entry cannot be cancelled or reset to draft, only reversed.
 _DTE_BLOCKED_STATES = frozenset({"accepted", "objected", "ask_for_status"})
@@ -499,10 +505,140 @@ class AccountMove(models.Model):
         self.ensure_one()
         return DteXmlBuilder(self, folio, caf_root, certificate)
 
+    def _l10n_cl_edi_post_validation(self):
+        """Validate issuer, receiver and document data before building the DTE."""
+        self.ensure_one()
+        self._l10n_cl_check_dte_emails()
+        self._l10n_cl_check_stamp_date()
+        self._l10n_cl_check_receiver_activity()
+        self._l10n_cl_check_receiver_address()
+        self._l10n_cl_check_electronic_ticket()
+        self._l10n_cl_check_exempt_document()
+        self._l10n_cl_check_taxed_document()
+
+    def _l10n_cl_check_dte_emails(self):
+        """Require the DTE mailbox of the issuer and of the receiver."""
+        document_type = self.l10n_latam_document_type_id
+        if (
+            document_type._is_doc_type_export()
+            or document_type._is_doc_type_electronic_ticket()
+        ):
+            return
+        if not self.company_id.sudo().l10n_cl_dte_email:
+            raise ValidationError(
+                _(
+                    "Falta el correo DTE del emisor. Configúrelo en la compañía "
+                    "antes de emitir un DTE electrónico."
+                )
+            )
+        if not (
+            self.partner_id.l10n_cl_dte_email
+            or self.commercial_partner_id.l10n_cl_dte_email
+        ):
+            raise ValidationError(
+                _(
+                    "Falta el correo DTE del receptor %(partner)s. Configúrelo "
+                    "en el contacto antes de emitir un DTE electrónico.",
+                    partner=self.partner_id.display_name,
+                )
+            )
+
+    def _l10n_cl_check_stamp_date(self):
+        """The stamp cannot be earlier than the invoice issue date."""
+        if not self.invoice_date:
+            return
+        stamp_date = (
+            datetime.now(pytz.UTC).astimezone(pytz.timezone("America/Santiago")).date()
+        )
+        if stamp_date < self.invoice_date:
+            raise ValidationError(
+                _(
+                    "La fecha de timbre no puede ser anterior a la fecha de "
+                    "emisión (%(invoice_date)s). Revise la fecha del documento "
+                    "o la zona horaria America/Santiago.",
+                    invoice_date=fields.Date.to_string(self.invoice_date),
+                )
+            )
+
+    def _l10n_cl_check_receiver_activity(self):
+        """Require the receiver's economic activity where the SII needs it."""
+        if self.l10n_latam_document_type_id.code in _DTE_NO_RECEIVER_ACTIVITY_CODES:
+            return
+        if not (
+            self.partner_id.l10n_cl_activity_description
+            or self.commercial_partner_id.l10n_cl_activity_description
+        ):
+            raise ValidationError(
+                _(
+                    "Falta la actividad económica (giro) del receptor "
+                    "%(partner)s. Es obligatoria para este tipo de documento.",
+                    partner=self.partner_id.display_name,
+                )
+            )
+
+    def _l10n_cl_check_receiver_address(self):
+        """Require a street address unless the SII allows a ticket without it."""
+        if self.l10n_latam_document_type_id._is_doc_type_electronic_ticket():
+            return
+        if not self.partner_id.street:
+            raise ValidationError(
+                _(
+                    "Falta la dirección del receptor %(partner)s. Es obligatoria "
+                    "para este tipo de documento.",
+                    partner=self.partner_id.display_name,
+                )
+            )
+
+    def _l10n_cl_check_electronic_ticket(self):
+        """A boleta 39 may not carry ILA/withholdings and must use CLP."""
+        if self.l10n_latam_document_type_id.code != "39":
+            return
+        if self._l10n_cl_get_withholdings():
+            raise ValidationError(
+                _("La boleta electrónica 39 no admite impuestos ILA ni retenciones.")
+            )
+        if self.currency_id != self.company_id.currency_id:
+            raise ValidationError(
+                _(
+                    "La boleta electrónica 39 debe emitirse en la moneda de la "
+                    "compañía (%(currency)s).",
+                    currency=self.company_id.currency_id.name,
+                )
+            )
+
+    def _l10n_cl_check_exempt_document(self):
+        """An exempt document cannot carry taxes."""
+        if self.l10n_latam_document_type_id.code not in _DTE_EXEMPT_DOCUMENT_CODES:
+            return
+        currency = self.currency_id
+        if currency.compare_amounts(self.amount_untaxed, self.amount_total) != 0:
+            raise ValidationError(
+                _(
+                    "El documento exento %(document_type)s tiene impuestos: el "
+                    "total afecto debe ser igual al total. Revise las líneas o "
+                    "use el tipo de documento afecto.",
+                    document_type=self.l10n_latam_document_type_id.display_name,
+                )
+            )
+
+    def _l10n_cl_check_taxed_document(self):
+        """A factura 33 must have at least one VAT-taxed line."""
+        if self.l10n_latam_document_type_id.code != "33":
+            return
+        currency = self.currency_id
+        if currency.compare_amounts(self.amount_untaxed, self.amount_total) == 0:
+            raise ValidationError(
+                _(
+                    "La factura 33 no tiene ítems afectos a IVA. Si el documento "
+                    "es exento, use el tipo de documento 34."
+                )
+            )
+
     def _l10n_cl_prepare_dte(self):
         """Validate the reserved folio, build and persist signed DTE documents."""
         self.ensure_one()
         self._check_dte_action_access()
+        self._l10n_cl_edi_post_validation()
         company = self.company_id.sudo()
         if company.l10n_cl_dte_environment not in ("SIIDEMO", "SIITEST", "SII"):
             raise ValidationError(
