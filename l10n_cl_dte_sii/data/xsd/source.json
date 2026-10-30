@@ -1,0 +1,13 @@
+{
+  "dte_source_url": "https://www.sii.cl/factura_electronica/factura_mercado/schema_dte.zip",
+  "boleta_source_url": "https://www.sii.cl/factura_electronica/factura_mercado/schema_envio_bol.zip",
+  "sii_schema_index": "https://www.sii.cl/servicios_online/3532-formato_xml-3811.html",
+  "retrieved_on": "2026-10-29",
+  "sha256": {
+    "DTE_v10.xsd": "85518401b7dddac1bc0b7b99646a1ce353a4afa645344ea5f10af3a2e6676b37",
+    "EnvioDTE_v10.xsd": "33ea8dd38c895c359dddbcd21feb5acf8a4717f7f67524a6b0dd9a83d76920eb",
+    "EnvioBOLETA_v11.xsd": "e0fbbaf70b0ac8ea2c0ac2310edac41bdd3773cef20fccf6d97e5b92ebeedaa9",
+    "SiiTypes_v10.xsd": "ce9a84bde70aa9d0f9269d99acd3b0ea81d868022517ac31064b6cdfa0c45bdf",
+    "xmldsignature_v10.xsd": "427e3225cd379ae92bae464b892dbf964665af92d453ac61774cffab38b95edb"
+  }
+}

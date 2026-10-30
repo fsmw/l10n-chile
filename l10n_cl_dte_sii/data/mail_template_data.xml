@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mail_template_dte_receiver" model="mail.template">
+        <field name="name">DTE firmado para el receptor</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="email_from">{{ object.company_id.l10n_cl_dte_email or object.company_id.email }}</field>
+        <field name="email_to">{{ object.partner_id.l10n_cl_dte_email or object.commercial_partner_id.l10n_cl_dte_email }}</field>
+        <field name="subject">{{ object.company_id.name }} - DTE {{ object.l10n_cl_dte_type_code }} folio {{ object.l10n_latam_document_number }}</field>
+        <field name="auto_delete" eval="False" />
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Adjuntamos el documento tributario electrónico firmado para el DTE <strong t-out="object.l10n_cl_dte_type_code" /> folio <strong t-out="object.l10n_latam_document_number" />.</p>
+                <p>Emisor: <span t-out="object.company_id.name" />.</p>
+            </div>
+        </field>
+    </record>
+</odoo>

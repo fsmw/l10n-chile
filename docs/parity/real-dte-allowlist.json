@@ -1,0 +1,10 @@
+{
+  "_comment": [
+    "Diferencias toleradas entre un DTE real aceptado por el SII y el DTE reemitido por el fork (S1).",
+    "Cada entrada necesita motivo y responsable. Sin entrada, la igualdad es estricta.",
+    "Los campos regenerados por diseño (TmstFirma, Signature, SignatureValue) no se comparan aquí.",
+    "`paths` usa rutas relativas al nodo Documento, resueltas por nombre local."
+  ],
+  "documents": {},
+  "global": []
+}

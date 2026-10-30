@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_move_form_dte_sii" model="ir.ui.view">
+        <field name="name">account.move.form.dte.sii</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_latam_document_number']" position="after">
+                <field
+                    name="l10n_cl_dte_status"
+                    string="Estado SII"
+                    widget="badge"
+                    invisible="country_code != 'CL' or move_type not in ('out_invoice', 'out_refund')"
+                />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_l10n_cl_dte_send"
+                    type="object"
+                    string="Enviar al SII"
+                    class="oe_highlight"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="country_code != 'CL' or move_type not in ('out_invoice', 'out_refund') or state != 'posted' or l10n_cl_dte_status != 'not_sent' or not l10n_cl_dte_has_envelope or l10n_cl_dte_is_external"
+                />
+                <button
+                    name="action_l10n_cl_dte_check_status"
+                    type="object"
+                    string="Consultar estado"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="country_code != 'CL' or move_type not in ('out_invoice', 'out_refund') or state != 'posted' or l10n_cl_dte_status not in ('ask_for_status', 'error') or not l10n_cl_dte_track_id"
+                />
+                <button
+                    name="action_l10n_cl_dte_reconcile_uncertain"
+                    type="object"
+                    string="Conciliar envío incierto"
+                    groups="l10n_cl_dte_sii.group_dte_manager"
+                    invisible="country_code != 'CL' or move_type != 'out_invoice' or l10n_cl_dte_type_code not in ('33', '34') or l10n_cl_dte_is_external or state != 'posted' or l10n_cl_dte_status != 'error' or l10n_cl_dte_track_id"
+                />
+                <button
+                    name="action_l10n_cl_dte_review_objections"
+                    type="object"
+                    string="Revisar reparos"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="country_code != 'CL' or l10n_cl_dte_status != 'objected'"
+                />
+                <button
+                    name="action_l10n_cl_dte_send_to_receiver"
+                    type="object"
+                    string="Enviar DTE al receptor"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="country_code != 'CL' or move_type not in ('out_invoice', 'out_refund') or state != 'posted' or l10n_cl_dte_status not in ('accepted', 'objected') or l10n_cl_dte_is_external or l10n_cl_dte_receiver_delivery_active"
+                />
+                <button
+                    name="action_l10n_cl_dte_open_xml"
+                    type="object"
+                    string="Ver DTE firmado"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="not l10n_cl_dte_has_xml"
+                />
+                <button
+                    name="action_l10n_cl_dte_open_envelope"
+                    type="object"
+                    string="Ver sobre SII"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="not l10n_cl_dte_has_envelope"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="DTE SII"
+                    name="dte_sii"
+                    invisible="country_code != 'CL' or move_type not in ('out_invoice', 'out_refund') or not l10n_latam_use_documents"
+                >
+                    <group>
+                        <group string="Documento tributario">
+                            <field name="l10n_cl_dte_type_code" string="Tipo DTE" />
+                            <field name="l10n_latam_document_number" string="Folio" />
+                            <field
+                                name="l10n_cl_dte_status"
+                                string="Estado SII"
+                                widget="badge"
+                            />
+                            <field
+                                name="l10n_cl_dte_track_id"
+                                string="Track ID"
+                                readonly="1"
+                            />
+                        </group>
+                        <group string="Envío y receptor">
+                            <field name="l10n_cl_dte_receiver_delivery_status" string="Entrega del DTE al receptor" readonly="1" />
+                            <field name="l10n_cl_dte_receiver_delivery_ids" readonly="1">
+                                <list
+                                    create="0"
+                                    edit="0"
+                                    delete="0"
+                                    default_order="requested_at desc, id desc"
+                                >
+                                    <field name="requested_at" />
+                                    <field name="recipient_email" />
+                                    <field name="state" widget="badge" />
+                                    <field name="actor_id" />
+                                </list>
+                            </field>
+                            <field
+                                name="l10n_cl_dte_last_status_check"
+                                string="Última consulta SII"
+                                readonly="1"
+                            />
+                            <field name="l10n_cl_dte_is_external" invisible="1" />
+                            <field name="l10n_cl_dte_has_xml" invisible="1" />
+                            <field name="l10n_cl_dte_has_envelope" invisible="1" />
+                            <field
+                                name="l10n_cl_dte_diagnostic"
+                                string="Diagnóstico SII"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_last_status_error"
+                                string="Error de la última consulta SII"
+                                readonly="1"
+                            />
+                        </group>
+                    </group>
+                    <group string="Respuesta de consulta SII">
+                        <field
+                            name="l10n_cl_dte_sii_has_summary"
+                            invisible="1"
+                        />
+                        <group>
+                            <field
+                                name="l10n_cl_dte_sii_status_code"
+                                string="Código de estado SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_server_code"
+                                string="Código de servicio SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_sql_code"
+                                string="Código SQL SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_error_code"
+                                string="Código de error SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_token_code"
+                                string="Código de token SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_attention_number"
+                                string="Número de atención SII"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_document_type"
+                                string="Tipo de documento informado"
+                                invisible="not l10n_cl_dte_sii_has_summary"
+                            />
+                        </group>
+                        <group
+                            string="Resumen del envío"
+                            invisible="not l10n_cl_dte_sii_has_summary"
+                        >
+                            <field
+                                name="l10n_cl_dte_sii_informed_count"
+                                string="Documentos informados"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_accepted_count"
+                                string="Documentos aceptados"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_rejected_count"
+                                string="Documentos rechazados"
+                            />
+                            <field
+                                name="l10n_cl_dte_sii_objection_count"
+                                string="Documentos con reparos"
+                            />
+                        </group>
+                    </group>
+                    <group string="Evidencia">
+                        <button
+                            name="action_l10n_cl_dte_open_xml"
+                            type="object"
+                            string="Descargar DTE firmado"
+                            groups="l10n_cl_dte_sii.group_dte_user"
+                            invisible="not l10n_cl_dte_has_xml"
+                        />
+                        <button
+                            name="action_l10n_cl_dte_open_envelope"
+                            type="object"
+                            string="Descargar sobre SII"
+                            groups="l10n_cl_dte_sii.group_dte_user"
+                            invisible="not l10n_cl_dte_has_envelope"
+                        />
+                    </group>
+                    <group
+                        string="Conciliaciones manuales de envío"
+                        invisible="not l10n_cl_dte_reconciliation_ids"
+                    >
+                        <field name="l10n_cl_dte_reconciliation_ids" readonly="1">
+                            <list create="0" edit="0" delete="0">
+                                <field name="resolved_at" />
+                                <field name="resolution" />
+                                <field name="track_id" />
+                                <field name="previous_track_id" />
+                                <field name="previous_diagnostic" />
+                                <field name="resolved_by" />
+                                <field name="evidence" />
+                            </list>
+                        </field>
+                    </group>
+                    <group
+                        string="Referencias"
+                        invisible="l10n_cl_dte_type_code not in ('56', '61')"
+                    >
+                        <field name="l10n_cl_reference_ids" readonly="state != 'draft'">
+                            <list editable="bottom">
+                                <field
+                                    name="l10n_cl_reference_doc_type_id"
+                                    string="Tipo de documento"
+                                />
+                                <field name="origin_doc_number" string="Folio" />
+                                <field name="date" string="Fecha" />
+                                <field name="reference_doc_code" string="Código" />
+                                <field name="reason" string="Motivo" />
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_out_invoice_list_dte_sii" model="ir.ui.view">
+        <field name="name">account.move.list.dte.sii</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="sample">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="l10n_cl_dte_type_code" string="Tipo DTE" optional="show" />
+                <field
+                    name="l10n_latam_document_number"
+                    string="Folio"
+                    optional="show"
+                />
+                <field
+                    name="l10n_cl_dte_status"
+                    string="Estado SII"
+                    widget="badge"
+                    optional="show"
+                />
+                <field name="l10n_cl_dte_track_id" string="Track ID" optional="show" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_dte_reconciliation_wizard_form" model="ir.ui.view">
+        <field name="name">l10n.cl.dte.reconciliation.wizard.form</field>
+        <field name="model">l10n_cl.dte.reconciliation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Conciliar envío DTE incierto">
+                <group>
+                    <field name="move_id" />
+                    <field name="resolution" widget="radio" />
+                    <field
+                        name="track_id"
+                        invisible="resolution != 'received'"
+                        required="resolution == 'received'"
+                    />
+                    <field name="evidence" placeholder="Fuente consultada y evidencia" />
+                </group>
+                <footer>
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Registrar conciliación"
+                        class="oe_highlight"
+                        groups="l10n_cl_dte_sii.group_dte_manager"
+                    />
+                    <button string="Cancelar" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
