@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_l10n_cl_dte_receiver_delivery_user,l10n.cl.dte.receiver.delivery user,model_l10n_cl_dte_receiver_delivery,l10n_cl_dte_sii.group_dte_user,1,0,0,0
+access_dte_caf_user,l10n.cl.dte.caf user,model_l10n_cl_dte_caf,l10n_cl_dte_sii.group_dte_user,1,0,0,0
+access_dte_caf_manager,l10n.cl.dte.caf manager,model_l10n_cl_dte_caf,l10n_cl_dte_sii.group_dte_manager,1,1,1,0
+access_dte_caf_upload_manager,l10n.cl.dte.caf.upload manager,model_l10n_cl_dte_caf_upload,l10n_cl_dte_sii.group_dte_manager,1,1,1,1
+access_dte_invoice_reference_user,l10n.cl.account.invoice.reference user,model_l10n_cl_account_invoice_reference,account.group_account_invoice,1,1,1,0
+access_dte_company_settings_manager,l10n.cl.dte.company.settings manager,model_l10n_cl_dte_company_settings,l10n_cl_dte_sii.group_dte_manager,1,1,1,1
+access_dte_reconciliation_user,l10n.cl.dte.reconciliation user,model_l10n_cl_dte_reconciliation,l10n_cl_dte_sii.group_dte_user,1,0,0,0
+access_dte_reconciliation_wizard_manager,l10n.cl.dte.reconciliation.wizard manager,model_l10n_cl_dte_reconciliation_wizard,l10n_cl_dte_sii.group_dte_manager,1,1,1,1

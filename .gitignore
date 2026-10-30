@@ -80,6 +80,9 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
+# Local working documentation: kept on disk, never committed
+/docs/
+
 # Backup files
 *~
 *.swp

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_reversal_dte_sii" model="ir.ui.view">
+        <field name="name">account.move.reversal.form.dte.sii</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <group string="Referencia DTE" invisible="country_code != 'CL'">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_cl_is_text_correction"/>
+                    <field name="l10n_cl_edi_reference_doc_code" invisible="1"/>
+                    <group invisible="not l10n_cl_is_text_correction">
+                        <field name="l10n_cl_original_text" required="l10n_cl_is_text_correction"/>
+                        <field name="l10n_cl_corrected_text" required="l10n_cl_is_text_correction"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

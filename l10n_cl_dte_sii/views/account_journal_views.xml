@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_journal_form_dte_sii" model="ir.ui.view">
+        <field name="name">account.journal.form.dte.sii</field>
+        <field name="model">account.journal</field>
+        <field
+            name="inherit_id"
+            ref="l10n_latam_invoice_document.view_account_journal_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="DTE SII"
+                    name="dte_sii"
+                    groups="l10n_cl_dte_sii.group_dte_manager"
+                    invisible="type != 'sale' or country_code != 'CL' or not l10n_latam_use_documents"
+                >
+                    <field name="country_code" invisible="1" />
+                    <group>
+                        <field
+                            name="l10n_cl_dte_point_of_sale"
+                            string="Modo de emisión DTE"
+                        />
+                        <field
+                            name="l10n_cl_dte_sucursal"
+                            string="Código de sucursal SII"
+                        />
+                        <field
+                            name="l10n_cl_dte_office_number"
+                            string="Número de oficina SII"
+                        />
+                    </group>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="l10n_cl_dte_point_of_sale != 'manual'"
+                    >
+                        En modo manual, contabilizar no genera ni envía automáticamente un DTE.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
