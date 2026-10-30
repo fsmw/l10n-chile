@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_dte" model="ir.ui.view">
+        <field name="name">pos.order.form.dte.chile</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_l10n_cl_dte_send"
+                        string="Enviar DTE al SII"
+                        type="object"
+                        class="oe_highlight"
+                        groups="l10n_cl_dte_sii.group_dte_user,point_of_sale.group_pos_user"
+                        invisible="country_code != 'CL' or not account_move or l10n_cl_dte_status != 'not_sent'" />
+                <button name="action_l10n_cl_dte_check_status"
+                        string="Consultar estado SII"
+                        type="object"
+                        groups="l10n_cl_dte_sii.group_dte_user,point_of_sale.group_pos_user"
+                        invisible="country_code != 'CL' or not account_move or l10n_cl_dte_status not in ['ask_for_status', 'error'] or not l10n_cl_dte_track_id" />
+                <button name="action_l10n_cl_dte_reconcile_uncertain"
+                        string="Conciliar envío DTE incierto"
+                        type="object"
+                        groups="l10n_cl_dte_sii.group_dte_manager"
+                        invisible="country_code != 'CL' or not account_move or l10n_cl_dte_type_code not in ['33', '34'] or l10n_cl_dte_is_external or l10n_cl_dte_status != 'error' or l10n_cl_dte_track_id" />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_l10n_cl_dte_open_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        groups="l10n_cl_dte_sii.group_dte_user,point_of_sale.group_pos_user"
+                        invisible="country_code != 'CL' or not account_move">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Documento DTE</span>
+                        <span class="o_stat_value"><field name="l10n_cl_dte_folio" /></span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="invoice_type" string="Documento POS" invisible="country_code != 'CL'" readonly="1" />
+                <field name="voucher_number" invisible="country_code != 'CL' or not voucher_number" readonly="1" />
+                <field name="l10n_cl_dte_status" invisible="country_code != 'CL'" readonly="1" />
+                <field name="l10n_cl_dte_track_id" invisible="country_code != 'CL' or not l10n_cl_dte_track_id" readonly="1" />
+                <field name="l10n_cl_dte_folio" invisible="country_code != 'CL' or not l10n_cl_dte_folio" readonly="1" />
+                <field name="l10n_cl_dte_type_code" invisible="1" />
+                <field name="l10n_cl_dte_is_external" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
