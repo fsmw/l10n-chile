@@ -9,8 +9,8 @@ productos, las líneas, las referencias y el CAF que lo cubre, de modo que el
 `DteXmlBuilder` del fork pueda reemitirlo y compararlo con el original.
 
 Reglas:
-- El CAF y su clave privada se cargan en memoria desde `xml-reales/caf/`; no se
-  versionan ni se imprimen.
+- El CAF y su clave privada se cargan en memoria desde el corpus indicado por
+  `L10N_CL_REAL_DTE_DIR`; no se versionan ni se imprimen.
 - El folio se fuerza al de la muestra únicamente en la fixture.
 - `TSTED`/`TmstFirma` se congelan con el valor del XML para que el TED sea
   reproducible byte a byte.
@@ -33,7 +33,6 @@ from odoo.addons.l10n_cl_dte_sii.services.dte_xml import DteXmlBuilder
 DTE_NS = "http://www.sii.cl/SiiDte"
 SII_TAXPAYER_TYPE_COMPANY = "1"
 REAL_DTE_DIR_ENV = "L10N_CL_REAL_DTE_DIR"
-DEFAULT_CORPUS_DIR = Path("/home/fsmw/dev/l10n_cl/xml-reales")
 DD_PATTERN = re.compile(rb"<DD\b[^>]*>.*?</DD>", re.S)
 
 

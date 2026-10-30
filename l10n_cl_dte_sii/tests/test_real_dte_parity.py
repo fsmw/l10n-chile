@@ -27,7 +27,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from ..services.incoming_dte_xml import _verify_signature, validate_dte_element
 from .real_dte.fixture_builder import (
-    DEFAULT_CORPUS_DIR,
     REAL_DTE_DIR_ENV,
     RealDte,
     RealDteFixture,
@@ -199,16 +198,16 @@ class TestRealDteParity(AccountTestInvoicingCommon):
         return payload.get("documents", {}), global_paths
 
     def _emit(self, name):
-        directory = Path(os.environ.get(REAL_DTE_DIR_ENV) or DEFAULT_CORPUS_DIR)
-        if not os.environ.get(REAL_DTE_DIR_ENV):
+        directory = os.environ.get(REAL_DTE_DIR_ENV)
+        if not directory:
             self.skipTest(
                 f"Definí {REAL_DTE_DIR_ENV} para comparar contra el corpus real."
             )
-        path = directory / "emitidos" / name
+        path = Path(directory) / "emitidos" / name
         if not path.is_file():
             self.skipTest(f"No está la muestra {path}.")
         real = RealDte(path)
-        fixture = RealDteFixture(self.env, real, directory / "caf")
+        fixture = RealDteFixture(self.env, real, path.parents[1] / "caf")
         fixture.configure_company(self.company)
         partner = fixture.create_partner()
         document_type = self.env["l10n_latam.document.type"].search(
