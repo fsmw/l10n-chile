@@ -189,7 +189,9 @@ class TestRealDteParity(AccountTestInvoicingCommon):
 
     def _allowlist(self):
         if not ALLOWLIST_PATH.is_file():
-            return set(), set()
+            # El allowlist vive en docs/, que no se versiona: en un clone
+            # limpio no existe y la comparación es estricta.
+            return {}, set()
         payload = json.loads(ALLOWLIST_PATH.read_text(encoding="utf-8"))
         global_paths = {
             entry["path"] for entry in payload.get("global", []) if entry.get("path")
