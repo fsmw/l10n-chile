@@ -47,6 +47,15 @@ class TestDteXmlBuilder(AccountTestInvoicingCommon):
         cls.partner_a.country_id = cls.company.country_id
         cls.partner_a.vat = "60803000-K"
         cls.partner_a.l10n_cl_sii_taxpayer_type = "1"
+        # Mandatory data for the pre-emission validation.
+        cls.company.l10n_cl_dte_email = "dte@example.invalid"
+        cls.partner_a.write(
+            {
+                "l10n_cl_dte_email": "receptor@example.invalid",
+                "l10n_cl_activity_description": "Servicios de prueba",
+                "street": "Av. Siempre Viva 123",
+            }
+        )
         cls.document_type = cls.env["l10n_latam.document.type"].search(
             [("country_id.code", "=", "CL"), ("code", "=", "33")], limit=1
         )
@@ -1064,6 +1073,11 @@ class TestDteXmlBuilder(AccountTestInvoicingCommon):
                                     "account_id": self.company_data[
                                         "default_account_revenue"
                                     ].id,
+                                    "tax_ids": (
+                                        [(6, 0, self.tax_sale_a.ids)]
+                                        if code == "33"
+                                        else [(5, 0, 0)]
+                                    ),
                                 },
                             )
                         ],
@@ -1152,6 +1166,7 @@ class TestDteXmlBuilder(AccountTestInvoicingCommon):
                             "account_id": self.company_data[
                                 "default_account_revenue"
                             ].id,
+                            "tax_ids": [(6, 0, self.tax_sale_a.ids)],
                         },
                     )
                 ],
