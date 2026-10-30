@@ -214,6 +214,55 @@ class TestDteXmlBuilder(AccountTestInvoicingCommon):
         frmt = base64.b64decode(document.findtext(f"{{{DTE_NS}}}TED/{{{DTE_NS}}}FRMT"))
         key.public_key().verify(frmt, payload, padding.PKCS1v15(), hashes.SHA1())
 
+    def _activity_invoice(self):
+        return self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "company_id": self.company.id,
+                "journal_id": self.company_data["default_journal_sale"].id,
+                "partner_id": self.partner_a.id,
+                "invoice_date": "2026-10-28",
+                "l10n_latam_document_type_id": self.document_type.id,
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Servicio con actividades SII",
+                            "quantity": 1,
+                            "price_unit": 1000,
+                            "account_id": self.company_data[
+                                "default_account_revenue"
+                            ].id,
+                        },
+                    )
+                ],
+            }
+        )
+
+    def test_builder_emits_selected_activities_ordered_by_code(self):
+        activity_model = self.env["l10n_cl.dte.activity"]
+        high = activity_model.search([("code", "=", "522990")], limit=1)
+        low = activity_model.search([("code", "=", "011101")], limit=1)
+        self.assertTrue(high and low)
+        self.company.l10n_cl_dte_activity_ids = [(6, 0, [high.id, low.id])]
+        invoice = self._activity_invoice()
+        caf_root, _caf_key = self._caf("33", start=700, end=709)
+        certificate, _certificate_key = self._certificate()
+        dte = DteXmlBuilder(invoice, 700, caf_root, certificate).build()
+        codes = dte.xpath(".//*[local-name()='Emisor']/*[local-name()='Acteco']/text()")
+        self.assertEqual(codes, ["011101", "522990"])
+
+    def test_builder_falls_back_to_the_legacy_activity_code(self):
+        self.company.l10n_cl_dte_activity_ids = [(5, 0, 0)]
+        self.company.l10n_cl_dte_activity_code = "620200"
+        invoice = self._activity_invoice()
+        caf_root, _caf_key = self._caf("33", start=710, end=719)
+        certificate, _certificate_key = self._certificate()
+        dte = DteXmlBuilder(invoice, 710, caf_root, certificate).build()
+        codes = dte.xpath(".//*[local-name()='Emisor']/*[local-name()='Acteco']/text()")
+        self.assertEqual(codes, ["620200"])
+
     def test_normalize_rut_removes_chilean_country_prefix(self):
         self.assertEqual(normalize_rut("CL762012243"), "76201224-3")
         self.assertEqual(normalize_rut("CL76.201.224-3"), "76201224-3")

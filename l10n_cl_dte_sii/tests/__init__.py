@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from . import test_caf
+from . import test_activity_catalog
 from . import test_xml_signature
 from . import test_dte_views
 from . import test_dte_lifecycle

@@ -24,6 +24,9 @@ class L10nClDteCompanySettings(models.TransientModel):
     l10n_cl_dte_email = fields.Char(string="Correo DTE")
     l10n_cl_dte_activity = fields.Char(string="Giro")
     l10n_cl_dte_activity_code = fields.Char(string="Código de actividad económica SII")
+    l10n_cl_dte_activity_ids = fields.Many2many(
+        "l10n_cl.dte.activity", string="Actividades económicas SII"
+    )
     l10n_cl_dte_office_code = fields.Char(string="Código de oficina SII")
     l10n_cl_dte_resolution_number = fields.Char(string="Número de resolución SII")
     l10n_cl_dte_resolution_date = fields.Date(string="Fecha de resolución SII")
@@ -75,6 +78,10 @@ class L10nClDteCompanySettings(models.TransientModel):
         for field_name in config_fields:
             if field_name in fields_list:
                 values[field_name] = company[field_name]
+        if "l10n_cl_dte_activity_ids" in fields_list:
+            values["l10n_cl_dte_activity_ids"] = [
+                (6, 0, company.l10n_cl_dte_activity_ids.ids)
+            ]
         if "certificate_option" in fields_list:
             certificate = company.sudo().l10n_cl_dte_certificate_id
             values["certificate_option"] = str(certificate.id) if certificate else False
@@ -109,6 +116,9 @@ class L10nClDteCompanySettings(models.TransientModel):
                 "l10n_cl_dte_email": self.l10n_cl_dte_email,
                 "l10n_cl_dte_activity": self.l10n_cl_dte_activity,
                 "l10n_cl_dte_activity_code": self.l10n_cl_dte_activity_code,
+                "l10n_cl_dte_activity_ids": [
+                    (6, 0, self.l10n_cl_dte_activity_ids.ids)
+                ],
                 "l10n_cl_dte_office_code": self.l10n_cl_dte_office_code,
                 "l10n_cl_dte_resolution_number": self.l10n_cl_dte_resolution_number,
                 "l10n_cl_dte_resolution_date": self.l10n_cl_dte_resolution_date,

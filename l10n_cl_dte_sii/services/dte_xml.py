@@ -261,6 +261,14 @@ class DteXmlBuilder:
             return "55555555-5"
         return normalize_rut(partner.vat)
 
+    def _activity_codes(self):
+        """Códigos Acteco del emisor: catálogo primero, Char heredado de respaldo."""
+        codes = self.company.l10n_cl_dte_activity_ids.sorted("code").mapped("code")
+        if codes:
+            return codes
+        legacy = (self.company.l10n_cl_dte_activity_code or "").strip()
+        return [legacy] if legacy else []
+
     def _build_header(self, document):
         move = self.move
         company = self.company
@@ -304,8 +312,9 @@ class DteXmlBuilder:
             _put(issuer, "Telefono", company.phone, 20)
         if company.l10n_cl_dte_email and not voucher:
             _put(issuer, "CorreoEmisor", company.l10n_cl_dte_email, 80)
-        if company.l10n_cl_dte_activity_code and not voucher:
-            _add(issuer, "Acteco", company.l10n_cl_dte_activity_code)
+        if not voucher:
+            for activity_code in self._activity_codes():
+                _add(issuer, "Acteco", activity_code)
         journal = move.journal_id
         _put(
             issuer,
