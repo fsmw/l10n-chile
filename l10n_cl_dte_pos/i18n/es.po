@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"PO-Revision-Date: 2026-10-30 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_pos
+msgid "Boleta"
+msgstr "Boleta"
+
+#. module: l10n_cl_dte_pos
+msgid "Factura"
+msgstr "Factura"
+
+#. module: l10n_cl_dte_pos
+msgid "Documento tributario POS"
+msgstr "Documento tributario POS"
+
+#. module: l10n_cl_dte_pos
+msgid "Número de voucher"
+msgstr "Número de voucher"
+
+#. module: l10n_cl_dte_pos
+msgid "Estado SII"
+msgstr "Estado SII"
+
+#. module: l10n_cl_dte_pos
+msgid "TrackID SII"
+msgstr "TrackID SII"
+
+#. module: l10n_cl_dte_pos
+msgid "Folio DTE"
+msgstr "Folio DTE"
+
+#. module: l10n_cl_dte_pos
+msgid "No se puede devolver"
+msgstr "No se puede devolver"
+
+#. module: l10n_cl_dte_pos
+msgid "Número de voucher de tarjeta"
+msgstr "Número de voucher de tarjeta"
+
+#. module: l10n_cl_dte_pos
+msgid "Enviar DTE al SII"
+msgstr "Enviar DTE al SII"
+
+#. module: l10n_cl_dte_pos
+msgid "Consultar estado SII"
+msgstr "Consultar estado SII"
+
+#. module: l10n_cl_dte_pos
+msgid "Conciliar envío DTE incierto"
+msgstr "Conciliar envío DTE incierto"
+
+#. module: l10n_cl_dte_pos
+msgid "Documento DTE"
+msgstr "Documento DTE"
+
+#. module: l10n_cl_dte_pos
+msgid "Comprobante POS: DTE pendiente de sincronización"
+msgstr "Comprobante POS: DTE pendiente de sincronización"
+
+#. module: l10n_cl_dte_pos
+msgid "Timbre Electrónico SII"
+msgstr "Timbre Electrónico SII"
+
+#. module: l10n_cl_dte_pos
+msgid "Verifique el documento en www.sii.cl"
+msgstr "Verifique el documento en www.sii.cl"
+
+#. module: l10n_cl_dte_pos
+msgid "Pago con tarjeta"
+msgstr "Pago con tarjeta"
+
+#. module: l10n_cl_dte_pos
+msgid "Solicita el número de voucher en la caja chilena para este medio de pago. Actívelo sólo para pagos con tarjeta; un diario bancario también puede representar una transferencia u otro medio."
+msgstr "Solicita el número de voucher en la caja chilena para este medio de pago. Actívelo sólo para pagos con tarjeta; un diario bancario también puede representar una transferencia u otro medio."

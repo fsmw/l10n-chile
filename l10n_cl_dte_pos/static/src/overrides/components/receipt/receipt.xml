@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="l10n_cl_dte_pos.OrderReceipt"
+       t-inherit="point_of_sale.OrderReceipt"
+       t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="props.data.headerData.company.country_id?.code === 'CL'">
+                <div t-if="props.data.voucher_number" class="pos-receipt-order-data">
+                    Voucher: <t t-esc="props.data.voucher_number" />
+                </div>
+                <div t-if="props.data.l10n_cl_dte_ted_image"
+                     class="d-flex flex-column align-items-center pos-receipt-order-data">
+                    <img class="img-fluid w-100"
+                         t-attf-src="data:image/png;base64,{{props.data.l10n_cl_dte_ted_image}}" />
+                    <span>Timbre Electrónico SII</span>
+                    <span>Resolución N.º: <t t-out="props.data.l10n_cl_dte_resolution_number" /></span>
+                    <span>Fecha: <t t-out="props.data.l10n_cl_dte_resolution_date" /></span>
+                    <span>Verifique el documento en www.sii.cl</span>
+                </div>
+                <div t-elif="props.data.l10n_latam_document_type" class="text-center">
+                    DTE generado; timbre no disponible en este comprobante.
+                </div>
+                <div t-if="props.data.l10n_cl_dte_status" class="text-center">
+                    Estado SII: <t t-out="props.data.l10n_cl_dte_status_label" />
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

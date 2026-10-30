@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- POS access stays on point_of_sale's read-only POS-order rule. -->
+    <record id="point_of_sale.group_pos_user" model="res.groups">
+        <field
+            name="implied_ids"
+            eval="[(3, ref('l10n_cl_dte_sii.group_dte_user'))]"
+        />
+    </record>
+</odoo>
