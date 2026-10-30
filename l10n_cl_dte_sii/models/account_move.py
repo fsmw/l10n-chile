@@ -13,6 +13,9 @@ from ..services.incoming_dte_xml import validate_dte_element
 from ..services.sii_client import SiiDteClient, SiiTransportError
 
 OUTBOUND_DOCUMENT_CODES = {"33", "34", "39", "41", "56", "61"}
+# States in which the SII already owns the DTE lifecycle: the local journal
+# entry cannot be cancelled or reset to draft, only reversed.
+_DTE_BLOCKED_STATES = frozenset({"accepted", "objected", "ask_for_status"})
 _DTE_LIFECYCLE_LOCK_NAMESPACE = 0x4C43444C
 _DTE_LIFECYCLE_FIELDS = frozenset(
     {
@@ -89,6 +92,94 @@ class AccountMove(models.Model):
                     "documento original en lugar de crear una reversa."
                 )
             )
+
+    def _l10n_cl_dte_state_guard_moves(self):
+        """Return the moves whose DTE lifecycle is owned by the SII."""
+        return self.filtered(
+            lambda move: (
+                move.company_id.account_fiscal_country_id.code == "CL"
+                and move.l10n_latam_document_type_id
+            )
+        )
+
+    def _l10n_cl_check_dte_state(self, action):
+        """Refuse to cancel or reset a DTE already processed by the SII.
+
+        ``action`` is ``"cancel"`` or ``"draft"``. Both share the same blocked
+        states but report a different message. Moves without a fiscal document
+        type, and companies outside Chile, keep the standard behaviour.
+        """
+        if action not in ("cancel", "draft"):
+            raise ValueError(f"Unsupported DTE state guard action: {action}")
+        blocked = self._l10n_cl_dte_state_guard_moves().filtered(
+            lambda move: move.l10n_cl_dte_status in _DTE_BLOCKED_STATES
+        )
+        if not blocked:
+            return
+        move = blocked[0]
+        status = move.l10n_cl_dte_status
+        document_type = move.l10n_latam_document_type_id.display_name
+        if status == "ask_for_status":
+            if action == "cancel":
+                raise UserError(
+                    _(
+                        "El DTE %(document_type)s está en consulta de estado en "
+                        "el SII. No se puede cancelar hasta que el SII lo "
+                        "rechace; si resulta aceptado o aceptado con reparos, "
+                        "debe revertirse con un documento de reversa.",
+                        document_type=document_type,
+                    )
+                )
+            raise UserError(
+                _(
+                    "El DTE %(document_type)s está en consulta de estado en el "
+                    "SII. No se puede devolver a borrador hasta que el SII lo "
+                    "rechace; si resulta aceptado o aceptado con reparos, debe "
+                    "revertirse con un documento de reversa.",
+                    document_type=document_type,
+                )
+            )
+        status_label = dict(
+            move._fields["l10n_cl_dte_status"]._description_selection(self.env)
+        ).get(status, status)
+        if action == "cancel":
+            raise UserError(
+                _(
+                    "El DTE %(document_type)s está en estado SII "
+                    "«%(status)s». No se puede cancelar: el documento ya fue "
+                    "procesado por el SII y debe revertirse con un documento de "
+                    "reversa.",
+                    document_type=document_type,
+                    status=status_label,
+                )
+            )
+        raise UserError(
+            _(
+                "El DTE %(document_type)s está en estado SII «%(status)s». No "
+                "se puede devolver a borrador: el documento ya fue procesado "
+                "por el SII y debe revertirse con un documento de reversa.",
+                document_type=document_type,
+                status=status_label,
+            )
+        )
+
+    def button_cancel(self):
+        self._l10n_cl_check_dte_state("cancel")
+        result = super().button_cancel()
+        moves = self._l10n_cl_dte_state_guard_moves()
+        if moves:
+            moves._l10n_cl_write_dte_lifecycle_values(
+                {"l10n_cl_dte_status": "cancelled"}
+            )
+        return result
+
+    def button_draft(self):
+        self._l10n_cl_check_dte_state("draft")
+        result = super().button_draft()
+        moves = self._l10n_cl_dte_state_guard_moves()
+        if moves:
+            moves._l10n_cl_write_dte_lifecycle_values({"l10n_cl_dte_status": False})
+        return result
 
     def _l10n_cl_normalize_currency_name(self, currency_name):
         """Provide the currency label expected by Odoo's Chilean DTE totals."""
