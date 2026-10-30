@@ -12,6 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 
 from ..services.dte_xml import DteXmlBuilder, serialize_xml
 from ..services.incoming_dte_xml import validate_dte_element
+from ..services.pdf417 import render_ted_timbre
 from ..services.sii_client import SiiDteClient, SiiTransportError
 
 OUTBOUND_DOCUMENT_CODES = {"33", "34", "39", "41", "56", "61"}
@@ -360,6 +361,22 @@ class AccountMove(models.Model):
             move.l10n_cl_dte_has_envelope = bool(
                 move.l10n_cl_dte_envelope_attachment_id
             )
+
+    def _l10n_cl_dte_render_timbre(self):
+        """Return the base64 PNG of the signed DTE timbre, if there is one."""
+        self.ensure_one()
+        attachment = self.sudo().l10n_cl_dte_attachment_id
+        if not attachment:
+            return False
+        parser = etree.XMLParser(resolve_entities=False, no_network=True)
+        try:
+            root = etree.fromstring(attachment.raw, parser=parser)
+        except etree.XMLSyntaxError:
+            return False
+        ted = root.xpath("//*[local-name()='TED']")
+        if not ted:
+            return False
+        return render_ted_timbre(ted[0])
 
     @api.depends(
         "l10n_cl_dte_receiver_delivery_ids.state", "l10n_cl_dte_receiver_status"

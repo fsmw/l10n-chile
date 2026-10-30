@@ -1,14 +1,12 @@
 # Copyright 2026 Odoo Community Association (OCA)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-import base64
-from io import BytesIO
-
-import pdf417gen
 from lxml import etree
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+
+from odoo.addons.l10n_cl_dte_sii.services.pdf417 import render_ted_timbre
 
 
 class AccountMove(models.Model):
@@ -57,15 +55,4 @@ class AccountMove(models.Model):
 
     @api.model
     def _l10n_cl_dte_pos_render_ted(self, ted):
-        for node in ted.iter():
-            node.tag = etree.QName(node).localname
-        etree.cleanup_namespaces(ted)
-        payload = etree.tostring(ted, encoding="ISO-8859-1", xml_declaration=False)
-        barcode = pdf417gen.render_image(
-            pdf417gen.encode(payload, security_level=5, columns=13),
-            padding=15,
-            scale=1,
-        )
-        output = BytesIO()
-        barcode.save(output, "PNG")
-        return base64.b64encode(output.getvalue()).decode("ascii")
+        return render_ted_timbre(ted)

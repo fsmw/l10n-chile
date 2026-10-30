@@ -12,6 +12,7 @@ from . import test_dte_reversal
 from . import test_dte_reversal_tour
 from . import test_state_guards
 from . import test_pre_emission_validation
+from . import test_pdf417
 from . import test_legacy_migration
 from . import test_xmldsig_variants
 from . import test_real_dte_parity

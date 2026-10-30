@@ -12,6 +12,7 @@
     ),
     "license": "AGPL-3",
     "depends": ["l10n_cl", "account_edi", "account_debit_note", "certificate"],
+    "external_dependencies": {"python": ["pdf417gen"]},
     "data": [
         "security/security.xml",
         "security/dte_reconciliation_security.xml",
@@ -20,6 +21,7 @@
         "data/l10n_cl.dte.activity.csv",
         "views/account_move_views.xml",
         "views/account_move_search_views.xml",
+        "views/report_invoice.xml",
         "views/res_company_views.xml",
         "views/account_journal_views.xml",
         "views/certificate_views.xml",
