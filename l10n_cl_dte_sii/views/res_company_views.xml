@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_company_form_dte_sii" model="ir.ui.view">
+        <field name="name">res.company.form.dte.sii</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <field name="country_code" invisible="1" />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="DTE SII"
+                    name="dte_sii"
+                    groups="l10n_cl_dte_sii.group_dte_user"
+                    invisible="country_code != 'CL'"
+                >
+                    <group>
+                        <group string="Emisor">
+                            <field
+                                name="l10n_cl_dte_environment"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_email"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_activity"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_activity_code"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_activity_ids"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                widget="many2many_tags"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_office_code"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_certificate_status"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                        </group>
+                        <group string="Resolución">
+                            <field
+                                name="l10n_cl_dte_resolution_number"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                            <field
+                                name="l10n_cl_dte_resolution_date"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                readonly="1"
+                            />
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status">
+                        Gestores: abra Facturación &gt; Configuración &gt; Configurar emisor DTE para editar ambiente, resolución, giro y certificado. Configure el diario electrónico en su ficha y verifique que haya un CAF activo para cada tipo de documento.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

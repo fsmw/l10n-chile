@@ -1477,8 +1477,6 @@ class TestRcvExportReconciliation(AccountTestInvoicingCommon):
         self.assertEqual(unrelated.automation_error, "Keep this unrelated diagnostic")
 
     def test_exempt_dte61_rejects_taxed_source(self):
-        if "l10n_cl_dte_file" not in self.env["account.move"]._fields:
-            raise unittest.SkipTest("requires l10n_cl_edi")
         vat = self.env["account.tax"].create(
             {
                 "name": "Taxed source for DTE 61 guard",
@@ -1496,8 +1494,6 @@ class TestRcvExportReconciliation(AccountTestInvoicingCommon):
         self.assertEqual(document.reconciliation_state, "amount_diff")
 
     def test_exempt_dte61_requires_matching_period_and_amount(self):
-        if "l10n_cl_dte_file" not in self.env["account.move"]._fields:
-            raise unittest.SkipTest("requires l10n_cl_edi")
         _source, _refund, document = self._exempt_dte61(folio="705")
         document.tax_period = "202610"
 

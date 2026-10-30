@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_dte_outgoing" model="ir.actions.act_window">
+        <field name="name">DTE de salida</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field
+            name="search_view_id"
+            ref="l10n_cl_dte_sii.view_account_invoice_filter_dte_sii"
+        />
+        <field
+            name="domain"
+        >[('move_type', 'in', ('out_invoice', 'out_refund')), ('state', '=', 'posted'), ('l10n_cl_dte_status', '!=', False)]</field>
+        <field
+            name="context"
+        >{'default_move_type': 'out_invoice', 'search_default_dte_not_sent': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Todavía no hay DTE de salida</p>
+            <p
+            >Configure la compañía, el diario electrónico, el certificado y un CAF vigente. Luego emita una factura o nota desde Clientes.</p>
+        </field>
+    </record>
+    <record id="action_dte_company_settings" model="ir.actions.act_window">
+        <field name="name">Configuración DTE SII</field>
+        <field name="res_model">l10n_cl.dte.company.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="l10n_cl_dte_sii.view_dte_company_settings_form" />
+        <field name="target">new</field>
+    </record>
+    <record id="action_dte_outgoing_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="l10n_cl_dte_sii.view_out_invoice_list_dte_sii" />
+        <field name="act_window_id" ref="l10n_cl_dte_sii.action_dte_outgoing" />
+    </record>
+    <menuitem
+        id="menu_dte_outgoing"
+        name="DTE de salida"
+        parent="account.menu_finance_receivables"
+        action="action_dte_outgoing"
+        sequence="35"
+        groups="l10n_cl_dte_sii.group_dte_user"
+    />
+    <menuitem
+        id="menu_dte_caf"
+        name="CAF y folios"
+        parent="account.menu_finance_configuration"
+        action="action_dte_caf"
+        sequence="85"
+        groups="l10n_cl_dte_sii.group_dte_manager"
+    />
+    <menuitem
+        id="menu_dte_caf_upload"
+        name="Importar CAF"
+        parent="account.menu_finance_configuration"
+        action="action_dte_caf_upload"
+        sequence="86"
+        groups="l10n_cl_dte_sii.group_dte_manager"
+    />
+    <menuitem
+        id="menu_dte_company_settings"
+        name="Configurar emisor DTE"
+        parent="account.menu_finance_configuration"
+        action="action_dte_company_settings"
+        sequence="87"
+        groups="l10n_cl_dte_sii.group_dte_manager"
+    />
+</odoo>

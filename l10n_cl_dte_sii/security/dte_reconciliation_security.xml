@@ -1,0 +1,14 @@
+<odoo>
+    <record id="rule_dte_reconciliation_company" model="ir.rule">
+        <field name="name">DTE reconciliations by allowed company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_reconciliation" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_sii.group_dte_user'))]" />
+    </record>
+    <record id="rule_dte_reconciliation_wizard_company" model="ir.rule">
+        <field name="name">DTE reconciliation wizards by allowed company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_reconciliation_wizard" />
+        <field name="domain_force">[('move_id.company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_sii.group_dte_manager'))]" />
+    </record>
+</odoo>

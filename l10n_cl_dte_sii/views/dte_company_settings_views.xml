@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_dte_company_settings_form" model="ir.ui.view">
+        <field name="name">l10n.cl.dte.company.settings.form</field>
+        <field name="model">l10n_cl.dte.company.settings</field>
+        <field name="arch" type="xml">
+            <form string="Configuración DTE SII">
+                <group>
+                    <field name="company_id" />
+                </group>
+                <group>
+                    <group string="Emisor">
+                        <field name="l10n_cl_dte_environment" />
+                        <field name="l10n_cl_dte_email" />
+                        <field name="l10n_cl_dte_activity" />
+                        <field name="l10n_cl_dte_activity_code" />
+                        <field
+                            name="l10n_cl_dte_activity_ids"
+                            widget="many2many_tags"
+                        />
+                        <field name="l10n_cl_dte_office_code" />
+                        <field name="certificate_option" />
+                    </group>
+                    <group string="Resolución">
+                        <field name="l10n_cl_dte_resolution_number" />
+                        <field name="l10n_cl_dte_resolution_date" />
+                    </group>
+                </group>
+                <div class="alert alert-info" role="status">
+                    Solo aparecen certificados activos de esta compañía. El archivo y
+                    la clave privada se administran con los permisos de Certificates.
+                </div>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Guardar configuración"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancelar" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

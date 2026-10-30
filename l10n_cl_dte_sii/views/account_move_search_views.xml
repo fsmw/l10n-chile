@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_account_invoice_filter_dte_sii" model="ir.ui.view">
+        <field name="name">account.move.search.dte.sii</field>
+        <field name="model">account.move</field>
+        <field
+            name="inherit_id"
+            ref="l10n_latam_invoice_document.view_account_invoice_filter"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator />
+                <filter
+                    name="dte_not_sent"
+                    string="Pendientes de envío"
+                    domain="[('l10n_cl_dte_status', '=', 'not_sent')]"
+                />
+                <filter
+                    name="dte_ask_for_status"
+                    string="En consulta"
+                    domain="[('l10n_cl_dte_status', '=', 'ask_for_status')]"
+                />
+                <filter
+                    name="dte_accepted"
+                    string="Aceptados"
+                    domain="[('l10n_cl_dte_status', '=', 'accepted')]"
+                />
+                <filter
+                    name="dte_objected"
+                    string="Con reparos"
+                    domain="[('l10n_cl_dte_status', '=', 'objected')]"
+                />
+                <filter
+                    name="dte_rejected"
+                    string="Rechazados"
+                    domain="[('l10n_cl_dte_status', '=', 'rejected')]"
+                />
+                <group expand="0" string="Agrupar por">
+                    <filter
+                        name="group_dte_status"
+                        string="Estado DTE"
+                        context="{'group_by': 'l10n_cl_dte_status'}"
+                    />
+                    <filter
+                        name="group_dte_type"
+                        string="Tipo de DTE"
+                        context="{'group_by': 'l10n_cl_dte_type_code'}"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

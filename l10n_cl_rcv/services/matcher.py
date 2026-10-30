@@ -288,7 +288,7 @@ class RcvMatcher(models.AbstractModel):
             amount_diff = any(
                 not currency.is_zero(rcv_amount - move_amount)
                 for rcv_amount, move_amount in amount_fields
-            )
+            ) or self._dte61_source_is_defective(document, move)
             (
                 tax_state,
                 tax_diff,
@@ -857,7 +857,32 @@ class RcvMatcher(models.AbstractModel):
         )
 
     @api.model
+    def _dte61_source_is_defective(self, document, move):
+        """Return whether an exempt 61 has a provable but rejected source.
+
+        A missing, unposted or wrong-type source is a review case. A posted
+        type 34 source that is taxed, or a 61 whose own amounts are
+        inconsistent, is an amount difference.
+        """
+        source = move.reversed_entry_id
+        if not (
+            document.operation == "sale"
+            and document.document_type_code == "61"
+            and move.move_type == "out_refund"
+            and source
+            and source.state == "posted"
+            and source.l10n_latam_document_type_id.code == "34"
+        ):
+            return False
+        if self._move_has_nonzero_taxes(source):
+            return True
+        currency = document.currency_id
+        return not currency.is_zero(document.exempt_amount - document.total_amount)
+
+    @api.model
     def _compare_tax_components(self, document, move):
+        if self._dte61_source_is_defective(document, move):
+            return "different", True
         if not document.tax_breakdown_available:
             return "not_comparable", False
         if document.operation == "purchase":

@@ -2,21 +2,14 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 import base64
 import os
-import unittest
 from datetime import date
 from unittest.mock import patch
 
 from odoo import api
-from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase, tagged
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged
 
-try:
-    from odoo.addons.l10n_cl_edi.tests.common import TestL10nClEdiCommon
-
-    HAS_DTE_LOCALIZATION = True
-except ImportError:  # l10n_cl_edi is an optional, non-OCA dependency.
-    TestL10nClEdiCommon = TransactionCase
-    HAS_DTE_LOCALIZATION = False
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 from ..services.identity import DteIdentity
 from ..services.recovery_service import RecoveryResult
@@ -24,11 +17,28 @@ from ..services.xml_dte import extract_candidates
 
 
 @tagged("post_install", "-at_install")
-@unittest.skipUnless(HAS_DTE_LOCALIZATION, "requires l10n_cl_edi")
-class TestDteRecoveryPersistence(TestL10nClEdiCommon):
+class TestDteRecoveryPersistence(AccountTestInvoicingCommon):
     """The recovery path must attach evidence, never generate accounting."""
 
-    def test_wizard_rejects_non_positive_folio(self):
+    @classmethod
+    @AccountTestInvoicingCommon.setup_country("cl")
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company = cls.company_data["company"]
+        cls.company.partner_id.vat = "76543210-3"
+        cls.sale_journal = cls.company_data["default_journal_sale"]
+        cls.partner_sii = cls.env["res.partner"].create(
+            {
+                "name": "SII customer",
+                "vat": "76086428-5",
+                "country_id": cls.env.ref("base.cl").id,
+                "l10n_latam_identification_type_id": cls.env.ref("l10n_cl.it_RUT").id,
+                "l10n_cl_sii_taxpayer_type": "1",
+            }
+        )
+        cls.has_dte_fields = "l10n_cl_dte_status" in cls.env["account.move"]._fields
+
+    def _add_recovery_group(self):
         self.env.user.write(
             {
                 "groups_id": [
@@ -41,11 +51,13 @@ class TestDteRecoveryPersistence(TestL10nClEdiCommon):
                 ],
             }
         )
-        company = self.company_data["company"]
-        company.partner_id.write({"vat": "765432103"})
+
+    def test_wizard_rejects_non_positive_folio(self):
+        self._add_recovery_group()
+        self.company.partner_id.write({"vat": "765432103"})
         wizard = self.env["l10n_cl.dte.recovery.wizard"].create(
             {
-                "company_id": company.id,
+                "company_id": self.company.id,
                 "dte_type": "33",
                 "folio": 0,
                 "date_from": date(2026, 8, 1),
@@ -96,61 +108,53 @@ class TestDteRecoveryPersistence(TestL10nClEdiCommon):
         analytic = self.env["account.analytic.account"].create(
             {
                 "name": "Recovered DTE project",
-                "company_id": self.company_data["company"].id,
+                "company_id": self.company.id,
                 "plan_id": plan.id,
             }
         )
-        invoice = self.env["account.move"].create(
-            {
-                "partner_id": self.partner_sii.id,
-                "move_type": "out_invoice",
-                "invoice_date": "2026-09-04",
-                "journal_id": self.sale_journal.id,
-                "l10n_latam_document_type_id": document_type.id,
-                "l10n_latam_document_number": "224",
-                "company_id": self.company_data["company"].id,
-                "l10n_cl_mipyme_imported": True,
-                "l10n_cl_mipyme_xml_total": 100,
-                "l10n_cl_dte_status": "manual",
-                "invoice_line_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "name": "Recovered exempt service",
-                            "account_id": self.sale_journal.default_account_id.id,
-                            "quantity": 1,
-                            "price_unit": 100,
-                        },
-                    )
-                ],
-            }
-        )
+        values = {
+            "partner_id": self.partner_sii.id,
+            "move_type": "out_invoice",
+            "invoice_date": "2026-09-04",
+            "journal_id": self.sale_journal.id,
+            "l10n_latam_document_type_id": document_type.id,
+            "l10n_latam_document_number": "224",
+            "company_id": self.company.id,
+            "l10n_cl_mipyme_imported": True,
+            "l10n_cl_mipyme_xml_total": 100,
+            "invoice_line_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "name": "Recovered exempt service",
+                        "account_id": self.sale_journal.default_account_id.id,
+                        "quantity": 1,
+                        "price_unit": 100,
+                    },
+                )
+            ],
+        }
+        if self.has_dte_fields:
+            values["l10n_cl_dte_status"] = "manual"
+        invoice = self.env["account.move"].create(values)
         self.assertEqual(invoice.state, "draft")
         invoice.invoice_line_ids.analytic_distribution = {str(analytic.id): 100}
-        with patch.object(type(invoice), "l10n_cl_send_dte_to_sii") as send_dte:
+        if self.has_dte_fields:
+            with patch.object(
+                type(invoice), "l10n_cl_send_dte_to_sii", create=True
+            ) as send_dte:
+                invoice.action_post()
+            send_dte.assert_not_called()
+            self.assertEqual(invoice.l10n_cl_dte_status, "accepted")
+        else:
             invoice.action_post()
         self.assertEqual(invoice.state, "posted")
-        self.assertEqual(invoice.l10n_cl_dte_status, "accepted")
-        send_dte.assert_not_called()
-        with self.assertRaises(ValidationError):
-            invoice.write({"partner_id": self.company_data["company"]["partner_id"].id})
+        with self.assertRaises(UserError):
+            invoice.write({"partner_id": self.company.partner_id.id})
 
     def test_recovery_associates_one_existing_invoice_idempotently(self):
-        self.env.user.write(
-            {
-                "groups_id": [
-                    (
-                        4,
-                        self.env.ref(
-                            "l10n_cl_dte_mipyme_recovery.group_mipyme_recovery_user"
-                        ).id,
-                    )
-                ],
-            }
-        )
-        company = self.company_data["company"]
-        company.partner_id.write({"vat": "765432103"})
+        self._add_recovery_group()
         document_type = self.env.ref("l10n_cl.dc_a_f_dte")
         invoice = self.env["account.move"].create(
             {
@@ -160,7 +164,7 @@ class TestDteRecoveryPersistence(TestL10nClEdiCommon):
                 "journal_id": self.sale_journal.id,
                 "l10n_latam_document_type_id": document_type.id,
                 "l10n_latam_document_number": "42",
-                "company_id": company.id,
+                "company_id": self.company.id,
                 "invoice_line_ids": [
                     (
                         0,
@@ -194,22 +198,26 @@ class TestDteRecoveryPersistence(TestL10nClEdiCommon):
         recovery_model = self.env["l10n_cl.dte.recovery"]
         self.assertEqual(invoice.l10n_latam_document_type_id.code, "33")
         self.assertEqual(
-            recovery_model._matching_moves(company, result.identity), invoice
+            recovery_model._matching_moves(self.company, result.identity), invoice
         )
         recovery = recovery_model.persist_result(
-            result, company, date(2026, 8, 1), date(2026, 8, 31)
+            result, self.company, date(2026, 8, 1), date(2026, 8, 31)
         )
         self.assertEqual(recovery.status, "recovered")
         self.assertEqual(recovery.move_id, invoice)
         self.assertEqual(invoice.state, "draft")
         self.assertEqual(invoice.amount_total, amount_before)
-        self.assertEqual(invoice.l10n_cl_dte_file, recovery.attachment_id)
+        if self.has_dte_fields:
+            self.assertEqual(invoice.l10n_cl_dte_file, recovery.attachment_id)
+        else:
+            self.assertEqual(recovery.attachment_id.res_model, "account.move")
+            self.assertEqual(recovery.attachment_id.res_id, invoice.id)
         self.assertEqual(
             base64.b64decode(recovery.attachment_id.datas), candidate.raw_xml
         )
 
         rerun = recovery_model.persist_result(
-            result, company, date(2026, 8, 1), date(2026, 8, 31)
+            result, self.company, date(2026, 8, 1), date(2026, 8, 31)
         )
         self.assertEqual(rerun, recovery)
         self.assertEqual(

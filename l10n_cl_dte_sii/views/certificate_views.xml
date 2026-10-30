@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_certificate_form_dte_sii" model="ir.ui.view">
+        <field name="name">certificate.certificate.form.dte.sii</field>
+        <field name="model">certificate.certificate</field>
+        <field name="inherit_id" ref="certificate.certificate_certificate_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='serial_number']" position="after">
+                <field name="company_id" groups="l10n_cl_dte_sii.group_dte_manager" />
+                <field name="user_id" groups="l10n_cl_dte_sii.group_dte_manager" />
+                <field
+                    name="subject_serial_number"
+                    string="RUT del firmante"
+                    groups="l10n_cl_dte_sii.group_dte_manager"
+                />
+                <field
+                    name="date_end"
+                    string="Válido hasta"
+                    readonly="1"
+                    groups="l10n_cl_dte_sii.group_dte_manager"
+                />
+                <field
+                    name="is_valid"
+                    string="Certificado vigente"
+                    readonly="1"
+                    groups="l10n_cl_dte_sii.group_dte_manager"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
