@@ -3,6 +3,7 @@
 
 from . import account_move
 from . import dte_receiver_delivery
+from . import l10n_cl_dte_activity
 from . import l10n_cl_dte_caf
 from . import res_company
 from . import account_journal

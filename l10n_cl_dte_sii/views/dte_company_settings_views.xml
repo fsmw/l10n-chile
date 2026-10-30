@@ -14,6 +14,10 @@
                         <field name="l10n_cl_dte_email" />
                         <field name="l10n_cl_dte_activity" />
                         <field name="l10n_cl_dte_activity_code" />
+                        <field
+                            name="l10n_cl_dte_activity_ids"
+                            widget="many2many_tags"
+                        />
                         <field name="l10n_cl_dte_office_code" />
                         <field name="certificate_option" />
                     </group>

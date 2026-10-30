@@ -41,6 +41,18 @@ class ResCompany(models.Model):
         string="Código de actividad económica SII",
         groups="l10n_cl_dte_sii.group_dte_manager",
     )
+    l10n_cl_dte_activity_ids = fields.Many2many(
+        "l10n_cl.dte.activity",
+        relation="res_company_l10n_cl_dte_activity_rel",
+        column1="company_id",
+        column2="activity_id",
+        string="Actividades económicas SII",
+        help=(
+            "Códigos de actividad registrados ante el SII. El DTE emite hasta "
+            "cuatro elementos Acteco, ordenados por código."
+        ),
+        groups="l10n_cl_dte_sii.group_dte_manager",
+    )
     l10n_cl_dte_certificate_id = fields.Many2one(
         "certificate.certificate",
         string="Certificado asignado",

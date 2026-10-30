@@ -3,7 +3,7 @@
 
 {
     "name": "Chile - SII DTE Emission",
-    "version": "18.0.6.0.0",
+    "version": "18.0.7.0.0",
     "category": "Accounting/Localizations/EDI",
     "summary": "Emite y consulta DTE de salida ante el SII",
     "author": (
@@ -17,6 +17,7 @@
         "security/dte_reconciliation_security.xml",
         "security/ir.model.access.csv",
         "data/mail_template_data.xml",
+        "data/l10n_cl.dte.activity.csv",
         "views/account_move_views.xml",
         "views/account_move_search_views.xml",
         "views/res_company_views.xml",

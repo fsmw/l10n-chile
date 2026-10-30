@@ -38,6 +38,12 @@
                                 readonly="1"
                             />
                             <field
+                                name="l10n_cl_dte_activity_ids"
+                                groups="l10n_cl_dte_sii.group_dte_manager"
+                                widget="many2many_tags"
+                                readonly="1"
+                            />
+                            <field
                                 name="l10n_cl_dte_office_code"
                                 groups="l10n_cl_dte_sii.group_dte_manager"
                                 readonly="1"
