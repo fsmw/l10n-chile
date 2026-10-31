@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="dte_invoice_information" inherit_id="l10n_cl.informations">
+        <xpath expr="//div[@id='informations']" position="after">
+            <t
+                t-if="o.l10n_cl_dte_attachment_id and not o.l10n_latam_document_type_id._is_doc_type_export()"
+                name="l10n_cl_dte_timbre"
+            >
+                <t t-set="dte_issuer" t-value="o.company_id.sudo()" />
+                <t t-set="dte_timbre" t-value="o._l10n_cl_dte_render_timbre()" />
+                <div class="row mt8 mb8" id="l10n_cl_dte_timbre">
+                    <div class="col-5">
+                        <img
+                            t-if="dte_timbre"
+                            t-att-src="'data:image/png;base64,%s' % dte_timbre"
+                            style="max-width: 100%; max-height: 145px;"
+                            alt="Timbre electrónico SII"
+                        />
+                        <div class="text-center small">
+                            Timbre electrónico SII<br />
+                            Resolución Nº <span
+                                t-field="dte_issuer.l10n_cl_dte_resolution_number"
+                            />
+                            del <span
+                                t-field="dte_issuer.l10n_cl_dte_resolution_date"
+                            /><br />
+                            Verifique el documento en www.sii.cl
+                        </div>
+                    </div>
+                    <div class="col-7" t-if="o.l10n_cl_reference_ids">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>Motivo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="o.l10n_cl_reference_ids"
+                                    t-as="reference"
+                                >
+                                    <td
+                                        t-out="reference.l10n_cl_reference_doc_type_id.display_name"
+                                    />
+                                    <td t-out="reference.origin_doc_number" />
+                                    <td
+                                        t-out="reference.date"
+                                        t-options='{"widget": "date"}'
+                                    />
+                                    <td t-out="reference.reason or ''" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div
+                    class="text-end"
+                    t-if="o.currency_id != o.company_id.currency_id"
+                >
+                    <strong>Total en <span
+                            t-out="o.company_id.currency_id.name"
+                        />:</strong>
+                    <span
+                        t-out="abs(o.amount_total_signed)"
+                        t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"
+                    />
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
