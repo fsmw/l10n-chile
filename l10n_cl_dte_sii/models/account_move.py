@@ -2,9 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
-from datetime import datetime
 
-import pytz
 from lxml import etree
 
 from odoo import _, api, fields, models
@@ -543,19 +541,27 @@ class AccountMove(models.Model):
                 )
             )
 
+    def _l10n_cl_stamp_date(self, at=None):
+        """Date of the stamp in the timezone used to write TmstFirma."""
+        return fields.Datetime.context_timestamp(
+            self, at or fields.Datetime.now()
+        ).date()
+
     def _l10n_cl_check_stamp_date(self):
-        """The stamp cannot be earlier than the invoice issue date."""
+        """The stamp cannot be earlier than the invoice issue date.
+
+        TmstFirma is written in the record timezone, so the comparison uses the
+        same frame. A fixed America/Santiago date rejected documents dated today
+        by users whose timezone is ahead of Chile.
+        """
         if not self.invoice_date:
             return
-        stamp_date = (
-            datetime.now(pytz.UTC).astimezone(pytz.timezone("America/Santiago")).date()
-        )
-        if stamp_date < self.invoice_date:
+        if self._l10n_cl_stamp_date() < self.invoice_date:
             raise ValidationError(
                 _(
                     "La fecha de timbre no puede ser anterior a la fecha de "
                     "emisión (%(invoice_date)s). Revise la fecha del documento "
-                    "o la zona horaria America/Santiago.",
+                    "o la zona horaria del usuario.",
                     invoice_date=fields.Date.to_string(self.invoice_date),
                 )
             )

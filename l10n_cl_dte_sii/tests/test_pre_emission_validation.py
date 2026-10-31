@@ -2,11 +2,13 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import os
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
+from unittest import mock
 
 import pytz
 
+from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -137,13 +139,52 @@ class TestPreEmissionValidation(AccountTestInvoicingCommon):
         move = self._make_move(code="39", taxes=self.vat)
         move._l10n_cl_edi_post_validation()
 
+    def _context_date(self, tz, offset=0, at=None):
+        stamp = fields.Datetime.context_timestamp(
+            self.env["account.move"].with_context(tz=tz),
+            at or fields.Datetime.now(),
+        )
+        return stamp.date() + timedelta(days=offset)
+
     def test_stamp_date_rule_allows_today(self):
         move = self._make_move(invoice_date=self._chile_date(), taxes=self.vat)
         move._l10n_cl_edi_post_validation()
 
     def test_stamp_date_rule_blocks_future_invoice(self):
-        move = self._make_move(invoice_date=self._chile_date(1), taxes=self.vat)
+        move = self._make_move(
+            invoice_date=self._context_date("UTC", 2), taxes=self.vat
+        ).with_context(tz="UTC")
         with self.assertRaisesRegex(ValidationError, "fecha de timbre"):
+            move._l10n_cl_edi_post_validation()
+
+    def test_stamp_date_uses_the_record_timezone(self):
+        at = datetime(2026, 10, 31, 1, 0)  # UTC: 22:00 the day before in Chile
+        move = self._make_move(invoice_date=self._context_date("UTC", at=at))
+        self.assertEqual(
+            move.with_context(tz="UTC")._l10n_cl_stamp_date(at), date(2026, 10, 31)
+        )
+        self.assertEqual(
+            move.with_context(tz="America/Santiago")._l10n_cl_stamp_date(at),
+            date(2026, 10, 30),
+        )
+
+    def test_stamp_date_allows_a_document_dated_today_in_the_user_timezone(self):
+        """Night in Chile, next day for the user: the document is still valid.
+
+        The stamp is written in the record timezone, so an invoice dated today
+        for a user in UTC must not be rejected while Chile is still yesterday.
+        """
+        at = datetime(2026, 10, 31, 1, 0)  # UTC: 22:00 the day before in Chile
+        move = self._make_move(invoice_date=date(2026, 10, 31), taxes=self.vat)
+        move = move.with_context(tz="UTC")
+        with mock.patch.object(
+            type(move),
+            "_l10n_cl_stamp_date",
+            autospec=True,
+            side_effect=lambda record: fields.Datetime.context_timestamp(
+                record, at
+            ).date(),
+        ):
             move._l10n_cl_edi_post_validation()
 
     def test_receiver_activity_rule_blocks_missing_activity(self):
