@@ -1,0 +1,21 @@
+{
+    "name": "Chile - DTE Account Integration",
+    "summary": "Issue SII type-33 electronic documents from posted invoices",
+    "version": "18.0.1.0.0",
+    "category": "Accounting/Localizations",
+    "author": "Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/l10n-chile",
+    "license": "AGPL-3",
+    "depends": [
+        "l10n_cl",
+        "account_edi",
+        "l10n_cl_dte_core",
+        "l10n_cl_dte_caf",
+        "l10n_cl_dte_xml",
+        "l10n_cl_dte_gateway",
+    ],
+    "data": ["views/account_move_views.xml"],
+    "installable": True,
+    "application": False,
+    "maintainers": ["fsmw"],
+}
