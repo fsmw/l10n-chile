@@ -1,0 +1,630 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_cl_dte_core
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:20+0000\n"
+"PO-Revision-Date: 2026-11-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.10.3\n"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A DTE folio cannot be negative."
+msgstr "El folio de un DTE no puede ser negativo."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A DTE must be created in its initial unnumbered state."
+msgstr "El DTE debe crearse en su estado inicial, sin numerar."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A folio cannot be assigned before the numbered state."
+msgstr "No se puede asignar un folio antes de pasar al estado numerado."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A folio must be reserved before preparing XML."
+msgstr "Se debe reservar un folio antes de preparar el XML."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A folio number can only be assigned with the numbered state."
+msgstr "El número de folio solo se puede asignar en el estado numerado."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A positive folio is required after the numbered state."
+msgstr "Se requiere un folio positivo después de pasar al estado numerado."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A positive folio number is required for the numbered state."
+msgstr "Se requiere un número de folio positivo para el estado numerado."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.constraint,message:l10n_cl_dte_core.constraint_l10n_cl_electronic_document_source_key_company_uniq
+msgid "A source invoice can only have one electronic document per company."
+msgstr ""
+"Una factura de origen solo puede tener un documento electrónico por compañía."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A source snapshot and its digest are required before XML preparation."
+msgstr ""
+"Se requieren una instantánea del origen y su resumen criptográfico antes de "
+"preparar el XML."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A source snapshot must be recorded before XML preparation."
+msgstr "Se debe registrar una instantánea del origen antes de preparar el XML."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A valid DTE state is required."
+msgstr "Se requiere un estado de DTE válido."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__accepted
+msgid "Accepted"
+msgstr "Aceptado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__actor_id
+msgid "Actor"
+msgstr "Actor"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "An unknown remote outcome must include a correlation key."
+msgstr "Un resultado remoto desconocido debe incluir una clave de correlación."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__artifact_id
+msgid "Artifact"
+msgstr "Artefacto"
+
+#. module: l10n_cl_dte_core
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_core.view_electronic_document_form
+msgid "Audit Events"
+msgstr "Eventos de auditoría"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_event.py:0
+msgid "Audit events can only be created by DTE actions."
+msgstr ""
+"Los eventos de auditoría solo se pueden crear mediante acciones del DTE."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__byte_count
+msgid "Byte Count"
+msgstr "Cantidad de bytes"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__authorized
+msgid "CAF Authorized"
+msgstr "CAF autorizado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__caf_source
+msgid "CAF Source"
+msgstr "Origen del CAF"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__res_company__dte_environment__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_core
+#: model:ir.ui.menu,name:l10n_cl_dte_core.menu_dte_root
+msgid "Chilean DTE"
+msgstr "DTE chileno"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model,name:l10n_cl_dte_core.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr "Documento tributario electrónico chileno"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model,name:l10n_cl_dte_core.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__content
+msgid "Content"
+msgstr "Contenido"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__correlation_key
+msgid "Correlation Key"
+msgstr "Clave de correlación"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__created_at
+msgid "Created At"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model,name:l10n_cl_dte_core.model_l10n_cl_electronic_event
+msgid "DTE Audit Event"
+msgstr "Evento de auditoría del DTE"
+
+#. module: l10n_cl_dte_core
+#: model:res.groups,name:l10n_cl_dte_core.group_dte_manager
+msgid "DTE Manager"
+msgstr "Responsable de DTE"
+
+#. module: l10n_cl_dte_core
+#: model:res.groups,name:l10n_cl_dte_core.group_dte_user
+msgid "DTE User"
+msgstr "Usuario de DTE"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_event.py:0
+msgid "DTE audit events are immutable."
+msgstr "Los eventos de auditoría del DTE son inmutables."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_event.py:0
+msgid "DTE audit events cannot be deleted."
+msgstr "No se pueden eliminar los eventos de auditoría del DTE."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "DTE evidence cannot be deleted."
+msgstr "No se puede eliminar la evidencia del DTE."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "DTE evidence is immutable."
+msgstr "La evidencia del DTE es inmutable."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid ""
+"DTE identity and state fields can only change through validated actions."
+msgstr ""
+"La identidad y los campos de estado del DTE solo pueden cambiar mediante "
+"acciones validadas."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__document_id
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__document_code
+msgid "Document Code"
+msgstr "Código de documento"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_res_company__dte_environment
+msgid "Dte Environment"
+msgstr "Entorno DTE"
+
+#. module: l10n_cl_dte_core
+#: model:ir.actions.act_window,name:l10n_cl_dte_core.action_electronic_document
+#: model:ir.ui.menu,name:l10n_cl_dte_core.menu_electronic_documents
+msgid "Electronic Documents"
+msgstr "Documentos electrónicos"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Electronic tax documents cannot be deleted."
+msgstr "No se pueden eliminar los documentos tributarios electrónicos."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Electronic tax documents cannot be duplicated."
+msgstr "No se pueden duplicar los documentos tributarios electrónicos."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__encoding
+msgid "Encoding"
+msgstr "Codificación"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__event_ids
+msgid "Event"
+msgstr "Evento"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__event_code
+msgid "Event Code"
+msgstr "Código del evento"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+#: code:addons/l10n_cl_dte_core/models/electronic_event.py:0
+msgid "Event codes must use lowercase letters, digits and underscores."
+msgstr ""
+"Los códigos de evento solo pueden contener letras minúsculas, números y "
+"guiones bajos."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__artifact_ids
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_core.view_electronic_document_form
+msgid "Evidence"
+msgstr "Evidencia"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Evidence content is required."
+msgstr "El contenido de la evidencia es obligatorio."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Evidence must be valid base64 content."
+msgstr "La evidencia debe contener datos Base64 válidos."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_event__state_domain__fiscal
+msgid "Fiscal"
+msgstr "Fiscal"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__fiscal_state
+msgid "Fiscal State"
+msgstr "Estado fiscal"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__numbered
+msgid "Folio Reserved"
+msgstr "Folio reservado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__from_state
+msgid "From State"
+msgstr "Estado de origen"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model,name:l10n_cl_dte_core.model_l10n_cl_electronic_artifact
+msgid "Immutable DTE Evidence Artifact"
+msgstr "Artefacto de evidencia inmutable del DTE"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__message
+msgid "Message"
+msgstr "Mensaje"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__mimetype
+msgid "Mimetype"
+msgstr "Tipo MIME"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__occurred_at
+msgid "Occurred At"
+msgstr "Fecha y hora del evento"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Only a DTE manager can add evidence."
+msgstr "Solo un responsable de DTE puede agregar evidencia."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Only a DTE manager can change document state."
+msgstr "Solo un responsable de DTE puede cambiar el estado del documento."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Only a DTE manager can record a source snapshot."
+msgstr "Solo un responsable de DTE puede registrar una instantánea del origen."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Only a DTE manager can verify evidence content."
+msgstr ""
+"Solo un responsable de DTE puede verificar el contenido de la evidencia."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__outcome_unknown
+msgid "Outcome Unknown"
+msgstr "Resultado desconocido"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__payload_digest
+msgid "Payload Digest"
+msgstr "Resumen criptográfico del contenido"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_event__state_domain__preparation
+msgid "Preparation"
+msgstr "Preparación"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__preparation_state
+msgid "Preparation State"
+msgstr "Estado de preparación"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__processing
+msgid "Processing"
+msgstr "En proceso"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__producer_version
+msgid "Producer Version"
+msgstr "Versión del generador"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__res_company__dte_environment__production
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__queued
+msgid "Queued"
+msgstr "En cola"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__rejected
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__role
+msgid "Role"
+msgstr "Rol"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__sii_request
+msgid "SII Request"
+msgstr "Solicitud al SII"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__sii_response
+msgid "SII Response"
+msgstr "Respuesta del SII"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "SII status cannot be recorded before the signed DTE is queued."
+msgstr ""
+"No se puede registrar el estado del SII antes de poner en cola el DTE "
+"firmado."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__sha256
+msgid "Sha256"
+msgstr "SHA-256"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__signed
+msgid "Signed"
+msgstr "Firmado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__signed_xml
+msgid "Signed XML"
+msgstr "XML firmado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_document__source_key
+msgid "Source Key"
+msgstr "Clave del origen"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__source_snapshot
+msgid "Source Snapshot"
+msgstr "Instantánea del origen"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__state_domain
+msgid "State Domain"
+msgstr "Ámbito del estado"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__status_response
+msgid "Status Response"
+msgstr "Respuesta de estado"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Stored evidence does not match its recorded digest and size."
+msgstr ""
+"La evidencia almacenada no coincide con el resumen criptográfico y el tamaño "
+"registrados."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Stored evidence is not valid base64 content."
+msgstr "La evidencia almacenada no contiene datos Base64 válidos."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__submitted
+msgid "Submitted"
+msgstr "Enviado"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The DTE type code must contain digits only."
+msgstr "El código de tipo de DTE solo puede contener números."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The audit artifact must belong to the electronic document."
+msgstr "El artefacto de auditoría debe pertenecer al documento electrónico."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The correlation key cannot exceed 256 characters."
+msgstr "La clave de correlación no puede superar los 256 caracteres."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The event message cannot exceed 4,000 characters."
+msgstr "El mensaje del evento no puede superar los 4.000 caracteres."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The source key cannot be empty."
+msgstr "La clave del origen no puede estar vacía."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The source snapshot cannot be replaced."
+msgstr "No se puede reemplazar la instantánea del origen."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "The source snapshot must be evidence for this electronic document."
+msgstr ""
+"La instantánea del origen debe ser evidencia de este documento electrónico."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_event__to_state
+msgid "To State"
+msgstr "Estado de destino"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Transition from %(source)s to %(target)s is not allowed."
+msgstr "No se permite la transición de %(source)s a %(target)s."
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Transition to %(state)s requires %(role)s evidence."
+msgstr "La transición a %(state)s requiere evidencia del rol %(role)s."
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__fiscal_state__unknown
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_artifact__role__unsigned_xml
+msgid "Unsigned XML"
+msgstr "XML sin firmar"
+
+#. module: l10n_cl_dte_core
+#. odoo-python
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Unsupported DTE state: %s"
+msgstr "Estado de DTE no compatible: %s"
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields.selection,name:l10n_cl_dte_core.selection__l10n_cl_electronic_document__preparation_state__prepared
+msgid "XML Prepared"
+msgstr "XML preparado"

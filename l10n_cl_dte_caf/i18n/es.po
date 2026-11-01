@@ -1,0 +1,720 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_cl_dte_caf
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:21+0000\n"
+"PO-Revision-Date: 2026-11-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.10.3\n"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "A CAF must be created in draft state."
+msgstr "El CAF debe crearse en estado borrador."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_folio_folio_document_uniq
+msgid "A document can reserve only one folio."
+msgstr "Un documento solo puede reservar un folio."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "A folio can be consumed only after its DTE has been signed."
+msgstr "El folio solo se puede consumir después de firmar su DTE."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "A folio can only be reserved for a draft DTE."
+msgstr "Solo se puede reservar un folio para un DTE en borrador."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "A reason is required to void a folio."
+msgstr "Se requiere un motivo para anular un folio."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "A reservation key between 1 and 256 characters is required."
+msgstr "Se requiere una clave de reserva de entre 1 y 256 caracteres."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "A reserved folio must remain in the fiscal ledger."
+msgstr "El folio reservado debe permanecer en el registro fiscal."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_trust_key_caf_trust_key_id_start_uniq
+msgid "A trust key with this ID and start date already exists."
+msgstr "Ya existe una clave de confianza con este ID y fecha de inicio."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "A validated CAF is immutable."
+msgstr "Un CAF validado es inmutable."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__algorithm
+msgid "Algorithm"
+msgstr "Algoritmo"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "An SII public key is required."
+msgstr "Se requiere una clave pública del SII."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "An expired CAF cannot reserve a folio."
+msgstr "Un CAF vencido no puede reservar folios."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__authorization_id
+msgid "Authorization"
+msgstr "Autorización"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.actions.act_window,name:l10n_cl_dte_caf.action_caf_authorization
+#: model:ir.ui.menu,name:l10n_cl_dte_caf.menu_caf_authorizations
+msgid "CAF Authorizations"
+msgstr "Autorizaciones CAF"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF authorizations cannot be deleted."
+msgstr "No se pueden eliminar las autorizaciones CAF."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF file content is required."
+msgstr "El contenido del archivo CAF es obligatorio."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF file content must be valid base64."
+msgstr "El contenido del archivo CAF debe estar codificado en Base64 válido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF folio values must be integers."
+msgstr "Los valores de folio del CAF deben ser números enteros."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF folio values must be positive."
+msgstr "Los valores de folio del CAF deben ser positivos."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "CAF state and digest can only change through validated actions."
+msgstr ""
+"El estado y el resumen criptográfico del CAF solo pueden cambiar mediante "
+"acciones validadas."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__caf_digest
+msgid "Caf Digest"
+msgstr "Resumen criptográfico del CAF"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__caf_file
+msgid "Caf File"
+msgstr "Archivo CAF"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__caf_filename
+msgid "Caf Filename"
+msgstr "Nombre de archivo CAF"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "DTD and entity declarations are not allowed in CAF."
+msgstr "No se permiten declaraciones DTD ni de entidades en el CAF."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__date_from
+msgid "Date From"
+msgstr "Fecha desde"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__date_to
+msgid "Date To"
+msgstr "Fecha hasta"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__document_id
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__document_code
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__document_code
+msgid "Document Code"
+msgstr "Código de documento"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__state__exhausted
+msgid "Exhausted"
+msgstr "Agotado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__fingerprint
+msgid "Fingerprint"
+msgstr "Huella digital"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__folio_ids
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__folio_end
+msgid "Folio End"
+msgstr "Folio final"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__folio_start
+msgid "Folio Start"
+msgstr "Folio inicial"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "Folios can only be created by the reservation action."
+msgstr "Los folios solo se pueden crear mediante la acción de reserva."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_folio__state__issued
+msgid "Issued"
+msgstr "Emitido"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__issued_at
+msgid "Issued At"
+msgstr "Emitido el"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__issuer_vat
+msgid "Issuer Vat"
+msgstr "RUT del emisor"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__key_id
+msgid "Key"
+msgstr "Clave"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__name
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "No SII trust key for IDK %(key_id)s covers CAF date %(date)s."
+msgstr ""
+"Ninguna clave de confianza del SII para el IDK %(key_id)s cubre la fecha del "
+"CAF %(date)s."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__number
+msgid "Number"
+msgstr "Número"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "Only RSA CAF key pairs are supported."
+msgstr "Solo se admiten pares de claves CAF RSA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "Only SHA1withRSA CAF trust keys are supported."
+msgstr "Solo se admiten claves de confianza CAF SHA1withRSA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "Only a DTE manager can manage CAF authorizations."
+msgstr "Solo un responsable de DTE puede administrar las autorizaciones CAF."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "Only a DTE manager can manage CAF trust keys."
+msgstr ""
+"Solo un responsable de DTE puede administrar las claves de confianza CAF."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "Only a DTE manager can reserve or consume folios."
+msgstr "Solo un responsable de DTE puede reservar o consumir folios."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "Only a draft CAF can be validated."
+msgstr "Solo se puede validar un CAF en borrador."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "Only a reserved folio can be voided."
+msgstr "Solo se puede anular un folio reservado."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "Only a validated CAF can be revoked."
+msgstr "Solo se puede revocar un CAF validado."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "Only a validated CAF can reserve folios."
+msgstr "Solo un CAF validado puede reservar folios."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__public_key_pem
+msgid "Public Key Pem"
+msgstr "PEM de la clave pública"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__reservation_key
+msgid "Reservation Key"
+msgstr "Clave de reserva"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_folio__state__reserved
+msgid "Reserved"
+msgstr "Reservado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__reserved_at
+msgid "Reserved At"
+msgstr "Reservado el"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__reserved_by
+msgid "Reserved By"
+msgstr "Reservado por"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model,name:l10n_cl_dte_caf.model_l10n_cl_caf_folio
+msgid "Reserved DTE Folio"
+msgstr "Folio del DTE reservado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.actions.act_window,name:l10n_cl_dte_caf.action_caf_folio
+#: model:ir.ui.menu,name:l10n_cl_dte_caf.menu_caf_folios
+msgid "Reserved Folios"
+msgstr "Folios reservados"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "Reserved folio records are immutable."
+msgstr "Los registros de folios reservados son inmutables."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__state__revoked
+msgid "Revoked"
+msgstr "Revocado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_trust_key__algorithm__sha1withrsa
+msgid "SHA1 with RSA"
+msgstr "SHA1 con RSA"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model,name:l10n_cl_dte_caf.model_l10n_cl_caf_trust_key
+msgid "SII CAF Signature Trust Key"
+msgstr "Clave de confianza para firma CAF del SII"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.actions.act_window,name:l10n_cl_dte_caf.action_caf_trust_key
+#: model:ir.ui.menu,name:l10n_cl_dte_caf.menu_caf_trust_keys
+msgid "SII CAF Trust Keys"
+msgstr "Claves de confianza CAF del SII"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "SII CAF trust keys cannot be deleted."
+msgstr "No se pueden eliminar las claves de confianza CAF del SII."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model,name:l10n_cl_dte_caf.model_l10n_cl_caf_authorization
+msgid "SII Folio Authorization (CAF)"
+msgstr "Autorización de folios del SII (CAF)"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "SII trust key identity and start date are immutable."
+msgstr ""
+"La identidad y fecha de inicio de la clave de confianza del SII son "
+"inmutables."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__source_url
+msgid "Source Url"
+msgstr "URL de origen"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF DA cannot be encoded as ISO-8859-1."
+msgstr "El DA del CAF no se puede codificar como ISO-8859-1."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF RSA key pair does not match its DA."
+msgstr "El par de claves RSA del CAF no coincide con su DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The CAF and DTE document types do not match."
+msgstr "Los tipos de documento del CAF y del DTE no coinciden."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The CAF and DTE must belong to the same company."
+msgstr "El CAF y el DTE deben pertenecer a la misma compañía."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF authorization date does not match its DA."
+msgstr "La fecha de autorización del CAF no coincide con su DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF authorization date is in the future."
+msgstr "La fecha de autorización del CAF es futura."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF authorization date is invalid."
+msgstr "La fecha de autorización del CAF no es válida."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF contains invalid encoded key material."
+msgstr "El CAF contiene material de clave codificado no válido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF document type does not match its DA."
+msgstr "El tipo de documento del CAF no coincide con su DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF document type must be a positive numeric code."
+msgstr "El tipo de documento del CAF debe ser un código numérico positivo."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF file is larger than 1 MiB."
+msgstr "El archivo CAF supera 1 MiB."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF file is not well-formed XML."
+msgstr "El archivo CAF no es XML válido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF folio range does not match its DA."
+msgstr "El rango de folios del CAF no coincide con su DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF folio range is invalid."
+msgstr "El rango de folios del CAF no es válido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF has expired."
+msgstr "El CAF ha vencido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF is missing required DA values."
+msgstr "Al CAF le faltan valores obligatorios del DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF issuer RUT does not match its DA."
+msgstr "El RUT del emisor del CAF no coincide con su DA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF issuer RUT does not match the company."
+msgstr "El RUT del emisor del CAF no coincide con el de la compañía."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF must include its RSA key pair."
+msgstr "El CAF debe incluir su par de claves RSA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF root element must be AUTORIZACION."
+msgstr "El elemento raíz del CAF debe ser AUTORIZACION."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "The CAF trust key must be RSA."
+msgstr "La clave de confianza CAF debe ser RSA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF, DA, or FRMA section is missing."
+msgstr "Falta la sección CAF, DA o FRMA."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "The SII public key is not valid PEM."
+msgstr "La clave pública del SII no es PEM válido."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "The SII signature on the CAF is invalid."
+msgstr "La firma del SII en el CAF no es válida."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The existing reservation does not match the DTE state."
+msgstr "La reserva existente no coincide con el estado del DTE."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The folio must be inside its CAF range."
+msgstr "El folio debe estar dentro del rango del CAF."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The reservation does not match the DTE state."
+msgstr "La reserva no coincide con el estado del DTE."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The reservation key is bound to another DTE or CAF."
+msgstr "La clave de reserva está vinculada a otro DTE o CAF."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The stored CAF content does not match its registered SHA-256."
+msgstr "El contenido del CAF almacenado no coincide con el SHA-256 registrado."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "The trust key fingerprint is calculated automatically."
+msgstr "La huella digital de la clave de confianza se calcula automáticamente."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_authorization_caf_company_digest_uniq
+msgid "This CAF file is already registered for the company."
+msgstr "Este archivo CAF ya está registrado para la compañía."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "This CAF has no available folios."
+msgstr "Este CAF no tiene folios disponibles."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "This DTE already has a folio reservation."
+msgstr "Este DTE ya tiene una reserva de folio."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_folio_folio_authorization_number_uniq
+msgid "This folio is already recorded for the CAF."
+msgstr "Este folio ya está registrado para el CAF."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_folio_folio_company_type_number_uniq
+msgid "This folio is already recorded for the company and document type."
+msgstr "Este folio ya está registrado para la compañía y el tipo de documento."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_folio_folio_reservation_key_uniq
+msgid "This reservation key has already been used."
+msgstr "Esta clave de reserva ya se utilizó."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_trust_key.py:0
+msgid "Trust key material is immutable; create a new validity record."
+msgstr ""
+"El material de la clave de confianza es inmutable; cree un nuevo registro de "
+"vigencia."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "Unsupported CAF signature algorithm: %s"
+msgstr "Algoritmo de firma CAF no compatible: %s"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__valid_from
+msgid "Valid From"
+msgstr "Válido desde"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__valid_to
+msgid "Valid To"
+msgstr "Válido hasta"
+
+#. module: l10n_cl_dte_caf
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_caf.view_caf_authorization_form
+msgid "Validate CAF"
+msgstr "Validar CAF"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__state__validated
+msgid "Validated"
+msgstr "Validado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__validated_at
+msgid "Validated At"
+msgstr "Validado el"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__validated_by
+msgid "Validated By"
+msgstr "Validado por"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__void_reason
+msgid "Void Reason"
+msgstr "Motivo de anulación"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_folio__state__void
+msgid "Voided"
+msgstr "Anulado"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__voided_at
+msgid "Voided At"
+msgstr "Anulado el"
