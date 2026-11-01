@@ -1,0 +1,22 @@
+{
+    "name": "Chile - DTE CAF and Folios",
+    "summary": "CAF authorization and controlled DTE folio reservation",
+    "version": "18.0.1.0.0",
+    "category": "Accounting/Localizations",
+    "author": "Odoo Community Association (OCA)",
+    "website": "https://github.com/OCA/l10n-chile",
+    "license": "AGPL-3",
+    "depends": ["l10n_cl_dte_core"],
+    "external_dependencies": {"python": ["cryptography"]},
+    "data": [
+        "security/caf_security.xml",
+        "security/ir.model.access.csv",
+        "views/caf_trust_key_views.xml",
+        "views/caf_authorization_views.xml",
+        "views/caf_folio_views.xml",
+        "views/menus.xml",
+    ],
+    "installable": True,
+    "application": False,
+    "maintainers": ["fsmw"],
+}

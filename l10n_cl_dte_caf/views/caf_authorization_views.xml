@@ -1,0 +1,51 @@
+<odoo>
+    <record id="view_caf_authorization_list" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.authorization.list</field>
+        <field name="model">l10n_cl.caf.authorization</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="document_code" />
+                <field name="folio_start" />
+                <field name="folio_end" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+    <record id="view_caf_authorization_form" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.authorization.form</field>
+        <field name="model">l10n_cl.caf.authorization</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button name="action_validate_authorization" type="object" string="Validate CAF" class="btn-primary" groups="l10n_cl_dte_core.group_dte_manager" />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="company_id" />
+                        <field name="document_code" />
+                        <field name="issuer_vat" />
+                        <field name="folio_start" />
+                        <field name="folio_end" />
+                        <field name="date_from" />
+                        <field name="date_to" />
+                        <field name="caf_file" filename="caf_filename" groups="l10n_cl_dte_core.group_dte_manager" />
+                        <field name="caf_filename" groups="l10n_cl_dte_core.group_dte_manager" />
+                        <field name="caf_digest" groups="l10n_cl_dte_core.group_dte_manager" />
+                    </group>
+                    <field name="folio_ids" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_caf_authorization" model="ir.actions.act_window">
+        <field name="name">CAF Authorizations</field>
+        <field name="res_model">l10n_cl.caf.authorization</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

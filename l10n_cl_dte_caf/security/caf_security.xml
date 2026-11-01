@@ -1,0 +1,14 @@
+<odoo>
+    <record id="rule_caf_authorization_company" model="ir.rule">
+        <field name="name">CAF authorizations: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_authorization" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_caf_folio_company" model="ir.rule">
+        <field name="name">CAF folios: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_folio" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
