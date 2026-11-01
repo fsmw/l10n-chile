@@ -395,9 +395,13 @@ addons.</p>
 Only DTE managers can create documents and evidence or advance a
 document state. Lifecycle changes pass through the validated transition
 action and create an immutable audit event in the same database
-transaction.</p>
-<p>Evidence hashes and byte counts are calculated from the stored bytes.
-Binary evidence is restricted to DTE managers because the common
+transaction. Authorization, XML preparation, signing, queuing and fiscal
+responses require evidence with the matching artifact role.</p>
+<p>Record one immutable <tt class="docutils literal">source_snapshot</tt> artifact before preparing XML.
+The core stores its SHA-256 as the document payload digest and will not
+allow the snapshot to be replaced. Evidence hashes and byte counts are
+calculated from the stored bytes and can be rechecked with the integrity
+action. Binary evidence is restricted to DTE managers because the common
 evidence store can contain CAF source material. DTE users can inspect
 document and evidence metadata within their allowed companies.
 Documents, artifacts and events cannot be deleted; evidence and audit

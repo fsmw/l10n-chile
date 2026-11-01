@@ -24,6 +24,7 @@ class ElectronicArtifact(models.Model):
     role = fields.Selection(
         [
             ("caf_source", "CAF Source"),
+            ("source_snapshot", "Source Snapshot"),
             ("unsigned_xml", "Unsigned XML"),
             ("signed_xml", "Signed XML"),
             ("sii_request", "SII Request"),
@@ -73,3 +74,23 @@ class ElectronicArtifact(models.Model):
 
     def unlink(self):  # pylint: disable=method-required-super
         raise AccessError(_("DTE evidence cannot be deleted."))
+
+    def action_verify_integrity(self):
+        """Recompute the digest and byte count from the stored content."""
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can verify evidence content."))
+        encoded_content = self.content
+        try:
+            raw_content = base64.b64decode(encoded_content, validate=True)
+        except (binascii.Error, TypeError, ValueError) as error:
+            raise ValidationError(
+                _("Stored evidence is not valid base64 content.")
+            ) from error
+        actual_digest = hashlib.sha256(raw_content).hexdigest()
+        actual_byte_count = len(raw_content)
+        if actual_digest != self.sha256 or actual_byte_count != self.byte_count:
+            raise ValidationError(
+                _("Stored evidence does not match its recorded digest and size.")
+            )
+        return True

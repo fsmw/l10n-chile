@@ -29,6 +29,18 @@ _FISCAL_TRANSITIONS = {
     "accepted": {"accepted"},
     "rejected": {"rejected"},
 }
+_PREPARATION_ARTIFACT_ROLES = {
+    "authorized": "caf_source",
+    "prepared": "unsigned_xml",
+    "signed": "signed_xml",
+    "queued": "sii_request",
+}
+_FISCAL_ARTIFACT_ROLES = {
+    "submitted": "sii_response",
+    "processing": "status_response",
+    "accepted": "status_response",
+    "rejected": "status_response",
+}
 _EVENT_CODE_RE = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 
 
@@ -124,17 +136,18 @@ class ElectronicDocument(models.Model):
                     )
                 vals[field_name] = initial_value
             normalized_vals_list.append(vals)
-        documents = super().create(normalized_vals_list)
-        documents._create_audit_events(
-            [
-                {
-                    "event_code": "document_created",
-                    "state_domain": "preparation",
-                    "to_state": "draft",
-                }
-            ]
-            * len(documents)
-        )
+        with self.env.cr.savepoint():
+            documents = super().create(normalized_vals_list)
+            documents._create_audit_events(
+                [
+                    {
+                        "event_code": "document_created",
+                        "state_domain": "preparation",
+                        "to_state": "draft",
+                    }
+                ]
+                * len(documents)
+            )
         return documents
 
     def write(self, vals):
@@ -148,6 +161,7 @@ class ElectronicDocument(models.Model):
             "fiscal_state",
             "source_key",
             "payload_digest",
+            "active",
         }
         if protected_fields.intersection(vals):
             raise UserError(
@@ -219,27 +233,90 @@ class ElectronicDocument(models.Model):
             raise ValidationError(
                 _("The audit artifact must belong to the electronic document.")
             )
-
-        if not isinstance(target_state, str):
-            raise ValidationError(_("A valid DTE state is required."))
-        if target_state in _PREPARATION_TRANSITIONS:
-            state_domain = "preparation"
-            current_state = self.preparation_state
-            transitions = _PREPARATION_TRANSITIONS
-            field_name = "preparation_state"
-        elif target_state in _FISCAL_TRANSITIONS:
-            state_domain = "fiscal"
-            current_state = self.fiscal_state
-            transitions = _FISCAL_TRANSITIONS
-            field_name = "fiscal_state"
-        else:
-            raise ValidationError(_("Unsupported DTE state: %s") % target_state)
-
+        state_domain, current_state, transitions, field_name = (
+            self._get_transition_details(target_state)
+        )
         if target_state not in transitions[current_state]:
             raise ValidationError(
                 _("Transition from %(source)s to %(target)s is not allowed.")
                 % {"source": current_state, "target": target_state}
             )
+        self._validate_transition_evidence(
+            target_state, state_domain, artifact, correlation_key
+        )
+        write_values = self._get_transition_write_values(
+            target_state, field_name, state_domain, folio_number
+        )
+        previous_state = current_state
+        with self.env.cr.savepoint():
+            super().write(write_values)
+            self._create_audit_events(
+                [
+                    {
+                        "event_code": event_code,
+                        "state_domain": state_domain,
+                        "from_state": previous_state,
+                        "to_state": target_state,
+                        "message": message or False,
+                        "correlation_key": correlation_key or False,
+                        "artifact_id": artifact.id if artifact else False,
+                    }
+                ]
+            )
+        return True
+
+    def _get_transition_details(self, target_state):
+        if not isinstance(target_state, str):
+            raise ValidationError(_("A valid DTE state is required."))
+        if target_state in _PREPARATION_TRANSITIONS:
+            return (
+                "preparation",
+                self.preparation_state,
+                _PREPARATION_TRANSITIONS,
+                "preparation_state",
+            )
+        if target_state in _FISCAL_TRANSITIONS:
+            return "fiscal", self.fiscal_state, _FISCAL_TRANSITIONS, "fiscal_state"
+        raise ValidationError(_("Unsupported DTE state: %s") % target_state)
+
+    def _validate_transition_evidence(
+        self, target_state, state_domain, artifact, correlation_key
+    ):
+        artifact_roles = (
+            _PREPARATION_ARTIFACT_ROLES
+            if state_domain == "preparation"
+            else _FISCAL_ARTIFACT_ROLES
+        )
+        required_role = artifact_roles.get(target_state)
+        if required_role and (len(artifact) != 1 or artifact.role != required_role):
+            raise ValidationError(
+                _("Transition to %(state)s requires %(role)s evidence.")
+                % {"state": target_state, "role": required_role}
+            )
+        if (
+            state_domain == "preparation"
+            and target_state in {"prepared", "signed", "queued"}
+            and not self.payload_digest
+        ):
+            raise ValidationError(
+                _(
+                    "A source snapshot and its digest are required before "
+                    "XML preparation."
+                )
+            )
+        if state_domain == "fiscal":
+            if target_state == "outcome_unknown" and not correlation_key:
+                raise ValidationError(
+                    _("An unknown remote outcome must include a correlation key.")
+                )
+            if self.preparation_state != "queued":
+                raise ValidationError(
+                    _("SII status cannot be recorded before the signed DTE is queued.")
+                )
+
+    def _get_transition_write_values(
+        self, target_state, field_name, state_domain, folio_number
+    ):
         write_values = {field_name: target_state}
         if target_state == "numbered":
             if (
@@ -266,26 +343,52 @@ class ElectronicDocument(models.Model):
             and not self.folio
         ):
             raise ValidationError(_("A folio must be reserved before preparing XML."))
-        if state_domain == "fiscal" and self.preparation_state != "queued":
-            raise ValidationError(
-                _("SII status cannot be recorded before the signed DTE is queued.")
-            )
+        return write_values
 
-        previous_state = current_state
-        super().write(write_values)
-        self._create_audit_events(
+    def action_record_source_snapshot(self, artifact_id):
+        """Bind one immutable source snapshot artifact to this document."""
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can record a source snapshot."))
+        artifact = self.env["l10n_cl.electronic.artifact"].browse(artifact_id).exists()
+        if (
+            len(artifact) != 1
+            or artifact.document_id != self
+            or artifact.role != "source_snapshot"
+        ):
+            raise ValidationError(
+                _("The source snapshot must be evidence for this electronic document.")
+            )
+        previous_snapshot = self.env["l10n_cl.electronic.event"].search(
             [
-                {
-                    "event_code": event_code,
-                    "state_domain": state_domain,
-                    "from_state": previous_state,
-                    "to_state": target_state,
-                    "message": message or False,
-                    "correlation_key": correlation_key or False,
-                    "artifact_id": artifact.id if artifact else False,
-                }
-            ]
+                ("document_id", "=", self.id),
+                ("event_code", "=", "source_snapshot_recorded"),
+            ],
+            limit=1,
         )
+        if self.payload_digest:
+            if previous_snapshot.artifact_id == artifact:
+                artifact.action_verify_integrity()
+                return True
+            raise ValidationError(_("The source snapshot cannot be replaced."))
+        if self.preparation_state in {"prepared", "signed", "queued"}:
+            raise ValidationError(
+                _("A source snapshot must be recorded before XML preparation.")
+            )
+        artifact.action_verify_integrity()
+        with self.env.cr.savepoint():
+            super().write({"payload_digest": artifact.sha256})
+            self._create_audit_events(
+                [
+                    {
+                        "event_code": "source_snapshot_recorded",
+                        "state_domain": "preparation",
+                        "from_state": self.preparation_state,
+                        "to_state": self.preparation_state,
+                        "artifact_id": artifact.id,
+                    }
+                ]
+            )
         return True
 
     def _create_audit_events(self, event_values_list):
