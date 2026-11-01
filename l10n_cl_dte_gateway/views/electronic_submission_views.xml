@@ -1,0 +1,67 @@
+<odoo>
+    <record id="view_electronic_submission_list" model="ir.ui.view">
+        <field name="name">l10n_cl.electronic.submission.list</field>
+        <field name="model">l10n_cl.electronic.submission</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="document_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="environment" />
+                <field name="state" />
+                <field name="track_id" />
+                <field name="submitted_at" />
+                <field name="last_checked_at" />
+            </list>
+        </field>
+    </record>
+    <record id="view_electronic_submission_form" model="ir.ui.view">
+        <field name="name">l10n_cl.electronic.submission.form</field>
+        <field name="model">l10n_cl.electronic.submission</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_enqueue_submission"
+                        type="object"
+                        string="Queue Submission"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state != 'pending'"
+                    />
+                    <button
+                        name="action_enqueue_status_query"
+                        type="object"
+                        string="Query SII Status"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state not in ['submitted', 'processing', 'outcome_unknown'] or not track_id"
+                    />
+                    <button
+                        name="action_enqueue_reconciliation"
+                        type="object"
+                        string="Reconcile Unknown Outcome"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state != 'outcome_unknown'"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="document_id" />
+                        <field name="company_id" />
+                        <field name="environment" />
+                        <field name="track_id" />
+                        <field name="idempotency_key" />
+                        <field name="submitted_at" />
+                        <field name="last_checked_at" />
+                    </group>
+                    <field name="attempt_ids" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_electronic_submission" model="ir.actions.act_window">
+        <field name="name">SII Submissions</field>
+        <field name="res_model">l10n_cl.electronic.submission</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
