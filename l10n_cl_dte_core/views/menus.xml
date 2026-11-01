@@ -1,0 +1,18 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_dte_root"
+        name="Chilean DTE"
+        sequence="80"
+        groups="group_dte_user"
+    />
+    <menuitem
+        id="menu_electronic_documents"
+        name="Electronic Documents"
+        parent="menu_dte_root"
+        action="action_electronic_document"
+        sequence="10"
+        groups="group_dte_user"
+    />
+</odoo>

@@ -1,0 +1,75 @@
+# Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+import base64
+import binascii
+import hashlib
+
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, ValidationError
+
+
+class ElectronicArtifact(models.Model):
+    _name = "l10n_cl.electronic.artifact"
+    _description = "Immutable DTE Evidence Artifact"
+    _order = "id desc"
+    _check_company_auto = True
+
+    document_id = fields.Many2one(
+        "l10n_cl.electronic.document", required=True, index=True, ondelete="restrict"
+    )
+    company_id = fields.Many2one(
+        related="document_id.company_id", store=True, index=True
+    )
+    role = fields.Selection(
+        [
+            ("caf_source", "CAF Source"),
+            ("unsigned_xml", "Unsigned XML"),
+            ("signed_xml", "Signed XML"),
+            ("sii_request", "SII Request"),
+            ("sii_response", "SII Response"),
+            ("status_response", "Status Response"),
+        ],
+        required=True,
+        index=True,
+    )
+    content = fields.Binary(
+        required=True,
+        attachment=True,
+        copy=False,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+    sha256 = fields.Char(required=True, index=True, copy=False, readonly=True)
+    mimetype = fields.Char(required=True)
+    encoding = fields.Char()
+    byte_count = fields.Integer(readonly=True, copy=False)
+    producer_version = fields.Char()
+    created_at = fields.Datetime(default=fields.Datetime.now, readonly=True)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Calculate evidence metadata from the exact persisted bytes."""
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can add evidence."))
+        normalized_vals_list = []
+        for vals in vals_list:
+            vals = vals.copy()
+            encoded_content = vals.get("content")
+            if not encoded_content:
+                raise ValidationError(_("Evidence content is required."))
+            try:
+                raw_content = base64.b64decode(encoded_content, validate=True)
+            except (binascii.Error, TypeError, ValueError) as error:
+                raise ValidationError(
+                    _("Evidence must be valid base64 content.")
+                ) from error
+            vals["sha256"] = hashlib.sha256(raw_content).hexdigest()
+            vals["byte_count"] = len(raw_content)
+            normalized_vals_list.append(vals)
+        return super().create(normalized_vals_list)
+
+    def write(self, vals):  # pylint: disable=method-required-super
+        raise AccessError(_("DTE evidence is immutable."))
+
+    def unlink(self):  # pylint: disable=method-required-super
+        raise AccessError(_("DTE evidence cannot be deleted."))
