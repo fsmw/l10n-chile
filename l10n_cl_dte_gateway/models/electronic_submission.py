@@ -155,9 +155,7 @@ class ElectronicSubmission(models.Model):
             raise UserError(_("Only a pending SII submission can be enqueued."))
         self._gateway()
         document = self.document_id
-        signed = document.artifact_ids.filtered(
-            lambda item: item.role == "signed_xml"
-        )
+        signed = document.artifact_ids.filtered(lambda item: item.role == "signed_xml")
         if len(signed) != 1:
             raise ValidationError(
                 _("A submission needs exactly one signed DTE artifact.")
@@ -272,9 +270,9 @@ class ElectronicSubmission(models.Model):
         if self.state not in {"submitted", "processing", "outcome_unknown"}:
             raise UserError(_("This submission is not eligible for status polling."))
         gateway = self._gateway()
-        query_number = len(
-            self.attempt_ids.filtered(lambda item: item.operation == "query")
-        ) + 1
+        query_number = (
+            len(self.attempt_ids.filtered(lambda item: item.operation == "query")) + 1
+        )
         attempt = self.env["l10n_cl.submission.attempt"].create(
             {
                 "submission_id": self.id,
