@@ -8,9 +8,10 @@
                     This creates synthetic Demo CAFs for the selected DTE types,
                     a trust key, and a disposable signing certificate for this
                     company. CAF creation does not mean that every selected type
-                    can be issued from an invoice. The current invoice flow supports
-                    electronic invoice types 33 and 34; boletas 39 and 41 are not yet
-                    issuable from invoices. All generated records are local
+                    can be issued from an invoice. Types 33 and 34 use the invoice
+                    adapter; types 39 and 41 require the separate Boletas addon.
+                    Other selected CAFs remain unavailable from customer invoices.
+                    All generated records are local
                     simulation material and are never valid for Certification,
                     Production, or submission to the SII.
                 </div>

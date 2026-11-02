@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 01:39+0000\n"
-"PO-Revision-Date: 2026-11-02 01:39+0000\n"
+"POT-Creation-Date: 2026-11-02 16:23+0000\n"
+"PO-Revision-Date: 2026-11-02 16:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: l10n_cl_dte_account
 #. odoo-python
-#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+#: code:addons/l10n_cl_dte_account/services/dte_issuance_service.py:0
 msgid "A DTE already exists for this invoice and is not ready to resend."
 msgstr ""
 
@@ -96,6 +96,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_cl_dte_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
+msgid "DTE"
+msgstr ""
+
+#. module: l10n_cl_dte_account
 #. odoo-python
 #: code:addons/l10n_cl_dte_account/wizards/demo_setup_wizard.py:0
 msgid "DTE Demo Configuration"
@@ -108,9 +113,22 @@ msgid "DTE Document Type Code"
 msgstr ""
 
 #. module: l10n_cl_dte_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_bank_statement_line__dte_document_count
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_move__dte_document_count
+msgid "DTE Documents"
+msgstr ""
+
+#. module: l10n_cl_dte_account
 #. odoo-python
 #: code:addons/l10n_cl_dte_account/models/account_move.py:0
 msgid "DTE document type %(code)s is not supported by this issuance flow."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
+msgid ""
+"DTE issuance is not available for this document type yet. The current\n"
+"                    flow supports electronic invoice types 33 and 34."
 msgstr ""
 
 #. module: l10n_cl_dte_account
@@ -222,6 +240,12 @@ msgstr ""
 
 #. module: l10n_cl_dte_account
 #. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "Select a Chilean DTE document type before issuing."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
 #: code:addons/l10n_cl_dte_account/wizards/demo_setup_wizard.py:0
 msgid "Select at least one Chilean DTE type for synthetic CAF creation."
 msgstr ""
@@ -275,32 +299,8 @@ msgstr ""
 
 #. module: l10n_cl_dte_account
 #. odoo-python
-#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+#: code:addons/l10n_cl_dte_account/services/dte_issuance_service.py:0
 msgid "The existing DTE has no submission record."
-msgstr ""
-
-#. module: l10n_cl_dte_account
-#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
-msgid "DTE"
-msgstr ""
-
-#. module: l10n_cl_dte_account
-#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_bank_statement_line__dte_document_count
-#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_move__dte_document_count
-msgid "DTE Documents"
-msgstr ""
-
-#. module: l10n_cl_dte_account
-#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
-msgid ""
-"DTE issuance is not available for this document type yet. The current\n"
-"                    flow supports electronic invoice types 33 and 34."
-msgstr ""
-
-#. module: l10n_cl_dte_account
-#. odoo-python
-#: code:addons/l10n_cl_dte_account/models/account_move.py:0
-msgid "Select a Chilean DTE document type before issuing."
 msgstr ""
 
 #. module: l10n_cl_dte_account
@@ -309,9 +309,10 @@ msgid ""
 "This creates synthetic Demo CAFs for the selected DTE types,\n"
 "                    a trust key, and a disposable signing certificate for this\n"
 "                    company. CAF creation does not mean that every selected type\n"
-"                    can be issued from an invoice. The current invoice flow supports\n"
-"                    electronic invoice types 33 and 34; boletas 39 and 41 are not yet\n"
-"                    issuable from invoices. All generated records are local\n"
+"                    can be issued from an invoice. Types 33 and 34 use the invoice\n"
+"                    adapter; types 39 and 41 require the separate Boletas addon.\n"
+"                    Other selected CAFs remain unavailable from customer invoices.\n"
+"                    All generated records are local\n"
 "                    simulation material and are never valid for Certification,\n"
 "                    Production, or submission to the SII."
 msgstr ""

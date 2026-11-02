@@ -33,6 +33,7 @@
             </xpath>
             <xpath expr="//field[@name='l10n_latam_document_type_id']" position="after">
                 <div
+                    name="dte_issuance_unavailable"
                     class="alert alert-info"
                     role="alert"
                     colspan="2"
