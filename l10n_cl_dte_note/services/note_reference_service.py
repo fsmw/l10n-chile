@@ -174,10 +174,7 @@ class NoteReferenceService:
 
     def validate_single_reference(self, move):
         """Reject legacy imported reference rows beside the DTE note target."""
-        if (
-            "l10n_cl_reference_ids" in move._fields
-            and move.l10n_cl_reference_ids
-        ):
+        if "l10n_cl_reference_ids" in move._fields and move.l10n_cl_reference_ids:
             raise ValidationError(
                 _(
                     "DTE notes support one fiscal reference; remove the other "
