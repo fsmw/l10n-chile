@@ -1,7 +1,7 @@
 {
     "name": "Chile - DTE Core",
     "summary": "Core records and audit trail for Chilean electronic tax documents",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
@@ -14,6 +14,7 @@
         "security/ir.model.access.csv",
         "views/electronic_document_views.xml",
         "views/electronic_artifact_views.xml",
+        "views/res_company_views.xml",
         "views/menus.xml",
     ],
     "installable": True,

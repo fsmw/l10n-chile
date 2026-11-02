@@ -8,6 +8,7 @@
             <list create="0" edit="0" delete="0">
                 <field name="document_id" />
                 <field name="role" />
+                <field name="is_simulated" string="DEMO / SIMULADO" />
                 <field name="sha256" />
                 <field name="mimetype" />
                 <field name="byte_count" />

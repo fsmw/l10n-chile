@@ -21,6 +21,7 @@ class ElectronicArtifact(models.Model):
     company_id = fields.Many2one(
         related="document_id.company_id", store=True, index=True
     )
+    is_simulated = fields.Boolean(compute="_compute_is_simulated", store=True)
     role = fields.Selection(
         [
             ("caf_source", "CAF Source"),
@@ -46,6 +47,11 @@ class ElectronicArtifact(models.Model):
     byte_count = fields.Integer(readonly=True, copy=False)
     producer_version = fields.Char()
     created_at = fields.Datetime(default=fields.Datetime.now, readonly=True)
+
+    @api.depends("document_id.sii_environment")
+    def _compute_is_simulated(self):
+        for artifact in self:
+            artifact.is_simulated = artifact.document_id.sii_environment == "demo"
 
     @api.model_create_multi
     def create(self, vals_list):

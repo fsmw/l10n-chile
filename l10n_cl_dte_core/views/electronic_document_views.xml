@@ -9,6 +9,7 @@
                 <field name="name" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="document_code" />
+                <field name="sii_environment" />
                 <field name="folio" />
                 <field name="preparation_state" />
                 <field name="fiscal_state" />
@@ -24,6 +25,7 @@
                     <group>
                         <field name="name" readonly="1" />
                         <field name="company_id" readonly="1" />
+                        <field name="sii_environment" readonly="1" />
                         <field name="document_code" readonly="1" />
                         <field name="folio" readonly="1" />
                         <field name="preparation_state" readonly="1" />

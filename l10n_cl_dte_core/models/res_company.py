@@ -7,9 +7,14 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    dte_environment = fields.Selection(
-        [("certification", "Certification"), ("production", "Production")],
-        default="certification",
+    dte_sii_environment = fields.Selection(
+        [
+            ("demo", "Demo / Simulated"),
+            ("certification", "Certification"),
+            ("production", "Production"),
+        ],
+        string="DTE SII Environment",
+        default="demo",
         required=True,
         groups="l10n_cl_dte_core.group_dte_manager",
     )

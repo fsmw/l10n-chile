@@ -61,6 +61,17 @@ class ElectronicDocument(models.Model):
     company_id = fields.Many2one(
         "res.company", required=True, index=True, default=lambda self: self.env.company
     )
+    sii_environment = fields.Selection(
+        [
+            ("demo", "Demo / Simulated"),
+            ("certification", "Certification"),
+            ("production", "Production"),
+        ],
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+    )
     document_code = fields.Char(required=True, index=True)
     folio = fields.Integer(readonly=True, index=True, copy=False)
     preparation_state = fields.Selection(
@@ -122,6 +133,16 @@ class ElectronicDocument(models.Model):
         normalized_vals_list = []
         for vals in vals_list:
             vals = vals.copy()
+            company_id = vals.get("company_id") or self.env.company.id
+            company = self.env["res.company"].browse(company_id).exists()
+            if len(company) != 1:
+                raise ValidationError(_("A valid company is required for a DTE."))
+            environment = vals.get("sii_environment") or company.dte_sii_environment
+            if environment != company.dte_sii_environment:
+                raise ValidationError(
+                    _("A new DTE must capture the company's current SII environment.")
+                )
+            vals["sii_environment"] = environment
             if vals.get("source_key"):
                 vals["source_key"] = vals["source_key"].strip()
             if vals.get("document_code"):
@@ -155,6 +176,7 @@ class ElectronicDocument(models.Model):
         protected_fields = {
             "name",
             "company_id",
+            "sii_environment",
             "document_code",
             "folio",
             "preparation_state",
