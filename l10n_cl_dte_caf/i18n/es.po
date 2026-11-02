@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 23:21+0000\n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
 "PO-Revision-Date: 2026-11-01 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -59,7 +59,7 @@ msgid "A reserved folio must remain in the fiscal ledger."
 msgstr "El folio reservado debe permanecer en el registro fiscal."
 
 #. module: l10n_cl_dte_caf
-#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_trust_key_caf_trust_key_id_start_uniq
+#: model:ir.model.constraint,message:l10n_cl_dte_caf.constraint_l10n_cl_caf_trust_key_caf_trust_key_id_scope_start_uniq
 msgid "A trust key with this ID and start date already exists."
 msgstr "Ya existe una clave de confianza con este ID y fecha de inicio."
 
@@ -151,6 +151,11 @@ msgid "Caf Filename"
 msgstr "Nombre de archivo CAF"
 
 #. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_environment__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_caf
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__company_id
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_folio__company_id
 msgid "Company"
@@ -185,6 +190,16 @@ msgstr "Fecha desde"
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__date_to
 msgid "Date To"
 msgstr "Fecha hasta"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_trust_key__scope__demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_environment__demo
+msgid "Demo / Simulated"
+msgstr "Demo / Simulado"
 
 #. module: l10n_cl_dte_caf
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__display_name
@@ -301,6 +316,11 @@ msgid "Number"
 msgstr "Número"
 
 #. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_trust_key__scope__official
+msgid "Official SII"
+msgstr "SII oficial"
+
+#. module: l10n_cl_dte_caf
 #. odoo-python
 #: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
 msgid "Only RSA CAF key pairs are supported."
@@ -354,6 +374,11 @@ msgstr "Solo se puede revocar un CAF validado."
 #: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
 msgid "Only a validated CAF can reserve folios."
 msgstr "Solo un CAF validado puede reservar folios."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_environment__production
+msgid "Production"
+msgstr "Producción"
 
 #. module: l10n_cl_dte_caf
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__public_key_pem
@@ -438,6 +463,16 @@ msgstr ""
 "inmutables."
 
 #. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__scope
+msgid "Scope"
+msgstr "Ámbito"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__sii_environment
+msgid "Sii Environment"
+msgstr "Entorno SII"
+
+#. module: l10n_cl_dte_caf
 #: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_trust_key__source_url
 msgid "Source Url"
 msgstr "URL de origen"
@@ -507,6 +542,12 @@ msgstr "El tipo de documento del CAF no coincide con su DA."
 #: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
 msgid "The CAF document type must be a positive numeric code."
 msgstr "El tipo de documento del CAF debe ser un código numérico positivo."
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_folio.py:0
+msgid "The CAF environment must match the DTE before reserving a folio."
+msgstr "El entorno del CAF debe coincidir con el DTE antes de reservar un folio."
 
 #. module: l10n_cl_dte_caf
 #. odoo-python

@@ -147,6 +147,7 @@ class CafAuthorization(models.Model):
             )
         if document.company_id != self.company_id:
             raise ValidationError(_("The CAF and DTE must belong to the same company."))
+        self._check_document_environment(document)
         if document.document_code != self.document_code:
             raise ValidationError(_("The CAF and DTE document types do not match."))
 
@@ -240,6 +241,13 @@ class CafAuthorization(models.Model):
                     "retry the complete transaction with the same reservation key."
                 ) from error
             raise
+
+    def _check_document_environment(self, document):
+        self.ensure_one()
+        if document.sii_environment != self.sii_environment:
+            raise ValidationError(
+                _("The CAF environment must match the DTE before reserving a folio.")
+            )
 
     def _next_available_folio(self):
         self.ensure_one()

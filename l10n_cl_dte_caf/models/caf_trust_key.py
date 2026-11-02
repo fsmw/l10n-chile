@@ -17,14 +17,20 @@ class CafTrustKey(models.Model):
     _order = "key_id, valid_from desc"
     _sql_constraints = [
         (
-            "caf_trust_key_id_start_uniq",
-            "unique(key_id, valid_from)",
+            "caf_trust_key_id_scope_start_uniq",
+            "unique(key_id, scope, valid_from)",
             "A trust key with this ID and start date already exists.",
         )
     ]
 
     name = fields.Char(required=True)
     key_id = fields.Char(required=True, index=True)
+    scope = fields.Selection(
+        [("demo", "Demo"), ("official", "Official SII")],
+        required=True,
+        default="official",
+        index=True,
+    )
     algorithm = fields.Selection(
         [("SHA1withRSA", "SHA1 with RSA")], required=True, default="SHA1withRSA"
     )
@@ -71,12 +77,15 @@ class CafTrustKey(models.Model):
     def unlink(self):  # pylint: disable=method-required-super
         raise AccessError(_("SII CAF trust keys cannot be deleted."))
 
-    def action_verify_caf_signature(self, key_id, signed_data, signature, signed_at):
+    def action_verify_caf_signature(
+        self, key_id, signed_data, signature, signed_at, scope="official"
+    ):
         """Verify CAF DA with the SII public key identified by IDK."""
         self._check_manager()
         trust_key = self.search(
             [
                 ("key_id", "=", str(key_id)),
+                ("scope", "=", scope),
                 ("valid_from", "<=", signed_at),
                 "|",
                 ("valid_to", "=", False),

@@ -35,6 +35,17 @@ class CafAuthorization(models.Model):
     company_id = fields.Many2one(
         "res.company", required=True, index=True, default=lambda self: self.env.company
     )
+    sii_environment = fields.Selection(
+        [
+            ("demo", "Demo / Simulated"),
+            ("certification", "Certification"),
+            ("production", "Production"),
+        ],
+        required=True,
+        index=True,
+        default=lambda self: self.env.company.dte_sii_environment,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
     document_code = fields.Char(required=True, index=True)
     issuer_vat = fields.Char(required=True, index=True)
     folio_start = fields.Integer(required=True)
@@ -71,6 +82,10 @@ class CafAuthorization(models.Model):
         normalized_vals_list = []
         for vals in vals_list:
             vals = vals.copy()
+            company = self.env["res.company"].browse(
+                vals.get("company_id") or self.env.company.id
+            )
+            vals.setdefault("sii_environment", company.dte_sii_environment)
             content = self._decode_content(vals.get("caf_file"))
             if vals.get("state", "draft") != "draft":
                 raise ValidationError(_("A CAF must be created in draft state."))
@@ -221,6 +236,7 @@ class CafAuthorization(models.Model):
             signed_data,
             signature_bytes,
             authorization_date,
+            "demo" if self.sii_environment == "demo" else "official",
         )
         return {
             "issuer_vat": self._normalize_vat(required["issuer_vat"]),
