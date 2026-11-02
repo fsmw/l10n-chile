@@ -2,9 +2,9 @@
     <record id="view_company_form_dte_xml" model="ir.ui.view">
         <field name="name">res.company.form.dte.xml</field>
         <field name="model">res.company</field>
-        <field name="inherit_id" ref="l10n_cl_dte_signing.view_company_form_dte_signing" />
+        <field name="inherit_id" ref="base.view_company_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='dte_certificate_id']" position="after">
+            <xpath expr="//field[@name='dte_sii_environment']" position="after">
                 <field name="dte_sii_activity_code" />
             </xpath>
         </field>

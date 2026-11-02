@@ -1,0 +1,273 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_xml
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
+"PO-Revision-Date: 2026-11-01 23:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "A type-33 DTE can only be created from a posted customer invoice."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "A type-33 DTE supports at most 60 detail lines."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "A type-33 invoice needs at least one detail line."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "An invoice line cannot mix VAT rates in this flow."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "CLP %(label)s must be an integer amount."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#: model:ir.model,name:l10n_cl_dte_xml.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Configure the SII economic activity code on the company first."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "DTE XML is not well-formed."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "DTE XML must be bytes without a DTD."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "DTE numbers must be finite."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Each invoice product name must contain between 1 and 80 characters."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Invoice line descriptions cannot exceed 1000 characters."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Invoice lines do not reconcile to the posted untaxed amount."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Invoice monetary values must be finite."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "Invoice monetary values must be numeric."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "Only a type-33 CAF can sign a type-33 TED."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "Only a type-33 invoice snapshot is supported."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#: model:ir.model.fields,help:l10n_cl_dte_xml.field_res_company__dte_sii_activity_code
+msgid "Positive SII activity code included in the DTE issuer section."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "Required DTE values cannot be blank."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#: model:ir.model.fields,field_description:l10n_cl_dte_xml.field_res_company__dte_sii_activity_code
+msgid "SII Economic Activity Code"
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "TED values must be representable in ISO-8859-1."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The CAF and invoice companies do not match."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The CAF file must contain exactly one CAF section."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE does not comply with the bundled SII DTE v10 schema: %s"
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE does not contain a TED."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE field %s is required."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE must contain exactly one serialized TED/DD."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/models/res_company.py:0
+msgid "The SII activity code must be a positive code of at most 6 digits."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The TED is missing DD, CAF, or FRMT."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The XML root element must be a SII DTE."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The accounting document type must be 33."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The folio is outside the CAF range."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The invoice contains characters outside ISO-8859-1."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The invoice must have an issue date."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The invoice needs at least one product line."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The invoice requires a type-33 CAF."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The invoice snapshot must be a mapping."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The issuing company must be registered in Chile."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The serialized DTE TED placeholder is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The snapshot and CAF companies do not match."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "The taxable invoice has no posted VAT amount."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "This first type-33 flow supports CLP invoices only."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
+msgid "This first type-33 flow supports only 19% VAT and exempt lines."
+msgstr ""

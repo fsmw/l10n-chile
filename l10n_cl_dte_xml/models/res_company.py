@@ -25,6 +25,7 @@ class ResCompany(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "The SII activity code must be a positive code of at most 6 digits."
+                        "The SII activity code must be a positive code of at most "
+                        "6 digits."
                     )
                 )
