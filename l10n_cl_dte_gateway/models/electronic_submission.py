@@ -1,6 +1,8 @@
 import base64
 import hashlib
 
+import psycopg2
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
@@ -246,6 +248,12 @@ class ElectronicSubmission(models.Model):
                 "submitted", "sii_submission_received", artifact_id=response.id
             )
         except Exception as error:  # the adapter boundary must persist ambiguity
+            if isinstance(error, psycopg2.Error):
+                # Database transaction failures must escape so the worker can
+                # roll back and retry the whole job. Treating a serialization
+                # failure as a transport outcome would mask the retry signal and
+                # could attempt to mutate an already completed audit record.
+                raise
             outcome_unknown = bool(getattr(error, "outcome_unknown", True))
             attempt._complete(
                 "unknown" if outcome_unknown else "failed",
@@ -320,6 +328,8 @@ class ElectronicSubmission(models.Model):
                 state, f"sii_status_{state}", artifact_id=response.id
             )
         except Exception as error:
+            if isinstance(error, psycopg2.Error):
+                raise
             unknown = bool(getattr(error, "outcome_unknown", True))
             attempt._complete(
                 "unknown" if unknown else "failed",
