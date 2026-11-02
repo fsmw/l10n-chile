@@ -26,6 +26,7 @@ class AccountMove(models.Model):
         if self.l10n_latam_document_type_id.code != "33":
             raise UserError(_("This action supports type-33 invoices only."))
         document_model = self.env["l10n_cl.electronic.document"]
+        environment = self.company_id.dte_sii_environment
         source_key = f"account.move:{self.id}:type-33"
         document = document_model.search(
             [("company_id", "=", self.company_id.id), ("source_key", "=", source_key)],
@@ -47,12 +48,13 @@ class AccountMove(models.Model):
                 return document
             raise UserError(_("The existing DTE has no submission record."))
 
-        caf = self._select_type_33_caf()
+        caf = self._select_type_33_caf(environment)
         document = document_model.create(
             {
                 "name": self.name or self.display_name,
                 "company_id": self.company_id.id,
                 "document_code": "33",
+                "sii_environment": environment,
                 "source_key": source_key,
                 "source_move_id": self.id,
             }
@@ -85,7 +87,9 @@ class AccountMove(models.Model):
         document.action_record_transition(
             "prepared", "dte_xml_prepared", artifact_id=unsigned_artifact.id
         )
-        signed_xml = SignatureService().sign_document(self.company_id, unsigned_xml)
+        signed_xml = SignatureService().sign_document(
+            self.company_id, document.sii_environment, unsigned_xml
+        )
         DteXmlComposer().validate_document(signed_xml)
         signed_artifact = self._create_dte_artifact(document, "signed_xml", signed_xml)
         document.action_record_transition(
@@ -100,7 +104,12 @@ class AccountMove(models.Model):
         submission = self.env["l10n_cl.electronic.submission"].create(
             {
                 "document_id": document.id,
-                "environment": self.company_id.dte_sii_environment,
+                "environment": document.sii_environment,
+                "demo_scenario": (
+                    self.env.context.get("dte_demo_scenario", "accepted")
+                    if document.sii_environment == "demo"
+                    else "accepted"
+                ),
                 "idempotency_key": f"{source_key}:submission",
             }
         )
@@ -108,12 +117,13 @@ class AccountMove(models.Model):
         submission.action_enqueue_submission()
         return document
 
-    def _select_type_33_caf(self):
+    def _select_type_33_caf(self, environment):
         self.ensure_one()
         selected_id = self.env.context.get("dte_caf_authorization_id")
         domain = [
             ("company_id", "=", self.company_id.id),
             ("document_code", "=", "33"),
+            ("sii_environment", "=", environment),
             ("state", "=", "validated"),
             "|",
             ("date_to", "=", False),

@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
+"PO-Revision-Date: 2026-11-01 23:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "A DTE already exists for this invoice and is not ready to resend."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model:ir.model,name:l10n_cl_dte_account.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_bank_statement_line__dte_document_ids
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_move__dte_document_ids
+msgid "Electronic Documents"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
+msgid "Issue DTE 33"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model:ir.model,name:l10n_cl_dte_account.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "Only a DTE manager can issue electronic documents."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "Only posted customer invoices can issue a DTE."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "Select exactly one current validated type-33 CAF before issuance."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_l10n_cl_electronic_document__source_move_id
+msgid "Source Move"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "The existing DTE has no submission record."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/models/account_move.py:0
+msgid "This action supports type-33 invoices only."
+msgstr ""
