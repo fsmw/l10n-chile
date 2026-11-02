@@ -1,0 +1,367 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_signing
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
+"PO-Revision-Date: 2026-11-01 23:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "A DTE must contain exactly one Documento."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.constraint,message:l10n_cl_dte_signing.constraint_l10n_cl_dte_signing_profile_certificate_uniq
+msgid "A certificate can only be used by one DTE signing profile."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "A signed DTE needs one Documento and Signature."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.constraint,message:l10n_cl_dte_signing.constraint_l10n_cl_dte_signing_profile_company_environment_uniq
+msgid "A signing profile already exists for this company and SII environment."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__active
+msgid "Active"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__certificate_id
+msgid "Certificate"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__certification
+msgid "Certification"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model,name:l10n_cl_dte_signing.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Configure a signing profile for this company and SII environment."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_res_company__dte_certificate_id
+msgid "DTE Signing Certificate"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model,name:l10n_cl_dte_signing.model_l10n_cl_dte_signing_profile
+msgid "DTE Signing Profile"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.actions.act_window,name:l10n_cl_dte_signing.action_dte_signing_profile
+msgid "DTE Signing Profiles"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Deactivate a signing profile before changing its identity or key."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__demo
+msgid "Demo / Simulated"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Documento ID must be unique in the DTE."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Documento must have a unique ID attribute."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Only RSA XMLDSig public keys are supported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Only a DTE manager can manage signing profiles."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Only a DTE manager can use the signing certificate."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Only an active CAF can sign a TED."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__production
+msgid "Production"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.ui.menu,name:l10n_cl_dte_signing.menu_dte_signing_profiles
+msgid "Signing Profiles"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Signing profiles are retained as configuration evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__sii_environment
+msgid "Sii Environment"
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "TED CAF key or FRMT is malformed."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF belongs to another company."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF does not contain an RSA private key."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF does not contain an RSA public key."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF private key is not valid PEM."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF private key must be RSA."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF public key is not valid PEM."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The CAF public key must be RSA."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The DTE already contains an XML signature."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The Documento digest does not match."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The TED FRMT signature is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The TED must include a CAF element."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The TED signature input must be the DD node."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The TED signing input must be the DD node."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML RSA public key is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML cannot be canonicalized."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML certificate is not valid DER/Base64."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML digest algorithm is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML input is not well-formed."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML input must be bytes without a DTD."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML root element must be DTE."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML signature algorithms are unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML signature contains invalid Base64."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML signature does not reference Documento."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML signature is incomplete."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML signature is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The configured certificate has no private key."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The configured signing certificate is not valid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The generated TED signature did not verify with the CAF key pair."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "The signing certificate must belong to the selected company."
+msgstr ""

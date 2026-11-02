@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 23:21+0000\n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
 "PO-Revision-Date: 2026-11-01 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -24,15 +24,35 @@ msgid "A DTE must contain exactly one Documento."
 msgstr "El DTE debe contener exactamente un elemento Documento."
 
 #. module: l10n_cl_dte_signing
+#: model:ir.model.constraint,message:l10n_cl_dte_signing.constraint_l10n_cl_dte_signing_profile_certificate_uniq
+msgid "A certificate can only be used by one DTE signing profile."
+msgstr "Un certificado solo puede utilizarse en un perfil de firma DTE."
+
+#. module: l10n_cl_dte_signing
 #. odoo-python
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "A signed DTE needs one Documento and Signature."
 msgstr "Un DTE firmado requiere un elemento Documento y uno Signature."
 
 #. module: l10n_cl_dte_signing
-#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_signing.view_company_form_dte_signing
-msgid "Chilean DTE"
-msgstr "DTE chileno"
+#: model:ir.model.constraint,message:l10n_cl_dte_signing.constraint_l10n_cl_dte_signing_profile_company_environment_uniq
+msgid "A signing profile already exists for this company and SII environment."
+msgstr "Ya existe un perfil de firma para esta compañía y entorno SII."
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__certificate_id
+msgid "Certificate"
+msgstr "Certificado"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__certification
+msgid "Certification"
+msgstr "Certificación"
 
 #. module: l10n_cl_dte_signing
 #: model:ir.model,name:l10n_cl_dte_signing.model_res_company
@@ -40,15 +60,56 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_cl_dte_signing
 #. odoo-python
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
-msgid "Configure a signing certificate for this company."
-msgstr "Configure un certificado de firma para esta compañía."
+msgid "Configure a signing profile for this company and SII environment."
+msgstr "Configure un perfil de firma para esta compañía y entorno SII."
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__create_date
+msgid "Created on"
+msgstr "Creado el"
 
 #. module: l10n_cl_dte_signing
 #: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_res_company__dte_certificate_id
 msgid "DTE Signing Certificate"
 msgstr "Certificado de firma DTE"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model,name:l10n_cl_dte_signing.model_l10n_cl_dte_signing_profile
+msgid "DTE Signing Profile"
+msgstr "Perfil de firma DTE"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.actions.act_window,name:l10n_cl_dte_signing.action_dte_signing_profile
+msgid "DTE Signing Profiles"
+msgstr "Perfiles de firma DTE"
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Deactivate a signing profile before changing its identity or key."
+msgstr "Desactive el perfil de firma antes de cambiar su identidad o certificado."
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__demo
+msgid "Demo / Simulated"
+msgstr "Demo / Simulado"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
@@ -63,10 +124,36 @@ msgid "Documento must have a unique ID attribute."
 msgstr "Documento debe tener un atributo ID único."
 
 #. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_signing
 #. odoo-python
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "Only RSA XMLDSig public keys are supported."
 msgstr "Solo se admiten claves públicas RSA para XMLDSig."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Only a DTE manager can manage signing profiles."
+msgstr "Solo un responsable DTE puede administrar perfiles de firma."
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
@@ -79,6 +166,27 @@ msgstr "Solo un responsable de DTE puede usar el certificado de firma."
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "Only an active CAF can sign a TED."
 msgstr "Solo un CAF activo puede firmar un TED."
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_signing.selection__l10n_cl_dte_signing_profile__sii_environment__production
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_cl_dte_signing
+#: model:ir.ui.menu,name:l10n_cl_dte_signing.menu_dte_signing_profiles
+msgid "Signing Profiles"
+msgstr "Perfiles de firma"
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "Signing profiles are retained as configuration evidence."
+msgstr "Los perfiles de firma se conservan como evidencia de configuración."
+
+#. module: l10n_cl_dte_signing
+#: model:ir.model.fields,field_description:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__sii_environment
+msgid "Sii Environment"
+msgstr "Entorno SII"
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
@@ -253,3 +361,15 @@ msgstr "El certificado de firma configurado no es válido."
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "The generated TED signature did not verify with the CAF key pair."
 msgstr "La firma TED generada no se verificó con el par de claves del CAF."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/models/signing_profile.py:0
+msgid "The signing certificate must belong to the selected company."
+msgstr "El certificado de firma debe pertenecer a la compañía seleccionada."
+
+#~ msgid "Chilean DTE"
+#~ msgstr "DTE chileno"
+
+#~ msgid "Configure a signing certificate for this company."
+#~ msgstr "Configure un certificado de firma para esta compañía."

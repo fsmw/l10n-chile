@@ -1,0 +1,12 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_dte_signing_profiles"
+        name="Signing Profiles"
+        parent="l10n_cl_dte_core.menu_dte_root"
+        action="action_dte_signing_profile"
+        sequence="50"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+</odoo>

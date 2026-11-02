@@ -82,13 +82,23 @@ class SignatureService:
             raise ValidationError(_("The TED FRMT signature is invalid.")) from error
         return True
 
-    def sign_document(self, company, unsigned_xml):
+    def sign_document(self, company, environment, unsigned_xml):
         """Append an enveloped XMLDSig over the DTE's Documento element."""
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
-        certificate = company.sudo().dte_certificate_id
+        profile = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", environment),
+                ("active", "=", True),
+            ],
+            limit=1,
+        )
+        certificate = profile.sudo().certificate_id
         if not certificate or certificate.company_id != company:
-            raise UserError(_("Configure a signing certificate for this company."))
+            raise UserError(
+                _("Configure a signing profile for this company and SII environment.")
+            )
         if not certificate.active or not certificate.is_valid:
             raise UserError(_("The configured signing certificate is not valid."))
         if not certificate.private_key_id or certificate.private_key_id.public:
