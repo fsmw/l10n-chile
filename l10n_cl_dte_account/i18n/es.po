@@ -184,8 +184,10 @@ msgstr "Solo un usuario DTE puede emitir documentos electrónicos."
 #. module: l10n_cl_dte_account
 #. odoo-python
 #: code:addons/l10n_cl_dte_account/models/account_move.py:0
-msgid "Only posted customer invoices can issue a DTE."
-msgstr "Solo las facturas de cliente contabilizadas pueden emitir un DTE."
+msgid "Only posted customer documents can issue a DTE."
+msgstr ""
+"Solo los documentos contables de cliente contabilizados pueden emitir un "
+"DTE."
 
 #. module: l10n_cl_dte_account
 #. odoo-python
@@ -311,11 +313,12 @@ msgstr "Documentos DTE"
 #. module: l10n_cl_dte_account
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
 msgid ""
-"DTE issuance is not available for this document type yet. The current\n"
-"                    flow supports electronic invoice types 33 and 34."
+"DTE issuance is unavailable for this accounting document or selected DTE type.\n"
+"                    Check that the document is posted and its fiscal configuration is complete."
 msgstr ""
-"La emisión DTE aún no está disponible para este tipo de documento. El flujo "
-"actual admite facturas electrónicas tipos 33 y 34."
+"La emisión DTE no está disponible para este documento contable o tipo DTE. "
+"Verifique que esté contabilizado y que la configuración fiscal esté "
+"completa."
 
 #. module: l10n_cl_dte_account
 #. odoo-python

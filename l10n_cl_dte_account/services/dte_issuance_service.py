@@ -12,6 +12,12 @@ class DteIssuanceService:
     """Orchestrate durable DTE issuance independently of XML format."""
 
     def issue(self, move, adapter, document_code):
+        """Keep fiscal preparation, evidence, folio and queue writes atomic."""
+        move.ensure_one()
+        with move.env.cr.savepoint():
+            return self._issue(move, adapter, document_code)
+
+    def _issue(self, move, adapter, document_code):
         move.ensure_one()
         document_model = move.env["l10n_cl.electronic.document"]
         environment = move.company_id.dte_sii_environment
@@ -21,23 +27,33 @@ class DteIssuanceService:
             limit=1,
         )
         if document:
-            if document.preparation_state != "queued":
-                raise UserError(
-                    _(
-                        "A DTE already exists for this invoice and is not ready "
-                        "to resend."
-                    )
-                )
-            submission = move.env["l10n_cl.electronic.submission"].search(
-                [("document_id", "=", document.id)], limit=1
-            )
-            if submission:
-                submission.action_enqueue_submission()
-                return document
-            raise UserError(_("The existing DTE has no submission record."))
+            return self._resume_existing(move, document)
 
         adapter.validate_source(move, document_code)
+        document = document_model.search(
+            [("company_id", "=", move.company_id.id), ("source_key", "=", source_key)],
+            limit=1,
+        )
+        if document:
+            return self._resume_existing(move, document)
         caf = move._select_dte_caf(environment, document_code)
+        extra_values = adapter.prepare_document_values(move, document_code)
+        protected_values = {
+            "name",
+            "company_id",
+            "document_code",
+            "sii_environment",
+            "source_key",
+            "source_move_id",
+            "preparation_state",
+            "fiscal_state",
+            "folio",
+            "payload_digest",
+        }
+        if not isinstance(extra_values, dict) or protected_values.intersection(
+            extra_values
+        ):
+            raise UserError(_("The DTE adapter returned invalid document metadata."))
         document = document_model.create(
             {
                 "name": move.name or move.display_name,
@@ -46,6 +62,7 @@ class DteIssuanceService:
                 "sii_environment": environment,
                 "source_key": source_key,
                 "source_move_id": move.id,
+                **extra_values,
             }
         )
         folio = caf.action_reserve_folio(document, f"{source_key}:folio")
@@ -101,5 +118,21 @@ class DteIssuanceService:
             }
         )
         folio.action_consume()
+        submission.action_enqueue_submission()
+        return document
+
+    def _resume_existing(self, move, document):
+        if document.preparation_state != "queued":
+            raise UserError(
+                _(
+                    "A DTE already exists for this invoice and is not ready "
+                    "to resend."
+                )
+            )
+        submission = move.env["l10n_cl.electronic.submission"].search(
+            [("document_id", "=", document.id)], limit=1
+        )
+        if not submission:
+            raise UserError(_("The existing DTE has no submission record."))
         submission.action_enqueue_submission()
         return document
