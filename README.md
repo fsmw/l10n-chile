@@ -35,3 +35,20 @@ that explains its license.
 OCA, or the [Odoo Community Association](http://odoo-community.org/), is a nonprofit
 organization whose mission is to support the collaborative development of Odoo features
 and promote its widespread use.
+# Local OCA CI (Odoo 18.0)
+
+The repository uses the OCA 18.0 test containers for both Odoo and OCB in
+GitHub Actions. Run the same install, manifest checks, database initialization,
+and addon tests locally with Docker Compose. You need Docker Compose and
+`pre-commit` installed in your host Python environment:
+
+```bash
+./scripts/oca-ci-local.sh          # Run Odoo and OCB
+./scripts/oca-ci-local.sh odoo     # Run only Odoo 18.0
+./scripts/oca-ci-local.sh ocb      # Run only OCB 18.0
+```
+
+The command first runs the repository's full pre-commit suite, then runs the
+OCA tests using disposable PostgreSQL. The first run pulls the OCA images and
+may take several minutes. The `pre-commit` and `tests` workflows can each be
+started manually from the GitHub Actions tab with **Run workflow**.

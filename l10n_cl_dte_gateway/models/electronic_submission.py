@@ -188,7 +188,7 @@ class ElectronicSubmission(models.Model):
             )
         signed.action_verify_integrity()
         request_bytes = base64.b64decode(signed.content, validate=True)
-        DteXmlComposer().validate_document(request_bytes)
+        self._validate_document_payload(request_bytes)
         self._write_internal({"state": "sending"})
         attempt = self.env["l10n_cl.submission.attempt"].create(
             {
@@ -261,6 +261,11 @@ class ElectronicSubmission(models.Model):
                     correlation_key=self.idempotency_key,
                 )
         return True
+
+    def _validate_document_payload(self, request_bytes):
+        """Validate a signed DTE before the transport adapter receives it."""
+        self.ensure_one()
+        return DteXmlComposer().validate_document(request_bytes)
 
     def _job_query_sii_status(self):
         """Query SII state for a known TrackID and retain the raw response."""

@@ -1,0 +1,423 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_boleta
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-02 16:22+0000\n"
+"PO-Revision-Date: 2026-11-02 16:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_CL\n"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "A boleta supports at most 1000 detail lines."
+msgstr "La boleta admite un máximo de 1000 líneas de detalle."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "Boleta 41 must contain exempt detail lines."
+msgstr "La boleta 41 debe contener líneas de detalle exentas."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields,field_description:l10n_cl_dte_boleta.field_account_bank_statement_line__dte_boleta_payment_method
+#: model:ir.model.fields,field_description:l10n_cl_dte_boleta.field_account_move__dte_boleta_payment_method
+msgid "Boleta Payment Method"
+msgstr "Medio de pago de la boleta"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Boleta issuance is currently available only in Demo mode."
+msgstr "La emisión de boletas está disponible actualmente solo en modo Demo."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid ""
+"Boleta product names must be 1-80 and descriptions at most 1000 characters."
+msgstr "Los nombres de productos de la boleta deben tener entre 1 y 80 caracteres, y las descripciones, un máximo de 1000 caracteres."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Boleta quantities must be greater than zero."
+msgstr "Las cantidades de la boleta deben ser mayores que cero."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "Boleta text must be representable in ISO-8859-1."
+msgstr "El texto de la boleta debe poder representarse en ISO-8859-1."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Boleta type 41 can contain only exempt lines."
+msgstr "La boleta tipo 41 solo puede contener líneas exentas."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Boleta type 41 requires all lines to be exempt."
+msgstr "La boleta tipo 41 exige que todas las líneas sean exentas."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "CLP %s must be an integer amount."
+msgstr "El monto en CLP de %s debe ser un número entero."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields.selection,name:l10n_cl_dte_boleta.selection__account_move__dte_boleta_payment_method__1
+msgid "Cash"
+msgstr "Efectivo"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Cash boletas over 135 UF require the receiver email and phone."
+msgstr "Las boletas pagadas en efectivo que superen las 135 UF requieren el correo electrónico y el teléfono del receptor."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Cash rounding is not supported for boletas yet."
+msgstr "Por ahora, las boletas no admiten redondeo de efectivo."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields.selection,name:l10n_cl_dte_boleta.selection__account_move__dte_boleta_payment_method__4
+msgid "Cheque"
+msgstr "Cheque"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Choose the payment method for a boleta over the annual 135 UF limit."
+msgstr "Seleccione el medio de pago para una boleta que supere el límite anual de 135 UF."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Complete the following issuer data before issuing: %s"
+msgstr "Complete los siguientes datos del emisor antes de emitir: %s"
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model,name:l10n_cl_dte_boleta.model_l10n_cl_electronic_submission
+msgid "DTE SII Submission"
+msgstr "Envío de DTE al SII"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Electronic boletas must be issued in CLP."
+msgstr "Las boletas electrónicas deben emitirse en CLP."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields.selection,name:l10n_cl_dte_boleta.selection__account_move__dte_boleta_payment_method__2
+msgid "Electronic payment"
+msgstr "Pago electrónico"
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields.selection,name:l10n_cl_dte_boleta.selection__account_move__dte_boleta_payment_method__3
+msgid "Electronic transfer"
+msgstr "Transferencia electrónica"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Invalid boleta %s."
+msgstr "El valor de %s no es válido para la boleta."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Invoice payment balances are not supported."
+msgstr "No se admiten saldos pendientes de pago en la factura."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model,name:l10n_cl_dte_boleta.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Negative invoice lines are not supported."
+msgstr "No se admiten líneas negativas en la factura."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Only Chilean boletas 39 and 41 are supported by this adapter."
+msgstr "Este adaptador solo admite boletas chilenas 39 y 41."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "Only boletas 39 and 41 can use a TED."
+msgstr "Solo las boletas 39 y 41 pueden usar un TED."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "Only boletas 39 and 41 can use this serializer."
+msgstr "Este serializador solo admite boletas 39 y 41."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Only posted customer invoices can be issued as electronic boletas."
+msgstr "Solo se pueden emitir boletas electrónicas a partir de facturas de cliente confirmadas."
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields.selection,name:l10n_cl_dte_boleta.selection__account_move__dte_boleta_payment_method__5
+msgid "Other"
+msgstr "Otro"
+
+#. module: l10n_cl_dte_boleta
+#: model:ir.model.fields,help:l10n_cl_dte_boleta.field_account_bank_statement_line__dte_boleta_payment_method
+#: model:ir.model.fields,help:l10n_cl_dte_boleta.field_account_move__dte_boleta_payment_method
+msgid ""
+"Required for boletas whose total exceeds the annual 135 UF limit. For cash, "
+"the receiver email and phone are also required."
+msgstr "Obligatorio para las boletas cuyo total supere el límite anual de 135 UF. Si el pago es en efectivo, también se requieren el correo electrónico y el teléfono del receptor."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Set a receiver RUT or use the generic final-consumer RUT."
+msgstr "Indique el RUT del receptor o use el RUT genérico de consumidor final."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Set a receiver name; it is required for sales and services."
+msgstr "Indique el nombre del receptor; es obligatorio para ventas y servicios."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "Set the invoice date before issuing a boleta."
+msgstr "Indique la fecha de la factura antes de emitir la boleta."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The CAF XML is malformed."
+msgstr "El XML del CAF no está bien formado."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The CAF belongs to another company."
+msgstr "El CAF pertenece a otra empresa."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The CAF document type must match the boleta."
+msgstr "El tipo de documento del CAF debe coincidir con el de la boleta."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The CAF type must match the boleta type."
+msgstr "El tipo de CAF debe coincidir con el tipo de boleta."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The UF and CLP currencies are required."
+msgstr "Se requieren las monedas UF y CLP."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The XML does not contain a DTE document."
+msgstr "El XML no contiene un documento DTE."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The annual 135 UF boleta threshold is unavailable for %s."
+msgstr "No se puede determinar el límite anual de 135 UF para la fecha %s."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta TED field %s is required."
+msgstr "El campo %s del TED de la boleta es obligatorio."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta TED is missing DD, CAF, or FRMT."
+msgstr "Al TED de la boleta le falta el DD, el CAF o la firma FRMT."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta TED placeholder is invalid."
+msgstr "El marcador de posición del TED de la boleta no es válido."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta XML is malformed: %s"
+msgstr "El XML de la boleta no está bien formado: %s"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta does not comply with the official SII schema: %s"
+msgstr "La boleta no cumple con el esquema oficial del SII: %s"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta field %s is required."
+msgstr "El campo %s de la boleta es obligatorio."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta must include its signed TED."
+msgstr "La boleta debe incluir su TED firmado."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The boleta must use type 39/41 and service indicator 3."
+msgstr "La boleta debe ser de tipo 39 o 41 y usar el indicador de servicio 3."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The company must be registered in Chile."
+msgstr "La empresa debe estar registrada en Chile."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The folio is outside the CAF range."
+msgstr "El folio está fuera del rango autorizado por el CAF."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The invoice needs at least one product line."
+msgstr "La factura debe tener al menos una línea de producto."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The official boleta schema cannot be loaded."
+msgstr "No se puede cargar el esquema oficial de boletas."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The official boleta schema is not available."
+msgstr "El esquema oficial de boletas no está disponible."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "The posted invoice totals do not reconcile with its detail lines."
+msgstr "Los totales de la factura confirmada no cuadran con sus líneas de detalle."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The snapshot and CAF companies do not match."
+msgstr "La empresa de la captura de datos no coincide con la empresa del CAF."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_xml_composer.py:0
+msgid "The validated CAF does not contain a CAF element."
+msgstr "El CAF validado no contiene un elemento CAF."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid ""
+"This boleta exceeds the annual 135 UF limit. Identify the person who paid "
+"and issue a new boleta with their RUT."
+msgstr "Esta boleta supera el límite anual de 135 UF. Identifique a la persona que pagó y emita una nueva boleta con su RUT."
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "VAT"
+msgstr "IVA"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "company RUT"
+msgstr "RUT de la empresa"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "company address and commune"
+msgstr "domicilio y comuna de la empresa"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "company economic activity"
+msgstr "giro de la empresa"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "company legal name"
+msgstr "razón social de la empresa"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "discount"
+msgstr "descuento"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "line subtotal"
+msgstr "subtotal de línea"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "net amount"
+msgstr "monto neto"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "quantity"
+msgstr "cantidad"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "total"
+msgstr "total"
+
+#. module: l10n_cl_dte_boleta
+#. odoo-python
+#: code:addons/l10n_cl_dte_boleta/services/boleta_snapshot.py:0
+msgid "valid SII activity code"
+msgstr "código de actividad válido del SII"
