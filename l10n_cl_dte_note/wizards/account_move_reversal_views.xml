@@ -1,0 +1,21 @@
+<odoo>
+    <record id="account_move_reversal_view_form" model="ir.ui.view">
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reason']" position="after">
+                <field name="country_code" invisible="1" />
+                <field name="dte_note_enabled" invisible="1" />
+                <field
+                    name="dte_note_operation"
+                    invisible="not dte_note_enabled"
+                    required="dte_note_enabled"
+                />
+            </xpath>
+            <xpath expr="//field[@name='reason']" position="attributes">
+                <attribute name="required">dte_note_enabled</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

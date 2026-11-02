@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-02 16:23+0000\n"
-"PO-Revision-Date: 2026-11-02 16:23+0000\n"
+"POT-Creation-Date: 2026-11-02 21:08+0000\n"
+"PO-Revision-Date: 2026-11-02 21:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -127,8 +127,8 @@ msgstr ""
 #. module: l10n_cl_dte_account
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_account.view_move_form_dte_issuance
 msgid ""
-"DTE issuance is not available for this document type yet. The current\n"
-"                    flow supports electronic invoice types 33 and 34."
+"DTE issuance is unavailable for this accounting document or selected DTE type.\n"
+"                    Check that the document is posted and its fiscal configuration is complete."
 msgstr ""
 
 #. module: l10n_cl_dte_account
@@ -139,6 +139,12 @@ msgstr ""
 #. module: l10n_cl_dte_account
 #: model:ir.model.fields,field_description:l10n_cl_dte_account.field_l10n_cl_dte_demo_setup_wizard__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_bank_statement_line__dte_issuance_available
+#: model:ir.model.fields,field_description:l10n_cl_dte_account.field_account_move__dte_issuance_available
+msgid "Dte Issuance Available"
 msgstr ""
 
 #. module: l10n_cl_dte_account
@@ -193,7 +199,7 @@ msgstr ""
 #. module: l10n_cl_dte_account
 #. odoo-python
 #: code:addons/l10n_cl_dte_account/models/account_move.py:0
-msgid "Only posted customer invoices can issue a DTE."
+msgid "Only posted customer documents can issue a DTE."
 msgstr ""
 
 #. module: l10n_cl_dte_account
@@ -295,6 +301,12 @@ msgstr ""
 msgid ""
 "Synthetic Demo configuration created: trust key %(key)s, validated CAF types"
 " %(codes)s, and signing profile for %(company)s."
+msgstr ""
+
+#. module: l10n_cl_dte_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_account/services/dte_issuance_service.py:0
+msgid "The DTE adapter returned invalid document metadata."
 msgstr ""
 
 #. module: l10n_cl_dte_account

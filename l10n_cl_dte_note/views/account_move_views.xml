@@ -1,0 +1,72 @@
+<odoo>
+    <record id="account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_account.view_move_form_dte_issuance"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_view_dte_notes"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-exchange"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                    invisible="dte_note_count == 0"
+                >
+                    <field name="dte_note_count" widget="statinfo" string="DTE Notes" />
+                </button>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="before">
+                <group
+                    string="DTE Reference"
+                    invisible="dte_document_type_code not in ['61', '56'] or move_type not in ['out_invoice', 'out_refund']"
+                >
+                    <field
+                        name="dte_note_target_document_id"
+                        readonly="state != 'draft' or dte_document_ids"
+                        domain="[('fiscal_state', '=', 'accepted'), ('sii_environment', '=', 'demo'), ('document_code', 'in', ['33', '34', '39', '41', '61'])]"
+                        options="{'no_create': True}"
+                    />
+                    <field name="dte_note_target_folio" />
+                    <field
+                        name="dte_note_operation"
+                        readonly="state != 'draft' or dte_document_ids"
+                    />
+                    <field
+                        name="dte_note_reason"
+                        readonly="state != 'draft' or dte_document_ids"
+                    />
+                </group>
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    invisible="not dte_issuance_available or dte_document_type_code not in ['61', '56']"
+                >
+                    Issue this published note to create its folio, signed XML, durable Demo submission and retained evidence.
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_move_line_view_dte_note" model="ir.ui.view">
+        <field name="name">account.move.form.dte.note.line</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="priority">95</field>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']"
+                position="after"
+            >
+                <field
+                    name="dte_note_origin_line_number"
+                    string="Original DTE Line"
+                    column_invisible="parent.dte_document_type_code not in ['61', '56']"
+                    readonly="parent.state != 'draft'"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

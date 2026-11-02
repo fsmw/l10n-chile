@@ -19,6 +19,10 @@ class DteIssuanceAdapter:
     def capture_snapshot(self, move, caf, folio_number, document_code):
         raise NotImplementedError
 
+    def prepare_document_values(self, move, document_code):
+        """Return adapter-owned immutable fields for the new fiscal document."""
+        return {}
+
     def compose_ted(self, snapshot, caf):
         raise NotImplementedError
 

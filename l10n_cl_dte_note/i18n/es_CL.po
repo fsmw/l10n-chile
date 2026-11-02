@@ -1,0 +1,985 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_note
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-02 21:00+0000\n"
+"PO-Revision-Date: 2026-11-02 21:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "A DTE credit note requires an accepted Demo source."
+msgstr ""
+"La nota de crédito DTE requiere un documento de origen aceptado en modo "
+"Demo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+msgid "A DTE debit note requires an accepted Demo source."
+msgstr ""
+"La nota de débito DTE requiere un documento de origen aceptado en modo Demo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "A DTE note must be type 61/56 and have exactly one reference."
+msgstr "La nota DTE debe ser tipo 61 o 56 y tener una sola referencia."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "A DTE note must have a positive fiscal amount."
+msgstr "La nota DTE debe tener un monto fiscal positivo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "A DTE note must reference a durably queued and accepted source."
+msgstr ""
+"La nota DTE debe referenciar un documento de origen aceptado y con evidencia"
+" durable."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "A DTE note needs at least one product line."
+msgstr "La nota DTE debe tener al menos una línea de producto."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "A DTE note needs one fiscal target, root and accounting source."
+msgstr ""
+"La nota DTE requiere un documento fiscal objetivo, una raíz y un asiento "
+"contable."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "A DTE note operation and reason require a referenced DTE."
+msgstr ""
+"La operación y el motivo de la nota DTE requieren un DTE de referencia."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_submission.py:0
+msgid "A DTE note submission requires exactly one signed XML artifact."
+msgstr "El envío de la nota DTE requiere exactamente un archivo XML firmado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"A cancellation must preserve every referenced detail amount and quantity."
+msgstr ""
+"La anulación debe conservar el monto y la cantidad de cada detalle "
+"referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "A cancellation must reverse every referenced fiscal detail."
+msgstr "La anulación debe revertir todos los detalles fiscales referenciados."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "A credit note can reference only an original invoice or boleta."
+msgstr ""
+"La nota de crédito solo puede referenciar una factura o boleta original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "A credit note must reverse the selected customer document."
+msgstr ""
+"La nota de crédito debe revertir el documento de cliente seleccionado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "A debit cancellation must be linked to the selected credit note."
+msgstr ""
+"La anulación con nota de débito debe vincularse a la nota de crédito "
+"seleccionada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "A debit note can reference only an invoice or credit note."
+msgstr ""
+"La nota de débito solo puede referenciar una factura o nota de crédito."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "A debit note must be linked to the selected customer invoice."
+msgstr ""
+"La nota de débito debe vincularse a la factura de cliente seleccionada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "A debit note must increase the fiscal amount."
+msgstr "La nota de débito debe aumentar el monto fiscal."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"A full cancellation is unavailable after another effective adjustment; "
+"create a credit for the remaining amount."
+msgstr ""
+"No se puede anular completamente después de otro ajuste efectivo. Emita una "
+"nota de crédito por el saldo restante."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"A goods return must use the original unit price and discount and cannot "
+"exceed the original quantity."
+msgstr ""
+"La devolución debe usar el precio unitario y descuento originales, y no "
+"puede exceder la cantidad original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "A note effect references a missing original fiscal detail."
+msgstr ""
+"El efecto de la nota referencia un detalle fiscal original inexistente."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "A note line cannot be matched to its original fiscal detail."
+msgstr ""
+"No se puede asociar la línea de la nota con su detalle fiscal original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"A partial DTE note supports at most 60 detail lines; split this adjustment "
+"into multiple notes."
+msgstr ""
+"La nota DTE parcial admite hasta 60 líneas de detalle; divida el ajuste en "
+"varias notas."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"A partial DTE note supports at most 60 details; split this adjustment into "
+"multiple notes."
+msgstr ""
+"La nota DTE parcial admite hasta 60 detalles; divida el ajuste en varias "
+"notas."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid ""
+"A posted DTE note must reference the accepted electronic document it "
+"adjusts."
+msgstr ""
+"La nota DTE contabilizada debe referenciar el documento electrónico aceptado"
+" que ajusta."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "A posted DTE note requires a reference reason of 1 to 90 characters."
+msgstr ""
+"La nota DTE contabilizada requiere un motivo de referencia de 1 a 90 "
+"caracteres."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_account_move_reversal
+msgid "Account Move Reversal"
+msgstr "Reversión de asiento contable"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_account_debit_note
+msgid "Add Debit Note wizard"
+msgstr "Asistente para agregar nota de débito"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_l10n_cl_electronic_document__note_root_document_id
+msgid "Adjustment Root DTE"
+msgstr "DTE raíz del ajuste"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "An amount correction cannot change the original quantity."
+msgstr "Una corrección de monto no puede cambiar la cantidad original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "An exempt note line cannot include VAT."
+msgstr "Una línea exenta de la nota no puede incluir IVA."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "CLP %(label)s must be an integer."
+msgstr "El monto CLP %(label)s debe ser un entero."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_debit_note__dte_note_operation__cancel
+msgid "Cancel credit note"
+msgstr "Anular nota de crédito"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move__dte_note_operation__cancel
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move_reversal__dte_note_operation__cancel
+msgid "Cancel document"
+msgstr "Anular documento"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico chileno"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_debit_note__dte_note_operation__amount
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move__dte_note_operation__amount
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move_reversal__dte_note_operation__amount
+msgid "Correct amounts"
+msgstr "Corregir montos"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_operation
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_debit_note__dte_note_operation
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_operation
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move_reversal__dte_note_operation
+msgid "DTE Note Operation"
+msgstr "Operación de la nota DTE"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_count
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_count
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_note.account_move_view_form
+msgid "DTE Notes"
+msgstr "Notas DTE"
+
+#. module: l10n_cl_dte_note
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_note.account_move_view_form
+msgid "DTE Reference"
+msgstr "Referencia DTE"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_reason
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_reason
+msgid "DTE Reference Reason"
+msgstr "Motivo de referencia DTE"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_l10n_cl_electronic_submission
+msgid "DTE SII Submission"
+msgstr "Envío DTE al SII"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "DTE credit and debit notes are available in Demo mode only."
+msgstr ""
+"Las notas de crédito y débito DTE solo están disponibles en modo Demo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "DTE note XML must be bytes without a DTD."
+msgstr "El XML de la nota DTE debe ser bytes y no contener una DTD."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid "DTE note details require positive quantity and amount."
+msgstr "Los detalles de la nota DTE requieren cantidades y montos positivos."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "DTE note provenance is immutable after document creation."
+msgstr ""
+"La procedencia de la nota DTE no se puede modificar después de crear el "
+"documento."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "DTE notes are currently restricted to Demo evidence."
+msgstr "Actualmente, las notas DTE están limitadas a evidencia del modo Demo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "DTE notes currently require CLP and Demo mode."
+msgstr "Actualmente, las notas DTE requieren CLP y el modo Demo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "DTE notes support only 19% VAT and exempt lines."
+msgstr "Las notas DTE solo admiten IVA de 19 % y líneas exentas."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "DTE type %(code)s cannot %(operation)s referenced type %(target)s."
+msgstr ""
+"El tipo DTE %(code)s no puede realizar la operación %(operation)s sobre el "
+"tipo %(target)s referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Debit cancellation amounts must match the referenced credit note."
+msgstr ""
+"Los montos de la anulación con nota de débito deben coincidir con la nota de"
+" crédito referenciada."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_debit_note__dte_note_enabled
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move_reversal__dte_note_enabled
+msgid "Dte Note Enabled"
+msgstr "Nota DTE habilitada"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "Enter a DTE reference reason of 1 to 90 characters."
+msgstr "Ingrese un motivo de referencia DTE de 1 a 90 caracteres."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Enter a reference reason of 1 to 90 characters."
+msgstr "Ingrese un motivo de referencia de 1 a 90 caracteres."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "Enter the reason that will be included in the DTE reference."
+msgstr "Ingrese el motivo que se incluirá en la referencia DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid "Every posted DTE note detail must reference an original fiscal line."
+msgstr ""
+"Cada detalle contabilizado de la nota DTE debe referenciar una línea fiscal "
+"original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Exempt reversal"
+msgstr "Reversión exenta"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "Existing DTE adjustments exceed the original fiscal amount."
+msgstr "Los ajustes DTE existentes exceden el monto fiscal original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid ""
+"Fiscal accounting details are immutable after DTE evidence has been created."
+msgstr ""
+"Los detalles contables fiscales no se pueden modificar después de crear "
+"evidencia DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid ""
+"Fiscal accounting details cannot be deleted after DTE evidence has been "
+"created."
+msgstr ""
+"Los detalles contables fiscales no se pueden eliminar después de crear "
+"evidencia DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid ""
+"Fiscal identity and lines cannot change after DTE evidence has been created."
+msgstr ""
+"La identidad fiscal y las líneas no se pueden modificar después de crear "
+"evidencia DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Full cancellation amounts must match the complete referenced DTE."
+msgstr ""
+"Los montos de la anulación total deben coincidir con el DTE completo "
+"referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Full cancellation of referenced document"
+msgstr "Anulación total del documento referenciado"
+
+#. module: l10n_cl_dte_note
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_note.account_move_view_form
+msgid ""
+"Issue this published note to create its folio, signed XML, durable Demo "
+"submission and retained evidence."
+msgstr ""
+"Emita esta nota contabilizada para crear su folio, XML firmado, envío "
+"durable en Demo y evidencia conservada."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model,name:l10n_cl_dte_note.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_l10n_cl_electronic_document__note_revision
+msgid "Note Revision"
+msgstr "Revisión de la nota"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_l10n_cl_electronic_document__note_target_document_id
+msgid "Note Target DTE"
+msgstr "DTE objetivo de la nota"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Note detail amounts must be positive."
+msgstr "Los montos de detalle de la nota deben ser positivos."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,help:l10n_cl_dte_note.field_account_move_line__dte_note_origin_line_number
+msgid ""
+"One-based position in the immutable source snapshot, not an accounting line "
+"ID."
+msgstr ""
+"Posición desde 1 en la instantánea inmutable del origen; no es el "
+"identificador de una línea contable."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Only DTE note types 61 and 56 are supported."
+msgstr "Solo se admiten notas DTE de tipo 61 y 56."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "Only DTE notes 61/56 with at most 60 details are supported."
+msgstr "Solo se admiten notas DTE 61/56 con un máximo de 60 detalles."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "Only DTE types 61 and 56 can carry note references."
+msgstr "Solo los DTE de tipo 61 y 56 pueden incluir referencias de nota."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Only a DTE manager can issue credit or debit notes."
+msgstr "Solo un administrador DTE puede emitir notas de crédito o débito."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "Only a DTE manager can serialize DTE note adjustments."
+msgstr "Solo un administrador DTE puede serializar ajustes de notas DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "Only an accepted DTE can be referenced."
+msgstr "Solo se puede referenciar un DTE aceptado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "Only document types 61 and 56 can reference a DTE here."
+msgstr "Aquí solo los tipos de documento 61 y 56 pueden referenciar un DTE."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move_line__dte_note_origin_line_number
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_note.account_move_line_view_dte_note
+msgid "Original DTE Line"
+msgstr "Línea DTE original"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid ""
+"Process one DTE source at a time to keep its fiscal reference unambiguous."
+msgstr ""
+"Procese un documento DTE de origen a la vez para mantener inequívoca la "
+"referencia fiscal."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Publish the accounting note with its selected DTE type before issuing."
+msgstr "Contabilice la nota con el tipo DTE seleccionado antes de emitirla."
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_target_move_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_target_move_id
+msgid "Referenced Accounting Document"
+msgstr "Documento contable referenciado"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_target_document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_target_document_id
+msgid "Referenced DTE"
+msgstr "DTE referenciado"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_target_folio
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_target_folio
+msgid "Referenced Fiscal Folio"
+msgstr "Folio fiscal referenciado"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_l10n_cl_electronic_document__note_document_ids
+msgid "Referencing Notes"
+msgstr "Notas que lo referencian"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_bank_statement_line__dte_note_move_ids
+#: model:ir.model.fields,field_description:l10n_cl_dte_note.field_account_move__dte_note_move_ids
+msgid "Related DTE Notes"
+msgstr "Notas DTE relacionadas"
+
+#. module: l10n_cl_dte_note
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move__dte_note_operation__return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_note.selection__account_move_reversal__dte_note_operation__return
+msgid "Return goods"
+msgstr "Devolver productos"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "Select one source document with exactly one issued DTE."
+msgstr "Seleccione un documento de origen con exactamente un DTE emitido."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Taxable reversal"
+msgstr "Reversión afecta"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "The Chilean document type %(code)s is not configured."
+msgstr "El tipo de documento chileno %(code)s no está configurado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid ""
+"The DTE evidence source must be the posted accounting note for its target."
+msgstr ""
+"El origen de la evidencia DTE debe ser la nota contable contabilizada "
+"correspondiente al documento objetivo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note TED is missing DD, CAF, or FRMT."
+msgstr "Al TED de la nota DTE le falta DD, CAF o FRMT."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note XML is malformed: %s"
+msgstr "El XML de la nota DTE está mal formado: %s"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The DTE note company and environment must match its root."
+msgstr ""
+"La compañía y el ambiente de la nota DTE deben coincidir con su documento "
+"raíz."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note contains characters outside ISO-8859-1."
+msgstr "La nota DTE contiene caracteres que no pertenecen a ISO-8859-1."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note does not comply with DTE_v10: %s"
+msgstr "La nota DTE no cumple con DTE_v10: %s"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The DTE note environment must match its fiscal chain."
+msgstr "El ambiente de la nota DTE debe coincidir con su cadena fiscal."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note has no Documento element."
+msgstr "La nota DTE no contiene el elemento Documento."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note must contain one complete fiscal reference."
+msgstr "La nota DTE debe contener una referencia fiscal completa."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note must include exactly one signed TED."
+msgstr "La nota DTE debe incluir exactamente un TED firmado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_xml_composer.py:0
+msgid "The DTE note reference is incomplete."
+msgstr "La referencia de la nota DTE está incompleta."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_submission.py:0
+msgid "The DTE note request XML is malformed."
+msgstr "El XML de solicitud de la nota DTE está mal formado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_submission.py:0
+msgid "The DTE note request differs from its signed XML evidence."
+msgstr "La solicitud de la nota DTE difiere de la evidencia XML firmada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The DTE note root does not match its reference chain."
+msgstr ""
+"El documento raíz de la nota DTE no coincide con la cadena de referencias."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The DTE note root is inconsistent with its referenced document."
+msgstr ""
+"El documento raíz de la nota DTE no es consistente con el documento "
+"referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The DTE note target, root and company must match."
+msgstr ""
+"El documento objetivo, la raíz y la compañía de la nota DTE deben coincidir."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "The DTE reference reason must use ISO-8859-1 characters."
+msgstr "El motivo de referencia DTE debe usar caracteres ISO-8859-1."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "The accounting lines no longer match the immutable DTE snapshot."
+msgstr ""
+"Las líneas contables ya no coinciden con la instantánea DTE inmutable."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The accounting note operation is not valid for its type."
+msgstr "La operación de la nota contable no es válida para su tipo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The accounting note origin does not match its fiscal target."
+msgstr ""
+"El origen de la nota contable no coincide con su documento fiscal objetivo."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "The accounting note type and fiscal evidence type differ."
+msgstr ""
+"El tipo de la nota contable y el de la evidencia fiscal son distintos."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "The company RUT no longer matches the original DTE."
+msgstr "El RUT de la compañía ya no coincide con el DTE original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The fiscal snapshot identity differs from its DTE."
+msgstr "La identidad de la instantánea fiscal difiere de su DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The fiscal snapshot totals do not reconcile."
+msgstr "Los totales de la instantánea fiscal no cuadran."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+msgid "The native debit wizard did not create exactly one note draft."
+msgstr ""
+"El asistente nativo de débito no creó exactamente un borrador de nota."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The note and referenced DTE must belong to the same company."
+msgstr "La nota y el DTE referenciado deben pertenecer a la misma compañía."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The note date cannot precede its referenced DTE."
+msgstr "La fecha de la nota no puede ser anterior a la del DTE referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid ""
+"The note detail amounts do not reconcile with the posted accounting total."
+msgstr ""
+"Los montos de detalle de la nota no cuadran con el total contable "
+"contabilizado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "The note exceeds the available %(component)s amount."
+msgstr "La nota excede el monto %(component)s disponible."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "The note exceeds the available amount for an original detail line."
+msgstr ""
+"La nota excede el monto disponible para una línea de detalle original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid "The note line tax treatment must match its referenced DTE line."
+msgstr ""
+"El tratamiento tributario de la línea debe coincidir con el de la línea DTE "
+"referenciada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid ""
+"The note recipient must match the fiscal recipient of the referenced DTE."
+msgstr ""
+"El receptor de la nota debe coincidir con el receptor fiscal del DTE "
+"referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid "The original DTE line number is outside the referenced snapshot."
+msgstr ""
+"El número de línea DTE original está fuera de la instantánea referenciada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "The original accounting lines changed after DTE acceptance."
+msgstr ""
+"Las líneas contables originales cambiaron después de la aceptación del DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced DTE has no unique source snapshot."
+msgstr "El DTE referenciado no tiene una instantánea de origen única."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "The referenced DTE must belong to the note company."
+msgstr "El DTE referenciado debe pertenecer a la compañía de la nota."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced DTE snapshot digest does not match."
+msgstr "El hash de la instantánea del DTE referenciado no coincide."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced DTE snapshot evidence is invalid."
+msgstr "La evidencia de la instantánea del DTE referenciado no es válida."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced DTE snapshot has an unknown schema."
+msgstr "La instantánea del DTE referenciado tiene un esquema desconocido."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced DTE snapshot is unreadable."
+msgstr "No se puede leer la instantánea del DTE referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "The referenced credit note has no supported fiscal root."
+msgstr ""
+"La nota de crédito referenciada no tiene un documento fiscal raíz admitido."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "The replacement-invoice workflow is not supported for issued DTEs."
+msgstr "El flujo de reemplazo por factura no se admite para DTE emitidos."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "The returned quantity exceeds the remaining original quantity."
+msgstr "La cantidad devuelta excede la cantidad original restante."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "The reversed accounting details do not match the DTE snapshot."
+msgstr ""
+"Los detalles contables revertidos no coinciden con la instantánea DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "The selected operation is not available for this DTE note type."
+msgstr ""
+"La operación seleccionada no está disponible para este tipo de nota DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_submission.py:0
+msgid "The signed DTE note does not match its frozen fiscal snapshot."
+msgstr "La nota DTE firmada no coincide con su instantánea fiscal congelada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid ""
+"This credit note already has a debit cancellation in progress or accepted."
+msgstr ""
+"Esta nota de crédito ya tiene una anulación mediante nota de débito en curso"
+" o aceptada."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_debit_note.py:0
+msgid "This debit operation is not supported for the referenced DTE type."
+msgstr ""
+"Esta operación de débito no se admite para el tipo de DTE referenciado."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "Use one accounting detail for each original DTE line."
+msgstr "Use un detalle contable por cada línea DTE original."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_reference_service.py:0
+msgid "DTE notes support one fiscal reference; remove the other imported invoice references."
+msgstr "Las notas DTE admiten una sola referencia fiscal. Quite las demás referencias de factura importadas."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/wizards/account_move_reversal.py:0
+msgid "A DTE credit note cannot reference another credit or debit note."
+msgstr "Una nota de crédito DTE no puede hacer referencia a otra nota de crédito o débito."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/electronic_document.py:0
+msgid "You cannot adjust a DTE outside your allowed companies."
+msgstr "No puede ajustar un DTE fuera de las compañías permitidas."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "line VAT"
+msgstr "IVA de línea"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "line amount"
+msgstr "monto de línea"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "tax amount"
+msgstr "monto del impuesto"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/services/note_snapshot.py:0
+msgid "total amount"
+msgstr "monto total"
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move.py:0
+msgid "A move with DTE evidence cannot be deleted."
+msgstr "No se puede eliminar un asiento con evidencia DTE."
+
+#. module: l10n_cl_dte_note
+#. odoo-python
+#: code:addons/l10n_cl_dte_note/models/account_move_line.py:0
+msgid "Fiscal accounting details cannot be added after DTE evidence exists."
+msgstr ""
+"No se pueden agregar detalles contables después de crear evidencia DTE."
