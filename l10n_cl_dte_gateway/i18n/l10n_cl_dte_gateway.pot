@@ -1,0 +1,487 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_gateway
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
+"PO-Revision-Date: 2026-11-01 23:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_electronic_submission_submission_document_uniq
+msgid "A DTE has one submission record."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A DTE is required for an SII submission."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A Demo scenario is immutable after the first attempt."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A TrackID is required before status can be queried."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "A completed transport attempt cannot be changed."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A submission needs exactly one signed DTE artifact."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "A transport attempt can only be completed once."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__accepted
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__accepted
+msgid "Accepted"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__attempt_ids
+msgid "Attempt"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__certification
+msgid "Certification"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__company_id
+msgid "Company"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__completed
+msgid "Completed"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__completed_at
+msgid "Completed At"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_list
+msgid "DEMO / SIMULADO"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_sii_gateway_factory
+msgid "DTE SII Gateway Factory"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_electronic_submission
+msgid "DTE SII Submission"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_submission_attempt
+msgid "DTE SII Transport Attempt"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__demo
+msgid "Demo / Simulated"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__demo_scenario
+msgid "Demo Scenario"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Demo response scenarios can only be set for Demo submissions."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__document_id
+msgid "Document"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__environment
+msgid "Environment"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__error_code
+msgid "Error Code"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__error_summary
+msgid "Error Summary"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__failed
+msgid "Failed"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__idempotency_key
+msgid "Idempotency Key"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__is_simulated
+msgid "Is Simulated"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__last_checked_at
+msgid "Last Checked At"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid ""
+"No SII transport adapter is installed for %(environment)s. The DTE has not "
+"been sent."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a DTE manager can select a Demo scenario."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a pending SII submission can be enqueued."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a submission with an unknown outcome can be reconciled."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a submitted DTE with a TrackID can be queried."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Only the unknown-then-reconciled Demo scenario can be reconciled."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__operation
+msgid "Operation"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__outcome_unknown
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__unknown
+msgid "Outcome Unknown"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__pending
+msgid "Pending"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__processing
+msgid "Processing"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__processing_then_accepted
+msgid "Processing then Accepted"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__production
+msgid "Production"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Query SII Status"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__query
+msgid "Query Status"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Queue Submission"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__reconcile
+msgid "Reconcile Outcome"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Reconcile Unknown Outcome"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__rejected
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__request_digest
+msgid "Request Digest"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__response_digest
+msgid "Response Digest"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.actions.act_window,name:l10n_cl_dte_gateway.action_electronic_submission
+#: model:ir.ui.menu,name:l10n_cl_dte_gateway.menu_electronic_submissions
+msgid "SII Submissions"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Select a valid Demo response scenario."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__send
+msgid "Send"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__sending
+msgid "Sending"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__started
+msgid "Started"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__started_at
+msgid "Started At"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__submission_id
+msgid "Submission"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_electronic_submission_submission_idempotency_uniq
+msgid "Submission key must be unique."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Submission records are retained as audit evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Submission state can only change through workflow actions."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__submitted
+msgid "Submitted"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__submitted_at
+msgid "Submitted At"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The DTE SII environment is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo TrackID does not match its submission identity."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo adapter returned a response without its simulation marker."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo gateway only accepts the Demo environment."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo scenario can only be changed before a Demo send."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII adapter returned an invalid receipt."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII adapter returned no raw response."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII status adapter returned an unknown state."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII status adapter returned no response."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The reconciliation adapter returned no confirmed SII receipt."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment must match the immutable DTE mode."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment no longer matches its DTE snapshot."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "This submission is not eligible for status polling."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__track_id
+msgid "Track"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__error
+msgid "Transport Error"
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "Transport attempt identity and request data are immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "Transport attempts are retained as audit evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__unknown_then_reconciled
+msgid "Unknown then Reconciled"
+msgstr ""

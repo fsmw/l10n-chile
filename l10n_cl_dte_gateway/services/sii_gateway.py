@@ -1,34 +1,152 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import hashlib
+import xml.etree.ElementTree as ElementTree
+
+from odoo import _, api, models
+from odoo.exceptions import UserError, ValidationError
+
+DEMO_NAMESPACE = "urn:oca:l10n-chile:dte:demo:v1"
+ElementTree.register_namespace("demo", DEMO_NAMESPACE)
+
 
 class SiiGateway:
-    """Outbound port for SII transport implementations.
+    """Outbound port for an SII transport implementation."""
 
-    Deployments provide a transport adapter implementing this contract. The
-    core workflow never makes network calls itself, so tests can replace this
-    port with a deterministic black-box implementation.
-    """
+    def send_document(
+        self, company, environment, request_bytes, idempotency_key, scenario
+    ):
+        raise NotImplementedError
 
-    def send_document(self, company, environment, signed_envelope):
-        """Return raw bytes, response metadata, TrackID and accepted status.
+    def query_status(
+        self, company, environment, track_id, scenario, query_number, idempotency_key
+    ):
+        raise NotImplementedError
 
-        The adapter returns a mapping containing ``raw_response`` (bytes),
-        ``track_id`` (string), and ``state`` (submitted or outcome_unknown).
-        Transport exceptions must expose ``outcome_unknown`` when the remote
-        outcome cannot be determined safely.
-        """
-        raise NotImplementedError("No SII transport adapter is configured.")
+    def reconcile_submission(self, company, environment, identity, scenario):
+        raise NotImplementedError
 
-    def query_status(self, company, environment, track_id):
-        """Return raw status bytes and one recognized fiscal state."""
-        raise NotImplementedError("No SII status adapter is configured.")
 
-    def reconcile_submission(self, company, environment, identity):
-        """Look up a potentially accepted send without sending the DTE again.
+class DemoSiiGateway(SiiGateway):
+    """Deterministic local SII simulator; this class deliberately has no I/O."""
 
-        ``identity`` includes the local idempotency key, DTE type and folio.
-        An adapter may return a known receipt/TrackID or a definitive not-found
-        result. An ambiguous lookup must raise with ``outcome_unknown = True``.
-        """
-        raise NotImplementedError("No SII reconciliation adapter is configured.")
+    _scenarios = {
+        "accepted",
+        "rejected",
+        "processing_then_accepted",
+        "unknown_then_reconciled",
+    }
+
+    def send_document(
+        self, company, environment, request_bytes, idempotency_key, scenario
+    ):
+        self._check_environment(environment)
+        self._check_scenario(scenario)
+        track_id = self._track_id(idempotency_key)
+        state = (
+            "outcome_unknown"
+            if scenario == "unknown_then_reconciled"
+            else "submitted"
+        )
+        return {
+            "state": state,
+            "track_id": False if state == "outcome_unknown" else track_id,
+            "raw_response": self._response(
+                "send", state, idempotency_key, track_id, scenario
+            ),
+            "is_simulated": True,
+        }
+
+    def query_status(
+        self, company, environment, track_id, scenario, query_number, idempotency_key
+    ):
+        self._check_environment(environment)
+        self._check_scenario(scenario)
+        if track_id != self._track_id(idempotency_key):
+            raise ValidationError(
+                _("The Demo TrackID does not match its submission identity.")
+            )
+        if scenario == "rejected":
+            state = "rejected"
+        elif scenario == "processing_then_accepted" and query_number <= 1:
+            state = "processing"
+        else:
+            state = "accepted"
+        return {
+            "state": state,
+            "track_id": track_id,
+            "raw_response": self._response(
+                "query", state, track_id, track_id, scenario
+            ),
+            "is_simulated": True,
+        }
+
+    def reconcile_submission(self, company, environment, identity, scenario):
+        self._check_environment(environment)
+        self._check_scenario(scenario)
+        if scenario != "unknown_then_reconciled":
+            raise ValidationError(
+                _("Only the unknown-then-reconciled Demo scenario can be reconciled.")
+            )
+        idempotency_key = identity["idempotency_key"]
+        track_id = self._track_id(idempotency_key)
+        return {
+            "state": "submitted",
+            "track_id": track_id,
+            "raw_response": self._response(
+                "reconcile", "submitted", idempotency_key, track_id, scenario
+            ),
+            "is_simulated": True,
+        }
+
+    @staticmethod
+    def _check_environment(environment):
+        if environment != "demo":
+            raise UserError(_("The Demo gateway only accepts the Demo environment."))
+
+    @classmethod
+    def _check_scenario(cls, scenario):
+        if scenario not in cls._scenarios:
+            raise ValidationError(_("Select a valid Demo response scenario."))
+
+    @staticmethod
+    def _track_id(identity):
+        digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:20].upper()
+        return f"DEMO-{digest}"
+
+    @staticmethod
+    def _response(operation, state, identity, track_id, scenario):
+        root = ElementTree.Element(
+            f"{{{DEMO_NAMESPACE}}}DemoSiiResponse",
+            {
+                "environment": "demo",
+                "simulated": "true",
+                "operation": operation,
+                "state": state,
+                "scenario": scenario,
+            },
+        )
+        ElementTree.SubElement(root, f"{{{DEMO_NAMESPACE}}}Identity").text = identity
+        if track_id:
+            ElementTree.SubElement(root, f"{{{DEMO_NAMESPACE}}}TrackID").text = track_id
+        return ElementTree.tostring(root, encoding="UTF-8", xml_declaration=True)
+
+
+class SiiGatewayFactory(models.AbstractModel):
+    _name = "l10n_cl.sii.gateway.factory"
+    _description = "DTE SII Gateway Factory"
+
+    @api.model
+    def get_gateway(self, environment):
+        if environment == "demo":
+            return DemoSiiGateway()
+        if environment in {"certification", "production"}:
+            raise UserError(
+                _(
+                    "No SII transport adapter is installed for %(environment)s. "
+                    "The DTE has not been sent."
+                )
+                % {"environment": environment}
+            )
+        raise ValidationError(_("The DTE SII environment is invalid."))

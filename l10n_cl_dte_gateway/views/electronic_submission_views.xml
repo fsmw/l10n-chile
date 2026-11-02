@@ -7,6 +7,7 @@
                 <field name="document_id" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="environment" />
+                <field name="is_simulated" string="DEMO / SIMULADO" />
                 <field name="state" />
                 <field name="track_id" />
                 <field name="submitted_at" />
@@ -49,6 +50,12 @@
                         <field name="document_id" />
                         <field name="company_id" />
                         <field name="environment" />
+                        <field name="is_simulated" string="DEMO / SIMULADO" readonly="1" />
+                        <field
+                            name="demo_scenario"
+                            invisible="environment != 'demo'"
+                            readonly="state != 'pending' or environment != 'demo'"
+                        />
                         <field name="track_id" />
                         <field name="idempotency_key" />
                         <field name="submitted_at" />

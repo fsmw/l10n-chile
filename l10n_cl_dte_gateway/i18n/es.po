@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 23:21+0000\n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
 "PO-Revision-Date: 2026-11-01 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -21,6 +21,18 @@ msgstr ""
 #: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_electronic_submission_submission_document_uniq
 msgid "A DTE has one submission record."
 msgstr "Un DTE tiene un único registro de envío."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A DTE is required for an SII submission."
+msgstr "Se requiere un DTE para el envío al SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A Demo scenario is immutable after the first attempt."
+msgstr "El escenario Demo no puede cambiarse después del primer intento."
 
 #. module: l10n_cl_dte_gateway
 #. odoo-python
@@ -47,6 +59,7 @@ msgid "A transport attempt can only be completed once."
 msgstr "Un intento de transporte solo se puede completar una vez."
 
 #. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__accepted
 #: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__accepted
 msgid "Accepted"
 msgstr "Aceptado"
@@ -58,14 +71,8 @@ msgstr "Intento"
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__certification
-#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__res_company__dte_sii_environment__certification
 msgid "Certification"
 msgstr "Certificación"
-
-#. module: l10n_cl_dte_gateway
-#: model:ir.model,name:l10n_cl_dte_gateway.model_res_company
-msgid "Companies"
-msgstr "Compañías"
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__company_id
@@ -96,9 +103,15 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: l10n_cl_dte_gateway
-#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_res_company__dte_sii_environment
-msgid "DTE SII Environment"
-msgstr "Entorno SII del DTE"
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_list
+msgid "DEMO / SIMULADO"
+msgstr "DEMO / SIMULADO"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_sii_gateway_factory
+msgid "DTE SII Gateway Factory"
+msgstr "Factoría de pasarelas SII para DTE"
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_electronic_submission
@@ -109,6 +122,22 @@ msgstr "Envío DTE al SII"
 #: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_submission_attempt
 msgid "DTE SII Transport Attempt"
 msgstr "Intento de transporte DTE al SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__demo
+msgid "Demo / Simulated"
+msgstr "Demo / Simulado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__demo_scenario
+msgid "Demo Scenario"
+msgstr "Escenario Demo"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Demo response scenarios can only be set for Demo submissions."
+msgstr "Los escenarios de respuesta solo se pueden configurar en envíos Demo."
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__display_name
@@ -153,6 +182,11 @@ msgid "Idempotency Key"
 msgstr "Clave de idempotencia"
 
 #. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__is_simulated
+msgid "Is Simulated"
+msgstr "Es simulado"
+
+#. module: l10n_cl_dte_gateway
 #: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__last_checked_at
 msgid "Last Checked At"
 msgstr "Última consulta"
@@ -171,6 +205,20 @@ msgstr "Última actualización el"
 
 #. module: l10n_cl_dte_gateway
 #. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid ""
+"No SII transport adapter is installed for %(environment)s. The DTE has not "
+"been sent."
+msgstr "No hay un adaptador de transporte SII instalado para %(environment)s. El DTE no se ha enviado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a DTE manager can select a Demo scenario."
+msgstr "Solo un responsable DTE puede seleccionar un escenario Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
 #: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
 msgid "Only a pending SII submission can be enqueued."
 msgstr "Solo se puede poner en cola un envío al SII pendiente."
@@ -186,6 +234,12 @@ msgstr "Solo se puede conciliar un envío cuyo resultado sea desconocido."
 #: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
 msgid "Only a submitted DTE with a TrackID can be queried."
 msgstr "Solo se puede consultar un DTE enviado que tenga TrackID."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Only the unknown-then-reconciled Demo scenario can be reconciled."
+msgstr "Solo se puede conciliar el escenario Demo «desconocido y luego conciliado»."
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__operation
@@ -209,8 +263,12 @@ msgid "Processing"
 msgstr "En proceso"
 
 #. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__processing_then_accepted
+msgid "Processing then Accepted"
+msgstr "En proceso y luego aceptado"
+
+#. module: l10n_cl_dte_gateway
 #: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__production
-#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__res_company__dte_sii_environment__production
 msgid "Production"
 msgstr "Producción"
 
@@ -240,6 +298,7 @@ msgid "Reconcile Unknown Outcome"
 msgstr "Conciliar resultado desconocido"
 
 #. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__rejected
 #: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__rejected
 msgid "Rejected"
 msgstr "Rechazado"
@@ -259,6 +318,12 @@ msgstr "Resumen criptográfico de la respuesta"
 #: model:ir.ui.menu,name:l10n_cl_dte_gateway.menu_electronic_submissions
 msgid "SII Submissions"
 msgstr "Envíos al SII"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Select a valid Demo response scenario."
+msgstr "Seleccione un escenario de respuesta Demo válido."
 
 #. module: l10n_cl_dte_gateway
 #: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__send
@@ -322,6 +387,36 @@ msgstr "Enviado el"
 
 #. module: l10n_cl_dte_gateway
 #. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The DTE SII environment is invalid."
+msgstr "El entorno SII del DTE no es válido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo TrackID does not match its submission identity."
+msgstr "El TrackID Demo no coincide con la identidad del envío."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo adapter returned a response without its simulation marker."
+msgstr "El adaptador Demo devolvió una respuesta sin la marca de simulación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo gateway only accepts the Demo environment."
+msgstr "La pasarela Demo solo acepta el entorno Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo scenario can only be changed before a Demo send."
+msgstr "El escenario Demo solo se puede cambiar antes del envío Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
 #: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
 msgid "The SII adapter returned an invalid receipt."
 msgstr "El adaptador del SII devolvió un comprobante no válido."
@@ -354,6 +449,18 @@ msgstr ""
 #. module: l10n_cl_dte_gateway
 #. odoo-python
 #: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment must match the immutable DTE mode."
+msgstr "El entorno del envío debe coincidir con el modo inmutable del DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment no longer matches its DTE snapshot."
+msgstr "El entorno del envío ya no coincide con la copia guardada en el DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
 msgid "This submission is not eligible for status polling."
 msgstr "Este envío no cumple los requisitos para consultar su estado."
 
@@ -380,3 +487,14 @@ msgstr ""
 #: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
 msgid "Transport attempts are retained as audit evidence."
 msgstr "Los intentos de transporte se conservan como evidencia de auditoría."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__unknown_then_reconciled
+msgid "Unknown then Reconciled"
+msgstr "Desconocido y luego conciliado"
+
+#~ msgid "Companies"
+#~ msgstr "Compañías"
+
+#~ msgid "DTE SII Environment"
+#~ msgstr "Entorno SII del DTE"

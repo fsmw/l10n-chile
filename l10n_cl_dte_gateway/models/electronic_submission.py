@@ -1,13 +1,11 @@
 import base64
 import hashlib
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
-
-from ..services.sii_gateway import SiiGateway
 
 
 class ElectronicSubmission(models.Model):
@@ -35,8 +33,25 @@ class ElectronicSubmission(models.Model):
         related="document_id.company_id", store=True, index=True
     )
     environment = fields.Selection(
-        [("certification", "Certification"), ("production", "Production")],
+        [
+            ("demo", "Demo / Simulated"),
+            ("certification", "Certification"),
+            ("production", "Production"),
+        ],
         required=True,
+        readonly=True,
+    )
+    is_simulated = fields.Boolean(compute="_compute_is_simulated", store=True)
+    demo_scenario = fields.Selection(
+        [
+            ("accepted", "Accepted"),
+            ("rejected", "Rejected"),
+            ("processing_then_accepted", "Processing then Accepted"),
+            ("unknown_then_reconciled", "Unknown then Reconciled"),
+        ],
+        default="accepted",
+        required=True,
+        copy=False,
     )
     state = fields.Selection(
         [
@@ -60,8 +75,63 @@ class ElectronicSubmission(models.Model):
     last_checked_at = fields.Datetime(copy=False)
     attempt_ids = fields.One2many("l10n_cl.submission.attempt", "submission_id")
 
+    @api.depends("environment")
+    def _compute_is_simulated(self):
+        for submission in self:
+            submission.is_simulated = submission.environment == "demo"
+
+    @api.constrains("environment", "demo_scenario")
+    def _check_demo_configuration(self):
+        for submission in self:
+            if (
+                submission.environment != "demo"
+                and submission.demo_scenario != "accepted"
+            ):
+                raise ValidationError(
+                    _("Demo response scenarios can only be set for Demo submissions.")
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            document = self.env["l10n_cl.electronic.document"].browse(
+                values.get("document_id")
+            )
+            if not document or not document.exists():
+                raise ValidationError(_("A DTE is required for an SII submission."))
+            environment = values.get("environment") or document.sii_environment
+            if environment != document.sii_environment:
+                raise ValidationError(
+                    _("The submission environment must match the immutable DTE mode.")
+                )
+            values["environment"] = environment
+        return super().create(vals_list)
+
+    def _gateway(self):
+        self.ensure_one()
+        if self.environment != self.document_id.sii_environment:
+            raise ValidationError(
+                _("The submission environment no longer matches its DTE snapshot.")
+            )
+        return self.env["l10n_cl.sii.gateway.factory"].get_gateway(self.environment)
+
     def write(self, vals):  # pylint: disable=method-required-super
-        raise UserError(_("Submission state can only change through workflow actions."))
+        if set(vals) != {"demo_scenario"}:
+            raise UserError(
+                _("Submission state can only change through workflow actions.")
+            )
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only a DTE manager can select a Demo scenario."))
+        for submission in self:
+            if submission.environment != "demo" or submission.state != "pending":
+                raise UserError(
+                    _("The Demo scenario can only be changed before a Demo send.")
+                )
+            if submission.attempt_ids:
+                raise UserError(
+                    _("A Demo scenario is immutable after the first attempt.")
+                )
+        return super().write(vals)
 
     def unlink(self):  # pylint: disable=method-required-super
         raise UserError(_("Submission records are retained as audit evidence."))
@@ -83,8 +153,11 @@ class ElectronicSubmission(models.Model):
             }:
                 return True
             raise UserError(_("Only a pending SII submission can be enqueued."))
+        self._gateway()
         document = self.document_id
-        signed = document.artifact_ids.filtered(lambda item: item.role == "signed_xml")
+        signed = document.artifact_ids.filtered(
+            lambda item: item.role == "signed_xml"
+        )
         if len(signed) != 1:
             raise ValidationError(
                 _("A submission needs exactly one signed DTE artifact.")
@@ -108,6 +181,7 @@ class ElectronicSubmission(models.Model):
         self.invalidate_recordset(["state"])
         if self.state != "pending":
             return True
+        gateway = self._gateway()
         document = self.document_id
         signed = document.artifact_ids.filtered(lambda item: item.role == "signed_xml")
         if len(signed) != 1:
@@ -126,20 +200,43 @@ class ElectronicSubmission(models.Model):
             }
         )
         try:
-            result = SiiGateway().send_document(
-                self.company_id, self.environment, request_bytes
+            result = gateway.send_document(
+                self.company_id,
+                self.environment,
+                request_bytes,
+                self.idempotency_key,
+                self.demo_scenario,
             )
             raw_response = result.get("raw_response")
             track_id = (result.get("track_id") or "").strip()
             if not isinstance(raw_response, bytes) or not raw_response:
                 raise ValidationError(_("The SII adapter returned no raw response."))
-            if result.get("state") != "submitted" or not track_id:
+            result_state = result.get("state")
+            if self.is_simulated and result.get("is_simulated") is not True:
+                raise ValidationError(
+                    _(
+                        "The Demo adapter returned a response without "
+                        "its simulation marker."
+                    )
+                )
+            if result_state not in {"submitted", "outcome_unknown"}:
+                raise ValidationError(_("The SII adapter returned an invalid receipt."))
+            if result_state == "submitted" and not track_id:
                 raise ValidationError(_("The SII adapter returned an invalid receipt."))
             response = self._create_response_artifact("sii_response", raw_response)
             attempt._complete(
-                "completed",
+                "unknown" if result_state == "outcome_unknown" else "completed",
                 response_digest=response.sha256,
             )
+            if result_state == "outcome_unknown":
+                self._write_internal({"state": "outcome_unknown"})
+                document.action_record_transition(
+                    "outcome_unknown",
+                    "sii_submission_outcome_unknown",
+                    correlation_key=self.idempotency_key,
+                    artifact_id=response.id,
+                )
+                return True
             self._write_internal(
                 {
                     "state": "submitted",
@@ -174,6 +271,10 @@ class ElectronicSubmission(models.Model):
             raise UserError(_("A TrackID is required before status can be queried."))
         if self.state not in {"submitted", "processing", "outcome_unknown"}:
             raise UserError(_("This submission is not eligible for status polling."))
+        gateway = self._gateway()
+        query_number = len(
+            self.attempt_ids.filtered(lambda item: item.operation == "query")
+        ) + 1
         attempt = self.env["l10n_cl.submission.attempt"].create(
             {
                 "submission_id": self.id,
@@ -184,11 +285,23 @@ class ElectronicSubmission(models.Model):
             }
         )
         try:
-            result = SiiGateway().query_status(
-                self.company_id, self.environment, self.track_id
+            result = gateway.query_status(
+                self.company_id,
+                self.environment,
+                self.track_id,
+                self.demo_scenario,
+                query_number,
+                self.idempotency_key,
             )
             raw_response = result.get("raw_response")
             state = result.get("state")
+            if self.is_simulated and result.get("is_simulated") is not True:
+                raise ValidationError(
+                    _(
+                        "The Demo adapter returned a response without "
+                        "its simulation marker."
+                    )
+                )
             if not isinstance(raw_response, bytes) or not raw_response:
                 raise ValidationError(_("The SII status adapter returned no response."))
             if state not in {"submitted", "processing", "accepted", "rejected"}:
@@ -227,6 +340,7 @@ class ElectronicSubmission(models.Model):
             or not self.track_id
         ):
             raise UserError(_("Only a submitted DTE with a TrackID can be queried."))
+        self._gateway()
         identity = f"dte-query-{self.id}-{fields.Datetime.now()}"
         self.with_delay(identity_key=identity)._job_query_sii_status()
         return True
@@ -238,6 +352,7 @@ class ElectronicSubmission(models.Model):
             raise UserError(
                 _("Only a submission with an unknown outcome can be reconciled.")
             )
+        self._gateway()
         identity = f"dte-reconcile-{self.id}-{fields.Datetime.now()}"
         self.with_delay(identity_key=identity)._job_reconcile_sii_submission()
         return True
@@ -247,6 +362,7 @@ class ElectronicSubmission(models.Model):
         self.ensure_one()
         if self.state != "outcome_unknown":
             return True
+        gateway = self._gateway()
         document = self.document_id
         identity = {
             "idempotency_key": self.idempotency_key,
@@ -264,11 +380,18 @@ class ElectronicSubmission(models.Model):
             }
         )
         try:
-            result = SiiGateway().reconcile_submission(
-                self.company_id, self.environment, identity
+            result = gateway.reconcile_submission(
+                self.company_id, self.environment, identity, self.demo_scenario
             )
             raw_response = result.get("raw_response")
             track_id = (result.get("track_id") or "").strip()
+            if self.is_simulated and result.get("is_simulated") is not True:
+                raise ValidationError(
+                    _(
+                        "The Demo adapter returned a response without "
+                        "its simulation marker."
+                    )
+                )
             if (
                 result.get("state") != "submitted"
                 or not track_id
