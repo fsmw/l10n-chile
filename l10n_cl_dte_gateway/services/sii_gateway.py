@@ -45,9 +45,7 @@ class DemoSiiGateway(SiiGateway):
         self._check_scenario(scenario)
         track_id = self._track_id(idempotency_key)
         state = (
-            "outcome_unknown"
-            if scenario == "unknown_then_reconciled"
-            else "submitted"
+            "outcome_unknown" if scenario == "unknown_then_reconciled" else "submitted"
         )
         return {
             "state": state,
