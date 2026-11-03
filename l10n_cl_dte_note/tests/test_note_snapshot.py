@@ -52,9 +52,7 @@ class TestNoteSnapshot(DteNoteTestCase):
             source_line.with_context(check_move_validity=False).write(
                 {"name": "Changed after DTE issue"}
             )
-        from odoo.addons.l10n_cl_dte_note.services.note_reference_service import (
-            NoteReferenceService,
-        )
+        from ..services.note_reference_service import NoteReferenceService
 
         observed = NoteReferenceService(self.env).read_original_snapshot(target)
         self.assertEqual(observed, source_snapshot)
