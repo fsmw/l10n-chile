@@ -88,7 +88,26 @@ class CafTrustKey(models.Model):
     ):
         """Verify CAF DA with the SII public key identified by IDK."""
         self._check_manager()
-        trust_key = self.search(
+        trust_key = self._find_applicable_key(key_id, signed_at, scope)
+        if not trust_key:
+            raise ValidationError(
+                _("No SII trust key for IDK %(key_id)s covers CAF date %(date)s.")
+                % {"key_id": key_id, "date": signed_at}
+            )
+        return self._verify_signature(trust_key, signed_data, signature)
+
+    def action_check_caf_signature_if_key_available(
+        self, key_id, signed_data, signature, signed_at, scope="official"
+    ):
+        """Verify FRMA when an applicable key exists, else report unverified."""
+        self._check_manager()
+        trust_key = self._find_applicable_key(key_id, signed_at, scope)
+        if not trust_key:
+            return False
+        return self._verify_signature(trust_key, signed_data, signature)
+
+    def _find_applicable_key(self, key_id, signed_at, scope):
+        return self.search(
             [
                 ("key_id", "=", str(key_id)),
                 ("scope", "=", scope),
@@ -100,11 +119,8 @@ class CafTrustKey(models.Model):
             order="valid_from desc, id desc",
             limit=1,
         )
-        if not trust_key:
-            raise ValidationError(
-                _("No SII trust key for IDK %(key_id)s covers CAF date %(date)s.")
-                % {"key_id": key_id, "date": signed_at}
-            )
+
+    def _verify_signature(self, trust_key, signed_data, signature):
         public_key = self._load_rsa_public_key(trust_key.public_key_pem)
         try:
             public_key.verify(

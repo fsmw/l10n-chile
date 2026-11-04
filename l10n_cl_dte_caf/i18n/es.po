@@ -871,3 +871,39 @@ msgstr "Estado"
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_caf.view_caf_trust_key_search
 msgid "Synthetic Demo"
 msgstr "Demo sintética"
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF folio range overlaps another active authorization."
+msgstr "El rango de folios del CAF se superpone con otra autorización activa."
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__caf_key_id
+msgid "CAF Key ID"
+msgstr "ID de llave del CAF"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__sii_signature_status
+msgid "SII Signature Status"
+msgstr "Estado de verificación de firma SII"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__not_checked
+msgid "Not checked"
+msgstr "No verificada"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__verified
+msgid "Verified"
+msgstr "Verificada"
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__key_unavailable
+msgid "Not checked: SII trust key unavailable"
+msgstr "No verificada: falta la llave pública del SII"
+
+#. module: l10n_cl_dte_caf
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_caf.view_caf_authorization_form
+msgid "SII Signature Verification"
+msgstr "Verificación de firma del SII"

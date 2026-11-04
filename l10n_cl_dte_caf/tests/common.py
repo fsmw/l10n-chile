@@ -77,6 +77,7 @@ class CafTestCase(DteTestCase):
         folio_end=103,
         issuer_vat="76864280-K",
         date_from=None,
+        key_id=None,
     ):
         signed_date = date.fromisoformat(str(date_from or fields.Date.today()))
         public_numbers = self.caf_public_numbers
@@ -97,7 +98,7 @@ class CafTestCase(DteTestCase):
         )
         ElementTree.SubElement(rsapk, "M").text = base64.b64encode(modulus).decode()
         ElementTree.SubElement(rsapk, "E").text = base64.b64encode(exponent).decode()
-        ElementTree.SubElement(data, "IDK").text = self.sii_key_id
+        ElementTree.SubElement(data, "IDK").text = key_id or self.sii_key_id
         signed_bytes = ElementTree.tostring(
             data, encoding="ISO-8859-1", short_empty_elements=True
         )
@@ -126,15 +127,18 @@ class CafTestCase(DteTestCase):
         company=None,
         issuer_vat="76864280-K",
         caf_bytes=None,
+        key_id=None,
     ):
         company = company or self.company
         company.partner_id.sudo().write({"vat": issuer_vat})
-        self.create_trust_key()
+        if key_id in (None, self.sii_key_id):
+            self.create_trust_key()
         caf_bytes = caf_bytes or self.build_caf_xml(
             document_code=file_document_code or document_code,
             folio_start=folio_start,
             folio_end=folio_end,
             issuer_vat=issuer_vat,
+            key_id=key_id,
         )
         return (
             self.env["l10n_cl.caf.authorization"]
