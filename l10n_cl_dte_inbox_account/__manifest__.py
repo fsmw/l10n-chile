@@ -14,7 +14,9 @@
     "depends": ["account", "l10n_cl", "l10n_cl_dte_inbox"],
     "data": [
         "security/incoming_account_security.xml",
+        "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
+        "views/incoming_account_mapping_views.xml",
     ],
     "installable": True,
 }

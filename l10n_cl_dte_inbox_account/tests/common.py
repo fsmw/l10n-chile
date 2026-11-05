@@ -12,7 +12,7 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import Signature
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
-from ..services.common import IncomingAccountError
+from ..services.common import MAPPING, IncomingAccountError
 from ..services.evidence_service import IncomingAccountEvidenceService
 
 NS = {"s": "http://www.sii.cl/SiiDte"}
@@ -173,6 +173,18 @@ class IncomingAccountCase(DteInvoiceTestCase):
 
     def document(self, source):
         return IncomingAccountEvidenceService(self.op_env).read(source)
+
+    def mapping(self, **kwargs):
+        values = dict(
+            name="Explicit supplier default",
+            company_id=self.recipient.id,
+            partner_id=self.supplier.id,
+            match_kind="default",
+            account_id=self.expense.id,
+            tax_id=self.purchase_vat.id,
+        )
+        values.update(kwargs)
+        return self.manager_env[MAPPING].create(values)
 
     def assert_code(self, code, callable_, *args, **kwargs):
         with self.assertRaises(IncomingAccountError) as result:
