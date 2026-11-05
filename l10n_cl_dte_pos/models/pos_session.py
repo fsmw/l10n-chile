@@ -36,6 +36,7 @@ class PosSession(models.Model):
         "order_ids.state",
         "order_ids.amount_total",
         "order_ids.dte_document_ids.preparation_state",
+        "order_ids.account_move.dte_document_ids.preparation_state",
     )
     def _compute_dte_session_summary(self):
         for session in self:
@@ -44,8 +45,8 @@ class PosSession(models.Model):
                 and order.state in {"paid", "done", "invoiced"}
             )
             complete = orders.filtered(
-                lambda order: len(order.dte_document_ids) == 1
-                and order.dte_document_ids.preparation_state == "queued"
+                lambda order: len(order._get_pos_dte_documents()) == 1
+                and order._get_pos_dte_documents().preparation_state == "queued"
             )
             session.dte_order_count = len(complete)
             session.dte_pending_order_count = len(orders) - len(complete)
@@ -88,7 +89,28 @@ class PosSession(models.Model):
         amount_to_balance=0,
         bank_payment_method_diffs=None,
     ):
-        """Validate POS DTE completeness and reconciliation before closing."""
+        self._check_pos_dte_closing()
+        return super().action_pos_session_closing_control(
+            balancing_account=balancing_account,
+            amount_to_balance=amount_to_balance,
+            bank_payment_method_diffs=bank_payment_method_diffs,
+        )
+
+    def action_pos_session_close(
+        self,
+        balancing_account=False,
+        amount_to_balance=0,
+        bank_payment_method_diffs=None,
+    ):
+        self._check_pos_dte_closing()
+        return super().action_pos_session_close(
+            balancing_account=balancing_account,
+            amount_to_balance=amount_to_balance,
+            bank_payment_method_diffs=bank_payment_method_diffs,
+        )
+
+    def _check_pos_dte_closing(self):
+        """Check evidence before either public closing entry point can post."""
         for session in self:
             if session.dte_pos_accounting_mode != "session_summary":
                 continue
@@ -134,8 +156,4 @@ class PosSession(models.Model):
                         )
                         % {"order": order.pos_reference}
                     )
-        return super().action_pos_session_closing_control(
-            balancing_account=balancing_account,
-            amount_to_balance=amount_to_balance,
-            bank_payment_method_diffs=bank_payment_method_diffs,
-        )
+        return True

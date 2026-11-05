@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
@@ -144,3 +144,39 @@ class TestPosBoletaOrderFlow(TestPoSCommon):
             issue.call_args.args[2].source_key(order, "39"),
             f"pos.order:{order.id}:type-39",
         )
+
+    def _check_unsupported_refund(self, mode):
+        self.company.sudo().dte_pos_accounting_mode = mode
+        order_data = self._paid_order_data()
+        for line in order_data["lines"]:
+            line[2]["qty"] = -1
+        for key in ("amount_total", "amount_paid", "amount_tax"):
+            order_data[key] *= -1
+        for payment in order_data["payment_ids"]:
+            payment[2]["amount"] *= -1
+        count = self.env["pos.order"].search_count([])
+        folios = self.env["l10n_cl.caf.folio"].sudo().search_count([])
+        with (
+            self.assertRaisesRegex(UserError, "referenced credit note"),
+            self.cr.savepoint(),
+        ):
+            self.env["pos.order"].sync_from_ui([order_data])
+        self.assertEqual(self.env["pos.order"].search_count([]), count)
+        self.assertEqual(self.env["l10n_cl.caf.folio"].sudo().search_count([]), folios)
+
+    def test_standard_refund_requires_credit_note_without_creating_records(self):
+        self._check_unsupported_refund("per_order_invoice")
+
+    def test_summary_refund_requires_credit_note_without_creating_records(self):
+        self._check_unsupported_refund("session_summary")
+
+    def test_direct_close_cannot_bypass_pending_summary_dte(self):
+        self.company.sudo().dte_pos_accounting_mode = "session_summary"
+        order_data = self._paid_order_data()
+        with patch.object(DteIssuanceService, "issue", autospec=True):
+            result = self.env["pos.order"].sync_from_ui([order_data])
+        order = self.env["pos.order"].browse(result["pos.order"][0]["id"])
+        with self.assertRaisesRegex(UserError, "exactly one prepared DTE"):
+            order.session_id.action_pos_session_close()
+        self.assertEqual(order.session_id.state, "opened")
+        self.assertFalse(order.session_id.move_id)

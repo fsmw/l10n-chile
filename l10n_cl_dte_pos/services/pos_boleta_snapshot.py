@@ -257,8 +257,12 @@ class PosBoletaSnapshotService:
                     "uom": (
                         line.product_uom_id.name or line.product_id.uom_id.name or ""
                     )[:4],
-                    "unit_price": self.boleta_service._decimal_text(line.price_unit),
-                    "discount_percent": self.boleta_service._decimal_text(line.discount)
+                    "unit_price": self.boleta_service._decimal_text(
+                        Decimal(str(line.price_unit))
+                    ),
+                    "discount_percent": self.boleta_service._decimal_text(
+                        Decimal(str(line.discount))
+                    )
                     if line.discount
                     else None,
                     "subtotal": str(int(subtotal)),

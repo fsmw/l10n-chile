@@ -116,6 +116,17 @@ class PosOrder(models.Model):
 
     def _process_saved_order(self, draft):
         """Issue a POS-sourced boleta after a paid order is persisted."""
+        if (
+            not draft
+            and self.company_id.country_id.code == "CL"
+            and any(line.qty < 0 for line in self.lines)
+        ):
+            raise UserError(
+                _(
+                    "POS refunds and exchanges require a referenced credit note. "
+                    "This POS DTE flow does not support them yet."
+                )
+            )
         result = super()._process_saved_order(draft)
         if not draft and self.state in {"paid", "invoiced"}:
             self._issue_pos_boleta_if_required()

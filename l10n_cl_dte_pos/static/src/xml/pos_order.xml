@@ -6,7 +6,9 @@
         t-inherit-mode="extension"
     >
         <xpath expr="//button[contains(@class, 'js_invoice')]" position="attributes">
-            <attribute name="t-if">not pos.session.dte_pos_accounting_mode</attribute>
+            <attribute
+                name="t-if"
+            >pos.company.country_id?.code !== 'CL' || !pos.session.dte_pos_accounting_mode</attribute>
         </xpath>
     </t>
 </templates>

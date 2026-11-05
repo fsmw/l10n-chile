@@ -27,3 +27,17 @@ and compares each immutable snapshot total with its POS order total. It
 then uses Odoo's native session closing move. SII acceptance and Demo
 simulation remain distinct states; this addon does not enable official
 transport.
+
+Refunds and exchanges containing negative quantities require a referenced
+credit note. This POS flow currently rejects them before posting an invoice or
+issuing another boleta, in both accounting modes. Mixed sales/returns are also
+blocked. Use the supported accounting credit-note flow for invoice sources;
+direct POS credit-note issuance remains a later delivery.
+
+Closing summary sessions checks every order's prepared DTE and signed-source
+total through both the cash-control action and direct session-close action.
+The session counters include invoice-sourced DTEs in standard mode.
+
+Automated browser tests exercise company policy controls, cash and split
+payments, refund rejection, counted cash and native session closing. Their
+fixtures use synthetic Demo CAFs and certificates; they do not contact the SII.
