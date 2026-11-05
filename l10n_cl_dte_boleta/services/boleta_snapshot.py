@@ -42,8 +42,8 @@ class BoletaSnapshotService:
 
         issuer = move.company_id.partner_id
         missing = []
-        if not (issuer.vat or "").strip():
-            missing.append(_("company RUT"))
+        if not self._is_valid_chilean_vat(move.env, issuer.vat):
+            missing.append(_("valid company RUT"))
         if not (issuer.name or "").strip():
             missing.append(_("company legal name"))
         if not (move.company_id.l10n_cl_activity_description or "").strip():
@@ -68,6 +68,10 @@ class BoletaSnapshotService:
             raise ValidationError(
                 _("Set a receiver RUT or use the generic final-consumer RUT.")
             )
+        if not self._is_generic_receiver_rut(receiver.vat) and not (
+            self._is_valid_chilean_vat(move.env, receiver.vat)
+        ):
+            raise ValidationError(_("Enter a valid Chilean receiver RUT."))
         self._validate_lines(move, document_code)
         self._validate_annual_receiver_threshold(move, receiver)
         return True
@@ -181,22 +185,27 @@ class BoletaSnapshotService:
                     )
 
     def _annual_135_uf_limit(self, move):
-        year = fields.Date.to_date(move.invoice_date).year
+        return self._annual_135_uf_limit_for(
+            move.env, move.company_id, move.invoice_date
+        )
+
+    def _annual_135_uf_limit_for(self, env, company, source_date):
+        year = fields.Date.to_date(source_date).year
         cutoff = fields.Date.to_date(f"{year - 1}-12-31")
-        uf = move.env.ref("l10n_cl.UF", raise_if_not_found=False)
-        clp = move.env.ref("base.CLP", raise_if_not_found=False)
+        uf = env.ref("l10n_cl.UF", raise_if_not_found=False)
+        clp = env.ref("base.CLP", raise_if_not_found=False)
         if not uf or not clp:
             raise ValidationError(_("The UF and CLP currencies are required."))
         available_rates = uf.rate_ids.filtered(
             lambda rate: rate.name <= cutoff
-            and (not rate.company_id or rate.company_id == move.company_id)
+            and (not rate.company_id or rate.company_id == company)
         )
         if not available_rates:
             raise ValidationError(
                 _("The annual 135 UF boleta threshold is unavailable for %s.") % cutoff
             )
         try:
-            limit = uf._convert(135.0, clp, move.company_id, cutoff)
+            limit = uf._convert(135.0, clp, company, cutoff)
         except (ValueError, ZeroDivisionError) as error:
             raise ValidationError(
                 _("The annual 135 UF boleta threshold is unavailable for %s.") % cutoff
@@ -211,6 +220,12 @@ class BoletaSnapshotService:
     def _is_generic_receiver_rut(self, vat):
         normalized = (vat or "").replace(".", "").replace("-", "").replace(" ", "")
         return normalized.upper() == "666666666"
+
+    def _is_valid_chilean_vat(self, env, vat):
+        if not (vat or "").strip():
+            return False
+        caf_model = env["l10n_cl.caf.authorization"]
+        return caf_model._is_valid_vat(caf_model._normalize_vat(vat))
 
     def _xml_rut(self, vat):
         return (vat or "").replace(".", "").replace(" ", "").strip()

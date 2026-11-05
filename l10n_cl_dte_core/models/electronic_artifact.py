@@ -56,7 +56,9 @@ class ElectronicArtifact(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """Calculate evidence metadata from the exact persisted bytes."""
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can add evidence."))
         normalized_vals_list = []
         for vals in vals_list:
@@ -84,7 +86,9 @@ class ElectronicArtifact(models.Model):
     def action_verify_integrity(self):
         """Recompute the digest and byte count from the stored content."""
         self.ensure_one()
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can verify evidence content."))
         encoded_content = self.content
         try:
