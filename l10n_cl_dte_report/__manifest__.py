@@ -10,7 +10,12 @@
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "development_status": "Alpha",
-    "depends": ["l10n_cl_dte_core", "l10n_cl_dte_xml", "l10n_cl_dte_boleta"],
+    "depends": [
+        "l10n_cl_dte_core",
+        "l10n_cl_dte_xml",
+        "l10n_cl_dte_boleta",
+        "l10n_cl_dte_note",
+    ],
     "external_dependencies": {"python": ["pdf417gen", "pypdf"]},
     "data": [
         "security/report_security.xml",

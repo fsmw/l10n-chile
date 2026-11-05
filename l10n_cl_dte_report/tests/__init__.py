@@ -3,4 +3,5 @@
 
 from . import test_dte_document_report
 from . import test_boleta_receipt
+from . import test_note_report
 from . import test_certification_sample_package

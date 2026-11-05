@@ -53,13 +53,22 @@
                     .barcode { width: 80mm; height: auto; }
                 </style>
                                 <t t-set="values" t-value="sample_data[sample.id]" />
-                                <h2 t-esc="sample.name" />
+                                <h2
+                                    t-if="values['document_code'] not in ('61', '56')"
+                                    t-esc="sample.name"
+                                />
                                 <p
                                     t-if="values['document_code'] == '39'"
                                 >Boleta electrónica</p>
                                 <p
                                     t-if="values['document_code'] == '41'"
                                 >Boleta no afecta o exenta electrónica</p>
+                                <h2
+                                    t-if="values['document_code'] == '61'"
+                                >Nota de crédito electrónica</h2>
+                                <h2
+                                    t-if="values['document_code'] == '56'"
+                                >Nota de débito electrónica</h2>
                                 <table class="table table-sm table-borderless">
                                     <tbody>
                                         <tr>
@@ -92,6 +101,45 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div t-if="values['document_code'] in ('61', '56')">
+                                    <h3>Referencias</h3>
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Folio</th>
+                                                <th>Fecha</th>
+                                                <th>Código</th>
+                                                <th>Motivo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                t-foreach="values['references']"
+                                                t-as="reference"
+                                            >
+                                                <td
+                                                    t-out="reference['document_code']"
+                                                />
+                                                <td t-out="reference['folio']" />
+                                                <td t-out="reference['date']" />
+                                                <td>
+                                                    <span t-out="reference['code']" />
+                                                    <span
+                                                        t-if="reference['code'] == '1'"
+                                                    > — Anulación</span>
+                                                    <span
+                                                        t-if="reference['code'] == '2'"
+                                                    > — Corrección de texto</span>
+                                                    <span
+                                                        t-if="reference['code'] == '3'"
+                                                    > — Corrección de montos</span>
+                                                </td>
+                                                <td t-out="reference['reason']" />
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <table class="table table-sm">
                                     <thead>
                                         <tr>
@@ -123,7 +171,9 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <p t-if="values['document_code'] in ('39', '41')">
+                                <p
+                                    t-if="values['document_code'] in ('39', '41', '61', '56')"
+                                >
                                     <span t-out="values['issuer_activity']" />
                                     <br />
                                     <span t-out="values['issuer_address']" />

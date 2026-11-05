@@ -56,9 +56,18 @@ Usage
    resultado en el expediente de certificación. La descarga local no
    cambia el estado de una etapa.
 
-Se soportan facturas electrónicas 33/34 y boletas 39/41. Las notas 61/56
-y los demás tipos continúan bloqueados. El módulo instala la dependencia
-de boletas para reutilizar su validación XSD, TED y firma.
+Se soportan facturas electrónicas 33/34, boletas 39/41 y notas de
+crédito 61 y débito 56. Los demás tipos continúan bloqueados. El módulo
+instala las dependencias de boletas y notas para reutilizar sus
+validaciones de esquema, TED y firma.
+
+Las notas se imprimen en A4 desde su XML firmado, con las referencias
+originales (tipo, folio, fecha, código y motivo), detalles, impuestos y
+total. El código de referencia distingue anulación y corrección de
+montos; el motivo conserva la descripción del ajuste o devolución
+parcial. La impresión no recalcula el ajuste desde la contabilidad ni
+cambia el documento fiscal o sus evidencias. La acción térmica de 80 mm
+continúa limitada a boletas 39/41.
 
 Para una boleta, **Thermal PDF (80 mm)** genera una representación
 adicional desde el XML firmado. Funciona tanto para documentos

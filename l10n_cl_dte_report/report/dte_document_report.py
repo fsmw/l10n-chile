@@ -106,6 +106,17 @@ class ReportDtePrintSample(models.AbstractModel):
                 "vat": _find_local_text(header, "IVA"),
                 "total": _find_local_text(header, "MntTotal"),
                 "environment": sample.document_id.sii_environment,
+                "references": [
+                    {
+                        "document_code": _find_local_text(reference, "TpoDocRef"),
+                        "folio": _find_local_text(reference, "FolioRef"),
+                        "date": _find_local_text(reference, "FchRef"),
+                        "code": _find_local_text(reference, "CodRef"),
+                        "reason": _find_local_text(reference, "RazonRef"),
+                    }
+                    for reference in document
+                    if etree.QName(reference).localname == "Referencia"
+                ],
                 "details": [
                     {
                         "name": _find_local_text(detail, "NmbItem"),
