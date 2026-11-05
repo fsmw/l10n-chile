@@ -15,9 +15,10 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_xml_composer import (
     BoletaXmlComposer,
 )
+from odoo.addons.l10n_cl_dte_note.services.note_xml_composer import NoteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
-_SUPPORTED_CODES = {"33", "34", "39", "41"}
+_SUPPORTED_CODES = {"33", "34", "39", "41", "61", "56"}
 
 
 class DteReportSample(models.Model):
@@ -161,11 +162,12 @@ class DteReportSample(models.Model):
             content = base64.b64decode(artifact.content, validate=True)
         except (ValueError, TypeError) as error:
             raise ValidationError(_("The signed XML artifact is invalid.")) from error
-        composer = (
-            BoletaXmlComposer()
-            if self.document_code in {"39", "41"}
-            else DteXmlComposer()
-        )
+        if self.document_code in {"39", "41"}:
+            composer = BoletaXmlComposer()
+        elif self.document_code in {"61", "56"}:
+            composer = NoteXmlComposer()
+        else:
+            composer = DteXmlComposer()
         composer.validate_document(content)
         root = etree.fromstring(
             content,
