@@ -10,9 +10,9 @@ Chile - POS DTE Boletas
    !! source digest: sha256:0cbadb184a9909972d7aed7afc737472f2ffb931fc391f341f69a44253992df9
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-.. |badge1| image:: https://img.shields.io/badge/maturity-Alpha-red.png
+.. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alpha
+    :alt: Beta
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
@@ -35,11 +35,6 @@ Issue Chilean electronic boletas 39 and 41 from Odoo Point of Sale. The
 company chooses either an invoice/accounting move per POS order or
 direct DTE issuance with accounting in the native POS session closing
 move.
-
-.. IMPORTANT::
-   This is an alpha version, the data model and design can change at any time without warning.
-   Only for development or testing purpose, do not use in production.
-   `More details on development status <https://odoo-community.org/page/development-status>`_
 
 **Table of contents**
 
