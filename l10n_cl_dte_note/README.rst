@@ -10,9 +10,9 @@ Chile - DTE Credit and Debit Notes
    !! source digest: sha256:84a766efbd0c9f9e9c18d95ee28d60e25e0e7e0d3ee085277cdfffe1d11e5aef
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-.. |badge1| image:: https://img.shields.io/badge/maturity-Alpha-red.png
+.. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alpha
+    :alt: Beta
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
@@ -32,11 +32,6 @@ Issue Chilean electronic credit notes (61) and debit notes (56) from
 native accounting documents. The module records a single immutable
 reference to an accepted DTE and reuses the shared folio, signing,
 durable submission and evidence lifecycle.
-
-.. IMPORTANT::
-   This is an alpha version, the data model and design can change at any time without warning.
-   Only for development or testing purpose, do not use in production.
-   `More details on development status <https://odoo-community.org/page/development-status>`_
 
 **Table of contents**
 
