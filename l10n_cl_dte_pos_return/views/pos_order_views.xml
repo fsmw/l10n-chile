@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_pos_order_form_dte_return" model="ir.ui.view">
+        <field name="name">pos.order.form.dte.pos.return</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="l10n_cl_dte_pos.view_pos_order_form_dte" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='dte_pos_information']" position="inside">
+                <group string="Original Sale and Credit Note">
+                    <field name="dte_return_target_document_id" />
+                    <field name="dte_return_operation" />
+                    <field name="dte_return_reason" readonly="state != 'draft'" />
+                    <field name="dte_return_accounting_mode" />
+                    <field name="dte_pos_mapping_state" />
+                    <button
+                        name="action_prepare_dte_line_mapping"
+                        string="Prepare Legacy Line Mapping"
+                        type="object"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="dte_pos_mapping_state == 'mapped'"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

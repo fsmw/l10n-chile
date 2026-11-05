@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW - AGPL-3.0 or later. -->
+<templates xml:space="preserve">
+    <t t-name="l10n_cl_dte_pos_return.DteReturnStatus">
+        <section class="o_l10n_cl_dte_pos_return_status" role="status">
+            <div>Electronic credit note 61: <t t-esc="props.status.folio" /></div>
+            <div>Original boleta: <t t-esc="props.status.original_type" /> / <t
+                t-esc="props.status.original_folio"
+            /></div>
+            <div><t t-esc="props.status.original_date" /> - <t
+                t-esc="props.status.reason"
+            /></div>
+            <div t-if="props.status.status == 'accepted'">Accepted</div>
+            <div
+                t-elif="['rejected', 'outcome_unknown'].includes(props.status.status)"
+            >Fiscal review required</div>
+            <div t-else="">Queued or awaiting fiscal confirmation</div>
+            <div>Operational refund receipt</div>
+        </section>
+    </t>
+    <t
+        t-name="l10n_cl_dte_pos_return.OrderReceipt"
+        t-inherit="point_of_sale.OrderReceipt"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//div[hasclass('before-footer')]" position="before">
+            <DteReturnStatus
+                t-if="props.data.dte_return_status"
+                status="props.data.dte_return_status"
+            />
+        </xpath>
+    </t>
+</templates>
