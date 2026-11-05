@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="pos_payment_method_view_form_dte" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.dte</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group" position="inside">
+                <group string="Chilean DTE">
+                    <field name="l10n_cl_dte_boleta_payment_method" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
