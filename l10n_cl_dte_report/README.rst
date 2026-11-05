@@ -10,9 +10,9 @@ Chile - DTE Reports
    !! source digest: sha256:996a8d4419e60fd41792bb90036bb7241e15dfe8bf04271f2faa4d76a6c4c87a
    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-.. |badge1| image:: https://img.shields.io/badge/maturity-Alpha-red.png
+.. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alpha
+    :alt: Beta
 .. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
@@ -33,11 +33,6 @@ inmutable. Conserva el PDF resultante, su SHA-256 y un manifiesto
 reproducible para paquetes de hasta 20 muestras. La generación de un PDF
 local no acredita carga ni aprobación del Servicio de Impuestos
 Internos.
-
-.. IMPORTANT::
-   This is an alpha version, the data model and design can change at any time without warning.
-   Only for development or testing purpose, do not use in production.
-   `More details on development status <https://odoo-community.org/page/development-status>`_
 
 **Table of contents**
 
