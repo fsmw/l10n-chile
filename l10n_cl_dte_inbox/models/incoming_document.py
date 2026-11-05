@@ -3,12 +3,16 @@
 
 import base64
 import hashlib
+import json
 import re
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from psycopg2.errors import SerializationFailure, UniqueViolation
 
 from ..services.incoming_parser import parse_incoming_dte
+from ..services.incoming_validation import IncomingValidationService, normalize_vat
+from .incoming_import import CHECK_STATES, ENVIRONMENTS
 
 
 def _normalize_vat(value):
@@ -30,7 +34,11 @@ class IncomingDte(models.Model):
         ondelete="restrict",
     )
     sii_environment = fields.Selection(
-        related="company_id.dte_sii_environment", store=True, readonly=True, index=True
+        ENVIRONMENTS,
+        required=True,
+        readonly=True,
+        index=True,
+        default=lambda self: self.env.company.dte_sii_environment,
     )
     channel = fields.Selection(
         [
@@ -64,6 +72,8 @@ class IncomingDte(models.Model):
         [
             ("parsed", "Identity Parsed"),
             ("signature_unverified", "Signature Unverified"),
+            ("validated", "Locally Validated"),
+            ("invalid", "Invalid"),
         ],
         required=True,
         default="parsed",
@@ -79,6 +89,23 @@ class IncomingDte(models.Model):
     event_ids = fields.One2many("l10n_cl.incoming.dte.event", "incoming_document_id")
     response_ids = fields.One2many(
         "l10n_cl.incoming.dte.response", "incoming_document_id"
+    )
+    schema_state = fields.Selection(CHECK_STATES, default="not_checked", readonly=True)
+    schema_name = fields.Char(readonly=True)
+    signature_state = fields.Selection(
+        CHECK_STATES, default="not_checked", readonly=True
+    )
+    ted_state = fields.Selection(CHECK_STATES, default="not_checked", readonly=True)
+    signer_certificate_fingerprint = fields.Char(readonly=True)
+    signer_trust_state = fields.Selection(
+        [("unverified", "Trust Not Verified")], default="unverified", readonly=True
+    )
+    diagnostics = fields.Text(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    validated_at = fields.Datetime(readonly=True)
+    import_line_ids = fields.One2many(
+        "l10n_cl.incoming.dte.import.line", "incoming_document_id", readonly=True
     )
 
     _sql_constraints = [
@@ -101,14 +128,16 @@ class IncomingDte(models.Model):
         )
 
     @api.model
-    def _import_xml(self, content, channel="operator_imported", filename=False):
+    def _import_xml(
+        self, content, channel="operator_imported", filename=False, validation=None
+    ):
         if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can import incoming DTEs."))
         if channel not in {"sii_portal", "email", "operator_imported"}:
             raise ValidationError(_("The incoming DTE source channel is invalid."))
         if not isinstance(content, bytes) or not content:
             raise ValidationError(_("The incoming DTE XML is empty."))
-        parsed = parse_incoming_dte(content, translate=_)
+        parsed = parse_incoming_dte(content, translate=self.env._)
         company = self.env.company
         expected_receiver = _normalize_vat(company.partner_id.vat)
         if (
@@ -118,12 +147,7 @@ class IncomingDte(models.Model):
             raise ValidationError(
                 _("The DTE receiver does not match the current company.")
             )
-        try:
-            issue_date = fields.Date.to_date(parsed["issue_date"])
-        except (TypeError, ValueError) as error:
-            raise ValidationError(_("The DTE issue date is invalid.")) from error
-        if not issue_date:
-            raise ValidationError(_("The DTE issue date is invalid."))
+        issue_date = fields.Date.to_date(parsed["issue_date"])
         digest = hashlib.sha256(content).hexdigest()
         existing = self.search(
             [
@@ -135,33 +159,129 @@ class IncomingDte(models.Model):
         )
         if existing:
             return existing
-        record = (
-            super(IncomingDte, self.sudo())
-            .create(
-                {
-                    "name": _(
-                        "Incoming DTE %(code)s / %(folio)s",
-                        code=parsed["document_code"],
-                        folio=parsed["folio"],
-                    ),
-                    "company_id": company.id,
-                    "channel": channel,
-                    "received_at": fields.Datetime.now(),
-                    "issuer_vat": parsed["issuer_vat"],
-                    "receiver_vat": parsed["receiver_vat"],
-                    "document_code": parsed["document_code"],
-                    "folio": parsed["folio"],
-                    "issue_date": issue_date,
-                    "raw_xml": base64.b64encode(content),
-                    "filename": filename or "incoming-dte.xml",
-                    "xml_sha256": digest,
-                    "xml_validation_state": "signature_unverified",
-                }
-            )
-            .with_user(self.env.user)
+        norm_issuer = normalize_vat(parsed["issuer_vat"])
+        # Old records retain their original RUT formatting; compare identities
+        # canonically without rewriting historical XML or metadata.
+        identity_matches = self.search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", company.dte_sii_environment),
+                ("document_code", "=", parsed["document_code"]),
+                ("folio", "=", parsed["folio"]),
+            ]
+        ).filtered(lambda record: normalize_vat(record.issuer_vat) == norm_issuer)
+        validation = (
+            validation
+            or IncomingValidationService(self.env).inspect(content)["documents"][0]
         )
+        if identity_matches:
+            if (
+                len(identity_matches) == 1
+                and identity_matches._identity_digest() == validation["identity_digest"]
+            ):
+                return identity_matches
+            raise ValidationError(
+                _("This DTE identity already exists with different signed XML.")
+            )
+        try:
+            with self.env.cr.savepoint():
+                record = (
+                    super(IncomingDte, self.sudo())
+                    .create(
+                        {
+                            "name": _(
+                                "Incoming DTE %(code)s / %(folio)s",
+                                code=parsed["document_code"],
+                                folio=parsed["folio"],
+                            ),
+                            "company_id": company.id,
+                            "sii_environment": company.dte_sii_environment,
+                            "channel": channel,
+                            "received_at": fields.Datetime.now(),
+                            "issuer_vat": norm_issuer[:-1] + "-" + norm_issuer[-1:],
+                            "receiver_vat": parsed["receiver_vat"],
+                            "document_code": parsed["document_code"],
+                            "folio": parsed["folio"],
+                            "issue_date": issue_date,
+                            "raw_xml": base64.b64encode(content),
+                            "filename": filename or "incoming-dte.xml",
+                            "xml_sha256": digest,
+                            "xml_validation_state": "signature_unverified",
+                        }
+                    )
+                    .with_user(self.env.user)
+                )
+        except UniqueViolation as error:
+            raise SerializationFailure(
+                "Retry concurrent incoming DTE import"
+            ) from error
         record._create_event("imported", "", "received")
+        record._apply_validation(validation)
         return record
+
+    def _identity_digest(self):
+        self.ensure_one()
+        from lxml import etree
+
+        from ..services.incoming_parser import extract_incoming_dtes
+
+        content = base64.b64decode(self.raw_xml, validate=True)
+        if hashlib.sha256(content).hexdigest() != self.xml_sha256:
+            raise ValidationError(
+                _("The stored incoming XML digest does not match its evidence.")
+            )
+        _root, nodes = extract_incoming_dtes(content, self.env._)
+        if len(nodes) != 1:
+            raise ValidationError(_("The stored incoming record must contain one DTE."))
+        return hashlib.sha256(
+            etree.tostring(nodes[0], method="c14n", exclusive=True)
+        ).hexdigest()
+
+    def _apply_validation(self, result):
+        self.ensure_one()
+        valid = not result["diagnostics"] and all(
+            result[key] == "valid"
+            for key in ("schema_state", "signature_state", "ted_state")
+        )
+        self._write_internal(
+            {
+                "xml_validation_state": "validated" if valid else "invalid",
+                "schema_state": result["schema_state"],
+                "schema_name": result["schema_name"],
+                "signature_state": result["signature_state"],
+                "ted_state": result["ted_state"],
+                "signer_certificate_fingerprint": result["signer_fingerprint"],
+                "validated_at": fields.Datetime.now(),
+                "diagnostics": json.dumps(
+                    result["diagnostics"], ensure_ascii=False, indent=2
+                ),
+            }
+        )
+        self._create_event(
+            "local_validation_valid" if valid else "local_validation_invalid",
+            self.state,
+            self.state,
+            self.xml_sha256,
+        )
+
+    def action_validate(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can validate incoming DTEs."))
+        for record in self:
+            content = base64.b64decode(record.raw_xml, validate=True)
+            if hashlib.sha256(content).hexdigest() != record.xml_sha256:
+                raise ValidationError(
+                    _("The stored incoming XML digest does not match its evidence.")
+                )
+            result = IncomingValidationService(self.env).inspect(content)
+            if len(result["documents"]) != 1:
+                raise ValidationError(
+                    _("The stored incoming record must contain one DTE.")
+                )
+            item = result["documents"][0]
+            item["diagnostics"] += result["diagnostics"]
+            record._apply_validation(item)
+        return True
 
     def _create_event(self, event_code, from_state, to_state, payload_digest=False):
         self.ensure_one()

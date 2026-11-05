@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+import binascii
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
@@ -27,13 +28,16 @@ class IncomingDteImportWizard(models.TransientModel):
         self.ensure_one()
         if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise UserError(_("Only a DTE manager can import incoming DTEs."))
-        content = base64.b64decode(self.xml_file, validate=True)
-        document = self.env["l10n_cl.incoming.dte"]._import_xml(
+        try:
+            content = base64.b64decode(self.xml_file, validate=True)
+        except (ValueError, binascii.Error) as error:
+            raise UserError(_("The uploaded XML file is not valid Base64.")) from error
+        document = self.env["l10n_cl.incoming.dte.import"]._import_xml(
             content, self.channel, self.filename
         )
         return {
             "type": "ir.actions.act_window",
-            "name": _("Incoming DTE"),
+            "name": _("Incoming XML Import Result"),
             "res_model": document._name,
             "res_id": document.id,
             "view_mode": "form",

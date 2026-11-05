@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Import Incoming DTE">
                 <div class="alert alert-warning" role="alert">
-                    Import validates XML structure and company receiver identity only. It does not verify SII origin or signature.
+                    Import one DTE or a signed envelope. The file, schema, XML signatures, TED and receiver are checked locally. Any invalid document blocks the whole file. No response is sent.
                 </div>
                 <group>
                     <field name="filename" />

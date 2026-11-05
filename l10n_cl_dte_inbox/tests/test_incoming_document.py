@@ -17,13 +17,15 @@ class TestIncomingDte(TransactionCase):
         cls.env.user.sudo().write({"groups_id": [(4, cls.manager.id)]})
         cls.company.partner_id.vat = "66666666-6"
 
-    def test_import_stores_exact_digest_and_explicitly_unverified_signature(self):
+    def test_import_stores_exact_digest_and_invalid_unsigned_xml(self):
         content = self._xml()
         record = self.env["l10n_cl.incoming.dte"]._import_xml(content)
         self.assertEqual(record.xml_sha256, hashlib.sha256(content).hexdigest())
-        self.assertEqual(record.xml_validation_state, "signature_unverified")
+        self.assertEqual(record.xml_validation_state, "invalid")
+        self.assertEqual(record.signature_state, "invalid")
+        self.assertEqual(record.signer_trust_state, "unverified")
         self.assertEqual(base64.b64decode(record.raw_xml), content)
-        self.assertEqual(record.event_ids.event_code, "imported")
+        self.assertIn("imported", record.event_ids.mapped("event_code"))
 
     def test_import_is_idempotent_for_same_xml(self):
         model = self.env["l10n_cl.incoming.dte"]

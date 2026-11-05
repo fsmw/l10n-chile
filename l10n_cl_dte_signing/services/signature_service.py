@@ -187,8 +187,12 @@ class SignatureService:
         if digest_method is None or digest_method.get("Algorithm") != SHA1_URI:
             raise ValidationError(_("The XML digest algorithm is unsupported."))
         try:
-            expected_digest = base64.b64decode(digest_value or "", validate=True)
-            signature_bytes = base64.b64decode(signature_value, validate=True)
+            expected_digest = base64.b64decode(
+                "".join((digest_value or "").split()), validate=True
+            )
+            signature_bytes = base64.b64decode(
+                "".join(signature_value.split()), validate=True
+            )
         except (binascii.Error, ValueError) as error:
             raise ValidationError(
                 _("The XML signature contains invalid Base64.")
@@ -281,8 +285,8 @@ class SignatureService:
     def verify_envelope_signature(self, envelope_bytes):
         """Verify only the outer SetDTE reference; inner DTEs are separate."""
         root = _parse_xml(envelope_bytes)
-        if _local_name(root) != "EnvioDTE":
-            raise ValidationError(_("The XML root must be EnvioDTE."))
+        if _local_name(root) not in {"EnvioDTE", "EnvioBOLETA"}:
+            raise ValidationError(_("The XML root must be EnvioDTE or EnvioBOLETA."))
         sets = root.xpath("./*[local-name()='SetDTE']")
         signatures = root.xpath("./*[local-name()='Signature']")
         if len(sets) != 1 or len(signatures) != 1:
@@ -320,9 +324,10 @@ class SignatureService:
             raise ValidationError(_("The envelope digest algorithm is unsupported."))
         try:
             expected = base64.b64decode(
-                reference.findtext(_qname("DigestValue")) or "", validate=True
+                "".join((reference.findtext(_qname("DigestValue")) or "").split()),
+                validate=True,
             )
-            signed = base64.b64decode(signature_value, validate=True)
+            signed = base64.b64decode("".join(signature_value.split()), validate=True)
         except (binascii.Error, ValueError) as error:
             raise ValidationError(
                 _("The envelope signature has invalid Base64.")
