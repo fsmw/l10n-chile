@@ -1,0 +1,47 @@
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block
+                    title="Incoming Chilean DTE"
+                    name="dte_inbox_account"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_manager"
+                >
+                    <setting
+                        id="dte_inbox_account_enabled_setting"
+                        string="Prepare vendor bills from incoming DTEs"
+                        company_dependent="1"
+                        help="Prepare or link reviewed incoming DTE 33/34 as native vendor bill drafts."
+                    >
+                        <field name="dte_inbox_account_enabled" />
+                        <div
+                            class="content-group"
+                            invisible="not dte_inbox_account_enabled"
+                        >
+                            <label for="dte_inbox_account_journal_id" />
+                            <field
+                                name="dte_inbox_account_journal_id"
+                                options="{'no_create': True}"
+                            />
+                            <label for="dte_inbox_account_vat_tax_id" />
+                            <field
+                                name="dte_inbox_account_vat_tax_id"
+                                options="{'no_create': True}"
+                            />
+                            <label for="dte_inbox_account_exempt_tax_id" />
+                            <field
+                                name="dte_inbox_account_exempt_tax_id"
+                                options="{'no_create': True}"
+                            />
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
