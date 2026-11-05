@@ -10,6 +10,14 @@
         groups="l10n_cl_dte_core.group_dte_user"
     />
     <menuitem
+        id="menu_incoming_import_history"
+        name="Import History"
+        parent="menu_incoming_dte"
+        action="incoming_import_action"
+        sequence="10"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
         id="menu_import_incoming_dte"
         name="Import Incoming DTE"
         parent="menu_incoming_dte"

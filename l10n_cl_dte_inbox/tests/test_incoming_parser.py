@@ -31,6 +31,29 @@ class TestIncomingDteParser(TransactionCase):
         with self.assertRaises(ValidationError):
             parse_incoming_dte(xml, translate=str)
 
+    def test_rejects_dtd_in_utf16_input(self):
+        xml = (
+            '<?xml version="1.0" encoding="UTF-16"?>'
+            '<!DOCTYPE DTE [<!ENTITY a "test">]><DTE>&a;</DTE>'
+        ).encode("utf-16")
+        with self.assertRaises(ValidationError):
+            parse_incoming_dte(xml, translate=str)
+
+    def test_rejects_foreign_wrapper_and_namespace(self):
+        for content in (
+            b"<foreign>" + self._xml().split(b"?>", 1)[1] + b"</foreign>",
+            self._xml().replace(
+                b"http://www.sii.cl/SiiDte", b"https://example.invalid"
+            ),
+        ):
+            with self.subTest(content=content), self.assertRaises(ValidationError):
+                parse_incoming_dte(content, translate=str)
+
+    def test_rejects_repeated_xml_ids(self):
+        xml = self._xml().replace(b"<IdDoc>", b'<IdDoc ID="T33F12">')
+        with self.assertRaises(ValidationError):
+            parse_incoming_dte(xml, translate=str)
+
     @staticmethod
     def _xml():
         return b"""<?xml version="1.0" encoding="ISO-8859-1"?>

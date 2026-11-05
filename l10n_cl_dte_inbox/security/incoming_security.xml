@@ -1,6 +1,16 @@
 <!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
 <!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
+    <record id="incoming_import_company_rule" model="ir.rule">
+        <field name="name">Incoming XML import company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_import" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_import_line_company_rule" model="ir.rule">
+        <field name="name">Incoming XML import result company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_import_line" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
     <record id="incoming_document_company_rule" model="ir.rule">
         <field name="name">Incoming DTE company access</field>
         <field name="model_id" ref="model_l10n_cl_incoming_dte" />
