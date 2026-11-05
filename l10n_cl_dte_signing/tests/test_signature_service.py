@@ -2,7 +2,7 @@ import base64
 
 from lxml import etree
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
@@ -10,6 +10,15 @@ from .common import SigningTestCase
 
 
 class TestSignatureService(SigningTestCase):
+    def test_dte_user_signs_only_through_privileged_issuance_context(self):
+        self.create_signing_profile()
+        company = self.company.with_user(self.dte_user)
+        service = SignatureService()
+        with self.assertRaises(AccessError):
+            service.sign_document(company, "demo", self.unsigned_xml())
+        signed = service.sign_document(company.sudo(), "demo", self.unsigned_xml())
+        self.assertTrue(service.verify_signature(signed)["valid"])
+
     def test_ted_signature_round_trip(self):
         authorization = self.validate_authorization()
         service = SignatureService()

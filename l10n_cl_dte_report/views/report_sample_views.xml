@@ -43,6 +43,13 @@
                         widget="statusbar"
                         statusbar_visible="draft,generated"
                     />
+                    <button
+                        name="action_print_thermal"
+                        type="object"
+                        string="Thermal PDF (80 mm)"
+                        invisible="document_code not in ('39', '41')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
                 </header>
                 <sheet>
                     <group>

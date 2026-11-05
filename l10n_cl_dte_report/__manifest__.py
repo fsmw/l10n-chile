@@ -10,7 +10,7 @@
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "development_status": "Alpha",
-    "depends": ["l10n_cl_dte_core", "l10n_cl_dte_xml"],
+    "depends": ["l10n_cl_dte_core", "l10n_cl_dte_xml", "l10n_cl_dte_boleta"],
     "external_dependencies": {"python": ["pdf417gen", "pypdf"]},
     "data": [
         "security/report_security.xml",
@@ -19,6 +19,7 @@
         "views/electronic_document_views.xml",
         "views/menus.xml",
         "report/dte_document_templates.xml",
+        "report/boleta_receipt_templates.xml",
         "report/certification_sample_templates.xml",
     ],
     "installable": True,

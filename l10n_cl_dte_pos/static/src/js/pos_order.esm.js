@@ -7,7 +7,7 @@ patch(PaymentScreen.prototype, {
     setup() {
         super.setup(...arguments);
         const mode = this.pos.session.dte_pos_accounting_mode;
-        if (mode) {
+        if (this.pos.company.country_id?.code === "CL" && mode) {
             this.currentOrder.set_to_invoice(mode === "per_order_invoice");
         }
     },

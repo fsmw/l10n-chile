@@ -30,18 +30,6 @@
         <html>
             <head>
                 <meta charset="utf-8" />
-                <style>
-                    @page { size: A4 portrait; margin: 10mm; }
-                    body { font-family: sans-serif; font-size: 10pt; color: #222; }
-                    .page { page-break-after: always; }
-                    .page:last-child { page-break-after: auto; }
-                    table { width: 100%; border-collapse: collapse; margin: 8px 0; }
-                    th, td { padding: 4px; border-bottom: 1px solid #ddd; text-align: left; }
-                    .text-end { text-align: right; }
-                    .text-center { text-align: center; }
-                    .small { font-size: 8pt; }
-                    .barcode { max-width: 80mm; max-height: 20mm; }
-                </style>
             </head>
             <body>
                 <main>
@@ -52,8 +40,26 @@
                             t-att-data-oe-id="sample.id"
                         >
                             <div class="page">
+                                <style>
+                    @page { size: A4 portrait; margin: 10mm; }
+                    body { font-family: sans-serif; font-size: 10pt; color: #222; }
+                    .page { page-break-after: always; }
+                    .page:last-child { page-break-after: auto; }
+                    table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+                    th, td { padding: 4px; border-bottom: 1px solid #ddd; text-align: left; }
+                    .text-end { text-align: right; }
+                    .text-center { text-align: center; }
+                    .small { font-size: 8pt; }
+                    .barcode { width: 80mm; height: auto; }
+                </style>
                                 <t t-set="values" t-value="sample_data[sample.id]" />
                                 <h2 t-esc="sample.name" />
+                                <p
+                                    t-if="values['document_code'] == '39'"
+                                >Boleta electrónica</p>
+                                <p
+                                    t-if="values['document_code'] == '41'"
+                                >Boleta no afecta o exenta electrónica</p>
                                 <table class="table table-sm table-borderless">
                                     <tbody>
                                         <tr>
@@ -96,7 +102,16 @@
                                     </thead>
                                     <tbody>
                                         <tr t-foreach="values['details']" t-as="line">
-                                            <td t-esc="line['name']" />
+                                            <td>
+                                                <span t-out="line['name']" />
+                                                <br
+                                                    t-if="line['description'] and line['description'] != line['name']"
+                                                />
+                                                <span
+                                                    t-if="line['description'] != line['name']"
+                                                    t-out="line['description']"
+                                                />
+                                            </td>
                                             <td
                                                 class="text-end"
                                                 t-esc="line['quantity']"
@@ -108,6 +123,22 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <p t-if="values['document_code'] in ('39', '41')">
+                                    <span t-out="values['issuer_activity']" />
+                                    <br />
+                                    <span t-out="values['issuer_address']" />
+                                    <span t-out="values['issuer_commune']" />
+                                    <br />
+                                    <t t-if="values['net']">Neto: <span
+                                        t-out="values['net']"
+                                    /> — </t>
+                                    <t t-if="values['exempt']">Exento: <span
+                                        t-out="values['exempt']"
+                                    /> — </t>
+                                    <t t-if="values['vat']">IVA: <span
+                                        t-out="values['vat']"
+                                    /></t>
+                                </p>
                                 <div class="text-center mt-3">
                                     <img
                                         t-att-src="'data:image/png;base64,%s' % values['barcode']"

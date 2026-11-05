@@ -12,9 +12,12 @@ from pypdf import PdfReader
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_boleta.services.boleta_xml_composer import (
+    BoletaXmlComposer,
+)
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
-_SUPPORTED_CODES = {"33", "34"}
+_SUPPORTED_CODES = {"33", "34", "39", "41"}
 
 
 class DteReportSample(models.Model):
@@ -158,8 +161,35 @@ class DteReportSample(models.Model):
             content = base64.b64decode(artifact.content, validate=True)
         except (ValueError, TypeError) as error:
             raise ValidationError(_("The signed XML artifact is invalid.")) from error
-        DteXmlComposer().validate_document(content)
+        composer = (
+            BoletaXmlComposer()
+            if self.document_code in {"39", "41"}
+            else DteXmlComposer()
+        )
+        composer.validate_document(content)
+        root = etree.fromstring(
+            content,
+            etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False),
+        )
+        namespace = {"sii": "http://www.sii.cl/SiiDte"}
+        header = root.find("sii:Documento/sii:Encabezado/sii:IdDoc", namespace)
+        if header is None or (
+            header.findtext("sii:TipoDTE", namespaces=namespace) != self.document_code
+            or header.findtext("sii:Folio", namespaces=namespace) != str(self.folio)
+        ):
+            raise ValidationError(_("The signed XML identity does not match the DTE."))
         return content
+
+    def action_print_thermal(self):
+        """Derive an 80 mm receipt from signed evidence without changing the sample."""
+        self.ensure_one()
+        self._check_manager()
+        if self.document_code not in {"39", "41"}:
+            raise UserError(_("Thermal printing supports only boletas 39 and 41."))
+        self._get_signed_xml()
+        return self.env.ref("l10n_cl_dte_report.action_boleta_receipt").report_action(
+            self
+        )
 
     def action_generate_pdf(self):
         self.ensure_one()

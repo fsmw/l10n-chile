@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="paperformat_boleta_receipt" model="report.paperformat">
+        <field name="name">Chilean Boleta (80 mm)</field>
+        <field name="default" eval="False" />
+        <field name="format">custom</field>
+        <field name="page_width">80</field>
+        <field name="page_height">297</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">4</field>
+        <field name="margin_bottom">4</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">4</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+    <record id="action_boleta_receipt" model="ir.actions.report">
+        <field name="name">Boleta Thermal PDF (80 mm)</field>
+        <field name="model">l10n_cl.dte.report.sample</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_dte_report.boleta_receipt</field>
+        <field name="report_file">l10n_cl_dte_report.boleta_receipt</field>
+        <field name="paperformat_id" ref="paperformat_boleta_receipt" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]"
+        />
+        <field
+            name="print_report_name"
+        >'Boleta-%s-%s-80mm' % (object.document_code, object.folio)</field>
+    </record>
+    <template id="boleta_receipt">
+        <html>
+            <head>
+                <meta charset="utf-8" />
+            </head>
+            <body>
+                <main>
+                    <t t-foreach="docs" t-as="sample">
+                        <div
+                            class="article"
+                            data-oe-model="l10n_cl.dte.report.sample"
+                            t-att-data-oe-id="sample.id"
+                        >
+                            <div class="page o_dte_receipt">
+                                <style>
+                    body { font-family: sans-serif; font-size: 10pt; color: #000; margin: 0; }
+                    .o_dte_receipt { width: 72mm; overflow-wrap: break-word; }
+                    .o_dte_receipt h2 { font-size: 12pt; }
+                    .o_dte_receipt p { margin: 3mm 0; }
+                    .o_dte_receipt table { width: 100%; border-collapse: collapse; }
+                    .o_dte_receipt td { padding: 1mm 0; vertical-align: top; }
+                    .o_dte_receipt tr { page-break-inside: avoid; }
+                    .o_dte_receipt .o_dte_amount { text-align: right; white-space: nowrap; }
+                    .o_dte_receipt .o_dte_stamp { page-break-inside: avoid; text-align: center; }
+                    .o_dte_receipt .o_dte_stamp img { width: 72mm; height: auto; }
+                </style>
+                                <t t-set="values" t-value="sample_data[sample.id]" />
+                                <h2
+                                    t-if="values['document_code'] == '39'"
+                                >Boleta electrónica</h2>
+                                <h2 t-else="">Boleta no afecta o exenta electrónica</h2>
+                                <p>RUT <span t-out="values['issuer_vat']" /><br />
+                                    <strong t-out="values['issuer_name']" /><br />
+                                    <span t-out="values['issuer_activity']" /><br />
+                                    <span t-out="values['issuer_address']" />
+                                    <span t-out="values['issuer_commune']" />
+                                </p>
+                                <p>N° <strong t-out="values['folio']" /><br />
+                                    Fecha: <span t-out="values['issue_date']" />
+                                </p>
+                                <p t-if="values['environment'] != 'production'">
+                                    Ambiente: <span t-out="values['environment']" />
+                                </p>
+                                <p t-if="values['receiver_name']">
+                                    <span t-out="values['receiver_name']" /><br />
+                                    RUT <span t-out="values['receiver_vat']" />
+                                </p>
+                                <table>
+                                    <tbody>
+                                        <tr t-foreach="values['details']" t-as="line">
+                                            <td><span t-out="line['name']" /><br />
+                                                <t
+                                                t-if="line['description'] and line['description'] != line['name']"
+                                            >
+                                                <span t-out="line['description']" />
+                                                <br />
+                                            </t>
+                                                Cantidad: <span
+                                                t-out="line['quantity']"
+                                            />
+                                            </td>
+                                            <td
+                                                class="o_dte_amount"
+                                                t-out="line['amount']"
+                                            />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table>
+                                    <tbody>
+                                        <tr t-if="values['net']">
+                                            <td>Neto</td>
+                                            <td
+                                                class="o_dte_amount"
+                                                t-out="values['net']"
+                                            />
+                                        </tr>
+                                        <tr t-if="values['exempt']">
+                                            <td>Exento</td>
+                                            <td
+                                                class="o_dte_amount"
+                                                t-out="values['exempt']"
+                                            />
+                                        </tr>
+                                        <tr t-if="values['vat']">
+                                            <td>IVA</td>
+                                            <td
+                                                class="o_dte_amount"
+                                                t-out="values['vat']"
+                                            />
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Total CLP</strong>
+                                            </td>
+                                            <td class="o_dte_amount">
+                                                <strong t-out="values['total']" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="o_dte_stamp">
+                                    <img
+                                        t-att-src="'data:image/png;base64,%s' % values['barcode']"
+                                        alt="PDF417 TED"
+                                    />
+                                    <p>Timbre electrónico SII<br
+                                    />Verifique en www.sii.cl</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

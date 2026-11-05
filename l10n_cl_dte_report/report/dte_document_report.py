@@ -58,9 +58,9 @@ class ReportDtePrintSample(models.AbstractModel):
                     ),
                 )
                 image = render_image(
-                    encode(ted.decode("ascii"), columns=10, security_level=4),
-                    scale=2,
-                    ratio=4,
+                    encode(ted.decode("ascii"), columns=18, security_level=4),
+                    scale=3,
+                    ratio=3,
                     padding=8,
                 )
                 buffer = io.BytesIO()
@@ -93,13 +93,23 @@ class ReportDtePrintSample(models.AbstractModel):
                 "folio": sample.folio,
                 "issue_date": _find_local_text(header, "FchEmis"),
                 "issuer_vat": _find_local_text(header, "RUTEmisor"),
-                "issuer_name": _find_local_text(header, "RznSoc"),
+                "issuer_name": _find_local_text(header, "RznSoc")
+                or _find_local_text(header, "RznSocEmisor"),
+                "issuer_activity": _find_local_text(header, "GiroEmis")
+                or _find_local_text(header, "GiroEmisor"),
+                "issuer_address": _find_local_text(header, "DirOrigen"),
+                "issuer_commune": _find_local_text(header, "CmnaOrigen"),
                 "receiver_vat": _find_local_text(header, "RUTRecep"),
                 "receiver_name": _find_local_text(header, "RznSocRecep"),
+                "net": _find_local_text(header, "MntNeto"),
+                "exempt": _find_local_text(header, "MntExe"),
+                "vat": _find_local_text(header, "IVA"),
                 "total": _find_local_text(header, "MntTotal"),
+                "environment": sample.document_id.sii_environment,
                 "details": [
                     {
                         "name": _find_local_text(detail, "NmbItem"),
+                        "description": _find_local_text(detail, "DscItem"),
                         "quantity": _find_local_text(detail, "QtyItem"),
                         "amount": _find_local_text(detail, "MontoItem"),
                     }

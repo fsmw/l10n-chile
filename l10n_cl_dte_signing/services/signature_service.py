@@ -84,7 +84,11 @@ class SignatureService:
 
     def sign_document(self, company, environment, unsigned_xml):
         """Append an enveloped XMLDSig over the DTE's Documento element."""
-        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        # The issuance service checks the operator before entering sudo mode.
+        # Cashiers may request issuance without reading private certificate data.
+        if not company.env.su and not company.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
         profile = company.env["l10n_cl.dte.signing.profile"].search(
             [
