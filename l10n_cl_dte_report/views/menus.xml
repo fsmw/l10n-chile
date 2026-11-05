@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="dte_report_samples_menu"
+        name="Muestras impresas"
+        parent="l10n_cl_dte_core.menu_dte_operations"
+        action="dte_report_sample_action"
+        sequence="40"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+    <menuitem
+        id="dte_report_sample_packages_menu"
+        name="Paquetes de muestras"
+        parent="l10n_cl_dte_core.menu_dte_operations"
+        action="dte_report_sample_package_action"
+        sequence="41"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+</odoo>

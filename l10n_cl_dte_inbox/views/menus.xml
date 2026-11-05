@@ -1,0 +1,20 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_incoming_dte"
+        name="Incoming DTEs"
+        parent="l10n_cl_dte_core.menu_dte_operations"
+        action="incoming_document_action"
+        sequence="30"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
+        id="menu_import_incoming_dte"
+        name="Import Incoming DTE"
+        parent="menu_incoming_dte"
+        action="incoming_import_wizard_action"
+        sequence="5"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+</odoo>

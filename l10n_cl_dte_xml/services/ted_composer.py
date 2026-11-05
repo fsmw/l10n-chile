@@ -45,7 +45,7 @@ class DteTedComposer:
                 _tag("RR", receiver["vat"]),
                 _tag("RSR", receiver["name"]),
                 _tag("MNT", totals["total"]),
-                _tag("IT1", first_line.get("description") or first_line["name"]),
+                _tag("IT1", first_line["name"][:40]),
                 caf_fragment,
                 _tag("TSTED", snapshot["ted_timestamp"]),
                 b"</DD>",

@@ -855,3 +855,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_caf.view_caf_trust_key_search
 msgid "Synthetic Demo"
 msgstr ""
+
+#. module: l10n_cl_dte_caf
+#. odoo-python
+#: code:addons/l10n_cl_dte_caf/models/caf_authorization.py:0
+msgid "The CAF folio range overlaps another active authorization."
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__caf_key_id
+msgid "CAF Key ID"
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields,field_description:l10n_cl_dte_caf.field_l10n_cl_caf_authorization__sii_signature_status
+msgid "SII Signature Status"
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__not_checked
+msgid "Not checked"
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__verified
+msgid "Verified"
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model:ir.model.fields.selection,name:l10n_cl_dte_caf.selection__l10n_cl_caf_authorization__sii_signature_status__key_unavailable
+msgid "Not checked: SII trust key unavailable"
+msgstr ""
+
+#. module: l10n_cl_dte_caf
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_caf.view_caf_authorization_form
+msgid "SII Signature Verification"
+msgstr ""

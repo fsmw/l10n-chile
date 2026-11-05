@@ -714,6 +714,36 @@ msgid "Operations"
 msgstr ""
 
 #. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_res_company__dte_sii_resolution_date
+msgid "SII Resolution Date"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_res_company__dte_sii_regional_office
+msgid "SII Regional Office"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_res_company__dte_sii_resolution_number
+msgid "SII Resolution Number"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,help:l10n_cl_dte_core.field_res_company__dte_sii_resolution_number
+msgid "Resolution number authorizing the company to issue electronic tax documents."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,help:l10n_cl_dte_core.field_res_company__dte_sii_regional_office
+msgid "Select the SII regional office associated with the company's registered address."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_core.view_company_form_dte_environment
+msgid "Chilean DTE"
+msgstr ""
+
+#. module: l10n_cl_dte_core
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_core.view_electronic_document_search
 msgid "Preparation Pending"
 msgstr ""

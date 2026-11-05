@@ -20,10 +20,9 @@ msgstr ""
 #. module: l10n_cl_dte_xml
 #. odoo-python
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
-#, fuzzy
 msgid "A DTE can only be created from a posted customer invoice."
 msgstr ""
-"Un DTE tipo 33 solo se puede crear a partir de una factura de cliente "
+"Un DTE solo se puede crear a partir de una factura de cliente "
 "contabilizada."
 
 #. module: l10n_cl_dte_xml
@@ -36,9 +35,8 @@ msgstr "El DTE requiere al menos una línea de detalle."
 #. odoo-python
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
 #: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
-#, fuzzy
 msgid "A DTE supports at most 60 detail lines."
-msgstr "Un DTE tipo 33 admite como máximo 60 líneas de detalle."
+msgstr "Un DTE admite como máximo 60 líneas de detalle."
 
 #. module: l10n_cl_dte_xml
 #. odoo-python
@@ -160,7 +158,7 @@ msgstr "La compañía del CAF no coincide con la de la factura."
 #. odoo-python
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
 msgid "The CAF does not match the selected DTE document type."
-msgstr ""
+msgstr "El CAF no corresponde al tipo de documento DTE seleccionado."
 
 #. module: l10n_cl_dte_xml
 #. odoo-python
@@ -377,5 +375,5 @@ msgstr "Cliente: ingrese la comuna del receptor del DTE."
 #. module: l10n_cl_dte_xml
 #. odoo-python
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
-msgid "DTE types 33 and 34 require an identified recipient; for an anonymous final consumer, select type 39; boleta issuance is not available in this flow yet."
-msgstr "Los DTE tipos 33 y 34 requieren un receptor identificado; para un consumidor final anónimo, seleccione el tipo 39. La emisión de boletas aún no está disponible en este flujo."
+msgid "DTE types 33 and 34 require an identified recipient; use the applicable boleta type for an anonymous final consumer."
+msgstr "Los DTE tipos 33 y 34 requieren un receptor identificado; para un consumidor final anónimo, use el tipo de boleta que corresponda."

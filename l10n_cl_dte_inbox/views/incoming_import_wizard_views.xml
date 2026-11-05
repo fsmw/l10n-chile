@@ -1,0 +1,62 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.import.wizard.form</field>
+        <field name="model">l10n_cl.incoming.dte.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Incoming DTE">
+                <div class="alert alert-warning" role="alert">
+                    Import validates XML structure and company receiver identity only. It does not verify SII origin or signature.
+                </div>
+                <group>
+                    <field name="filename" />
+                    <field name="channel" />
+                    <field name="xml_file" filename="filename" />
+                </group>
+                <footer>
+                    <button
+                        name="action_import"
+                        type="object"
+                        string="Import"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="incoming_import_wizard_action" model="ir.actions.act_window">
+        <field name="name">Import Incoming DTE</field>
+        <field name="res_model">l10n_cl.incoming.dte.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="incoming_import_wizard_view_form" />
+        <field name="target">new</field>
+    </record>
+    <record id="incoming_response_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.response.wizard.form</field>
+        <field name="model">l10n_cl.incoming.dte.response.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Prepare Incoming DTE Response">
+                <div class="alert alert-warning" role="alert">
+                    Enter response values from the current official contract. Preparing this record does not send it to SII.
+                </div>
+                <group>
+                    <field name="incoming_document_id" />
+                    <field name="response_code" />
+                    <field name="response_text" />
+                    <field name="contract_reference" />
+                </group>
+                <footer>
+                    <button
+                        name="action_prepare"
+                        type="object"
+                        string="Prepare"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

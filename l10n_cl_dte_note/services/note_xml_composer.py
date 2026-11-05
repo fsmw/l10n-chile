@@ -25,22 +25,40 @@ class NoteXmlComposer:
 
         return DteTedComposer().compose_ted(snapshot, caf, signature_service)
 
-    def compose_unsigned_document(self, snapshot):
+    def compose_unsigned_document(self, snapshot):  # noqa: C901
         """Serialize one note and its SII reference before inserting the TED."""
         code = str(snapshot.get("document_code"))
         if code not in {"61", "56"} or len(snapshot.get("lines", [])) > 60:
             raise ValidationError(
                 _("Only DTE notes 61/56 with at most 60 details are supported.")
             )
-        ref = snapshot.get("reference") or {}
-        required = ("document_code", "folio", "issue_date", "reference_code", "reason")
-        if any(ref.get(name) in (None, "") for name in required):
-            raise ValidationError(
-                _("The DTE note must contain one complete fiscal reference.")
+        refs = snapshot.get("references") or []
+        if not refs and snapshot.get("reference"):
+            ref = snapshot["reference"]
+            refs = [
+                {
+                    "line_number": 1,
+                    "document_type": ref.get("document_code"),
+                    "folio": ref.get("folio"),
+                    "date": ref.get("issue_date"),
+                    "reason": ref.get("reason"),
+                    "reference_code": ref.get("reference_code"),
+                }
+            ]
+        if not 1 <= len(refs) <= 2 or any(
+            any(
+                ref.get(key) in (None, "")
+                for key in ("document_type", "folio", "date", "reason")
             )
-        root = etree.Element(
-            f"{{{SII_NAMESPACE}}}DTE", nsmap={None: SII_NAMESPACE}, version="1.0"
-        )
+            for ref in refs
+        ):
+            raise ValidationError(
+                _("The DTE note must contain complete fiscal references.")
+            )
+        nsmap = {None: SII_NAMESPACE}
+        if snapshot.get("certification"):
+            nsmap["xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+        root = etree.Element(f"{{{SII_NAMESPACE}}}DTE", nsmap=nsmap, version="1.0")
         document = etree.SubElement(
             root,
             f"{{{SII_NAMESPACE}}}Documento",
@@ -98,22 +116,24 @@ class NoteXmlComposer:
                 _add_text(detail, "IndExe", "1")
             _add_text(detail, "NmbItem", line_data["name"])
             _add_optional_text(detail, "DscItem", line_data.get("description"))
-            _add_text(detail, "QtyItem", line_data["quantity"])
-            _add_optional_text(detail, "UnmdItem", line_data.get("uom"))
-            _add_text(detail, "PrcItem", line_data["unit_price"])
-            if line_data.get("discount_percent"):
-                _add_text(detail, "DescuentoPct", line_data["discount_percent"])
+            if not line_data.get("text_correction"):
+                _add_text(detail, "QtyItem", line_data["quantity"])
+                _add_optional_text(detail, "UnmdItem", line_data.get("uom"))
+                _add_text(detail, "PrcItem", line_data["unit_price"])
+                if line_data.get("discount_percent"):
+                    _add_text(detail, "DescuentoPct", line_data["discount_percent"])
             _add_text(detail, "MontoItem", line_data["subtotal"])
-        reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
-        for name, value in (
-            ("NroLinRef", 1),
-            ("TpoDocRef", ref["document_code"]),
-            ("FolioRef", ref["folio"]),
-            ("FchRef", ref["issue_date"]),
-            ("CodRef", ref["reference_code"]),
-            ("RazonRef", ref["reason"]),
-        ):
-            _add_text(reference, name, value)
+        for index, ref in enumerate(refs, start=1):
+            reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
+            for name, value in (
+                ("NroLinRef", index),
+                ("TpoDocRef", ref["document_type"]),
+                ("FolioRef", ref["folio"]),
+                ("FchRef", ref["date"]),
+            ):
+                _add_text(reference, name, value)
+            _add_optional_text(reference, "CodRef", ref.get("reference_code"))
+            _add_text(reference, "RazonRef", ref["reason"])
         etree.SubElement(document, f"{{{SII_NAMESPACE}}}TED_PLACEHOLDER")
         _add_text(document, "TmstFirma", snapshot["document_timestamp"])
         try:
@@ -159,16 +179,21 @@ class NoteXmlComposer:
             f"{{{SII_NAMESPACE}}}Encabezado/{{{SII_NAMESPACE}}}IdDoc/{{{SII_NAMESPACE}}}TipoDTE"
         )
         references = document.findall(f"{{{SII_NAMESPACE}}}Referencia")
-        if code not in {"61", "56"} or len(references) != 1:
+        if code not in {"61", "56"} or len(references) not in {1, 2}:
             raise ValidationError(
-                _("A DTE note must be type 61/56 and have exactly one reference.")
+                _("A DTE note must be type 61/56 and have one or two references.")
             )
-        ref = references[0]
-        if not all(
-            ref.findtext(f"{{{SII_NAMESPACE}}}{name}")
-            for name in ("TpoDocRef", "FolioRef", "FchRef", "CodRef", "RazonRef")
+        for index, ref in enumerate(references, start=1):
+            required = ("TpoDocRef", "FolioRef", "FchRef", "RazonRef")
+            if not all(ref.findtext(f"{{{SII_NAMESPACE}}}{name}") for name in required):
+                raise ValidationError(_("The DTE note reference is incomplete."))
+            if index == 2 and not ref.findtext(f"{{{SII_NAMESPACE}}}CodRef"):
+                raise ValidationError(_("The referenced DTE note requires CodRef."))
+        if (
+            len(references) == 2
+            and references[0].findtext(f"{{{SII_NAMESPACE}}}TpoDocRef") != "SET"
         ):
-            raise ValidationError(_("The DTE note reference is incomplete."))
+            raise ValidationError(_("The first certification reference must be SET."))
         ted = self._child_by_local_name(document, "TED")
         dd = self._child_by_local_name(ted, "DD")
         caf = self._child_by_local_name(dd, "CAF")

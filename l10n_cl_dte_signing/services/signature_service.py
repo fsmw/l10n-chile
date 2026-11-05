@@ -209,6 +209,263 @@ class SignatureService:
             "signed_info_canonicalization": signed_info_variant,
         }
 
+    def sign_envelope(self, company, environment, unsigned_xml):
+        """Sign the SetDTE inside an already assembled SII EnvioDTE."""
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can use the signing certificate."))
+        profiles = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", environment),
+                ("active", "=", True),
+            ]
+        )
+        if len(profiles) != 1:
+            raise UserError(
+                _("Select exactly one active signing profile for this environment.")
+            )
+        certificate = profiles.sudo().certificate_id
+        if (
+            not certificate
+            or certificate.company_id != company
+            or not certificate.active
+            or not certificate.is_valid
+        ):
+            raise UserError(_("The certification signing certificate is not valid."))
+        if not certificate.private_key_id or certificate.private_key_id.public:
+            raise UserError(_("The signing certificate has no private key."))
+        root = _parse_xml(unsigned_xml)
+        if (
+            _local_name(root) != "EnvioDTE"
+            or len(root.xpath("./*[local-name()='SetDTE']")) != 1
+        ):
+            raise ValidationError(_("The envelope must have one SetDTE."))
+        target = root.xpath("./*[local-name()='SetDTE']")[0]
+        target_id = target.get("ID")
+        if not target_id or root.xpath(".//*[@ID=$target]", target=target_id) != [
+            target
+        ]:
+            raise ValidationError(_("SetDTE needs a unique ID."))
+        if root.xpath("./*[local-name()='Signature']"):
+            raise ValidationError(_("The envelope is already signed."))
+        signature = etree.SubElement(
+            root, _qname("Signature"), nsmap={None: DS_NAMESPACE}
+        )
+        signed_info = etree.SubElement(signature, _qname("SignedInfo"))
+        etree.SubElement(
+            signed_info, _qname("CanonicalizationMethod"), Algorithm=C14N_URI
+        )
+        etree.SubElement(signed_info, _qname("SignatureMethod"), Algorithm=RSA_SHA1_URI)
+        reference = etree.SubElement(
+            signed_info, _qname("Reference"), URI=f"#{target_id}"
+        )
+        etree.SubElement(reference, _qname("DigestMethod"), Algorithm=SHA1_URI)
+        digest = hashes.Hash(hashes.SHA1())
+        digest.update(_canonicalize(target))
+        etree.SubElement(reference, _qname("DigestValue")).text = base64.b64encode(
+            digest.finalize()
+        ).decode("ascii")
+        signature_bytes = certificate._sign(
+            _canonicalize(signed_info), hashing_algorithm="sha1", formatting="base64"
+        )
+        etree.SubElement(
+            signature, _qname("SignatureValue")
+        ).text = signature_bytes.decode("ascii")
+        self._add_key_info(signature, certificate)
+        envelope = etree.tostring(
+            root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=False
+        )
+        self.verify_envelope_signature(envelope)
+        return envelope
+
+    def verify_envelope_signature(self, envelope_bytes):
+        """Verify only the outer SetDTE reference; inner DTEs are separate."""
+        root = _parse_xml(envelope_bytes)
+        if _local_name(root) != "EnvioDTE":
+            raise ValidationError(_("The XML root must be EnvioDTE."))
+        sets = root.xpath("./*[local-name()='SetDTE']")
+        signatures = root.xpath("./*[local-name()='Signature']")
+        if len(sets) != 1 or len(signatures) != 1:
+            raise ValidationError(_("An envelope needs one SetDTE and one signature."))
+        target, signature = sets[0], signatures[0]
+        signed_info = signature.find(_qname("SignedInfo"))
+        signature_value = signature.findtext(_qname("SignatureValue"))
+        if signed_info is None or not signature_value:
+            raise ValidationError(_("The envelope signature is incomplete."))
+        canonicalization = signed_info.find(_qname("CanonicalizationMethod"))
+        signature_method = signed_info.find(_qname("SignatureMethod"))
+        references = signed_info.findall(_qname("Reference"))
+        if (
+            canonicalization is None
+            or canonicalization.get("Algorithm") != C14N_URI
+            or signature_method is None
+            or signature_method.get("Algorithm") != RSA_SHA1_URI
+            or len(references) != 1
+        ):
+            raise ValidationError(
+                _("The envelope signature algorithms are unsupported.")
+            )
+        reference = references[0]
+        target_id = target.get("ID")
+        if (
+            not target_id
+            or reference.get("URI") != f"#{target_id}"
+            or root.xpath(".//*[@ID=$target]", target=target_id) != [target]
+        ):
+            raise ValidationError(
+                _("The envelope signature does not reference its unique SetDTE.")
+            )
+        digest_method = reference.find(_qname("DigestMethod"))
+        if digest_method is None or digest_method.get("Algorithm") != SHA1_URI:
+            raise ValidationError(_("The envelope digest algorithm is unsupported."))
+        try:
+            expected = base64.b64decode(
+                reference.findtext(_qname("DigestValue")) or "", validate=True
+            )
+            signed = base64.b64decode(signature_value, validate=True)
+        except (binascii.Error, ValueError) as error:
+            raise ValidationError(
+                _("The envelope signature has invalid Base64.")
+            ) from error
+        self._verify_document_digest(target, expected)
+        key = self._public_key_from_key_info(signature)
+        if not isinstance(key, rsa.RSAPublicKey) or not self._verify_signed_info(
+            key, signed, signed_info
+        ):
+            raise ValidationError(_("The envelope XML signature is invalid."))
+        return True
+
+    def sign_certification_book(self, company, environment, unsigned_xml):
+        """Sign EnvioLibro using the certificate selected for its SII mode."""
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can use the signing certificate."))
+        profile = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", environment),
+                ("active", "=", True),
+            ],
+            limit=1,
+        )
+        certificate = profile.sudo().certificate_id
+        if (
+            not certificate
+            or certificate.company_id != company
+            or not certificate.active
+            or not certificate.is_valid
+            or not certificate.private_key_id
+            or certificate.private_key_id.public
+        ):
+            raise UserError(
+                _("Configure a valid private signing certificate for this environment.")
+            )
+        root = _parse_xml(unsigned_xml)
+        if _local_name(root) != "LibroCompraVenta":
+            raise ValidationError(
+                _("The electronic book root element must be LibroCompraVenta.")
+            )
+        books = root.xpath("./*[local-name()='EnvioLibro']")
+        if len(books) != 1 or root.xpath("./*[local-name()='Signature']"):
+            raise ValidationError(
+                _("An electronic book must contain one unsigned EnvioLibro.")
+            )
+        target = books[0]
+        target_id = target.get("ID")
+        if not target_id or root.xpath(".//*[@ID=$target]", target=target_id) != [
+            target
+        ]:
+            raise ValidationError(_("EnvioLibro must have a unique ID."))
+        signature = etree.SubElement(
+            root, _qname("Signature"), nsmap={None: DS_NAMESPACE}
+        )
+        signed_info = etree.SubElement(signature, _qname("SignedInfo"))
+        etree.SubElement(
+            signed_info, _qname("CanonicalizationMethod"), Algorithm=C14N_URI
+        )
+        etree.SubElement(signed_info, _qname("SignatureMethod"), Algorithm=RSA_SHA1_URI)
+        reference = etree.SubElement(
+            signed_info, _qname("Reference"), URI=f"#{target_id}"
+        )
+        etree.SubElement(reference, _qname("DigestMethod"), Algorithm=SHA1_URI)
+        digest = hashes.Hash(hashes.SHA1())
+        digest.update(_canonicalize(target))
+        etree.SubElement(reference, _qname("DigestValue")).text = base64.b64encode(
+            digest.finalize()
+        ).decode("ascii")
+        signature_bytes = certificate._sign(
+            _canonicalize(signed_info), hashing_algorithm="sha1", formatting="base64"
+        )
+        etree.SubElement(
+            signature, _qname("SignatureValue")
+        ).text = signature_bytes.decode("ascii")
+        self._add_key_info(signature, certificate)
+        signed_xml = etree.tostring(
+            root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=False
+        )
+        self.verify_certification_book_signature(signed_xml)
+        return signed_xml
+
+    def verify_certification_book_signature(self, book_xml):
+        """Verify the XMLDSig reference over the unique EnvioLibro element."""
+        root = _parse_xml(book_xml)
+        if _local_name(root) != "LibroCompraVenta":
+            raise ValidationError(
+                _("The electronic book root element must be LibroCompraVenta.")
+            )
+        books = root.xpath("./*[local-name()='EnvioLibro']")
+        signatures = root.xpath("./*[local-name()='Signature']")
+        if len(books) != 1 or len(signatures) != 1:
+            raise ValidationError(
+                _("A signed electronic book needs one EnvioLibro and one Signature.")
+            )
+        target, signature = books[0], signatures[0]
+        signed_info = signature.find(_qname("SignedInfo"))
+        signature_value = signature.findtext(_qname("SignatureValue"))
+        if signed_info is None or not signature_value:
+            raise ValidationError(_("The electronic book signature is incomplete."))
+        canonicalization = signed_info.find(_qname("CanonicalizationMethod"))
+        signature_method = signed_info.find(_qname("SignatureMethod"))
+        references = signed_info.findall(_qname("Reference"))
+        target_id = target.get("ID")
+        if (
+            canonicalization is None
+            or canonicalization.get("Algorithm") != C14N_URI
+            or signature_method is None
+            or signature_method.get("Algorithm") != RSA_SHA1_URI
+            or len(references) != 1
+            or not target_id
+            or references[0].get("URI") != f"#{target_id}"
+            or root.xpath(".//*[@ID=$target]", target=target_id) != [target]
+        ):
+            raise ValidationError(
+                _(
+                    "The electronic book signature does not reference its unique "
+                    "EnvioLibro."
+                )
+            )
+        reference = references[0]
+        digest_method = reference.find(_qname("DigestMethod"))
+        if digest_method is None or digest_method.get("Algorithm") != SHA1_URI:
+            raise ValidationError(
+                _("The electronic book digest algorithm is unsupported.")
+            )
+        try:
+            expected_digest = base64.b64decode(
+                reference.findtext(_qname("DigestValue")) or "", validate=True
+            )
+            signature_bytes = base64.b64decode(signature_value, validate=True)
+        except (binascii.Error, ValueError) as error:
+            raise ValidationError(
+                _("The electronic book signature contains invalid Base64.")
+            ) from error
+        self._verify_document_digest(target, expected_digest)
+        public_key = self._public_key_from_key_info(signature)
+        if not isinstance(public_key, rsa.RSAPublicKey) or not self._verify_signed_info(
+            public_key, signature_bytes, signed_info
+        ):
+            raise ValidationError(_("The electronic book XML signature is invalid."))
+        return True
+
     def _verify_document_digest(self, document, expected_digest):
         candidates = (
             ("inclusive", _canonicalize(document)),

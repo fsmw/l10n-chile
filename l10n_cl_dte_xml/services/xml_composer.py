@@ -33,7 +33,14 @@ class DteXmlComposer:
         _require_supported_snapshot(snapshot)
         root = etree.Element(
             f"{{{SII_NAMESPACE}}}DTE",
-            nsmap={None: SII_NAMESPACE},
+            nsmap=(
+                {
+                    None: SII_NAMESPACE,
+                    "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                }
+                if snapshot.get("certification")
+                else {None: SII_NAMESPACE}
+            ),
             version="1.0",
         )
         document_code = str(snapshot["document_code"])
@@ -93,6 +100,49 @@ class DteXmlComposer:
             if line_data.get("discount_percent"):
                 _add_text(detail, "DescuentoPct", line_data["discount_percent"])
             _add_text(detail, "MontoItem", line_data["subtotal"])
+
+        global_discount = snapshot.get("global_discount")
+        if global_discount:
+            if (
+                set(global_discount)
+                != {
+                    "movement",
+                    "description",
+                    "value_type",
+                    "value",
+                }
+                or global_discount["movement"] != "D"
+            ):
+                raise ValidationError(_("The global DTE discount is invalid."))
+            discount_node = etree.SubElement(
+                document, f"{{{SII_NAMESPACE}}}DscRcgGlobal"
+            )
+            _add_text(discount_node, "NroLinDR", 1)
+            _add_text(discount_node, "TpoMov", global_discount["movement"])
+            _add_optional_text(discount_node, "GlosaDR", global_discount["description"])
+            _add_text(discount_node, "TpoValor", global_discount["value_type"])
+            _add_text(discount_node, "ValorDR", global_discount["value"])
+
+        references = snapshot.get("references", [])
+        if not isinstance(references, list) or len(references) > 40:
+            raise ValidationError(_("A DTE supports at most 40 references."))
+        for index, reference_data in enumerate(references, start=1):
+            if not isinstance(reference_data, dict) or set(reference_data) != {
+                "line_number",
+                "document_type",
+                "folio",
+                "date",
+                "reason",
+            }:
+                raise ValidationError(_("The DTE reference is invalid."))
+            if reference_data["line_number"] != index:
+                raise ValidationError(_("DTE reference numbers must be sequential."))
+            reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
+            _add_text(reference, "NroLinRef", index)
+            _add_text(reference, "TpoDocRef", reference_data["document_type"])
+            _add_text(reference, "FolioRef", reference_data["folio"])
+            _add_text(reference, "FchRef", reference_data["date"])
+            _add_text(reference, "RazonRef", reference_data["reason"])
 
         ted_xml = snapshot.get("ted_xml")
         if ted_xml:

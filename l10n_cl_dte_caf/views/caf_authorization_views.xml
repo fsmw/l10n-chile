@@ -98,6 +98,13 @@
                             <field name="date_from" />
                             <field name="date_to" />
                         </group>
+                        <group
+                            string="SII Signature Verification"
+                            groups="l10n_cl_dte_core.group_dte_manager"
+                        >
+                            <field name="caf_key_id" />
+                            <field name="sii_signature_status" />
+                        </group>
                     </group>
                     <notebook>
                         <page string="CAF File and Integrity">

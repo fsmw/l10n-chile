@@ -352,5 +352,5 @@ msgstr ""
 #. module: l10n_cl_dte_xml
 #. odoo-python
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
-msgid "DTE types 33 and 34 require an identified recipient; for an anonymous final consumer, select type 39; boleta issuance is not available in this flow yet."
+msgid "DTE types 33 and 34 require an identified recipient; use the applicable boleta type for an anonymous final consumer."
 msgstr ""

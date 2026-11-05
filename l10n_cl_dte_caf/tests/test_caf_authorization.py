@@ -1,4 +1,5 @@
-import unittest
+import base64
+import xml.etree.ElementTree as ElementTree
 from datetime import timedelta
 
 from odoo import fields
@@ -16,6 +17,27 @@ class TestCafAuthorization(CafTestCase):
         self.assertEqual(authorization.folio_end, 103)
         self.assertTrue(authorization.validated_at)
         self.assertEqual(authorization.validated_by, self.dte_manager)
+        self.assertEqual(authorization.caf_key_id, self.sii_key_id)
+        self.assertEqual(authorization.sii_signature_status, "verified")
+
+    def test_missing_sii_trust_key_does_not_block_caf_issuance_setup(self):
+        authorization = self.create_authorization(key_id="unpublished-idk")
+
+        authorization.action_validate_authorization()
+
+        self.assertEqual(authorization.state, "validated")
+        self.assertEqual(authorization.caf_key_id, "unpublished-idk")
+        self.assertEqual(authorization.sii_signature_status, "key_unavailable")
+
+    def test_invalid_sii_signature_is_rejected_when_trust_key_exists(self):
+        caf = ElementTree.fromstring(self.build_caf_xml())
+        caf.find("CAF/FRMA").text = base64.b64encode(b"invalid signature").decode()
+        authorization = self.create_authorization(
+            caf_bytes=ElementTree.tostring(caf, encoding="ISO-8859-1")
+        )
+
+        with self.assertRaises(ValidationError):
+            authorization.action_validate_authorization()
 
     def test_authorization_scope_and_dates_checked(self):
         wrong_type = self.create_authorization(
@@ -32,9 +54,6 @@ class TestCafAuthorization(CafTestCase):
         with self.assertRaises(ValidationError):
             expired.action_validate_authorization()
 
-    @unittest.skip(
-        "Known product gap: active CAF folio-range overlap is not enforced yet."
-    )
     def test_overlapping_active_caf_rejected(self):
         self.validate_authorization(folio_start=120, folio_end=125)
         overlapping = self.create_authorization(folio_start=123, folio_end=128)

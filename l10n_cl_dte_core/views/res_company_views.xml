@@ -9,10 +9,17 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Chilean DTE" name="dte_sii_settings">
                     <group string="SII Configuration">
-                        <field
-                            name="dte_sii_environment"
-                            groups="l10n_cl_dte_core.group_dte_manager"
-                        />
+                        <group>
+                            <field
+                                name="dte_sii_environment"
+                                groups="l10n_cl_dte_core.group_dte_manager"
+                            />
+                            <field name="dte_sii_regional_office" />
+                        </group>
+                        <group>
+                            <field name="dte_sii_resolution_number" />
+                            <field name="dte_sii_resolution_date" />
+                        </group>
                         <div class="alert alert-info" role="alert" colspan="2">
                             Demo runs a local simulation. Certification and Production
                             require their own SII credentials and connection setup.

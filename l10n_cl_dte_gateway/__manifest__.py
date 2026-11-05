@@ -11,6 +11,7 @@
         "security/gateway_security.xml",
         "security/ir.model.access.csv",
         "views/electronic_submission_views.xml",
+        "views/envelope_submission_views.xml",
         "views/menus.xml",
     ],
     "installable": True,

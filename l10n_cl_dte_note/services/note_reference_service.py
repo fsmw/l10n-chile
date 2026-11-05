@@ -74,6 +74,11 @@ class NoteReferenceService:
         operation = move.dte_note_operation
         target_code = str(target_document.document_code)
         self.validate_single_reference(move)
+        certification_root = self._validate_certification_reference(
+            move, target_document, code, operation, target_code
+        )
+        if certification_root:
+            return certification_root
         if (
             target_document.fiscal_state != "accepted"
             or target_document.preparation_state != "queued"
@@ -94,7 +99,7 @@ class NoteReferenceService:
         if (
             code == "61"
             and target_code in self.ROOT_DOCUMENT_CODES
-            and operation in {"cancel", "return", "amount"}
+            and operation in {"cancel", "return", "text", "amount"}
         ):
             if (
                 move.move_type != "out_refund"
@@ -104,7 +109,11 @@ class NoteReferenceService:
                     _("A credit note must reverse the selected customer document.")
                 )
             root = target_document.note_root_document_id or target_document
-        elif code == "56" and target_code in {"33", "34"} and operation == "amount":
+        elif (
+            code == "56"
+            and target_code in {"33", "34"}
+            and operation in {"amount", "return", "text"}
+        ):
             if (
                 move.move_type != "out_invoice"
                 or move.debit_origin_id != target_document.source_move_id
@@ -169,6 +178,76 @@ class NoteReferenceService:
                         "This credit note already has a debit cancellation in "
                         "progress or accepted."
                     )
+                )
+        return root
+
+    def _validate_certification_reference(
+        self, move, target_document, code, operation, target_code
+    ):
+        """Allow signed references only inside their validated assigned-set run."""
+        if "dte_certification_run_line_id" not in move._fields:
+            return False
+        run_line = move.dte_certification_run_line_id
+        if not run_line:
+            return False
+        run_line = run_line.sudo().exists()
+        if not run_line:
+            raise ValidationError(_("The assigned-set reference context is invalid."))
+        case = run_line.case_id
+        run = run_line.run_id
+        target_line = run.line_ids.filtered(
+            lambda line: line.case_id.case_identifier == case.reference_case_identifier
+        )
+        expected_root_types = self.ROOT_DOCUMENT_CODES
+        valid_pair = (
+            (
+                code == "61"
+                and target_code in expected_root_types | {"56"}
+                and operation in {"cancel", "return", "text", "amount"}
+            )
+            or (
+                code == "56"
+                and target_code in {"33", "34"}
+                and operation in {"cancel", "return", "text", "amount"}
+            )
+            or (code == "56" and target_code == "61" and operation == "cancel")
+        )
+        accounting_link = (
+            move.move_type == "out_refund"
+            and move.reversed_entry_id == target_document.source_move_id
+            if code == "61"
+            else move.move_type == "out_invoice"
+            and move.debit_origin_id == target_document.source_move_id
+        )
+        if (
+            run_line.move_id != move
+            or not run_line.selected
+            or not case
+            or case.document_code != code
+            or case.note_operation != operation
+            or len(target_line) != 1
+            or not target_line.selected
+            or target_line.sequence >= run_line.sequence
+            or target_line.document_id != target_document
+            or target_document.source_move_id != target_line.move_id
+            or target_document.preparation_state != "signed"
+            or target_document.sii_environment != "certification"
+            or run.company_id.dte_sii_environment != "certification"
+            or target_document.company_id != run.company_id
+            or not valid_pair
+            or not accounting_link
+        ):
+            raise ValidationError(
+                _(
+                    "A certification note must reference an earlier signed DTE "
+                    "from the same assigned set."
+                )
+            )
+        root = target_document.note_root_document_id or target_document
+        if code == "56" and target_code == "61":
+            if not root or root.document_code not in self.ROOT_DOCUMENT_CODES:
+                raise ValidationError(
+                    _("The referenced credit note has no supported fiscal root.")
                 )
         return root
 

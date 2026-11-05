@@ -66,6 +66,18 @@ class CafAuthorization(models.Model):
     )
     caf_filename = fields.Char(groups="l10n_cl_dte_core.group_dte_manager")
     caf_digest = fields.Char(required=True, index=True, copy=False, readonly=True)
+    caf_key_id = fields.Char(string="CAF Key ID", readonly=True, copy=False)
+    sii_signature_status = fields.Selection(
+        [
+            ("not_checked", "Not checked"),
+            ("verified", "Verified"),
+            ("key_unavailable", "Not checked: SII trust key unavailable"),
+        ],
+        string="SII Signature Status",
+        readonly=True,
+        copy=False,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -108,6 +120,8 @@ class CafAuthorization(models.Model):
             "validated_at",
             "validated_by",
             "is_synthetic",
+            "caf_key_id",
+            "sii_signature_status",
         }.intersection(vals):
             raise UserError(
                 _("CAF state and digest can only change through validated actions.")
@@ -126,7 +140,7 @@ class CafAuthorization(models.Model):
         raise AccessError(_("CAF authorizations cannot be deleted."))
 
     def action_validate_authorization(self):
-        """Verify CAF structure, metadata, SII signature, and key pair."""
+        """Validate CAF metadata and key pair; verify FRMA when a trust key exists."""
         self.ensure_one()
         self._check_manager()
         if self.state == "validated":
@@ -140,12 +154,15 @@ class CafAuthorization(models.Model):
         if self.date_to and self.date_to < today:
             raise ValidationError(_("The CAF has expired."))
         self._check_metadata_matches(metadata)
+        self._check_no_active_range_overlap()
         with self.env.cr.savepoint():
             self._write_internal(
                 {
                     "state": "validated",
                     "validated_at": fields.Datetime.now(),
                     "validated_by": self.env.uid,
+                    "caf_key_id": metadata["key_id"],
+                    "sii_signature_status": metadata["sii_signature_status"],
                 }
             )
         return True
@@ -243,7 +260,9 @@ class CafAuthorization(models.Model):
             ) from error
         signed_data = _CAF_SIGNED_DATA_WHITESPACE.sub(b"><", signed_data)
         authorization_date = self._parse_date(required["date_from"])
-        self.env["l10n_cl.caf.trust.key"].action_verify_caf_signature(
+        trust_key = self.env[
+            "l10n_cl.caf.trust.key"
+        ].action_check_caf_signature_if_key_available(
             required["key_id"].strip(),
             signed_data,
             signature_bytes,
@@ -256,6 +275,8 @@ class CafAuthorization(models.Model):
             "folio_start": self._parse_positive_int(required["folio_start"]),
             "folio_end": self._parse_positive_int(required["folio_end"]),
             "date_from": authorization_date,
+            "key_id": required["key_id"].strip(),
+            "sii_signature_status": "verified" if trust_key else "key_unavailable",
         }
 
     def _check_caf_integrity(self, content=None):
@@ -294,6 +315,55 @@ class CafAuthorization(models.Model):
             raise ValidationError(
                 _("The CAF authorization date does not match its DA.")
             )
+
+    def _check_no_active_range_overlap(self):
+        """Serialize CAF activation and reject intersecting active folio ranges."""
+        self.ensure_one()
+        self._lock_range()
+        overlapping = self.search(
+            [
+                ("id", "!=", self.id),
+                ("company_id", "=", self.company_id.id),
+                ("document_code", "=", self.document_code),
+                ("sii_environment", "=", self.sii_environment),
+                ("state", "in", ["validated", "exhausted"]),
+                ("folio_start", "<=", self.folio_end),
+                ("folio_end", ">=", self.folio_start),
+            ],
+            limit=1,
+        )
+        if overlapping:
+            raise ValidationError(
+                _("The CAF folio range overlaps another active authorization.")
+            )
+        # A concurrent validator may have committed while this transaction waited
+        # for the advisory lock. Query through a fresh cursor so repeatable-read
+        # snapshots cannot hide that newly active authorization.
+        with self.env.registry.cursor() as fresh_cr:
+            fresh_cr.execute(
+                """SELECT id
+                     FROM l10n_cl_caf_authorization
+                    WHERE id != %s
+                      AND company_id = %s
+                      AND document_code = %s
+                      AND sii_environment = %s
+                      AND state IN ('validated', 'exhausted')
+                      AND folio_start <= %s
+                      AND folio_end >= %s
+                    LIMIT 1""",
+                [
+                    self.id,
+                    self.company_id.id,
+                    self.document_code,
+                    self.sii_environment,
+                    self.folio_end,
+                    self.folio_start,
+                ],
+            )
+            if fresh_cr.fetchone():
+                raise ValidationError(
+                    _("The CAF folio range overlaps another active authorization.")
+                )
 
     @api.constrains("sii_environment", "is_synthetic")
     def _check_synthetic_environment(self):

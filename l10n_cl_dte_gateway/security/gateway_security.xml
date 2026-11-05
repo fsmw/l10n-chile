@@ -11,4 +11,16 @@
         <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_sii_envelope_submission_company" model="ir.rule">
+        <field name="name">SII envelope submissions: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_sii_envelope_submission" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_sii_envelope_attempt_company" model="ir.rule">
+        <field name="name">SII envelope attempts: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_sii_envelope_attempt" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>

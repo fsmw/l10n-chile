@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="paperformat_dte_print_sample" model="report.paperformat">
+        <field name="name">Chilean DTE Print Sample</field>
+        <field name="default" eval="False" />
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">5</field>
+        <field name="dpi">90</field>
+    </record>
+    <record id="action_dte_print_sample" model="ir.actions.report">
+        <field name="name">DTE Print Sample</field>
+        <field name="model">l10n_cl.dte.report.sample</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_dte_report.dte_print_sample</field>
+        <field name="report_file">l10n_cl_dte_report.dte_print_sample</field>
+        <field name="paperformat_id" ref="paperformat_dte_print_sample" />
+        <field
+            name="print_report_name"
+        >'DTE-%s-%s' % (object.document_code, object.folio)</field>
+    </record>
+    <template id="dte_print_sample">
+        <html>
+            <head>
+                <meta charset="utf-8" />
+                <style>
+                    @page { size: A4 portrait; margin: 10mm; }
+                    body { font-family: sans-serif; font-size: 10pt; color: #222; }
+                    .page { page-break-after: always; }
+                    .page:last-child { page-break-after: auto; }
+                    table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+                    th, td { padding: 4px; border-bottom: 1px solid #ddd; text-align: left; }
+                    .text-end { text-align: right; }
+                    .text-center { text-align: center; }
+                    .small { font-size: 8pt; }
+                    .barcode { max-width: 80mm; max-height: 20mm; }
+                </style>
+            </head>
+            <body>
+                <main>
+                    <t t-foreach="docs" t-as="sample">
+                        <div
+                            class="article"
+                            data-oe-model="l10n_cl.dte.report.sample"
+                            t-att-data-oe-id="sample.id"
+                        >
+                            <div class="page">
+                                <t t-set="values" t-value="sample_data[sample.id]" />
+                                <h2 t-esc="sample.name" />
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <th>Tipo de documento</th>
+                                            <td t-esc="values['document_code']" />
+                                            <th>Folio</th>
+                                            <td t-esc="values['folio']" />
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <td t-esc="values['issue_date']" />
+                                            <th>Total</th>
+                                            <td t-esc="values['total']" />
+                                        </tr>
+                                        <tr>
+                                            <th>Emisor</th>
+                                            <td colspan="3"><span
+                                                t-esc="values['issuer_name']"
+                                            /> — <span
+                                                t-esc="values['issuer_vat']"
+                                            /></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Receptor</th>
+                                            <td colspan="3"><span
+                                                t-esc="values['receiver_name']"
+                                            /> — <span
+                                                t-esc="values['receiver_vat']"
+                                            /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Detalle</th>
+                                            <th class="text-end">Cantidad</th>
+                                            <th class="text-end">Monto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="values['details']" t-as="line">
+                                            <td t-esc="line['name']" />
+                                            <td
+                                                class="text-end"
+                                                t-esc="line['quantity']"
+                                            />
+                                            <td
+                                                class="text-end"
+                                                t-esc="line['amount']"
+                                            />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="text-center mt-3">
+                                    <img
+                                        t-att-src="'data:image/png;base64,%s' % values['barcode']"
+                                        class="barcode"
+                                        alt="PDF417 TED"
+                                    />
+                                    <p
+                                        class="small"
+                                    >Timbre Electrónico del Documento (TED)</p>
+                                </div>
+                                <p
+                                    class="small text-muted mt-2"
+                                >Representación impresa de un DTE generado para certificación. La aprobación depende del resultado oficial del SII.</p>
+                            </div>
+                        </div>
+                    </t>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

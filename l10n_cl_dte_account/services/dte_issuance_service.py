@@ -17,7 +17,17 @@ class DteIssuanceService:
         with move.env.cr.savepoint():
             return self._issue(move, adapter, document_code)
 
+    def prepare(self, move, adapter, document_code):
+        """Sign a DTE and retain its evidence without dispatching it."""
+        move.ensure_one()
+        with move.env.cr.savepoint():
+            return self._prepare(move, adapter, document_code)
+
     def _issue(self, move, adapter, document_code):
+        document = self._prepare(move, adapter, document_code)
+        return self._enqueue_prepared(move, adapter, document)
+
+    def _prepare(self, move, adapter, document_code):
         move.ensure_one()
         document_model = move.env["l10n_cl.electronic.document"]
         environment = move.company_id.dte_sii_environment
@@ -27,7 +37,7 @@ class DteIssuanceService:
             limit=1,
         )
         if document:
-            return self._resume_existing(move, document)
+            return self._resume_prepared(document)
 
         adapter.validate_source(move, document_code)
         document = document_model.search(
@@ -35,7 +45,7 @@ class DteIssuanceService:
             limit=1,
         )
         if document:
-            return self._resume_existing(move, document)
+            return self._resume_prepared(document)
         caf = move._select_dte_caf(environment, document_code)
         extra_values = adapter.prepare_document_values(move, document_code)
         protected_values = {
@@ -99,6 +109,22 @@ class DteIssuanceService:
         document.action_record_transition(
             "signed", "dte_xml_signed", artifact_id=signed_artifact.id
         )
+        folio.action_consume()
+        return document
+
+    def _enqueue_prepared(self, move, adapter, document):
+        if document.preparation_state == "queued":
+            return self._resume_existing(move, document)
+        if document.preparation_state != "signed":
+            raise UserError(_("Only a signed DTE can be queued for submission."))
+        signed_artifacts = document.artifact_ids.filtered(
+            lambda artifact: artifact.role == "signed_xml"
+        )
+        if len(signed_artifacts) != 1:
+            raise UserError(_("A signed DTE needs one signed XML artifact."))
+        signed_artifacts.action_verify_integrity()
+        signed_xml = base64.b64decode(signed_artifacts.content, validate=True)
+        source_key = document.source_key
         request_artifact = move._create_dte_artifact(
             document, "sii_request", signed_xml, adapter.artifact_producer_version
         )
@@ -117,17 +143,18 @@ class DteIssuanceService:
                 "idempotency_key": f"{source_key}:submission",
             }
         )
-        folio.action_consume()
         submission.action_enqueue_submission()
+        return document
+
+    def _resume_prepared(self, document):
+        if document.preparation_state not in {"signed", "queued"}:
+            raise UserError(_("The existing DTE is not ready to resume."))
         return document
 
     def _resume_existing(self, move, document):
         if document.preparation_state != "queued":
             raise UserError(
-                _(
-                    "A DTE already exists for this invoice and is not ready "
-                    "to resend."
-                )
+                _("A DTE already exists for this invoice and is not ready to resend.")
             )
         submission = move.env["l10n_cl.electronic.submission"].search(
             [("document_id", "=", document.id)], limit=1
