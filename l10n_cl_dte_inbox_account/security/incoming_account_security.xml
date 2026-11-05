@@ -17,9 +17,34 @@
             eval="[(4, ref('group_inbox_account_user')), (4, ref('account.group_account_manager'))]"
         />
     </record>
+    <record id="incoming_account_binding_rule_company" model="ir.rule">
+        <field name="name">Incoming DTE bill links: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_account_binding" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
     <record id="incoming_account_mapping_rule_company" model="ir.rule">
         <field name="name">Incoming DTE purchase mappings: allowed companies</field>
         <field name="model_id" ref="model_l10n_cl_incoming_dte_account_mapping" />
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_bill_wizard_rule_company" model="ir.rule">
+        <field name="name">Incoming DTE previews: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_bill_wizard" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_bill_wizard_line_rule_company" model="ir.rule">
+        <field name="name">Incoming DTE preview details: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_bill_wizard_line" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_bill_wizard_rule_owner" model="ir.rule">
+        <field name="name">incoming_bill_wizard: current operator</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_bill_wizard" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+    <record id="incoming_bill_wizard_line_rule_owner" model="ir.rule">
+        <field name="name">incoming_bill_wizard_line: current operator</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_bill_wizard_line" />
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 </odoo>

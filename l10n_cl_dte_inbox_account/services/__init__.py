@@ -5,3 +5,5 @@ from . import evidence_service
 from . import policy_service
 from . import mapping_service
 from . import comparison_service
+from . import binding_service
+from . import binding_context

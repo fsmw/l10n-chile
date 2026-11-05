@@ -1,3 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_incoming_account_binding_user,l10n_cl.incoming.dte.account.binding user,model_l10n_cl_incoming_dte_account_binding,group_inbox_account_user,1,0,0,0
+access_incoming_account_binding_manager,l10n_cl.incoming.dte.account.binding manager,model_l10n_cl_incoming_dte_account_binding,group_inbox_account_manager,1,0,0,0
 access_incoming_account_mapping_user,l10n_cl.incoming.dte.account.mapping user,model_l10n_cl_incoming_dte_account_mapping,group_inbox_account_user,1,0,0,0
 access_incoming_account_mapping_manager,l10n_cl.incoming.dte.account.mapping manager,model_l10n_cl_incoming_dte_account_mapping,group_inbox_account_manager,1,1,1,1
+access_incoming_bill_wizard_user,l10n_cl.incoming.dte.bill.wizard user,model_l10n_cl_incoming_dte_bill_wizard,group_inbox_account_user,1,1,1,1
+access_incoming_bill_wizard_manager,l10n_cl.incoming.dte.bill.wizard manager,model_l10n_cl_incoming_dte_bill_wizard,group_inbox_account_manager,1,1,1,1
+access_incoming_bill_wizard_line_user,l10n_cl.incoming.dte.bill.wizard.line user,model_l10n_cl_incoming_dte_bill_wizard_line,group_inbox_account_user,1,1,1,1
+access_incoming_bill_wizard_line_manager,l10n_cl.incoming.dte.bill.wizard.line manager,model_l10n_cl_incoming_dte_bill_wizard_line,group_inbox_account_manager,1,1,1,1
