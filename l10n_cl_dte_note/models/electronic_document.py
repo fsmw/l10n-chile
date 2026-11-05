@@ -39,7 +39,6 @@ class ElectronicDocument(models.Model):
     def create(self, vals_list):
         """Validate note provenance when the immutable evidence row is created."""
         documents = self.env["l10n_cl.electronic.document"]
-        moves = self.env["account.move"]
         for vals in vals_list:
             target_id, root_id = (
                 vals.get("note_target_document_id"),
@@ -51,8 +50,7 @@ class ElectronicDocument(models.Model):
                 documents.browse(target_id).exists(),
                 documents.browse(root_id).exists(),
             )
-            source = moves.browse(vals.get("source_move_id")).exists()
-            if len(target) != 1 or len(root) != 1 or len(source) != 1:
+            if len(target) != 1 or len(root) != 1:
                 raise ValidationError(
                     _("A DTE note needs one fiscal target, root and accounting source.")
                 )
@@ -97,42 +95,7 @@ class ElectronicDocument(models.Model):
                 raise ValidationError(
                     _("A credit note can reference only an original invoice or boleta.")
                 )
-            if source.dte_note_target_document_id != target or source.state != "posted":
-                raise ValidationError(
-                    _(
-                        "The DTE evidence source must be the posted accounting "
-                        "note for its target."
-                    )
-                )
-            if source.l10n_latam_document_type_id.code != code:
-                raise ValidationError(
-                    _("The accounting note type and fiscal evidence type differ.")
-                )
-            if (
-                code == "61"
-                and source.dte_note_operation not in {"cancel", "return", "amount"}
-            ) or (
-                code == "56" and source.dte_note_operation not in {"cancel", "amount"}
-            ):
-                raise ValidationError(
-                    _("The accounting note operation is not valid for its type.")
-                )
-            if (
-                code == "61"
-                and (
-                    source.move_type != "out_refund"
-                    or source.reversed_entry_id != target.source_move_id
-                )
-            ) or (
-                code == "56"
-                and (
-                    source.move_type != "out_invoice"
-                    or source.debit_origin_id != target.source_move_id
-                )
-            ):
-                raise ValidationError(
-                    _("The accounting note origin does not match its fiscal target.")
-                )
+            self._validate_note_source_values(vals, target, root)
         return super().create(vals_list)
 
     def write(self, vals):
@@ -172,18 +135,11 @@ class ElectronicDocument(models.Model):
                     _("The DTE note company and environment must match its root.")
                 )
 
-    def _lock_note_chain(self, target_document):
+    def _lock_note_chain(self, target_document, source=None):
         """Lock root and target in deterministic order and bump the root revision."""
         target_document.ensure_one()
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            raise AccessError(
-                _("Only a DTE manager can serialize DTE note adjustments.")
-            )
-        target_document.check_access("read")
-        target_document.check_access("write")
+        self._check_note_chain_operator(target_document, source=source)
         root = target_document.note_root_document_id or target_document
-        root.check_access("read")
-        root.check_access("write")
         if (
             root.company_id not in self.env.companies
             or target_document.company_id not in self.env.companies
@@ -238,3 +194,55 @@ class ElectronicDocument(models.Model):
             artifact_id=artifact_id,
             folio_number=folio_number,
         )
+
+    @api.model
+    def _validate_note_source_values(self, vals, target, root):
+        source = self.env["account.move"].browse(vals.get("source_move_id")).exists()
+        if len(source) != 1:
+            raise ValidationError(_("A DTE note needs one posted accounting source."))
+        code = str(vals.get("document_code"))
+        if source.dte_note_target_document_id != target or source.state != "posted":
+            raise ValidationError(
+                _(
+                    "The DTE evidence source must be the posted accounting "
+                    "note for its target."
+                )
+            )
+        if source.l10n_latam_document_type_id.code != code:
+            raise ValidationError(
+                _("The accounting note type and fiscal evidence type differ.")
+            )
+        if (
+            code == "61"
+            and source.dte_note_operation not in {"cancel", "return", "amount"}
+        ) or (code == "56" and source.dte_note_operation not in {"cancel", "amount"}):
+            raise ValidationError(
+                _("The accounting note operation is not valid for its type.")
+            )
+        if (
+            code == "61"
+            and (
+                source.move_type != "out_refund"
+                or source.reversed_entry_id != target.source_move_id
+            )
+        ) or (
+            code == "56"
+            and (
+                source.move_type != "out_invoice"
+                or source.debit_origin_id != target.source_move_id
+            )
+        ):
+            raise ValidationError(
+                _("The accounting note origin does not match its fiscal target.")
+            )
+
+    def _check_note_chain_operator(self, target_document, source=None):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(
+                _("Only a DTE manager can serialize DTE note adjustments.")
+            )
+        target_document.check_access("read")
+        target_document.check_access("write")
+        root = target_document.note_root_document_id or target_document
+        root.check_access("read")
+        root.check_access("write")

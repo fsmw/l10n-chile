@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_pos_session_form_dte_return" model="ir.ui.view">
+        <field name="name">pos.session.form.dte.pos.return</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="l10n_cl_dte_pos.view_pos_session_form_dte" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='dte_pos_information']" position="inside">
+                <field name="dte_pos_returns_enabled" />
+                <field name="dte_return_order_count" />
+                <field name="dte_return_total" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

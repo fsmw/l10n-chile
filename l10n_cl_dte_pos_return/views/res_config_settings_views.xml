@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_res_config_settings_dte_pos_return" model="ir.ui.view">
+        <field name="name">res.config.settings.form.dte.pos.return</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    name="l10n_cl_dte_pos_return"
+                    string="Chile POS Returns"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                >
+                    <block title="POS Return Policy" name="dte_pos_return_policy">
+                        <setting
+                            id="dte_pos_returns_enabled_setting"
+                            string="Enable Chilean POS Returns"
+                            help="Allow referenced online goods returns across stores of this company."
+                        >
+                            <field name="dte_pos_returns_enabled" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

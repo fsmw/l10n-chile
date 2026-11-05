@@ -223,6 +223,7 @@ class PosBoletaSnapshotService:
             )
 
     def _snapshot_lines(self, order):
+        self.boleta_service.env = order.env
         lines = order.lines.filtered(lambda line: line.product_id and line.qty > 0)
         if len(lines) > BoletaSnapshotService.MAX_DETAIL_LINES:
             raise ValidationError(
