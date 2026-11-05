@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_pos_session_form_dte" model="ir.ui.view">
+        <field name="name">pos.session.form.dte</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Chilean DTE" name="dte_pos_information">
+                    <field name="dte_pos_accounting_mode" />
+                    <field name="move_id" />
+                    <field name="dte_order_count" />
+                    <field name="dte_pending_order_count" />
+                    <field name="dte_pos_total" />
+                    <field name="dte_readiness" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
