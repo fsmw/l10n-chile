@@ -9,7 +9,7 @@
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
-    "development_status": "Alpha",
+    "development_status": "Beta",
     "depends": [
         "l10n_cl_dte_account",
         "l10n_cl_dte_core",
