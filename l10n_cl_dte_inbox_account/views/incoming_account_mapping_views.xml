@@ -1,0 +1,87 @@
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_account_mapping_view_list" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.account.mapping.list</field>
+        <field name="model">l10n_cl.incoming.dte.account.mapping</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="match_kind" />
+                <field name="source_code_type" />
+                <field name="source_value" />
+                <field name="product_id" />
+                <field name="account_id" />
+                <field name="tax_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="active" column_invisible="True" />
+            </list>
+        </field>
+    </record>
+    <record id="incoming_account_mapping_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.account.mapping.form</field>
+        <field name="model">l10n_cl.incoming.dte.account.mapping</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <field name="active" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="company_id" invisible="1" />
+                            <field name="partner_id" />
+                            <field name="match_kind" />
+                            <field
+                                name="source_code_type"
+                                invisible="match_kind != 'code'"
+                            />
+                            <field
+                                name="source_value"
+                                invisible="match_kind == 'default'"
+                            />
+                        </group>
+                        <group>
+                            <field name="product_id" />
+                            <field name="account_id" />
+                            <field name="tax_id" />
+                            <field name="source_uom" />
+                            <field name="uom_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="incoming_account_mapping_view_search" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.account.mapping.search</field>
+        <field name="model">l10n_cl.incoming.dte.account.mapping</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="source_value" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="incoming_account_mapping_action" model="ir.actions.act_window">
+        <field name="name">Incoming DTE Purchase Mappings</field>
+        <field name="res_model">l10n_cl.incoming.dte.account.mapping</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

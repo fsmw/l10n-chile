@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_incoming_account_mapping_user,l10n_cl.incoming.dte.account.mapping user,model_l10n_cl_incoming_dte_account_mapping,group_inbox_account_user,1,0,0,0
+access_incoming_account_mapping_manager,l10n_cl.incoming.dte.account.mapping manager,model_l10n_cl_incoming_dte_account_mapping,group_inbox_account_manager,1,1,1,1

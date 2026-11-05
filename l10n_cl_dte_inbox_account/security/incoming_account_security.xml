@@ -17,4 +17,9 @@
             eval="[(4, ref('group_inbox_account_user')), (4, ref('account.group_account_manager'))]"
         />
     </record>
+    <record id="incoming_account_mapping_rule_company" model="ir.rule">
+        <field name="name">Incoming DTE purchase mappings: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_account_mapping" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>
