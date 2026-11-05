@@ -39,6 +39,10 @@ class CommittedIncomingFixture:
             env.cache.set(currency, currency._fields["active"], True)
             prefix = "Synthetic concurrency " + uuid4().hex
             native_write = type(env["res.users"]).write
+            company_class = type(env["res.company"])
+            native_stock_setup = getattr(
+                company_class, "_set_per_company_inter_company_locations", None
+            )
 
             def isolated_root_membership(users, values):
                 # Company creation normally enrolls root. The outer TransactionCase
@@ -51,8 +55,22 @@ class CommittedIncomingFixture:
                     return True
                 return native_write(users, values)
 
-            with patch.object(
-                type(env["res.users"]), "write", isolated_root_membership
+            def isolated_stock_setup(companies, location):
+                # Stock otherwise writes every existing company's partner and
+                # children, including contacts locked by the outer test. These
+                # inventory properties are unrelated to this accounting fixture.
+                if companies.env.cr is cr:
+                    return None
+                return native_stock_setup(companies, location)
+
+            with (
+                patch.object(type(env["res.users"]), "write", isolated_root_membership),
+                patch.object(
+                    company_class,
+                    "_set_per_company_inter_company_locations",
+                    isolated_stock_setup,
+                    create=True,
+                ),
             ):
                 company = env["res.company"].create(
                     dict(name=prefix, country_id=country.id, currency_id=currency.id)
@@ -213,6 +231,7 @@ class CommittedIncomingFixture:
     def run(self, callback):
         with self.db.cursor() as cr:
             cr.transaction = api.Transaction(self.registry)
+            cr.execute("SET LOCAL lock_timeout = '10s'")
             env = api.Environment(cr, self.uid, self.context)
             # CLP is active in the outer fixture, whose uncommitted currency row
             # must not be touched by these independent transaction tests.
@@ -229,6 +248,7 @@ class CommittedIncomingFixture:
             for attempt in range(4):
                 with self.db.cursor() as cr:
                     cr.transaction = api.Transaction(self.registry)
+                    cr.execute("SET LOCAL lock_timeout = '10s'")
                     env = api.Environment(cr, self.uid, self.context)
                     # CLP is active in the outer fixture, whose uncommitted currency row
                     # must not be touched by these independent transaction tests.
@@ -275,6 +295,7 @@ class CommittedIncomingFixture:
     def close(self):
         with self.db.cursor() as cr:
             cr.transaction = api.Transaction(self.registry)
+            cr.execute("SET LOCAL lock_timeout = '10s'")
             env = api.Environment(cr, 1, self.context, su=True)
             company = env["res.company"].browse(self.company_id)
             company.dte_inbox_account_enabled = False
@@ -320,6 +341,22 @@ class CommittedIncomingFixture:
             env["account.tax.group"].search(
                 [("company_id", "=", self.company_id)]
             ).unlink()
+            # The full CI registry includes stock, which creates a warehouse,
+            # picking types and locations for every new test company.
+            env["ir.default"].search([("company_id", "=", self.company_id)]).unlink()
+            if "stock.warehouse" in env:
+                company.internal_transit_location_id = False
+            for model in (
+                "stock.rule",
+                "stock.warehouse",
+                "stock.route",
+                "stock.picking.type",
+                "stock.location",
+            ):
+                if model in env:
+                    env[model].with_context(active_test=False).search(
+                        [("company_id", "=", self.company_id)]
+                    ).unlink()
             env["res.users"].browse(self.uid).unlink()
             company.unlink()
             env["res.partner"].browse(self.partner_ids).exists().unlink()
