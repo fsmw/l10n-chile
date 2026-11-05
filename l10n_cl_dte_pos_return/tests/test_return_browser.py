@@ -11,6 +11,7 @@ from lxml import etree
 
 from odoo import Command
 from odoo.tests import tagged
+from odoo.tests.common import TEST_CURSOR_COOKIE_NAME
 
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
     BoletaSnapshotService,
@@ -136,7 +137,26 @@ class TestPosReturnBrowser(TestPosBoletaBrowser):
             .with_user(self.dte_manager)
             .browse(action["res_id"])
         )
-        sample.with_context(force_report_rendering=True).action_generate_pdf()
+        report_class = type(self.env["ir.actions.report"])
+        build_args = report_class._build_wkhtmltopdf_args
+
+        def report_args(report, *args, **kwargs):
+            # After a browser tour every request must identify its test cursor.
+            # Forward the cookie to real PDF asset requests without relaxing
+            # HttpCase's isolation or replacing the renderer.
+            return build_args(report, *args, **kwargs) + [
+                "--cookie",
+                TEST_CURSOR_COOKIE_NAME,
+                self.http_request_key,
+            ]
+
+        with (
+            patch.object(report_class, "_build_wkhtmltopdf_args", report_args),
+            self.assertNoLogs(
+                "odoo.addons.base.models.ir_actions_report", level="WARNING"
+            ),
+        ):
+            sample.with_context(force_report_rendering=True).action_generate_pdf()
         self.assertTrue(base64.b64decode(sample.pdf_content).startswith(b"%PDF"))
         self.assertEqual(signed.sha256, digest)
 
