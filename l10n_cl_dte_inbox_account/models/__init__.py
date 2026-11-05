@@ -3,4 +3,9 @@
 
 from . import res_company
 from . import res_config_settings
+from . import res_partner
+from . import incoming_document
+from . import incoming_account_binding
 from . import incoming_account_mapping
+from . import account_move
+from . import account_move_line

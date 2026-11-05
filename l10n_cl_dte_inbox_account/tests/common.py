@@ -4,7 +4,7 @@
 
 from lxml import etree
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import new_test_user
 
 from odoo.addons.l10n_cl_dte_inbox.services.incoming_validation import xml_bytes
@@ -174,6 +174,31 @@ class IncomingAccountCase(DteInvoiceTestCase):
     def document(self, source):
         return IncomingAccountEvidenceService(self.op_env).read(source)
 
+    def wizard(self, source=None, ready=True):
+        source = source if source is not None else self.source()
+        action = source.action_prepare_vendor_bill()
+        wizard = self.op_env["l10n_cl.incoming.dte.bill.wizard"].browse(
+            action["res_id"]
+        )
+        if ready:
+            for line in wizard.line_ids:
+                line.write(
+                    dict(
+                        account_id=self.expense.id,
+                        tax_id=self.purchase_exempt.id
+                        if line.source_exempt
+                        else self.purchase_vat.id,
+                        uom_id=self.unit.id,
+                    )
+                )
+            wizard.action_refresh_preview()
+            self.assertFalse(wizard.has_blockers, wizard.diagnostic_text)
+        return wizard
+
+    def bill(self, wizard):
+        action = wizard.action_confirm()
+        return self.op_env["account.move"].browse(action["res_id"])
+
     def mapping(self, **kwargs):
         values = dict(
             name="Explicit supplier default",
@@ -185,6 +210,69 @@ class IncomingAccountCase(DteInvoiceTestCase):
         )
         values.update(kwargs)
         return self.manager_env[MAPPING].create(values)
+
+    def manual_bill(self, source):
+        doc = self.document(source)
+        code = doc["identity"]["document_code"]
+        values = dict(
+            move_type="in_invoice",
+            company_id=self.recipient.id,
+            partner_id=self.supplier.id,
+            journal_id=self.purchase_journal.id,
+            currency_id=self.recipient.currency_id.id,
+            invoice_date=source.issue_date,
+            date=fields.Date.today(),
+            l10n_latam_document_type_id=self.document_types[code].id,
+            l10n_latam_document_number=str(source.folio),
+            invoice_line_ids=[],
+        )
+        for line in doc["lines"]:
+            values["invoice_line_ids"].append(
+                Command.create(
+                    dict(
+                        name=line["name"],
+                        account_id=self.expense.id,
+                        quantity=float(line["quantity"]),
+                        price_unit=float(line["unit_price"]),
+                        discount=float(line["discount_percent"]),
+                        product_uom_id=self.unit.id,
+                        tax_ids=[
+                            Command.set(
+                                [
+                                    self.purchase_exempt.id
+                                    if line["exempt"]
+                                    else self.purchase_vat.id
+                                ]
+                            )
+                        ],
+                    )
+                )
+            )
+        if doc["identity"]["due_date"]:
+            values.update(
+                invoice_date_due=doc["identity"]["due_date"],
+                invoice_payment_term_id=False,
+            )
+        return self.op_env["account.move"].create(values)
+
+    def link_wizard(self, source, move):
+        wizard = self.wizard(source, ready=False)
+        wizard.write(dict(mode="link", existing_move_id=move.id))
+        details = move.invoice_line_ids.filtered(
+            lambda line: line.display_type == "product"
+        )
+        for line, target in zip(wizard.line_ids, details, strict=True):
+            line.write(
+                dict(
+                    account_id=target.account_id.id,
+                    tax_id=target.tax_ids.id,
+                    uom_id=target.product_uom_id.id,
+                    existing_line_id=target.id,
+                )
+            )
+        wizard.action_refresh_preview()
+        self.assertFalse(wizard.has_blockers, wizard.diagnostic_text)
+        return wizard
 
     def assert_code(self, code, callable_, *args, **kwargs):
         with self.assertRaises(IncomingAccountError) as result:

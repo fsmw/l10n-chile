@@ -6,6 +6,7 @@ import hashlib
 
 from lxml import etree
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_cl_dte_inbox.services.incoming_validation import xml_bytes
@@ -17,6 +18,22 @@ from .common import NS, IncomingAccountCase
 
 @tagged("post_install", "-at_install")
 class TestIncomingAccountEligibility(IncomingAccountCase):
+    def test_reviewed_valid_33_and_34(self):
+        for code in ("33", "34"):
+            source = self.source(code)
+            wizard = self.wizard(source)
+            self.assertEqual(wizard.document_code, code)
+            self.assertEqual(source.signer_trust_state, "unverified")
+
+    def test_unreviewed_or_invalid_source(self):
+        source = self.source(reviewed=False)
+        wizard = self.wizard(source, ready=False)
+        self.assertTrue(wizard.has_blockers)
+        self.assertIn("source_not_reviewed", wizard.diagnostic_text)
+        source.sudo()._write_internal({"state": "reviewed", "ted_state": "invalid"})
+        wizard.action_refresh_preview()
+        self.assertIn("source_validation_failed", wizard.diagnostic_text)
+
     def test_source_digest_and_receiver(self):
         source = self.source()
         source.sudo()._write_internal({"xml_sha256": "0" * 64})
@@ -30,6 +47,20 @@ class TestIncomingAccountEligibility(IncomingAccountCase):
             }
         )
         self.assert_code("identity_mismatch", self.document, source)
+
+    def test_company_environment_and_currency(self):
+        source = self.source()
+        self.recipient.sudo().dte_inbox_account_enabled = False
+        self.assertIn(
+            "company_disabled", self.wizard(source, ready=False).diagnostic_text
+        )
+        self.recipient.sudo().dte_inbox_account_enabled = True
+        source.sudo()._write_internal({"sii_environment": "certification"})
+        self.assertIn(
+            "environment_mismatch", self.wizard(source, ready=False).diagnostic_text
+        )
+        with self.assertRaises(ValidationError):
+            self.recipient.sudo().currency_id = self.env.ref("base.USD")
 
     def test_supplier_rut_canonicalization(self):
         source = self.source()
@@ -66,6 +97,15 @@ class TestIncomingAccountEligibility(IncomingAccountCase):
             self.recipient,
             source.issuer_vat,
         )
+
+    def test_native_latam_purchase_domain(self):
+        source = self.source()
+        self.supplier.sudo().l10n_cl_sii_taxpayer_type = "2"
+        self.assertIn(
+            "unsupported_feature", self.wizard(source, ready=False).diagnostic_text
+        )
+        self.supplier.sudo().l10n_cl_sii_taxpayer_type = "1"
+        self.assertFalse(self.wizard(source).has_blockers)
 
     def test_unsupported_xml_economics(self):
         content = self.signed()
