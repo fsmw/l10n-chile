@@ -30,7 +30,10 @@ jobs:
           done
   test:
     runs-on: ubuntu-22.04
-    container: ${{ matrix.container }}
+    container:
+      image: ${{ matrix.container }}
+      # Reap orphaned Chrome processes after browser tours.
+      options: --init
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
