@@ -23,6 +23,18 @@ from .common import PosReturnCase
 
 @tagged("post_install", "-at_install", "dte_pos_return")
 class TestPosReturnAcceptance(PosReturnCase):
+    def test_summary_refund_has_translation_context(self):
+        with self.assertNoLogs("odoo.tools.translate", level="WARNING"):
+            original = self.sale(quantity=1)
+            order = self.refund(original)
+        self.assertEqual(order.dte_return_operation, "cancel")
+
+    def test_standard_refund_has_translation_context(self):
+        with self.assertNoLogs("odoo.tools.translate", level="WARNING"):
+            original = self.sale("per_order_invoice")
+            order = self.refund(original)
+        self.assertEqual(order.dte_return_operation, "return")
+
     def test_foreign_pos_user_does_not_need_dte_group(self):
         self.company.country_id = self.env.ref("base.us")
         self.open_new_session()
@@ -239,7 +251,7 @@ class TestPosReturnAcceptance(PosReturnCase):
         self.refund(original)
         self.assertEqual(mapping.sha256, digest)
         self.assertEqual(
-            PosLineMappingService().read_mapping(original.dte_document_ids)[
+            PosLineMappingService(self.env).read_mapping(original.dte_document_ids)[
                 "pos_order_id"
             ],
             original.id,
@@ -469,7 +481,7 @@ class TestPosReturnAcceptance(PosReturnCase):
             patch.object(type(session), "company_id", other),
             self.assertRaises(AccessError),
         ):
-            PosReturnPolicyService().original(original, session)
+            PosReturnPolicyService(self.env).original(original, session)
 
     def test_manual_note_and_pos_return_share_fiscal_capacity(self):
         original = self.sale("per_order_invoice")

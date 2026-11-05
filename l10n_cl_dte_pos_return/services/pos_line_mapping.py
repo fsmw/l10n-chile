@@ -5,7 +5,6 @@ import base64
 import json
 from decimal import Decimal
 
-from odoo import _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_pos.services.pos_boleta_snapshot import (
@@ -21,6 +20,9 @@ class PosLineMappingService:
     """Preserve source identities separately from immutable fiscal evidence."""
 
     SCHEMA = "l10n_cl_dte_pos_return.line_map/1"
+
+    def __init__(self, env):
+        self.env = env
 
     def _key(self, line):
         return (
@@ -57,7 +59,7 @@ class PosLineMappingService:
         native, accounting = self._native_lines(order, move)
         if len(native) != len(snapshot["lines"]) or any(not line for line in native):
             raise ValidationError(
-                _("The fiscal details have no exact native POS line mapping.")
+                move.env._("The fiscal details have no exact native POS line mapping.")
             )
         entries = []
         for ordinal, (line, fiscal) in enumerate(
@@ -65,7 +67,7 @@ class PosLineMappingService:
         ):
             if line.order_id != order or line.qty <= 0:
                 raise ValidationError(
-                    _("A fiscal detail belongs to a different POS sale.")
+                    move.env._("A fiscal detail belongs to a different POS sale.")
                 )
             if (
                 Decimal(str(line.qty)) != Decimal(str(fiscal["quantity"]))
@@ -76,7 +78,7 @@ class PosLineMappingService:
                 or Decimal(str(line.price_subtotal)) != Decimal(str(fiscal["subtotal"]))
             ):
                 raise ValidationError(
-                    _("POS fiscal line amounts differ from the original sale.")
+                    move.env._("POS fiscal line amounts differ from the original sale.")
                 )
             entries.append(
                 {
@@ -100,7 +102,9 @@ class PosLineMappingService:
         lineage = snapshot.get("pos_line_map")
         if not lineage or lineage.get("schema") != self.SCHEMA:
             raise ValidationError(
-                _("The original fiscal snapshot has no verified POS line identities.")
+                document.env._(
+                    "The original fiscal snapshot has no verified POS line identities."
+                )
             )
         return self._persist(order, document, lineage["lines"])
 
@@ -159,7 +163,9 @@ class PosLineMappingService:
                 )
         if len(native) != len(snapshot["lines"]):
             raise ValidationError(
-                _("Legacy fiscal details cannot be matched uniquely to the POS sale.")
+                document.env._(
+                    "Legacy fiscal details cannot be matched uniquely to the POS sale."
+                )
             )
         entries, used = [], set()
         for ordinal, fiscal in enumerate(snapshot["lines"], 1):
@@ -170,7 +176,7 @@ class PosLineMappingService:
             ]
             if len(candidates) != 1 or candidates[0] in used:
                 raise ValidationError(
-                    _(
+                    document.env._(
                         "Legacy POS line mapping is ambiguous; no fiscal "
                         "identity was guessed."
                     )
@@ -189,7 +195,9 @@ class PosLineMappingService:
             )
             if order.account_move and len(invoice_lines) != 1:
                 raise ValidationError(
-                    _("The original accounting line cannot be identified uniquely.")
+                    document.env._(
+                        "The original accounting line cannot be identified uniquely."
+                    )
                 )
             entries.append(
                 {
@@ -212,7 +220,7 @@ class PosLineMappingService:
             or artifact.role != "pos_line_mapping"
         ):
             raise ValidationError(
-                _(
+                document.env._(
                     "Prepare an unambiguous original POS fiscal line mapping "
                     "before refunding."
                 )
@@ -222,7 +230,7 @@ class PosLineMappingService:
             data = json.loads(base64.b64decode(artifact.sudo().content, validate=True))
         except (ValueError, TypeError) as error:
             raise ValidationError(
-                _("The POS fiscal mapping evidence is invalid.")
+                document.env._("The POS fiscal mapping evidence is invalid.")
             ) from error
         snapshot = read_snapshot(document)
         order = document.env["pos.order"].browse(data.get("pos_order_id")).exists()
@@ -237,7 +245,9 @@ class PosLineMappingService:
             or len(data.get("lines", [])) != len(snapshot["lines"])
         ):
             raise ValidationError(
-                _("The POS fiscal mapping does not match its immutable source.")
+                document.env._(
+                    "The POS fiscal mapping does not match its immutable source."
+                )
             )
         seen = set()
         for index, entry in enumerate(data["lines"], 1):
@@ -251,7 +261,7 @@ class PosLineMappingService:
                 or entry.get("pos_line_uuid") != line.uuid
             ):
                 raise ValidationError(
-                    _("A POS fiscal detail identity is inconsistent.")
+                    document.env._("A POS fiscal detail identity is inconsistent.")
                 )
             seen.add(line.id)
             if document.source_move_id:
@@ -266,7 +276,7 @@ class PosLineMappingService:
                     or Decimal(str(accounting.discount)) != Decimal(str(line.discount))
                 ):
                     raise ValidationError(
-                        _(
+                        document.env._(
                             "The original invoice and POS line economics no longer "
                             "match."
                         )
@@ -277,7 +287,7 @@ class PosLineMappingService:
                 "lot_names", sorted(line.pack_lot_ids.mapped("lot_name"))
             ) != sorted(line.pack_lot_ids.mapped("lot_name")):
                 raise ValidationError(
-                    _(
+                    document.env._(
                         "The original POS tracking identity differs from its "
                         "frozen line mapping."
                     )
@@ -287,7 +297,7 @@ class PosLineMappingService:
                 fiscal.get("exempt")
             ) == InvoiceSnapshotService()._is_taxable_19_percent(line.tax_ids):
                 raise ValidationError(
-                    _(
+                    document.env._(
                         "The original fiscal tax or unit can no longer be "
                         "represented by the native POS line."
                     )
@@ -303,7 +313,7 @@ class PosLineMappingService:
                 or Decimal(str(line.price_subtotal)) != Decimal(str(fiscal["subtotal"]))
             ):
                 raise ValidationError(
-                    _(
+                    document.env._(
                         "The original POS economics no longer match the frozen "
                         "fiscal detail."
                     )

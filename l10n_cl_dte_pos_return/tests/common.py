@@ -130,7 +130,7 @@ class PosReturnCase(TestPoSCommon):
                 "lines": lines,
             }
             if order.session_id.dte_pos_returns_enabled:
-                snapshot = PosLineMappingService().attach_snapshot_lineage(
+                snapshot = PosLineMappingService(self.env).attach_snapshot_lineage(
                     snapshot,
                     order,
                     move=source if source._name == "account.move" else None,

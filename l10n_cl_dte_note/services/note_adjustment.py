@@ -3,12 +3,14 @@
 
 from decimal import Decimal
 
-from odoo import _
 from odoo.exceptions import ValidationError
 
 
 class NoteAdjustmentService:
     """Canonical arithmetic shared by accounting and direct POS credit notes."""
+
+    def __init__(self, env):
+        self.env = env
 
     def allocate_vat(self, vat_total, lines):
         """Distribute integer CLP tax by largest remainder and ordinal tie-break."""
@@ -43,8 +45,12 @@ class NoteAdjustmentService:
                     "origin_line_numbers": [
                         line["origin_line_number"] for line in selected
                     ],
-                    "name": _("Exempt reversal") if exempt else _("Taxable reversal"),
-                    "description": _("Full cancellation of referenced document"),
+                    "name": self.env._("Exempt reversal")
+                    if exempt
+                    else self.env._("Taxable reversal"),
+                    "description": self.env._(
+                        "Full cancellation of referenced document"
+                    ),
                     "quantity": "1",
                     "uom": "UN",
                     "unit_price": str(total),
@@ -74,6 +80,6 @@ class NoteAdjustmentService:
         amount = Decimal(str(value))
         if amount != amount.to_integral_value():
             raise ValidationError(
-                _("CLP %(label)s must be an integer.") % {"label": label}
+                self.env._("CLP %(label)s must be an integer.") % {"label": label}
             )
         return int(amount)

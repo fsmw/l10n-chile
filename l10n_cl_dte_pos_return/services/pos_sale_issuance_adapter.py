@@ -14,12 +14,14 @@ from .pos_line_mapping import PosLineMappingService
 class PosTrackedBoletaIssuanceAdapter(PosBoletaIssuanceAdapter):
     def capture_snapshot(self, source, caf, folio_number, document_code):
         snapshot = super().capture_snapshot(source, caf, folio_number, document_code)
-        return PosLineMappingService().attach_snapshot_lineage(snapshot, source)
+        return PosLineMappingService(source.env).attach_snapshot_lineage(
+            snapshot, source
+        )
 
 
 class PosTrackedInvoiceBoletaIssuanceAdapter(BoletaIssuanceAdapter):
     def capture_snapshot(self, source, caf, folio_number, document_code):
         snapshot = super().capture_snapshot(source, caf, folio_number, document_code)
-        return PosLineMappingService().attach_snapshot_lineage(
+        return PosLineMappingService(source.env).attach_snapshot_lineage(
             snapshot, source.pos_order_ids, move=source
         )

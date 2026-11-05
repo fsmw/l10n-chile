@@ -3,7 +3,6 @@
 
 from decimal import Decimal, InvalidOperation
 
-from odoo import _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import SQL
 
@@ -14,16 +13,19 @@ from .pos_line_mapping import PosLineMappingService
 class PosReturnPolicyService:
     """Validate advisory and committed returns against one fiscal root."""
 
+    def __init__(self, env):
+        self.env = env
+
     def decimal(self, value):
         try:
             result = Decimal(str(value))
         except (InvalidOperation, ValueError, TypeError) as error:
             raise ValidationError(
-                _("Enter a finite numeric return quantity or amount.")
+                self.env._("Enter a finite numeric return quantity or amount.")
             ) from error
         if not result.is_finite():
             raise ValidationError(
-                _("Enter a finite numeric return quantity or amount.")
+                self.env._("Enter a finite numeric return quantity or amount.")
             )
         return result
 
@@ -33,7 +35,7 @@ class PosReturnPolicyService:
             and env.user.has_group("l10n_cl_dte_core.group_dte_user")
         ):
             raise AccessError(
-                _("POS returns require both POS User and DTE User permissions.")
+                env._("POS returns require both POS User and DTE User permissions.")
             )
         session.ensure_one()
         session.check_access("read")
@@ -42,24 +44,26 @@ class PosReturnPolicyService:
             session.company_id not in env.companies
             or session.company_id.country_id.code != "CL"
         ):
-            raise AccessError(_("Use an allowed Chilean POS company for this return."))
+            raise AccessError(
+                env._("Use an allowed Chilean POS company for this return.")
+            )
         if session.state != "opened" or not session.dte_pos_returns_enabled:
             raise ValidationError(
-                _("Open a POS session with Chilean returns enabled first.")
+                env._("Open a POS session with Chilean returns enabled first.")
             )
         if not session.company_id.sudo().dte_pos_returns_enabled:
             raise ValidationError(
-                _("Chilean POS returns are disabled for this company.")
+                env._("Chilean POS returns are disabled for this company.")
             )
         if (
             session.currency_id.name != "CLP"
             or session.company_id.sudo().dte_sii_environment != "demo"
         ):
             raise ValidationError(
-                _("POS returns currently require CLP and Demo evidence.")
+                env._("POS returns currently require CLP and Demo evidence.")
             )
         if session.config_id.cash_rounding:
-            raise ValidationError(_("POS returns do not support cash rounding."))
+            raise ValidationError(env._("POS returns do not support cash rounding."))
 
     def original(self, original, session):
         self.check_actor(original.env, session)
@@ -70,7 +74,7 @@ class PosReturnPolicyService:
             or original.currency_id != session.currency_id
         ):
             raise AccessError(
-                _("Return only sales of the current POS company and currency.")
+                self.env._("Return only sales of the current POS company and currency.")
             )
         documents = original._get_pos_dte_documents()
         if (
@@ -83,7 +87,9 @@ class PosReturnPolicyService:
             or documents.sii_environment != "demo"
         ):
             raise ValidationError(
-                _("Select a paid POS sale with one accepted original boleta 39 or 41.")
+                self.env._(
+                    "Select a paid POS sale with one accepted original boleta 39 or 41."
+                )
             )
         mode = "per_order_invoice" if documents.source_move_id else "session_summary"
         if (
@@ -97,7 +103,7 @@ class PosReturnPolicyService:
             and (documents.source_pos_order_id != original or original.account_move)
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "The original fiscal source and POS accounting mode are "
                     "inconsistent."
                 )
@@ -115,7 +121,7 @@ class PosReturnPolicyService:
             != self.decimal(original.amount_total)
         ):
             raise ValidationError(
-                _(
+                self.env._(
                     "The original POS totals and payments do not reconcile "
                     "with its fiscal evidence."
                 )
@@ -128,7 +134,7 @@ class PosReturnPolicyService:
         )
         if normalize(current_receiver) != normalize(snapshot["receiver"]["vat"]):
             raise ValidationError(
-                _(
+                self.env._(
                     "The original POS customer no longer matches its frozen "
                     "fiscal receiver."
                 )
@@ -138,12 +144,14 @@ class PosReturnPolicyService:
     def reason(self, value):
         reason = (value or "").strip()
         if not reason or len(reason) > 90:
-            raise ValidationError(_("Enter a return reason of 1 to 90 characters."))
+            raise ValidationError(
+                self.env._("Enter a return reason of 1 to 90 characters.")
+            )
         try:
             reason.encode("ISO-8859-1")
         except UnicodeEncodeError as error:
             raise ValidationError(
-                _("The return reason must use ISO-8859-1 characters.")
+                self.env._("The return reason must use ISO-8859-1 characters.")
             ) from error
         return reason
 
@@ -156,7 +164,9 @@ class PosReturnPolicyService:
             or ("is_online_payment" in method._fields and method.is_online_payment)
         ):
             raise ValidationError(
-                _("Use a manual cash or bank refund method configured on this POS.")
+                self.env._(
+                    "Use a manual cash or bank refund method configured on this POS."
+                )
             )
 
     def validate_payload(self, env, payload, session):
@@ -183,7 +193,7 @@ class PosReturnPolicyService:
             )
         ):
             raise ValidationError(
-                _("A POS return requires explicit original product lines.")
+                env._("A POS return requires explicit original product lines.")
             )
         claims = {
             "account_move",
@@ -193,7 +203,7 @@ class PosReturnPolicyService:
         }
         if any(payload.get(name) for name in claims):
             raise AccessError(
-                _("Fiscal POS return bindings are assigned only by the server.")
+                env._("Fiscal POS return bindings are assigned only by the server.")
             )
         requested = []
         original_orders = env["pos.order"]
@@ -206,7 +216,7 @@ class PosReturnPolicyService:
                 )
             ):
                 raise AccessError(
-                    _("Fiscal POS line identities are assigned only by the server.")
+                    env._("Fiscal POS line identities are assigned only by the server.")
                 )
             qty = self.decimal(values.get("qty", 0))
             origin = (
@@ -220,7 +230,7 @@ class PosReturnPolicyService:
                 or values.get("product_id") != origin.product_id.id
             ):
                 raise ValidationError(
-                    _("Use only negative product lines from one original POS sale.")
+                    env._("Use only negative product lines from one original POS sale.")
                 )
             origin.check_access("read")
             if self.decimal(values.get("price_unit")) != self.decimal(
@@ -229,13 +239,15 @@ class PosReturnPolicyService:
                 origin.discount
             ):
                 raise ValidationError(
-                    _("A goods return must preserve the original price and discount.")
+                    env._(
+                        "A goods return must preserve the original price and discount."
+                    )
                 )
             original_orders |= origin.order_id
             requested.append({"original_line_id": origin.id, "quantity": str(-qty)})
         if len(original_orders) != 1:
             raise ValidationError(
-                _("A return can reference only one original POS sale.")
+                env._("A return can reference only one original POS sale.")
             )
         target, mode = self.original(original_orders, session)
         self._lock(target, original_orders)
@@ -251,7 +263,7 @@ class PosReturnPolicyService:
                 for command in lot_commands
             ):
                 raise ValidationError(
-                    _(
+                    env._(
                         "Return lot identities must be new records linked to the "
                         "original sale."
                     )
@@ -271,7 +283,7 @@ class PosReturnPolicyService:
                     float(self.decimal(values.get(key))), expected
                 ):
                     raise ValidationError(
-                        _(
+                        env._(
                             "The supplied return line amounts differ from native tax "
                             "computation."
                         )
@@ -285,7 +297,9 @@ class PosReturnPolicyService:
                 float(self.decimal(payload.get(key))), expected
             ):
                 raise ValidationError(
-                    _("The supplied return totals differ from native tax computation.")
+                    env._(
+                        "The supplied return totals differ from native tax computation."
+                    )
                 )
             payload[key] = expected
         reason = self.reason(payload.get("dte_return_reason"))
@@ -365,8 +379,10 @@ class PosReturnPolicyService:
 
     def _requested(self, original, target, requested, exclude_uuid=None):
         if not isinstance(requested, list) or not requested or len(requested) > 1000:
-            raise ValidationError(_("Select between 1 and 1000 original POS details."))
-        mapping = PosLineMappingService().read_mapping(target)
+            raise ValidationError(
+                target.env._("Select between 1 and 1000 original POS details.")
+            )
+        mapping = PosLineMappingService(target.env).read_mapping(target)
         snapshot = read_snapshot(target)
         all_quantities = [
             {
@@ -382,7 +398,7 @@ class PosReturnPolicyService:
             for key in native_totals
         ):
             raise ValidationError(
-                _(
+                target.env._(
                     "Current native tax settings no longer reproduce the "
                     "frozen original sale."
                 )
@@ -393,7 +409,7 @@ class PosReturnPolicyService:
             for entry in mapping["lines"]
         ):
             raise ValidationError(
-                _(
+                target.env._(
                     "Current native detail rounding differs from the frozen "
                     "original sale."
                 )
@@ -415,7 +431,7 @@ class PosReturnPolicyService:
                 or line.id not in ordinals
             ):
                 raise ValidationError(
-                    _(
+                    target.env._(
                         "Select each original fiscal product line once with a "
                         "positive quantity."
                     )
@@ -428,7 +444,10 @@ class PosReturnPolicyService:
                 or line.product_id == original.config_id.tip_product_id
             ):
                 raise ValidationError(
-                    _("Combo, reward and tip returns are outside this POS return flow.")
+                    target.env._(
+                        "Combo, reward and tip returns are outside this POS "
+                        "return flow."
+                    )
                 )
             other = line.refund_orderline_ids.filtered(
                 lambda row: (
@@ -443,7 +462,9 @@ class PosReturnPolicyService:
             )
             if quantity > min(remaining, fiscal_remaining):
                 raise ValidationError(
-                    _("The returned quantity exceeds the remaining original quantity.")
+                    target.env._(
+                        "The returned quantity exceeds the remaining original quantity."
+                    )
                 )
             values.append(
                 {
@@ -466,7 +487,9 @@ class PosReturnPolicyService:
         operation = "cancel" if untouched and full else "return"
         if operation == "return" and len(values) > 60:
             raise ValidationError(
-                _("A partial credit note supports at most 60 fiscal details.")
+                target.env._(
+                    "A partial credit note supports at most 60 fiscal details."
+                )
             )
         return {"lines": values, "operation": operation, "available": available}
 
@@ -497,16 +520,20 @@ class PosReturnPolicyService:
             or order.dte_return_accounting_mode != mode
         ):
             raise ValidationError(
-                _("The POS return fiscal provenance differs from its original sale.")
+                order.env._(
+                    "The POS return fiscal provenance differs from its original sale."
+                )
             )
         if order.partner_id != original.partner_id:
             raise ValidationError(
-                _("The POS return must preserve the original sale customer.")
+                order.env._("The POS return must preserve the original sale customer.")
             )
         self.reason(order.dte_return_reason)
         if any(line.qty >= 0 or not line.refunded_orderline_id for line in order.lines):
             raise ValidationError(
-                _("Mixed sales and returns are not supported in one fiscal order.")
+                order.env._(
+                    "Mixed sales and returns are not supported in one fiscal order."
+                )
             )
         requested = [
             {
@@ -518,7 +545,9 @@ class PosReturnPolicyService:
         result = self._requested(original, target, requested, exclude_uuid=order.uuid)
         if result["operation"] != order.dte_return_operation:
             raise ValidationError(
-                _("Revalidate the return: the original adjustment capacity changed.")
+                order.env._(
+                    "Revalidate the return: the original adjustment capacity changed."
+                )
             )
         for line in order.lines:
             origin = line.refunded_orderline_id
@@ -530,7 +559,7 @@ class PosReturnPolicyService:
                 or self.decimal(line.discount) != self.decimal(origin.discount)
             ):
                 raise ValidationError(
-                    _(
+                    order.env._(
                         "The return must preserve original product, tax, unit, "
                         "price and discount."
                     )
@@ -544,7 +573,7 @@ class PosReturnPolicyService:
                 values["total"]
             ):
                 raise ValidationError(
-                    _(
+                    order.env._(
                         "The persisted POS return details differ from native tax "
                         "computation."
                     )
@@ -553,7 +582,10 @@ class PosReturnPolicyService:
             native_totals["total"]
         ) or self.decimal(-order.amount_tax) != self.decimal(native_totals["vat"]):
             raise ValidationError(
-                _("The persisted POS return totals differ from native tax computation.")
+                order.env._(
+                    "The persisted POS return totals differ from native tax "
+                    "computation."
+                )
             )
         for line in order.lines:
             self.validate_lots(
@@ -565,7 +597,7 @@ class PosReturnPolicyService:
         for payment in order.payment_ids:
             self._check_payment_method(payment.payment_method_id, order.session_id)
             if payment.amount >= 0:
-                raise ValidationError(_("A return payment must be negative."))
+                raise ValidationError(order.env._("A return payment must be negative."))
         return result
 
     def validate_native_result(self, order):
@@ -576,7 +608,7 @@ class PosReturnPolicyService:
             or not order.currency_id.is_zero(order.amount_paid - order.amount_total)
         ):
             raise ValidationError(
-                _(
+                order.env._(
                     "The native POS refund is not completely paid; no credit "
                     "note was issued."
                 )
@@ -585,7 +617,7 @@ class PosReturnPolicyService:
             self.authorize_accounting_source(order.account_move)
         elif order.account_move:
             raise ValidationError(
-                _(
+                order.env._(
                     "A summarized POS return cannot create an individual "
                     "accounting credit."
                 )
@@ -597,7 +629,9 @@ class PosReturnPolicyService:
         order = move.dte_pos_return_order_id
         if not order:
             raise AccessError(
-                _("The accounting credit has no verified native POS return source.")
+                move.env._(
+                    "The accounting credit has no verified native POS return source."
+                )
             )
         self.check_actor(move.env, order.session_id)
         target = order.dte_return_target_document_id
@@ -614,7 +648,9 @@ class PosReturnPolicyService:
             or self.decimal(move.amount_total) != -self.decimal(order.amount_total)
         ):
             raise ValidationError(
-                _("The accounting credit is not the exact posted native POS refund.")
+                move.env._(
+                    "The accounting credit is not the exact posted native POS refund."
+                )
             )
         return order
 
@@ -650,21 +686,21 @@ class PosReturnPolicyService:
         paid = Decimal(0)
         for command in payload.get("payment_ids", []):
             if command[0] not in {0, 1}:
-                raise ValidationError(_("Use explicit manual refund payments."))
+                raise ValidationError(env._("Use explicit manual refund payments."))
             values = command[2]
             self._check_payment_method(
                 env["pos.payment.method"].browse(values.get("payment_method_id")),
                 session,
             )
             if self.decimal(values.get("amount", 0)) >= 0:
-                raise ValidationError(_("A return payment must be negative."))
+                raise ValidationError(env._("A return payment must be negative."))
             amount = self.decimal(values["amount"])
             if amount != amount.to_integral_value():
-                raise ValidationError(_("CLP refund payments must be whole pesos."))
+                raise ValidationError(env._("CLP refund payments must be whole pesos."))
             paid += amount
         if paid != -self.decimal(expected_total):
             raise ValidationError(
-                _("Refund payments must equal the exact native credit total.")
+                env._("Refund payments must equal the exact native credit total.")
             )
 
     def validate_lots(self, origin, names, quantity, exclude_uuid):
@@ -673,7 +709,7 @@ class PosReturnPolicyService:
         if tracking == "none":
             if original_names or names:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The original product tracking can no longer be "
                         "represented natively."
                     )
@@ -688,7 +724,7 @@ class PosReturnPolicyService:
         )
         if not original_names or not original_names <= stock_names:
             raise ValidationError(
-                _(
+                self.env._(
                     "The original native stock movement has no matching lot "
                     "or serial trace."
                 )
@@ -699,16 +735,20 @@ class PosReturnPolicyService:
             or not set(names) <= original_names
         ):
             raise ValidationError(
-                _("Return only lot or serial identities from the original POS line.")
+                self.env._(
+                    "Return only lot or serial identities from the original POS line."
+                )
             )
         if tracking == "lot" and len(original_names) != 1:
             raise ValidationError(
-                _("This return flow requires one original lot per POS detail.")
+                self.env._("This return flow requires one original lot per POS detail.")
             )
         if tracking == "serial":
             if quantity != len(names):
                 raise ValidationError(
-                    _("Provide exactly one original serial for each returned unit.")
+                    self.env._(
+                        "Provide exactly one original serial for each returned unit."
+                    )
                 )
             previous = origin.order_id.lines.refund_orderline_ids.filtered(
                 lambda line: (
@@ -719,5 +759,5 @@ class PosReturnPolicyService:
             )
             if set(names).intersection(previous.pack_lot_ids.mapped("lot_name")):
                 raise ValidationError(
-                    _("An original serial has already been returned.")
+                    self.env._("An original serial has already been returned.")
                 )

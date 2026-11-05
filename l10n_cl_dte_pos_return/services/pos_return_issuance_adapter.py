@@ -27,7 +27,7 @@ class PosReturnIssuanceAdapter(PosBoletaIssuanceAdapter):
         self.pos_snapshot_service = PosReturnSnapshotService()
 
     def validate_source(self, source, document_code):
-        PosReturnPolicyService().validate_return(source, lock=True)
+        PosReturnPolicyService(source.env).validate_return(source, lock=True)
         return self.pos_snapshot_service.validate_source(source, document_code)
 
     def prepare_document_values(self, source, document_code):
@@ -48,8 +48,8 @@ class PosAccountingNoteIssuanceAdapter(NoteIssuanceAdapter):
         self.snapshot_service = PosAccountingNoteSnapshotService()
 
     def validate_source(self, source, document_code):
-        order = PosReturnPolicyService().authorize_accounting_source(source)
-        PosReturnPolicyService().validate_return(order, lock=True)
+        order = PosReturnPolicyService(source.env).authorize_accounting_source(source)
+        PosReturnPolicyService(source.env).validate_return(order, lock=True)
         return self.snapshot_service.validate_note_source(source, document_code)
 
     def prepare_document_values(self, source, document_code):

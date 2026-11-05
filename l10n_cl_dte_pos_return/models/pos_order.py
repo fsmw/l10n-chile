@@ -179,7 +179,7 @@ class PosOrder(models.Model):
                     "drafts are not supported."
                 )
             )
-        policy = PosReturnPolicyService()
+        policy = PosReturnPolicyService(self.env)
         result = policy.validate_payload(self.env, payload, session)
         if existing_order and (
             existing_order.session_id != session
@@ -200,7 +200,7 @@ class PosOrder(models.Model):
                 "fiscal_position_id": original.fiscal_position_id.id,
             }
         )
-        mapping = PosLineMappingService().read_mapping(result["target"])
+        mapping = PosLineMappingService(self.env).read_mapping(result["target"])
         ordinals = {
             entry["pos_line_id"]: entry["ordinal"] for entry in mapping["lines"]
         }
@@ -234,7 +234,7 @@ class PosOrder(models.Model):
 
     def _check_pos_dte_order_before_processing(self, draft):
         if self.dte_return_target_document_id:
-            PosReturnPolicyService().validate_return(self)
+            PosReturnPolicyService(self.env).validate_return(self)
             return
         return super()._check_pos_dte_order_before_processing(draft)
 
@@ -253,7 +253,7 @@ class PosOrder(models.Model):
     def _prepare_pos_dte_invoice_vals(self, vals):
         if not self.dte_return_target_document_id:
             return super()._prepare_pos_dte_invoice_vals(vals)
-        PosReturnPolicyService().validate_return(self)
+        PosReturnPolicyService(self.env).validate_return(self)
         document_type = self.env["l10n_latam.document.type"].search(
             [("country_id", "=", self.company_id.country_id.id), ("code", "=", "61")],
             limit=1,
@@ -286,7 +286,7 @@ class PosOrder(models.Model):
         if self.company_id.country_id.code != "CL":
             return super()._create_invoice(move_vals)
         if self.dte_return_target_document_id:
-            PosReturnPolicyService().validate_return(self)
+            PosReturnPolicyService(self.env).validate_return(self)
         return super(
             PosOrder, self.with_context(_dte_pos_native_binding=_NATIVE_POS_BINDING)
         )._create_invoice(move_vals)
@@ -298,7 +298,7 @@ class PosOrder(models.Model):
 
     def _issue_pos_return_if_required(self):
         self.ensure_one()
-        policy = PosReturnPolicyService()
+        policy = PosReturnPolicyService(self.env)
         existing = self._get_pos_dte_documents()
         if existing:
             policy.check_actor(self.env, self.session_id)
@@ -330,14 +330,14 @@ class PosOrder(models.Model):
             return self._issue_pos_return_if_required()
         documents = super()._issue_pos_boleta_if_required()
         if self.session_id.dte_pos_returns_enabled and len(documents) == 1:
-            PosLineMappingService().persist_mapping(self, documents)
+            PosLineMappingService(self.env).persist_mapping(self, documents)
         return documents
 
     @api.model
     def get_dte_return_preview(
         self, config_id, original_order_id, requested_lines, reason
     ):
-        return PosReturnPolicyService().preview(
+        return PosReturnPolicyService(self.env).preview(
             self.env, config_id, original_order_id, requested_lines, reason
         )
 
@@ -389,7 +389,9 @@ class PosOrder(models.Model):
     def search_dte_return_order_ids(self, config_id, search_term, limit=30, offset=0):
         config = self.env["pos.config"].browse(config_id).exists()
         config.check_access("read")
-        PosReturnPolicyService().check_actor(self.env, config.current_session_id)
+        PosReturnPolicyService(self.env).check_actor(
+            self.env, config.current_session_id
+        )
         if (
             not isinstance(search_term, str)
             or len(search_term) > 128
@@ -445,7 +447,7 @@ class PosOrder(models.Model):
                     "line mapping."
                 )
             )
-        PosLineMappingService().derive_legacy_mapping(self, documents)
+        PosLineMappingService(self.env).derive_legacy_mapping(self, documents)
         return True
 
     @api.constrains(

@@ -5,7 +5,7 @@ from datetime import datetime
 from decimal import Decimal
 from zoneinfo import ZoneInfo
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
@@ -19,18 +19,24 @@ class NoteSnapshotService:
 
     SUPPORTED_DOCUMENT_CODES = frozenset({"61", "56"})
 
+    def __init__(self, env=None):
+        self.env = env
+
     def validate_note_source(self, move, document_code):
         """Validate role, source, arithmetic, note matrix and available amounts."""
+        self.env = move.env
         move.ensure_one()
         document_code = str(document_code)
         if document_code not in self.SUPPORTED_DOCUMENT_CODES:
-            raise ValidationError(_("Only DTE note types 61 and 56 are supported."))
+            raise ValidationError(
+                move.env._("Only DTE note types 61 and 56 are supported.")
+            )
         if (
             move.state != "posted"
             or move.l10n_latam_document_type_id.code != document_code
         ):
             raise ValidationError(
-                _(
+                move.env._(
                     "Publish the accounting note with its selected DTE type "
                     "before issuing."
                 )
@@ -42,31 +48,37 @@ class NoteSnapshotService:
         if move.currency_id.name != "CLP" or (
             move.company_id.dte_sii_environment != "demo" and not certification_case
         ):
-            raise ValidationError(_("DTE notes currently require CLP and Demo mode."))
+            raise ValidationError(
+                move.env._("DTE notes currently require CLP and Demo mode.")
+            )
         self._check_note_operator(move)
         reference_service = NoteReferenceService(move.env)
         target = move.dte_note_target_document_id
         root = reference_service.validate_reference(move, target)
         reason = (move.dte_note_reason or "").strip()
         if not reason or len(reason) > 90:
-            raise ValidationError(_("Enter a reference reason of 1 to 90 characters."))
+            raise ValidationError(
+                move.env._("Enter a reference reason of 1 to 90 characters.")
+            )
         try:
             reason.encode("ISO-8859-1")
         except UnicodeEncodeError as error:
             raise ValidationError(
-                _("The DTE reference reason must use ISO-8859-1 characters.")
+                move.env._("The DTE reference reason must use ISO-8859-1 characters.")
             ) from error
         self._validate_caf(move, document_code)
         effects, amounts = self._move_effects(move)
         if amounts["total"] <= 0 and move.dte_note_operation != "text":
-            raise ValidationError(_("A DTE note must have a positive fiscal amount."))
+            raise ValidationError(
+                move.env._("A DTE note must have a positive fiscal amount.")
+            )
         if move.dte_note_operation == "text" and amounts["total"] != 0:
             raise ValidationError(
-                _("A text correction must not change fiscal amounts.")
+                move.env._("A text correction must not change fiscal amounts.")
             )
         if move.dte_note_operation != "cancel" and len(effects) > 60:
             raise ValidationError(
-                _(
+                move.env._(
                     "A partial DTE note supports at most 60 detail lines; "
                     "split this adjustment into multiple notes."
                 )
@@ -98,13 +110,13 @@ class NoteSnapshotService:
         elif move.dte_note_operation == "amount":
             if amounts["total"] <= 0:
                 raise ValidationError(
-                    _("A debit note must increase the fiscal amount.")
+                    move.env._("A debit note must increase the fiscal amount.")
                 )
         elif move.dte_note_operation == "cancel":
             target_snapshot = reference_service.read_original_snapshot(target)
             if amounts != self._snapshot_totals(target_snapshot):
                 raise ValidationError(
-                    _(
+                    move.env._(
                         "Debit cancellation amounts must match the referenced "
                         "credit note."
                     )
@@ -119,7 +131,7 @@ class NoteSnapshotService:
         )
         if any(available[key] != value for key, value in root_totals.items()):
             raise ValidationError(
-                _(
+                target.env._(
                     "A full cancellation is unavailable after another "
                     "effective adjustment; create a credit for the remaining "
                     "amount."
@@ -128,7 +140,9 @@ class NoteSnapshotService:
         target_snapshot = reference_service.read_original_snapshot(target)
         if amounts != self._snapshot_totals(target_snapshot):
             raise ValidationError(
-                _("Full cancellation amounts must match the complete referenced DTE.")
+                target.env._(
+                    "Full cancellation amounts must match the complete referenced DTE."
+                )
             )
         self._assert_full_line_equivalence(effects, target_snapshot)
 
@@ -146,7 +160,7 @@ class NoteSnapshotService:
                 )
             ):
                 raise ValidationError(
-                    _(
+                    move.env._(
                         "The note exceeds the available amount for an "
                         "original detail line."
                     )
@@ -155,7 +169,9 @@ class NoteSnapshotService:
                 str(effect["quantity_delta"])
             ) > Decimal(str(line_available["quantity"])):
                 raise ValidationError(
-                    _("The returned quantity exceeds the remaining original quantity.")
+                    move.env._(
+                        "The returned quantity exceeds the remaining original quantity."
+                    )
                 )
 
     def capture_note(self, move, caf, folio_number, document_code):
@@ -177,7 +193,7 @@ class NoteSnapshotService:
             issuer_snapshot["vat"]
         ):
             raise ValidationError(
-                _("The company RUT no longer matches the original DTE.")
+                move.env._("The company RUT no longer matches the original DTE.")
             )
         lines = result["effects"]
         code = str(document_code)
@@ -188,7 +204,7 @@ class NoteSnapshotService:
             serialization_mode = "detail"
             if len(lines) > 60:
                 raise ValidationError(
-                    _(
+                    move.env._(
                         "A partial DTE note supports at most 60 details; split "
                         "this adjustment into multiple notes."
                     )
@@ -237,11 +253,14 @@ class NoteSnapshotService:
         caf._check_caf_integrity()
 
     def _move_effects(self, move):
+        self.env = move.env
         lines = move.invoice_line_ids.filtered(
             lambda line: line.display_type == "product"
         )
         if not lines:
-            raise ValidationError(_("A DTE note needs at least one product line."))
+            raise ValidationError(
+                move.env._("A DTE note needs at least one product line.")
+            )
         result = []
         net = exempt = Decimal(0)
         source_snapshot = NoteReferenceService(move.env).read_original_snapshot(
@@ -260,16 +279,20 @@ class NoteSnapshotService:
             ordinal = line.dte_note_origin_line_number
             if ordinal < 1 or ordinal not in lines_by_number:
                 raise ValidationError(
-                    _("A note line cannot be matched to its original fiscal detail.")
+                    move.env._(
+                        "A note line cannot be matched to its original fiscal detail."
+                    )
                 )
             if ordinal in seen_ordinals:
                 raise ValidationError(
-                    _("Use one accounting detail for each original DTE line.")
+                    move.env._("Use one accounting detail for each original DTE line.")
                 )
             seen_ordinals.add(ordinal)
-            subtotal = self._integer(line.price_subtotal, _("line amount"))
+            subtotal = self._integer(line.price_subtotal, move.env._("line amount"))
             if subtotal <= 0:
-                raise ValidationError(_("Note detail amounts must be positive."))
+                raise ValidationError(
+                    move.env._("Note detail amounts must be positive.")
+                )
             original = lines_by_number[ordinal]
             original_quantity = Decimal(str(original.get("quantity") or "0"))
             quantity = Decimal(str(line.quantity))
@@ -283,14 +306,16 @@ class NoteSnapshotService:
                 or discount != original_discount
             ):
                 raise ValidationError(
-                    _(
+                    move.env._(
                         "A goods return must use the original unit price and "
                         "discount and cannot exceed the original quantity."
                     )
                 )
             if move.dte_note_operation == "amount" and quantity != original_quantity:
                 raise ValidationError(
-                    _("An amount correction cannot change the original quantity.")
+                    move.env._(
+                        "An amount correction cannot change the original quantity."
+                    )
                 )
             is_exempt = bool(original.get("exempt"))
             if any(
@@ -298,15 +323,17 @@ class NoteSnapshotService:
                 for tax in line.tax_ids
             ):
                 raise ValidationError(
-                    _("DTE notes support only 19% VAT and exempt lines.")
+                    move.env._("DTE notes support only 19% VAT and exempt lines.")
                 )
             line_vat = self._integer(
-                line.price_total - line.price_subtotal, _("line VAT")
+                line.price_total - line.price_subtotal, move.env._("line VAT")
             )
             if is_exempt:
                 exempt += subtotal
                 if line_vat:
-                    raise ValidationError(_("An exempt note line cannot include VAT."))
+                    raise ValidationError(
+                        move.env._("An exempt note line cannot include VAT.")
+                    )
             else:
                 net += subtotal
             result.append(
@@ -337,7 +364,7 @@ class NoteSnapshotService:
                 }
             )
         vat = self._allocate_vat(
-            self._integer(move.amount_tax, _("tax amount")), result
+            self._integer(move.amount_tax, move.env._("tax amount")), result
         )
         for item in result:
             if not item["exempt"]:
@@ -350,10 +377,12 @@ class NoteSnapshotService:
             "total": int(net + exempt + sum(vat.values())),
         }
         if amount_values["total"] != self._integer(
-            move.amount_total, _("total amount")
-        ) or amount_values["vat"] != self._integer(move.amount_tax, _("tax amount")):
+            move.amount_total, move.env._("total amount")
+        ) or amount_values["vat"] != self._integer(
+            move.amount_tax, move.env._("tax amount")
+        ):
             raise ValidationError(
-                _(
+                move.env._(
                     "The note detail amounts do not reconcile with the posted "
                     "accounting total."
                 )
@@ -361,13 +390,13 @@ class NoteSnapshotService:
         return result, amount_values
 
     def _allocate_vat(self, vat_total, lines):
-        return NoteAdjustmentService().allocate_vat(vat_total, lines)
+        return NoteAdjustmentService(self.env).allocate_vat(vat_total, lines)
 
     def _summary_lines(self, details):
-        return NoteAdjustmentService().summary_lines(details)
+        return NoteAdjustmentService(self.env).summary_lines(details)
 
     def _snapshot_totals(self, snapshot):
-        return NoteAdjustmentService().snapshot_totals(snapshot)
+        return NoteAdjustmentService(self.env).snapshot_totals(snapshot)
 
     def _assert_full_line_equivalence(self, effects, snapshot):
         source_lines = (
@@ -379,7 +408,9 @@ class NoteSnapshotService:
         }
         if len(effects) != len(source_by_number):
             raise ValidationError(
-                _("A cancellation must reverse every referenced fiscal detail.")
+                self.env._(
+                    "A cancellation must reverse every referenced fiscal detail."
+                )
             )
         for effect in effects:
             source = source_by_number.get(effect["origin_line_number"])
@@ -391,28 +422,30 @@ class NoteSnapshotService:
                 or bool(source.get("exempt")) != bool(effect["exempt"])
             ):
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "A cancellation must preserve every referenced detail "
                         "amount and quantity."
                     )
                 )
 
     def _format_totals(self, values):
-        return NoteAdjustmentService().format_totals(values)
+        return NoteAdjustmentService(self.env).format_totals(values)
 
     def _check_within(self, amounts, available):
         for key in ("net", "exempt", "vat", "total"):
             if amounts[key] > available[key]:
                 raise ValidationError(
-                    _("The note exceeds the available %(component)s amount.")
+                    self.env._("The note exceeds the available %(component)s amount.")
                     % {"component": key}
                 )
 
     def _integer(self, value, label):
-        return NoteAdjustmentService().integer(value, label)
+        return NoteAdjustmentService(self.env).integer(value, label)
 
     def _check_note_operator(self, move):
         if not move.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             from odoo.exceptions import AccessError
 
-            raise AccessError(_("Only a DTE manager can issue credit or debit notes."))
+            raise AccessError(
+                move.env._("Only a DTE manager can issue credit or debit notes.")
+            )

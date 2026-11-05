@@ -4,7 +4,7 @@
 from copy import deepcopy
 from decimal import Decimal
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_note.services.note_adjustment import NoteAdjustmentService
@@ -22,15 +22,17 @@ class PosReturnSnapshotService:
 
     def validate_source(self, order, document_code):
         if str(document_code) != "61":
-            raise ValidationError(_("POS returns support only credit note type 61."))
-        policy = PosReturnPolicyService()
+            raise ValidationError(
+                order.env._("POS returns support only credit note type 61.")
+            )
+        policy = PosReturnPolicyService(order.env)
         result = policy.validate_return(order)
         policy.validate_native_result(order)
         effects, amounts = self.effects(order, result["available"])
         return {**result, "effects": effects, "amounts": amounts}
 
     def effects(self, order, available):
-        math = NoteAdjustmentService()
+        math = NoteAdjustmentService(order.env)
         target = order.dte_return_target_document_id
         reference = NoteReferenceService(order.env)
         snapshot = reference.read_original_snapshot(target)
@@ -39,7 +41,9 @@ class PosReturnSnapshotService:
             ordinal = line.dte_return_origin_line_number
             if ordinal < 1 or ordinal > len(snapshot["lines"]):
                 raise ValidationError(
-                    _("A return detail has no verified original fiscal ordinal.")
+                    order.env._(
+                        "A return detail has no verified original fiscal ordinal."
+                    )
                 )
             source = snapshot["lines"][ordinal - 1]
             factor = Decimal(1) - Decimal(
@@ -52,10 +56,12 @@ class PosReturnSnapshotService:
                 if factor
                 else Decimal(0)
             )
-            subtotal = math.integer(-line.price_subtotal, _("return detail"))
+            subtotal = math.integer(-line.price_subtotal, order.env._("return detail"))
             if subtotal <= 0:
                 raise ValidationError(
-                    _("Return details must have positive fiscal credit amounts.")
+                    order.env._(
+                        "Return details must have positive fiscal credit amounts."
+                    )
                 )
             effects.append(
                 {
@@ -74,7 +80,7 @@ class PosReturnSnapshotService:
                 }
             )
         vat = math.allocate_vat(
-            math.integer(-order.amount_tax, _("return VAT")), effects
+            math.integer(-order.amount_tax, order.env._("return VAT")), effects
         )
         for effect in effects:
             effect["vat"] = vat[effect["origin_line_number"]]
@@ -85,14 +91,16 @@ class PosReturnSnapshotService:
             "vat": sum(e["vat"] for e in effects),
             "total": sum(e["total"] for e in effects),
         }
-        if amounts["total"] != math.integer(-order.amount_total, _("return total")):
+        if amounts["total"] != math.integer(
+            -order.amount_total, order.env._("return total")
+        ):
             raise ValidationError(
-                _(
+                order.env._(
                     "The fiscal credit does not reconcile exactly with the "
                     "native POS refund."
                 )
             )
-        validator = NoteSnapshotService()
+        validator = NoteSnapshotService(order.env)
         validator._check_within(amounts, available)
         for effect in effects:
             capacity = available["lines"][effect["origin_line_number"]]
@@ -106,7 +114,7 @@ class PosReturnSnapshotService:
                 )
             ):
                 raise ValidationError(
-                    _(
+                    order.env._(
                         "A return detail exceeds the remaining fiscal amount; "
                         "CLP rounding cannot be adjusted silently."
                     )
@@ -126,7 +134,9 @@ class PosReturnSnapshotService:
             source["issuer"]["vat"]
         ):
             raise ValidationError(
-                _("The company RUT no longer matches the original fiscal issuer.")
+                order.env._(
+                    "The company RUT no longer matches the original fiscal issuer."
+                )
             )
         timestamp = InvoiceSnapshotService()._chile_timestamp()
         issue_date = (
@@ -138,7 +148,7 @@ class PosReturnSnapshotService:
         )
         operation = order.dte_return_operation
         effects = result["effects"]
-        totals = NoteAdjustmentService().format_totals(result["amounts"])
+        totals = NoteAdjustmentService(order.env).format_totals(result["amounts"])
         return {
             "snapshot_schema": "l10n_cl_dte_note/1",
             "document_code": "61",
@@ -151,7 +161,7 @@ class PosReturnSnapshotService:
             "issuer": source["issuer"],
             "receiver": source["receiver"],
             "totals": totals,
-            "lines": NoteAdjustmentService().summary_lines(effects)
+            "lines": NoteAdjustmentService(order.env).summary_lines(effects)
             if operation == "cancel"
             else effects,
             "reference": {
@@ -186,22 +196,23 @@ class PosReturnSnapshotService:
 
 class PosAccountingNoteSnapshotService(NoteSnapshotService):
     def _check_note_operator(self, move):
-        PosReturnPolicyService().authorize_accounting_source(move)
+        PosReturnPolicyService(move.env).authorize_accounting_source(move)
 
     def _move_effects(self, move):
-        order = PosReturnPolicyService().authorize_accounting_source(move)
+        order = PosReturnPolicyService(move.env).authorize_accounting_source(move)
         available = NoteReferenceService(move.env).calculate_available_amounts(
             order.dte_return_target_document_id
         )
         effects, amounts = PosReturnSnapshotService().effects(order, available)
-        math = NoteAdjustmentService()
+        math = NoteAdjustmentService(move.env)
         if (
-            math.integer(move.amount_untaxed, _("accounting net amount"))
+            math.integer(move.amount_untaxed, move.env._("accounting net amount"))
             != amounts["net"] + amounts["exempt"]
-            or math.integer(move.amount_tax, _("accounting VAT")) != amounts["vat"]
+            or math.integer(move.amount_tax, move.env._("accounting VAT"))
+            != amounts["vat"]
         ):
             raise ValidationError(
-                _(
+                move.env._(
                     "The native accounting credit and POS fiscal components "
                     "do not reconcile."
                 )
@@ -211,7 +222,7 @@ class PosAccountingNoteSnapshotService(NoteSnapshotService):
         )
         if len(product_lines) != len(order.lines):
             raise ValidationError(
-                _(
+                move.env._(
                     "The native credit needs one accounting detail per "
                     "returned POS line."
                 )
@@ -229,7 +240,7 @@ class PosAccountingNoteSnapshotService(NoteSnapshotService):
                 != source.dte_return_origin_line_number
             ):
                 raise ValidationError(
-                    _(
+                    move.env._(
                         "The native accounting detail differs from its verified "
                         "POS return line."
                     )

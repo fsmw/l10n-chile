@@ -60,7 +60,7 @@ class ElectronicDocument(models.Model):
                 )
                 if len(order) != 1:
                     raise ValidationError(_("The POS credit source does not exist."))
-                PosReturnPolicyService().validate_native_result(order)
+                PosReturnPolicyService(self.env).validate_native_result(order)
                 if (
                     str(vals.get("document_code")) != "61"
                     or vals.get("note_target_document_id")
@@ -97,7 +97,7 @@ class ElectronicDocument(models.Model):
                         "return source."
                     )
                 )
-            PosReturnPolicyService().validate_native_result(order)
+            PosReturnPolicyService(self.env).validate_native_result(order)
             return
         return super()._validate_note_source_values(vals, target, root)
 
