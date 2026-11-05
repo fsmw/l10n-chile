@@ -41,12 +41,16 @@ class PosSession(models.Model):
     def _compute_dte_session_summary(self):
         for session in self:
             orders = session.order_ids.filtered(
-                lambda order: order.company_id.country_id.code == "CL"
-                and order.state in {"paid", "done", "invoiced"}
+                lambda order: (
+                    order.company_id.country_id.code == "CL"
+                    and order.state in {"paid", "done", "invoiced"}
+                )
             )
             complete = orders.filtered(
-                lambda order: len(order._get_pos_dte_documents()) == 1
-                and order._get_pos_dte_documents().preparation_state == "queued"
+                lambda order: (
+                    len(order._get_pos_dte_documents()) == 1
+                    and order._get_pos_dte_documents().preparation_state == "queued"
+                )
             )
             session.dte_order_count = len(complete)
             session.dte_pending_order_count = len(orders) - len(complete)
@@ -110,45 +114,13 @@ class PosSession(models.Model):
         )
 
     def _check_pos_dte_closing(self):
-        """Check evidence before either public closing entry point can post."""
+        """Check fiscal evidence before either closing entry point can post."""
         for session in self:
-            if session.dte_pos_accounting_mode != "session_summary":
-                continue
-            orders = session.order_ids.filtered(
-                lambda order: order.state in {"paid", "done", "invoiced"}
-                and order.company_id.country_id.code == "CL"
-            )
-            for order in orders:
-                documents = order.dte_document_ids
-                if len(documents) != 1 or documents.preparation_state != "queued":
-                    raise UserError(
-                        _(
-                            "The POS session cannot close because order %s does "
-                            "not have exactly one prepared DTE."
-                        )
-                        % order.pos_reference
-                    )
-                snapshots = documents.artifact_ids.filtered(
-                    lambda artifact: artifact.role == "source_snapshot"
-                )
-                if len(snapshots) != 1 or not documents.payload_digest:
-                    raise UserError(
-                        _("The DTE snapshot for order %s is missing.")
-                        % order.pos_reference
-                    )
-                snapshots.sudo().action_verify_integrity()
-                try:
-                    payload = json.loads(
-                        base64.b64decode(snapshots.sudo().content, validate=True)
-                    )
-                    dte_total = Decimal(payload["totals"]["total"])
-                    order_total = Decimal(str(order.amount_total))
-                except (ValueError, TypeError, KeyError, InvalidOperation) as error:
-                    raise UserError(
-                        _("The DTE snapshot for order %s is invalid.")
-                        % order.pos_reference
-                    ) from error
-                if dte_total != order_total:
+            for order in session._get_pos_dte_orders_for_closing():
+                document = session._get_pos_dte_close_document(order)
+                if session._get_pos_dte_signed_total(order, document) != Decimal(
+                    str(order.amount_total)
+                ):
                     raise UserError(
                         _(
                             "The DTE total for order %(order)s does not match its "
@@ -157,3 +129,47 @@ class PosSession(models.Model):
                         % {"order": order.pos_reference}
                     )
         return True
+
+    def _get_pos_dte_orders_for_closing(self):
+        self.ensure_one()
+        if self.dte_pos_accounting_mode != "session_summary":
+            return self.env["pos.order"]
+        return self.order_ids.filtered(
+            lambda order: (
+                order.state in {"paid", "done", "invoiced"}
+                and order.company_id.country_id.code == "CL"
+            )
+        )
+
+    def _get_pos_dte_close_document(self, order):
+        documents = order._get_pos_dte_documents()
+        if len(documents) != 1 or documents.preparation_state != "queued":
+            raise UserError(
+                _(
+                    "The POS session cannot close because order %s does not "
+                    "have exactly one prepared DTE."
+                )
+                % order.pos_reference
+            )
+        return documents
+
+    def _get_pos_dte_signed_total(self, order, document):
+        snapshots = document.artifact_ids.filtered(
+            lambda artifact: artifact.role == "source_snapshot"
+        )
+        if len(snapshots) != 1 or not document.payload_digest:
+            raise UserError(
+                _("The DTE snapshot for order %s is missing.") % order.pos_reference
+            )
+        snapshots.sudo().action_verify_integrity()
+        if snapshots.sha256 != document.payload_digest:
+            raise UserError(_("The DTE snapshot digest does not match its document."))
+        try:
+            payload = json.loads(
+                base64.b64decode(snapshots.sudo().content, validate=True)
+            )
+            return Decimal(payload["totals"]["total"])
+        except (ValueError, TypeError, KeyError, InvalidOperation) as error:
+            raise UserError(
+                _("The DTE snapshot for order %s is invalid.") % order.pos_reference
+            ) from error

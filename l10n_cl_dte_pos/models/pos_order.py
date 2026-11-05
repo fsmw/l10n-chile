@@ -17,14 +17,7 @@ class PosOrder(models.Model):
     @api.model
     def _process_order(self, order, existing_order):
         session = self.env["pos.session"].browse(order.get("session_id")).exists()
-        if session and session.company_id.country_id.code == "CL":
-            mode = session.dte_pos_accounting_mode or (
-                session.company_id.dte_pos_accounting_mode
-            )
-            if mode == "per_order_invoice":
-                order["to_invoice"] = True
-            elif mode == "session_summary":
-                order["to_invoice"] = False
+        order["to_invoice"] = self._get_pos_dte_to_invoice(order, session)
         return super()._process_order(order, existing_order)
 
     dte_document_ids = fields.One2many(
@@ -115,18 +108,8 @@ class PosOrder(models.Model):
                 )
 
     def _process_saved_order(self, draft):
-        """Issue a POS-sourced boleta after a paid order is persisted."""
-        if (
-            not draft
-            and self.company_id.country_id.code == "CL"
-            and any(line.qty < 0 for line in self.lines)
-        ):
-            raise UserError(
-                _(
-                    "POS refunds and exchanges require a referenced credit note. "
-                    "This POS DTE flow does not support them yet."
-                )
-            )
+        """Issue only after the native paid-order processing succeeds."""
+        self._check_pos_dte_order_before_processing(draft)
         result = super()._process_saved_order(draft)
         if not draft and self.state in {"paid", "invoiced"}:
             self._issue_pos_boleta_if_required()
@@ -134,6 +117,8 @@ class PosOrder(models.Model):
 
     def _get_pos_dte_documents(self):
         self.ensure_one()
+        if self.company_id.country_id.code != "CL":
+            return self.env["l10n_cl.electronic.document"]
         documents = self.dte_document_ids
         if self.account_move:
             documents |= self.account_move.dte_document_ids
@@ -169,7 +154,9 @@ class PosOrder(models.Model):
             raise UserError(_("A POS order must be paid before DTE issuance."))
         if self.dte_document_ids:
             return self.dte_document_ids
-        return DteIssuanceService().issue(self, PosBoletaIssuanceAdapter(), code)
+        return DteIssuanceService().issue(
+            self, self._get_pos_boleta_issuance_adapter(), code
+        )
 
     def action_view_dte_documents(self):
         """Open DTEs linked directly or through this order's invoice."""
@@ -185,7 +172,9 @@ class PosOrder(models.Model):
         return action
 
     def _prepare_invoice_vals(self):
-        vals = super()._prepare_invoice_vals()
+        return self._prepare_pos_dte_invoice_vals(super()._prepare_invoice_vals())
+
+    def _prepare_pos_dte_invoice_vals(self, vals):
         if self.company_id.country_id.code != "CL":
             return vals
         code = self.dte_document_code
@@ -211,3 +200,31 @@ class PosOrder(models.Model):
         if payments and all(payment_codes) and len(unique_codes) == 1:
             vals["dte_boleta_payment_method"] = unique_codes.pop()
         return vals
+
+    @api.model
+    def _get_pos_dte_to_invoice(self, payload, session):
+        if session and session.company_id.country_id.code == "CL":
+            mode = (
+                session.dte_pos_accounting_mode
+                or session.company_id.sudo().dte_pos_accounting_mode
+            )
+            if mode in {"per_order_invoice", "session_summary"}:
+                return mode == "per_order_invoice"
+        return payload.get("to_invoice", False)
+
+    def _check_pos_dte_order_before_processing(self, draft):
+        """Keep unsupported refunds closed unless an extension validates them."""
+        if (
+            not draft
+            and self.company_id.country_id.code == "CL"
+            and any(line.qty < 0 for line in self.lines)
+        ):
+            raise UserError(
+                _(
+                    "POS refunds and exchanges require a referenced credit note. "
+                    "This POS DTE flow does not support them yet."
+                )
+            )
+
+    def _get_pos_boleta_issuance_adapter(self):
+        return PosBoletaIssuanceAdapter()

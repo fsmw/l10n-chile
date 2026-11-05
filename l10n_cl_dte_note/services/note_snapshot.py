@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
+from .note_adjustment import NoteAdjustmentService
 from .note_reference_service import NoteReferenceService
 
 
@@ -42,10 +43,7 @@ class NoteSnapshotService:
             move.company_id.dte_sii_environment != "demo" and not certification_case
         ):
             raise ValidationError(_("DTE notes currently require CLP and Demo mode."))
-        if not move.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            from odoo.exceptions import AccessError
-
-            raise AccessError(_("Only a DTE manager can issue credit or debit notes."))
+        self._check_note_operator(move)
         reference_service = NoteReferenceService(move.env)
         target = move.dte_note_target_document_id
         root = reference_service.validate_reference(move, target)
@@ -363,56 +361,13 @@ class NoteSnapshotService:
         return result, amount_values
 
     def _allocate_vat(self, vat_total, lines):
-        """Distribute integer CLP tax by largest remainder and ordinal tie-break."""
-        taxable = [line for line in lines if not line["exempt"]]
-        net = sum(Decimal(line["subtotal"]) for line in taxable)
-        result = {line["origin_line_number"]: 0 for line in lines}
-        if not net or not vat_total:
-            return result
-        exact_values = []
-        assigned = 0
-        for line in taxable:
-            exact = Decimal(vat_total) * Decimal(line["subtotal"]) / net
-            floor = int(exact.to_integral_value(rounding="ROUND_FLOOR"))
-            result[line["origin_line_number"]] = floor
-            assigned += floor
-            exact_values.append((exact - floor, line["origin_line_number"]))
-        for _remainder, ordinal in sorted(
-            exact_values, key=lambda item: (-item[0], item[1])
-        )[: vat_total - assigned]:
-            result[ordinal] += 1
-        return result
+        return NoteAdjustmentService().allocate_vat(vat_total, lines)
 
     def _summary_lines(self, details):
-        groups = []
-        for exempt in (False, True):
-            selected = [line for line in details if line["exempt"] == exempt]
-            if not selected:
-                continue
-            total = sum(int(line["subtotal"]) for line in selected)
-            groups.append(
-                {
-                    "origin_line_numbers": [
-                        line["origin_line_number"] for line in selected
-                    ],
-                    "name": _("Exempt reversal") if exempt else _("Taxable reversal"),
-                    "description": _("Full cancellation of referenced document"),
-                    "quantity": "1",
-                    "uom": "UN",
-                    "unit_price": str(total),
-                    "discount_percent": None,
-                    "subtotal": str(total),
-                    "exempt": exempt,
-                }
-            )
-        return groups
+        return NoteAdjustmentService().summary_lines(details)
 
     def _snapshot_totals(self, snapshot):
-        totals = snapshot["totals"]
-        return {
-            key: int(Decimal(str(totals.get(key) or 0)))
-            for key in ("net", "exempt", "vat", "total")
-        }
+        return NoteAdjustmentService().snapshot_totals(snapshot)
 
     def _assert_full_line_equivalence(self, effects, snapshot):
         source_lines = (
@@ -443,12 +398,7 @@ class NoteSnapshotService:
                 )
 
     def _format_totals(self, values):
-        result = {
-            key: str(int(values[key])) if values[key] else None
-            for key in ("net", "exempt", "vat", "total")
-        }
-        result["vat_rate"] = "19" if values["net"] else None
-        return result
+        return NoteAdjustmentService().format_totals(values)
 
     def _check_within(self, amounts, available):
         for key in ("net", "exempt", "vat", "total"):
@@ -459,9 +409,10 @@ class NoteSnapshotService:
                 )
 
     def _integer(self, value, label):
-        amount = Decimal(str(value))
-        if amount != amount.to_integral_value():
-            raise ValidationError(
-                _("CLP %(label)s must be an integer.") % {"label": label}
-            )
-        return int(amount)
+        return NoteAdjustmentService().integer(value, label)
+
+    def _check_note_operator(self, move):
+        if not move.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            from odoo.exceptions import AccessError
+
+            raise AccessError(_("Only a DTE manager can issue credit or debit notes."))
