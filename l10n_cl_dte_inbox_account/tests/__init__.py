@@ -6,4 +6,5 @@ from . import test_mapping
 from . import test_bills
 from . import test_linking
 from . import test_security_evidence
+from . import test_concurrency
 from . import test_functional
