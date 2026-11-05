@@ -432,5 +432,7 @@ class CafAuthorization(models.Model):
         return vat[-1] == expected
 
     def _check_manager(self):
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can manage CAF authorizations."))

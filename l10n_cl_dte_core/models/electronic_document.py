@@ -234,7 +234,9 @@ class ElectronicDocument(models.Model):
     ):
         """Apply one valid lifecycle transition and persist its audit event."""
         self.ensure_one()
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can change document state."))
         if not isinstance(event_code, str) or not _EVENT_CODE_RE.fullmatch(event_code):
             raise ValidationError(
@@ -370,7 +372,9 @@ class ElectronicDocument(models.Model):
     def action_record_source_snapshot(self, artifact_id):
         """Bind one immutable source snapshot artifact to this document."""
         self.ensure_one()
-        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can record a source snapshot."))
         artifact = self.env["l10n_cl.electronic.artifact"].browse(artifact_id).exists()
         if (
