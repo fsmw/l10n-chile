@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_company_form_dte_pos" model="ir.ui.view">
+        <field name="name">res.company.form.dte.pos</field>
+        <field name="model">res.company</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_core.view_company_form_dte_environment"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='dte_sii_settings']/group" position="inside">
+                <group string="Point of Sale DTE">
+                    <field name="dte_pos_accounting_mode" />
+                    <div class="text-muted" colspan="2">
+                        This policy applies to all POS configurations in this company
+                        and affects sessions opened after the change.
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
