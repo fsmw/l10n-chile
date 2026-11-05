@@ -19,6 +19,7 @@ class PosSession(models.Model):
         ],
         string="POS DTE Accounting Mode",
         required=True,
+        default="per_order_invoice",
         readonly=True,
         index=True,
         copy=False,

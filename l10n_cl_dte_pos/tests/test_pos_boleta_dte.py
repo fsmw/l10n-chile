@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
     DteIssuanceAdapter,
@@ -55,7 +55,10 @@ class TestPosBoletaDte(TransactionCase):
         service = PosBoletaSnapshotService()
         with self.assertRaisesRegex(ValidationError, "Only Chilean boletas"):
             service.validate_source(
-                SimpleNamespace(_name="pos.order", ensure_one=lambda: True), "33"
+                SimpleNamespace(
+                    _name="pos.order", ensure_one=lambda: True, env=self.env
+                ),
+                "33",
             )
 
     def test_high_value_payments_need_one_explicit_sii_code(self):
@@ -78,7 +81,7 @@ class TestPosBoletaDte(TransactionCase):
                 ),
             ]
         )
-        order = SimpleNamespace(payment_ids=payments)
+        order = SimpleNamespace(payment_ids=payments, env=self.env)
         self.assertEqual(service._payment_method_for_order(order, required=True), "2")
         payments[1].payment_method_id.l10n_cl_dte_boleta_payment_method = "3"
         with self.assertRaisesRegex(ValidationError, "must map to one SII code"):
@@ -88,6 +91,7 @@ class TestPosBoletaDte(TransactionCase):
             service._payment_method_for_order(order, required=True)
 
 
+@tagged("post_install", "-at_install")
 class TestPosBoletaOrderFlow(TestPoSCommon):
     def setUp(self):
         super().setUp()

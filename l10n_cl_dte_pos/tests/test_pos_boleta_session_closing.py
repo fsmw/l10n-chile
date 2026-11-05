@@ -1,9 +1,12 @@
 # Copyright 2026 FSMW
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo.tests import tagged
+
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
+@tagged("post_install", "-at_install")
 class TestPosBoletaSessionClosing(TestPointOfSaleCommon):
     @classmethod
     def setUpClass(cls):

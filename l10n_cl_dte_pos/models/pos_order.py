@@ -35,12 +35,12 @@ class PosOrder(models.Model):
     )
     dte_related_document_ids = fields.Many2many(
         comodel_name="l10n_cl.electronic.document",
-        string="DTE Documents",
+        string="Related DTE Documents",
         compute="_compute_dte_related_documents",
         readonly=True,
     )
     dte_document_count = fields.Integer(
-        string="DTE Documents",
+        string="DTE Document Count",
         compute="_compute_dte_document_count",
     )
     dte_document_code = fields.Selection(

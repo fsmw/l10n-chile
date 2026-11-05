@@ -3,7 +3,7 @@
 
 from decimal import Decimal
 
-from odoo import _, fields
+from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
@@ -24,44 +24,66 @@ class PosBoletaSnapshotService:
     def validate_source(self, order, document_code):
         order.ensure_one()
         if order._name != "pos.order":
-            raise ValidationError(_("A persisted POS order is required."))
+            raise ValidationError(order.env._("A persisted POS order is required."))
         if str(document_code) not in {"39", "41"}:
-            raise ValidationError(_("Only Chilean boletas 39 and 41 are supported."))
+            raise ValidationError(
+                order.env._("Only Chilean boletas 39 and 41 are supported.")
+            )
         if order.state != "paid" or not order.date_order:
-            raise ValidationError(_("Only paid, persisted POS orders can issue DTEs."))
+            raise ValidationError(
+                order.env._("Only paid, persisted POS orders can issue DTEs.")
+            )
         if order.session_id.dte_pos_accounting_mode != "session_summary":
-            raise ValidationError(_("Direct POS DTEs require session summary mode."))
+            raise ValidationError(
+                order.env._("Direct POS DTEs require session summary mode.")
+            )
         if order.company_id.country_id.code != "CL":
-            raise ValidationError(_("The company must be registered in Chile."))
+            raise ValidationError(
+                order.env._("The company must be registered in Chile.")
+            )
         if order.currency_id.name != "CLP":
-            raise ValidationError(_("Electronic boletas must be issued in CLP."))
+            raise ValidationError(
+                order.env._("Electronic boletas must be issued in CLP.")
+            )
         if order.company_id.dte_sii_environment != "demo":
             raise ValidationError(
-                _("POS boleta issuance is currently available only in Demo mode.")
+                order.env._(
+                    "POS boleta issuance is currently available only in Demo mode."
+                )
             )
         if order.amount_total <= 0:
-            raise ValidationError(_("Refunds and zero-value orders are not supported."))
+            raise ValidationError(
+                order.env._("Refunds and zero-value orders are not supported.")
+            )
         if order.account_move:
             raise ValidationError(
-                _("A direct-source POS boleta cannot be linked to an invoice.")
+                order.env._(
+                    "A direct-source POS boleta cannot be linked to an invoice."
+                )
             )
         self._validate_issuer(order.company_id)
         receiver = order.partner_id.commercial_partner_id if order.partner_id else False
         if receiver and not (receiver.name or "").strip():
-            raise ValidationError(_("The POS receiver must have a name."))
+            raise ValidationError(order.env._("The POS receiver must have a name."))
         if receiver and not (receiver.vat or "").strip():
             raise ValidationError(
-                _("Set a receiver RUT or use the generic final-consumer RUT.")
+                order.env._("Set a receiver RUT or use the generic final-consumer RUT.")
             )
         if receiver and not self.boleta_service._is_generic_receiver_rut(receiver.vat):
             caf_model = order.env["l10n_cl.caf.authorization"]
             if not caf_model._is_valid_vat(caf_model._normalize_vat(receiver.vat)):
-                raise ValidationError(_("Enter a valid Chilean receiver RUT."))
+                raise ValidationError(
+                    order.env._("Enter a valid Chilean receiver RUT.")
+                )
         lines, taxable_net, _exempt_net = self._snapshot_lines(order)
         if not lines:
-            raise ValidationError(_("The POS order needs at least one product line."))
+            raise ValidationError(
+                order.env._("The POS order needs at least one product line.")
+            )
         if str(document_code) == "41" and taxable_net:
-            raise ValidationError(_("Boleta type 41 requires all lines to be exempt."))
+            raise ValidationError(
+                order.env._("Boleta type 41 requires all lines to be exempt.")
+            )
         self._payment_method_for_order(order, required=False)
         return True
 
@@ -72,20 +94,24 @@ class PosBoletaSnapshotService:
             caf.document_code != str(document_code)
             or caf.company_id != order.company_id
         ):
-            raise ValidationError(_("The CAF must match the POS company and DTE type."))
+            raise ValidationError(
+                order.env._("The CAF must match the POS company and DTE type.")
+            )
         caf._check_caf_integrity()
         lines, taxable_net, exempt_net = self._snapshot_lines(order)
-        total = self.boleta_service._integer(order.amount_total, _("total"))
-        tax = self.boleta_service._integer(order.amount_tax, _("VAT"))
+        total = self.boleta_service._integer(order.amount_total, order.env._("total"))
+        tax = self.boleta_service._integer(order.amount_tax, order.env._("VAT"))
         net = self.boleta_service._integer(
-            order.amount_total - order.amount_tax, _("net amount")
+            order.amount_total - order.amount_tax, order.env._("net amount")
         )
         if taxable_net + exempt_net != net or net + tax != total:
             raise ValidationError(
-                _("The POS order totals do not reconcile with its lines.")
+                order.env._("The POS order totals do not reconcile with its lines.")
             )
         if str(document_code) == "41" and (taxable_net or tax):
-            raise ValidationError(_("Boleta type 41 can contain only exempt lines."))
+            raise ValidationError(
+                order.env._("Boleta type 41 can contain only exempt lines.")
+            )
         receiver = order.partner_id.commercial_partner_id if order.partner_id else False
         receiver_snapshot = (
             self.invoice_service._partner_snapshot(receiver)
@@ -129,7 +155,7 @@ class PosBoletaSnapshotService:
             or self.boleta_service._is_generic_receiver_rut(receiver_snapshot["vat"])
         ):
             raise ValidationError(
-                _("A boleta over 135 UF requires the identified payer's RUT.")
+                order.env._("A boleta over 135 UF requires the identified payer's RUT.")
             )
         payment_code = self._payment_method_for_order(order, required=over_threshold)
         if (
@@ -142,7 +168,9 @@ class PosBoletaSnapshotService:
             )
         ):
             raise ValidationError(
-                _("Cash boletas over 135 UF require receiver email and phone.")
+                order.env._(
+                    "Cash boletas over 135 UF require receiver email and phone."
+                )
             )
         stamp = self.invoice_service._chile_timestamp()
         return {
@@ -174,47 +202,53 @@ class PosBoletaSnapshotService:
         partner = company.partner_id
         missing = []
         if not (partner.vat or "").strip():
-            missing.append(_("company RUT"))
+            missing.append(company.env._("company RUT"))
         else:
             caf_model = company.env["l10n_cl.caf.authorization"]
             if not caf_model._is_valid_vat(caf_model._normalize_vat(partner.vat)):
-                missing.append(_("valid company RUT"))
+                missing.append(company.env._("valid company RUT"))
         if not (partner.name or "").strip():
-            missing.append(_("company legal name"))
+            missing.append(company.env._("company legal name"))
         if not (company.l10n_cl_activity_description or "").strip():
-            missing.append(_("company economic activity"))
+            missing.append(company.env._("company economic activity"))
         activity_code = (company.dte_sii_activity_code or "").strip()
         if not activity_code.isdigit() or int(activity_code or "0") <= 0:
-            missing.append(_("valid SII activity code"))
+            missing.append(company.env._("valid SII activity code"))
         if not (partner.street or "").strip() or not (partner.city or "").strip():
-            missing.append(_("company address and commune"))
+            missing.append(company.env._("company address and commune"))
         if missing:
             raise ValidationError(
-                _("Complete the following issuer data before issuing: %s")
+                company.env._("Complete the following issuer data before issuing: %s")
                 % ", ".join(missing)
             )
 
     def _snapshot_lines(self, order):
         lines = order.lines.filtered(lambda line: line.product_id and line.qty > 0)
         if len(lines) > BoletaSnapshotService.MAX_DETAIL_LINES:
-            raise ValidationError(_("A boleta supports at most 1000 detail lines."))
+            raise ValidationError(
+                order.env._("A boleta supports at most 1000 detail lines.")
+            )
         snapshots = []
         taxable_net = Decimal("0")
         exempt_net = Decimal("0")
         for line in lines:
             taxable = self.invoice_service._is_taxable_19_percent(line.tax_ids)
             subtotal = self.boleta_service._integer(
-                line.price_subtotal, _("line subtotal")
+                line.price_subtotal, order.env._("line subtotal")
             )
             if subtotal < 0:
-                raise ValidationError(_("Negative POS order lines are not supported."))
+                raise ValidationError(
+                    order.env._("Negative POS order lines are not supported.")
+                )
             taxable_net += subtotal if taxable else Decimal("0")
             exempt_net += Decimal("0") if taxable else subtotal
             name = (line.product_id.name or line.full_product_name or "").strip()
             description = (line.full_product_name or name).strip()
             qty = Decimal(str(line.qty))
             if not name or len(name) > 80 or len(description) > 1000 or qty <= 0:
-                raise ValidationError(_("The POS line is not valid for a boleta."))
+                raise ValidationError(
+                    order.env._("The POS line is not valid for a boleta.")
+                )
             snapshots.append(
                 {
                     "name": name,
@@ -240,7 +274,7 @@ class PosBoletaSnapshotService:
         codes = payments.mapped("payment_method_id.l10n_cl_dte_boleta_payment_method")
         if required and (not payments or any(not code for code in codes)):
             raise ValidationError(
-                _(
+                order.env._(
                     "Map every POS payment method to an SII code for boletas "
                     "over 135 UF."
                 )
@@ -248,7 +282,7 @@ class PosBoletaSnapshotService:
         distinct_codes = set(codes) - {False}
         if required and len(distinct_codes) != 1:
             raise ValidationError(
-                _(
+                order.env._(
                     "All POS payment methods in a high-value boleta must map "
                     "to one SII code."
                 )
