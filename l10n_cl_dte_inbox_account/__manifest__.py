@@ -16,7 +16,12 @@
         "security/incoming_account_security.xml",
         "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
+        "views/incoming_account_binding_views.xml",
         "views/incoming_account_mapping_views.xml",
+        "wizards/incoming_bill_wizard_views.xml",
+        "views/incoming_document_views.xml",
+        "views/account_move_views.xml",
+        "views/incoming_account_menus.xml",
     ],
     "installable": True,
 }
