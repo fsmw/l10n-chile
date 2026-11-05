@@ -8,7 +8,7 @@ from lxml import etree
 
 from odoo import _
 from odoo.exceptions import ValidationError
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_path
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
@@ -238,11 +238,12 @@ def _safe_xml_parser():
 
 
 def _boleta_schema():
-    schema_path = get_module_resource(
-        "l10n_cl_dte_boleta", "static", "xsd", "BoletaDTE_v11.xsd"
-    )
-    if not schema_path:
-        raise ValidationError(_("The official boleta schema is not available."))
+    try:
+        schema_path = file_path("l10n_cl_dte_boleta/static/xsd/BoletaDTE_v11.xsd")
+    except FileNotFoundError as error:
+        raise ValidationError(
+            _("The official boleta schema is not available.")
+        ) from error
     try:
         return etree.XMLSchema(etree.parse(schema_path, parser=_safe_xml_parser()))
     except (OSError, etree.XMLSchemaParseError, etree.XMLSyntaxError) as error:
