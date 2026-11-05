@@ -1,0 +1,24 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_company_rule" model="ir.rule">
+        <field name="name">Incoming DTE company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_event_company_rule" model="ir.rule">
+        <field name="name">Incoming DTE event company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_event" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_response_company_rule" model="ir.rule">
+        <field name="name">Incoming DTE response company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_response" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="incoming_attempt_company_rule" model="ir.rule">
+        <field name="name">Incoming DTE response attempt company access</field>
+        <field name="model_id" ref="model_l10n_cl_incoming_dte_response_attempt" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

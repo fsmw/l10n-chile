@@ -24,6 +24,7 @@ class AccountMove(models.Model):
         [
             ("cancel", "Cancel document"),
             ("return", "Return goods"),
+            ("text", "Correct text"),
             ("amount", "Correct amounts"),
         ],
         string="DTE Note Operation",
@@ -165,10 +166,13 @@ class AccountMove(models.Model):
                     _("Only document types 61 and 56 can reference a DTE here.")
                 )
             if (
-                code == "56" and move.dte_note_operation not in {"cancel", "amount"}
+                code == "56"
+                and move.dte_note_operation
+                not in {"cancel", "return", "text", "amount"}
             ) or (
                 code == "61"
-                and move.dte_note_operation not in {"cancel", "return", "amount"}
+                and move.dte_note_operation
+                not in {"cancel", "return", "text", "amount"}
             ):
                 raise ValidationError(
                     _("The selected operation is not available for this DTE note type.")

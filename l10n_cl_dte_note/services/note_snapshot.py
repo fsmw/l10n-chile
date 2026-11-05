@@ -34,9 +34,12 @@ class NoteSnapshotService:
                     "before issuing."
                 )
             )
-        if (
-            move.currency_id.name != "CLP"
-            or move.company_id.dte_sii_environment != "demo"
+        certification_case = bool(
+            "dte_certification_run_line_id" in move._fields
+            and move.dte_certification_run_line_id
+        )
+        if move.currency_id.name != "CLP" or (
+            move.company_id.dte_sii_environment != "demo" and not certification_case
         ):
             raise ValidationError(_("DTE notes currently require CLP and Demo mode."))
         if not move.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
@@ -57,8 +60,12 @@ class NoteSnapshotService:
             ) from error
         self._validate_caf(move, document_code)
         effects, amounts = self._move_effects(move)
-        if amounts["total"] <= 0:
+        if amounts["total"] <= 0 and move.dte_note_operation != "text":
             raise ValidationError(_("A DTE note must have a positive fiscal amount."))
+        if move.dte_note_operation == "text" and amounts["total"] != 0:
+            raise ValidationError(
+                _("A text correction must not change fiscal amounts.")
+            )
         if move.dte_note_operation != "cancel" and len(effects) > 60:
             raise ValidationError(
                 _(
@@ -81,6 +88,8 @@ class NoteSnapshotService:
         self, move, document_code, target, root, effects, amounts, reference_service
     ):
         available = reference_service.calculate_available_amounts(root)
+        if move.dte_note_operation == "text":
+            return
         if document_code == "61":
             if move.dte_note_operation == "cancel":
                 self._validate_full_credit_cancel(
@@ -121,10 +130,7 @@ class NoteSnapshotService:
         target_snapshot = reference_service.read_original_snapshot(target)
         if amounts != self._snapshot_totals(target_snapshot):
             raise ValidationError(
-                _(
-                    "Full cancellation amounts must match the complete "
-                    "referenced DTE."
-                )
+                _("Full cancellation amounts must match the complete referenced DTE.")
             )
         self._assert_full_line_equivalence(effects, target_snapshot)
 
@@ -151,10 +157,7 @@ class NoteSnapshotService:
                 str(effect["quantity_delta"])
             ) > Decimal(str(line_available["quantity"])):
                 raise ValidationError(
-                    _(
-                        "The returned quantity exceeds the remaining "
-                        "original quantity."
-                    )
+                    _("The returned quantity exceeds the remaining original quantity.")
                 )
 
     def capture_note(self, move, caf, folio_number, document_code):

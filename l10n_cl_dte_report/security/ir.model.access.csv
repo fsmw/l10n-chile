@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dte_report_sample_user,dte.report.sample user,model_l10n_cl_dte_report_sample,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_dte_report_sample_manager,dte.report.sample manager,model_l10n_cl_dte_report_sample,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_dte_report_sample_package_user,dte.report.sample.package user,model_l10n_cl_dte_report_sample_package,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_dte_report_sample_package_manager,dte.report.sample.package manager,model_l10n_cl_dte_report_sample_package,l10n_cl_dte_core.group_dte_manager,1,1,1,1

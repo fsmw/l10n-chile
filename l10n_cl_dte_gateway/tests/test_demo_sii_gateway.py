@@ -71,3 +71,9 @@ class TestDemoSiiGateway(GatewayTestCase):
         self.assertIsInstance(gateway, DemoSiiGateway)
         with self.assertRaises(UserError):
             self.env["l10n_cl.sii.gateway.factory"].get_gateway("production")
+
+    def test_certification_envelope_requires_verified_transport(self):
+        with self.assertRaisesRegex(UserError, "No verified multi-DTE SII transport"):
+            self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway(
+                "certification"
+            )

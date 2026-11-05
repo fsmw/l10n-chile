@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_incoming_dte_user,incoming.dte.user,model_l10n_cl_incoming_dte,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_manager,incoming.dte.manager,model_l10n_cl_incoming_dte,l10n_cl_dte_core.group_dte_manager,1,1,0,0
+access_incoming_dte_event_user,incoming.dte.event.user,model_l10n_cl_incoming_dte_event,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_event_manager,incoming.dte.event.manager,model_l10n_cl_incoming_dte_event,l10n_cl_dte_core.group_dte_manager,1,0,0,0
+access_incoming_dte_response_user,incoming.dte.response.user,model_l10n_cl_incoming_dte_response,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_response_manager,incoming.dte.response.manager,model_l10n_cl_incoming_dte_response,l10n_cl_dte_core.group_dte_manager,1,0,0,0
+access_incoming_dte_attempt_user,incoming.dte.attempt.user,model_l10n_cl_incoming_dte_response_attempt,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_attempt_manager,incoming.dte.attempt.manager,model_l10n_cl_incoming_dte_response_attempt,l10n_cl_dte_core.group_dte_manager,1,0,0,0
+access_incoming_dte_import_manager,incoming.dte.import.manager,model_l10n_cl_incoming_dte_import_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_incoming_dte_response_wizard_manager,incoming.dte.response.wizard.manager,model_l10n_cl_incoming_dte_response_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_incoming_dte_response_wizard_user,incoming.dte.response.wizard.user,model_l10n_cl_incoming_dte_response_wizard,base.group_user,1,0,0,0

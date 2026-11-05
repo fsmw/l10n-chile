@@ -1,0 +1,57 @@
+<odoo>
+    <record id="view_sii_envelope_submission_form" model="ir.ui.view">
+        <field name="name">l10n_cl.sii.envelope.submission.form</field>
+        <field name="model">l10n_cl.sii.envelope.submission</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <header>
+                    <button
+                        name="action_enqueue_send"
+                        type="object"
+                        string="Queue SII Envelope"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state != 'pending'"
+                    />
+                    <button
+                        name="action_enqueue_status_query"
+                        type="object"
+                        string="Query SII Status"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state not in ['submitted', 'processing'] or not track_id"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="company_id" />
+                        <field name="environment" />
+                        <field name="track_id" />
+                        <field name="idempotency_key" />
+                        <field name="request_digest" />
+                        <field name="request_filename" />
+                        <field
+                            name="request_xml"
+                            filename="request_filename"
+                            groups="l10n_cl_dte_core.group_dte_manager"
+                        />
+                        <field name="submitted_at" />
+                        <field name="last_checked_at" />
+                    </group>
+                    <field name="attempt_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="operation" />
+                            <field name="started_at" />
+                            <field name="finished_at" />
+                            <field name="state" />
+                            <field name="request_digest" />
+                            <field name="response_digest" />
+                            <field name="error_summary" />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -24,6 +24,19 @@ class TestTedComposer(DteInvoiceTestCase):
         self.assertEqual(root.findtext("DD/TD"), "33")
         self.assertEqual(root.find("DD/CAF/DA/RE").text, "76864280-K")
 
+    def test_ted_uses_short_item_name_instead_of_long_description(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
+        snapshot["lines"][0]["name"] = "Servicio de prueba"
+        snapshot["lines"][0]["description"] = (
+            "Dice: giro de prueba anterior. Debe decir: giro de prueba actualizado."
+        )
+
+        ted = DteXmlComposer().compose_ted(snapshot, authorization)
+        root = etree.fromstring(ted)
+
+        self.assertEqual(root.findtext("DD/IT1"), "Servicio de prueba")
+        self.assertLessEqual(len(root.findtext("DD/IT1")), 40)
+
     def test_ted_tampering_fails_verification(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
         ted = DteXmlComposer().compose_ted(snapshot, authorization)

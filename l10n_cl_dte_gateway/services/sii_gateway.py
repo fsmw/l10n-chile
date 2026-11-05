@@ -148,3 +148,20 @@ class SiiGatewayFactory(models.AbstractModel):
                 % {"environment": environment}
             )
         raise ValidationError(_("The DTE SII environment is invalid."))
+
+    @api.model
+    def get_envelope_gateway(self, environment):
+        """Return a verified multi-DTE transport adapter for the selected mode."""
+        if environment == "demo":
+            raise UserError(
+                _("Certification-set envelopes cannot use the simulated Demo gateway.")
+            )
+        if environment in {"certification", "production"}:
+            raise UserError(
+                _(
+                    "No verified multi-DTE SII transport is configured for "
+                    "%(environment)s. The envelope has not been sent."
+                )
+                % {"environment": environment}
+            )
+        raise ValidationError(_("The DTE SII environment is invalid."))

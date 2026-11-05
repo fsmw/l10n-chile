@@ -1,0 +1,1 @@
+Renderiza representaciones impresas de DTE desde el XML firmado e inmutable. Conserva el PDF resultante, su SHA-256 y un manifiesto reproducible para paquetes de hasta 20 muestras. La generación de un PDF local no acredita carga ni aprobación del Servicio de Impuestos Internos.

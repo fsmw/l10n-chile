@@ -1,0 +1,173 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_list" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.list</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="issuer_vat" />
+                <field name="document_code" />
+                <field name="folio" />
+                <field name="issue_date" />
+                <field name="received_at" />
+                <field name="channel" />
+                <field name="xml_validation_state" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+    <record id="incoming_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_mark_reviewed"
+                        type="object"
+                        string="Mark Reviewed"
+                        invisible="state != 'received'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_create_response"
+                        type="object"
+                        string="Prepare Response"
+                        invisible="state != 'reviewed'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="received,reviewed"
+                    />
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        XML parsing does not prove SII origin, schema compliance, or cryptographic signature validity.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="sii_environment" />
+                            <field name="channel" />
+                            <field name="received_at" />
+                        </group>
+                        <group>
+                            <field name="issuer_vat" />
+                            <field name="receiver_vat" />
+                            <field name="document_code" />
+                            <field name="folio" />
+                            <field name="issue_date" />
+                            <field name="xml_validation_state" />
+                            <field name="xml_sha256" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                            string="Original XML"
+                            groups="l10n_cl_dte_core.group_dte_manager"
+                        >
+                            <field name="raw_xml" filename="filename" />
+                            <field name="filename" />
+                        </page>
+                        <page string="Audit Events">
+                            <field name="event_ids" readonly="1">
+                                <list create="0" edit="0" delete="0">
+                                    <field name="occurred_at" />
+                                    <field name="event_code" />
+                                    <field name="actor_id" />
+                                    <field name="from_state" />
+                                    <field name="to_state" />
+                                    <field name="correlation_id" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Responses">
+                            <field name="response_ids" readonly="1">
+                                <list create="0" edit="0" delete="0">
+                                    <field name="response_code" />
+                                    <field name="contract_reference" />
+                                    <field name="state" />
+                                    <field name="external_reference" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="incoming_response_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.response.form</field>
+        <field name="model">l10n_cl.incoming.dte.response</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_enqueue"
+                        type="object"
+                        string="Send Response"
+                        invisible="state != 'pending'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_poll"
+                        type="object"
+                        string="Query Status"
+                        invisible="state not in ('submitted', 'outcome_unknown')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="pending,sending,submitted,accepted,rejected"
+                    />
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        Transmission and status polling remain disabled until the current official SII contract is implemented and verified.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="incoming_document_id" />
+                            <field name="response_code" />
+                            <field name="response_text" />
+                            <field name="contract_reference" />
+                        </group>
+                        <group>
+                            <field name="environment" />
+                            <field name="idempotency_key" />
+                            <field name="request_digest" />
+                            <field name="response_digest" />
+                            <field name="external_reference" />
+                        </group>
+                    </group>
+                    <field name="attempt_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="operation" />
+                            <field name="started_at" />
+                            <field name="finished_at" />
+                            <field name="state" />
+                            <field name="request_digest" />
+                            <field name="response_digest" />
+                            <field name="transport_code" />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="incoming_document_action" model="ir.actions.act_window">
+        <field name="name">Incoming DTEs</field>
+        <field name="res_model">l10n_cl.incoming.dte</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

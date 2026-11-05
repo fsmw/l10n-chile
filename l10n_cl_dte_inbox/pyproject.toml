@@ -1,0 +1,11 @@
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C90", "I", "UP", "B", "A", "C4", "DTZ", "T10", "T20", "SIM", "ARG", "PTH", "PL"]
+ignore = ["PLR0913", "PLR2004"]
+
+[build-system]
+requires = ["whool"]
+build-backend = "whool.buildapi"

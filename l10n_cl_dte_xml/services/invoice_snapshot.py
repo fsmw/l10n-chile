@@ -126,9 +126,15 @@ class InvoiceSnapshotService:
             raise ValidationError(_("The folio is outside the CAF range."))
 
     def _fiscal_master_data_errors(self, move, document_code):
-        caf_model = move.env["l10n_cl.caf.authorization"]
+        return self.fiscal_master_data_errors(
+            move.company_id, move.partner_id, document_code
+        )
+
+    def fiscal_master_data_errors(self, company, partner, document_code):
+        """Validate the fiscal parties before an invoice or folio is created."""
+        caf_model = company.env["l10n_cl.caf.authorization"]
         errors = []
-        issuer = move.company_id.partner_id
+        issuer = company.partner_id
         issuer_vat = caf_model._normalize_vat(issuer.vat)
         if not caf_model._is_valid_vat(issuer_vat):
             errors.append(_("Company: enter a valid Chilean RUT."))
@@ -136,7 +142,7 @@ class InvoiceSnapshotService:
             errors.append(_("Company: enter the legal name."))
         if not (issuer.l10n_cl_activity_description or "").strip():
             errors.append(_("Company: enter the SII economic activity."))
-        activity_code = (move.company_id.dte_sii_activity_code or "").strip()
+        activity_code = (company.dte_sii_activity_code or "").strip()
         if not activity_code.isdigit() or int(activity_code or "0") <= 0:
             errors.append(_("Company: enter a valid SII activity code."))
         if not " ".join(
@@ -146,7 +152,7 @@ class InvoiceSnapshotService:
         if not (issuer.city or "").strip():
             errors.append(_("Company: enter the DTE origin commune."))
 
-        receiver = move.partner_id.commercial_partner_id
+        receiver = partner.commercial_partner_id
         receiver_vat = caf_model._normalize_vat(receiver.vat)
         if not caf_model._is_valid_vat(receiver_vat):
             errors.append(_("Customer: enter a valid Chilean RUT."))
@@ -161,9 +167,8 @@ class InvoiceSnapshotService:
         if document_code in {"33", "34"} and receiver_vat == "666666666":
             errors.append(
                 _(
-                    "DTE types 33 and 34 require an identified recipient; for an "
-                    "anonymous final consumer, select type 39; boleta issuance is "
-                    "not available in this flow yet."
+                    "DTE types 33 and 34 require an identified recipient; "
+                    "use the applicable boleta type for an anonymous final consumer."
                 )
             )
         return errors
