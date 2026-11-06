@@ -224,6 +224,68 @@ class SignatureService:
             "signed_info_canonicalization": signed_info_variant,
         }
 
+    def sign_authentication_seed(self, company, environment, seed):
+        """Sign SII's enveloped getToken request without persisting credentials."""
+        self.env = company.env
+        if environment != "certification" or not str(seed).isdigit():
+            raise ValidationError(
+                _("A numeric Certification authentication seed is required.")
+            )
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(_("Only a DTE manager can use the signing certificate."))
+        profiles = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", environment),
+                ("active", "=", True),
+            ]
+        )
+        if len(profiles) != 1 or profiles.is_synthetic:
+            raise UserError(
+                _("Configure one non-synthetic Certification signing profile.")
+            )
+        certificate = profiles.sudo().certificate_id
+        if (
+            not certificate
+            or certificate.company_id != company
+            or not certificate.active
+            or not certificate.is_valid
+            or not certificate.private_key_id
+            or certificate.private_key_id.public
+        ):
+            raise UserError(
+                _("Configure a valid Certification certificate with its private key.")
+            )
+        root = etree.Element("getToken")
+        etree.SubElement(etree.SubElement(root, "item"), "Semilla").text = str(seed)
+        digest = hashes.Hash(hashes.SHA1())
+        digest.update(_canonicalize(root))
+        signature = etree.SubElement(
+            root, _qname("Signature"), nsmap={None: DS_NAMESPACE}
+        )
+        info = etree.SubElement(signature, _qname("SignedInfo"))
+        etree.SubElement(info, _qname("CanonicalizationMethod"), Algorithm=C14N_URI)
+        etree.SubElement(info, _qname("SignatureMethod"), Algorithm=RSA_SHA1_URI)
+        reference = etree.SubElement(info, _qname("Reference"), URI="")
+        transforms = etree.SubElement(reference, _qname("Transforms"))
+        etree.SubElement(
+            transforms,
+            _qname("Transform"),
+            Algorithm=DS_NAMESPACE + "enveloped-signature",
+        )
+        etree.SubElement(reference, _qname("DigestMethod"), Algorithm=SHA1_URI)
+        etree.SubElement(reference, _qname("DigestValue")).text = base64.b64encode(
+            digest.finalize()
+        ).decode("ascii")
+        value = certificate._sign(
+            _canonicalize(info), hashing_algorithm="sha1", formatting="base64"
+        )
+        etree.SubElement(signature, _qname("SignatureValue")).text = value.decode(
+            "ascii"
+        )
+        self._add_key_info(signature, certificate)
+        return etree.tostring(root, encoding="ISO-8859-1", xml_declaration=True)
+
     def sign_envelope(self, company, environment, unsigned_xml):
         """Sign the SetDTE inside an already assembled SII EnvioDTE."""
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
