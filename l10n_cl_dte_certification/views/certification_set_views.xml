@@ -41,6 +41,13 @@
                         invisible="not case_count"
                     />
                     <button
+                        name="action_reinterpret_cases"
+                        type="object"
+                        string="Reinterpret Outdated Cases"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="case_outdated_count == 0"
+                    />
+                    <button
                         name="action_check_case_coverage"
                         type="object"
                         string="Check Case Coverage"
@@ -149,6 +156,8 @@
                                         </group>
                                         <group>
                                             <field name="reference_reason" />
+                                            <field name="reference_code" />
+                                            <field name="reference_code_source_line" />
                                             <field
                                                 name="reference_reason_source_line"
                                             />
@@ -157,6 +166,56 @@
                                                 widget="json"
                                             />
                                         </group>
+                                    </group>
+                                    <group string="Interpretation history">
+                                        <field
+                                            name="interpretation_history_ids"
+                                            nolabel="1"
+                                            readonly="1"
+                                        >
+                                            <list
+                                                create="false"
+                                                edit="false"
+                                                delete="false"
+                                            >
+                                                <field name="sequence" />
+                                                <field name="occurred_at" />
+                                                <field name="actor_id" />
+                                                <field
+                                                    name="from_interpreter_version"
+                                                />
+                                                <field name="to_interpreter_version" />
+                                            </list>
+                                            <form
+                                                create="false"
+                                                edit="false"
+                                                delete="false"
+                                            >
+                                                <sheet>
+                                                    <group>
+                                                        <field name="sequence" />
+                                                        <field name="occurred_at" />
+                                                        <field name="actor_id" />
+                                                        <field
+                                                            name="from_interpreter_version"
+                                                        />
+                                                        <field
+                                                            name="to_interpreter_version"
+                                                        />
+                                                    </group>
+                                                    <group>
+                                                        <field
+                                                            name="previous_interpretation"
+                                                            widget="json"
+                                                        />
+                                                        <field
+                                                            name="new_interpretation"
+                                                            widget="json"
+                                                        />
+                                                    </group>
+                                                </sheet>
+                                            </form>
+                                        </field>
                                     </group>
                                 </sheet>
                             </form>

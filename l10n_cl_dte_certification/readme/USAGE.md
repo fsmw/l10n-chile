@@ -30,3 +30,9 @@ in review; they are never silently corrected.
 Global discounts, note references and reasons, note operations, text corrections,
 and interpretation diagnostics are also shown as structured, read-only case
 facts with their original line references.
+
+Recognized note reasons map to a separate SII reference code (`CodRef`); the
+source reason remains intact for `RazonRef`. Unknown reasons and note/document
+type mismatches require review. When a newer interpreter is introduced, a DTE
+manager must explicitly reinterpret outdated cases; the previous and new
+interpretations are retained in an immutable history.
