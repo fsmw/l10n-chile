@@ -182,9 +182,10 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
                 "source_line": source_start_line,
             }
         )
-    if result["global_discount_percent"] and Decimal(
+    if (
         result["global_discount_percent"]
-    ) > 100:
+        and Decimal(result["global_discount_percent"]) > 100
+    ):
         result["diagnostics"].append(
             {
                 "code": "global_discount_out_of_range",
