@@ -9,6 +9,8 @@ import psycopg2
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from ..services.envelope_composer import SiiEnvelopeComposer
+
 
 class SiiEnvelopeSubmission(models.Model):
     _name = "l10n_cl.sii.envelope.submission"
@@ -124,11 +126,11 @@ class SiiEnvelopeSubmission(models.Model):
         self.ensure_one()
         if self.state != "pending":
             raise UserError(_("Only a pending envelope can be sent."))
-        self._verify_request()
-        gateway = self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway(
-            self.environment
+        content = self._verify_request()
+        sender_vat = SiiEnvelopeComposer().get_sender_vat(content)
+        self.env["l10n_cl.sii.gateway.factory"]._get_ready_envelope_gateway(
+            self.company_id, sender_vat, self.environment
         )
-        gateway.validate_configuration(self.company_id, self.environment)
         self.with_delay(identity_key=f"sii-envelope-{self.idempotency_key}")._job_send()
         return self.action_open()
 
@@ -136,9 +138,10 @@ class SiiEnvelopeSubmission(models.Model):
         self.ensure_one()
         if self.state != "pending":
             return True
-        self._verify_request()
-        gateway = self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway(
-            self.environment
+        content = self._verify_request()
+        sender_vat = SiiEnvelopeComposer().get_sender_vat(content)
+        gateway = self.env["l10n_cl.sii.gateway.factory"]._get_ready_envelope_gateway(
+            self.company_id, sender_vat, self.environment
         )
         attempt = self.env["l10n_cl.sii.envelope.attempt"]._create_for_operation(
             self, "send"
@@ -148,7 +151,7 @@ class SiiEnvelopeSubmission(models.Model):
             result = gateway.send_envelope(
                 self.company_id,
                 self.environment,
-                base64.b64decode(self.request_xml),
+                content,
                 self.idempotency_key,
             )
             response = result.get("raw_response")
@@ -226,6 +229,7 @@ class SiiEnvelopeSubmission(models.Model):
         content = base64.b64decode(self.request_xml, validate=True)
         if hashlib.sha256(content).hexdigest() != self.request_digest:
             raise ValidationError(_("The stored SII envelope fingerprint changed."))
+        return content
 
 
 class SiiEnvelopeAttempt(models.Model):
