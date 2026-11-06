@@ -5,7 +5,11 @@ import hashlib
 import xml.etree.ElementTree as ElementTree
 
 from odoo import _, api, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
+
+from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+
+from .envelope_composer import SiiEnvelopeComposer
 
 DEMO_NAMESPACE = "urn:oca:l10n-chile:dte:demo:v1"
 ElementTree.register_namespace("demo", DEMO_NAMESPACE)
@@ -13,6 +17,9 @@ ElementTree.register_namespace("demo", DEMO_NAMESPACE)
 
 class SiiGateway:
     """Outbound port for an SII transport implementation."""
+
+    def validate_configuration(self, company, environment):
+        raise NotImplementedError
 
     def send_document(
         self, company, environment, request_bytes, idempotency_key, scenario
@@ -25,6 +32,12 @@ class SiiGateway:
         raise NotImplementedError
 
     def reconcile_submission(self, company, environment, identity, scenario):
+        raise NotImplementedError
+
+    def send_envelope(self, company, environment, request_bytes, idempotency_key):
+        raise NotImplementedError
+
+    def query_envelope(self, company, environment, track_id):
         raise NotImplementedError
 
 
@@ -165,3 +178,31 @@ class SiiGatewayFactory(models.AbstractModel):
                 % {"environment": environment}
             )
         raise ValidationError(_("The DTE SII environment is invalid."))
+
+    @api.model
+    def check_envelope_readiness(self, company_id, sender_vat, environment=None):
+        """Report certificate identity and transport blockers without sending."""
+        company = self.env["res.company"].browse(company_id).exists()
+        if not company:
+            return {
+                "ready": False,
+                "diagnostics": [_("An envelope company is required.")],
+            }
+        try:
+            self._get_ready_envelope_gateway(company, sender_vat, environment)
+        except (AccessError, UserError) as error:
+            return {"ready": False, "diagnostics": [str(error)]}
+        return {"ready": True, "diagnostics": []}
+
+    @api.model
+    def _get_ready_envelope_gateway(self, company, sender_vat, environment=None):
+        """Fail closed before queueing if identity or transport is not ready."""
+        environment = environment or company.dte_sii_environment
+        if environment != company.dte_sii_environment:
+            raise UserError(_("The envelope mode differs from the company mode."))
+        SiiEnvelopeComposer().validate_sender_identity(
+            company, sender_vat, SignatureService()
+        )
+        gateway = self.get_envelope_gateway(environment)
+        gateway.validate_configuration(company, environment)
+        return gateway

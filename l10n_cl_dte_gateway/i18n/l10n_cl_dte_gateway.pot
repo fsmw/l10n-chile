@@ -526,3 +526,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
 msgid "Transport Timeline"
 msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "Envelope sender identity checks require Certification mode."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The XML root must be EnvioDTE."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The configured RutEnvia must match the Certification certificate holder RUT."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The SII envelope is missing RutEnvia."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "An envelope company is required."
+msgstr ""
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The envelope mode differs from the company mode."
+msgstr ""

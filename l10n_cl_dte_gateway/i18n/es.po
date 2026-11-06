@@ -542,3 +542,39 @@ msgstr "Cronología de transporte"
 
 #~ msgid "DTE SII Environment"
 #~ msgstr "Entorno SII del DTE"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "Envelope sender identity checks require Certification mode."
+msgstr "Las verificaciones de identidad del remitente requieren modo Certificación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The XML root must be EnvioDTE."
+msgstr "La raíz del XML debe ser EnvioDTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The configured RutEnvia must match the Certification certificate holder RUT."
+msgstr "El RutEnvia configurado debe coincidir con el RUT del titular del certificado de Certificación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The SII envelope is missing RutEnvia."
+msgstr "Falta RutEnvia en el sobre del SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "An envelope company is required."
+msgstr "Se requiere una compañía para el sobre."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The envelope mode differs from the company mode."
+msgstr "El entorno del sobre no coincide con el entorno de la compañía."

@@ -15,6 +15,7 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SignatureService,
 )
@@ -54,6 +55,38 @@ def _schema():
 
 
 class SiiEnvelopeComposer:
+    def validate_sender_identity(self, company, sender_vat, signature_service=None):
+        """Match the configured RutEnvia to the Certification certificate holder."""
+        if company.dte_sii_environment != "certification":
+            raise ValidationError(
+                _("Envelope sender identity checks require Certification mode.")
+            )
+        signature_service = signature_service or SignatureService()
+        _certificate, certificate_sender_vat = (
+            signature_service.certification_signing_identity(company)
+        )
+        configured_sender_vat = normalize_rut(sender_vat)
+        if configured_sender_vat != certificate_sender_vat:
+            raise ValidationError(
+                _(
+                    "The configured RutEnvia must match the Certification "
+                    "certificate holder RUT."
+                )
+            )
+        return configured_sender_vat
+
+    def get_sender_vat(self, envelope_bytes):
+        """Read RutEnvia from a bounded EnvioDTE XML payload."""
+        root = _parse(envelope_bytes)
+        if root.tag != _tag("EnvioDTE"):
+            raise ValidationError(_("The XML root must be EnvioDTE."))
+        set_dte = root.find(_tag("SetDTE"))
+        cover = set_dte.find(_tag("Caratula")) if set_dte is not None else None
+        sender_vat = cover.findtext(_tag("RutEnvia")) if cover is not None else None
+        if not sender_vat:
+            raise ValidationError(_("The SII envelope is missing RutEnvia."))
+        return sender_vat
+
     def compose(self, company, signed_documents, header, signature_service=None):
         if company.dte_sii_environment != "certification":
             raise ValidationError(
@@ -72,6 +105,9 @@ class SiiEnvelopeComposer:
         }:
             raise ValidationError(_("The certification envelope header is incomplete."))
         signature_service = signature_service or SignatureService()
+        sender_vat = self.validate_sender_identity(
+            company, header["sender_vat"], signature_service
+        )
         dtes = []
         identifiers = set()
         type_counts = Counter()
@@ -119,7 +155,7 @@ class SiiEnvelopeComposer:
         set_dte = etree.SubElement(root, _tag("SetDTE"), ID=header["id"])
         cover = etree.SubElement(set_dte, _tag("Caratula"), version="1.0")
         _add(cover, "RutEmisor", issuer_vat)
-        _add(cover, "RutEnvia", header["sender_vat"])
+        _add(cover, "RutEnvia", sender_vat)
         _add(cover, "RutReceptor", "60803000-K")
         resolution_date = header["resolution_date"]
         _add(
