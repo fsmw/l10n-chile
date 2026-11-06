@@ -22,3 +22,7 @@ reviewed successfully.
 Recognized detail rows are materialized as ordered, immutable case-line
 snapshots. Each row retains its explicit values, source line, source digest,
 and interpreter version for later operator mapping.
+
+Item quantities, prices, and discounts are checked with decimal arithmetic.
+Out-of-range values remain visible with their source evidence and put the case
+in review; they are never silently corrected.

@@ -33,6 +33,34 @@ def _cells(line):
     ]
 
 
+def _validate_item_values(item, diagnostics):
+    """Flag explicit decimal values that cannot be used in a DTE detail."""
+    limits = {
+        "quantity": (Decimal("0"), None, False),
+        "unit_price": (Decimal("0"), None, True),
+        "discount_percent": (Decimal("0"), Decimal("100"), True),
+    }
+    for field_name, (minimum, maximum, inclusive_minimum) in limits.items():
+        value = item.get(field_name)
+        if value is None:
+            continue
+        amount = Decimal(value)
+        if amount.is_finite():
+            valid_minimum = amount >= minimum if inclusive_minimum else amount > minimum
+            valid_maximum = maximum is None or amount <= maximum
+        else:
+            valid_minimum = valid_maximum = False
+        if not valid_minimum or not valid_maximum:
+            diagnostics.append(
+                {
+                    "code": "item_value_out_of_range",
+                    "source_line": item["source_line"],
+                    "field": field_name,
+                    "value": value,
+                }
+            )
+
+
 def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
     """Return explicit facts and diagnostics without completing missing values."""
     lines = instruction_text.splitlines()
@@ -133,17 +161,17 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
                         if not re.fullmatch(r"\d+(?:\.\d+)?", values[key]):
                             invalid_number = True
                 if item_name and not invalid_number:
-                    result["items"].append(
-                        {
-                            "sequence": len(result["items"]) + 1,
-                            "source_line": source_line,
-                            "name": item_name,
-                            "quantity": values.get("quantity"),
-                            "unit_price": values.get("unit_price"),
-                            "uom": values.get("uom"),
-                            "discount_percent": values.get("discount_percent"),
-                        }
-                    )
+                    item = {
+                        "sequence": len(result["items"]) + 1,
+                        "source_line": source_line,
+                        "name": item_name,
+                        "quantity": values.get("quantity"),
+                        "unit_price": values.get("unit_price"),
+                        "uom": values.get("uom"),
+                        "discount_percent": values.get("discount_percent"),
+                    }
+                    _validate_item_values(item, result["diagnostics"])
+                    result["items"].append(item)
                     continue
         result["diagnostics"].append(
             {
