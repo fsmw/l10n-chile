@@ -15,6 +15,8 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from .certificate_identity import certificate_sender_rut
+
 DS_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#"
 C14N_URI = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
 RSA_SHA1_URI = DS_NAMESPACE + "rsa-sha1"
@@ -224,19 +226,15 @@ class SignatureService:
             "signed_info_canonicalization": signed_info_variant,
         }
 
-    def sign_authentication_seed(self, company, environment, seed):
-        """Sign SII's enveloped getToken request without persisting credentials."""
+    def certification_signing_identity(self, company):
+        """Return the active Certification certificate and its personal holder RUT."""
         self.env = company.env
-        if environment != "certification" or not str(seed).isdigit():
-            raise ValidationError(
-                _("A numeric Certification authentication seed is required.")
-            )
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
             [
                 ("company_id", "=", company.id),
-                ("sii_environment", "=", environment),
+                ("sii_environment", "=", "certification"),
                 ("active", "=", True),
             ]
         )
@@ -256,6 +254,24 @@ class SignatureService:
             raise UserError(
                 _("Configure a valid Certification certificate with its private key.")
             )
+        try:
+            certificate_data = base64.b64decode(
+                certificate.pem_certificate, validate=True
+            )
+            parsed_certificate = x509.load_pem_x509_certificate(certificate_data)
+        except (TypeError, ValueError, binascii.Error) as error:
+            raise ValidationError(
+                _("The Certification signing certificate cannot be read.")
+            ) from error
+        return certificate, certificate_sender_rut(parsed_certificate)
+
+    def sign_authentication_seed(self, company, environment, seed):
+        """Sign SII's enveloped getToken request without persisting credentials."""
+        if environment != "certification" or not str(seed).isdigit():
+            raise ValidationError(
+                _("A numeric Certification authentication seed is required.")
+            )
+        certificate, _sender_rut = self.certification_signing_identity(company)
         root = etree.Element("getToken")
         etree.SubElement(etree.SubElement(root, "item"), "Semilla").text = str(seed)
         digest = hashes.Hash(hashes.SHA1())

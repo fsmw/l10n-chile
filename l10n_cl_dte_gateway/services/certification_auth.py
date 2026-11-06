@@ -98,6 +98,7 @@ class CertificationAuthentication:
 
     def token(self, company):
         self.env = company.env
+        SignatureService().certification_signing_identity(company)
         seed_response = soap_payload(self.soap("CrSeed", "getSeed", {}), "getSeed")
         if text(seed_response, "ESTADO") != "00":
             raise SiiTransportError(_("SII did not authorize an authentication seed."))

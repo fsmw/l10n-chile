@@ -14,7 +14,10 @@ class SigningTestCase(CafTestCase):
         company = company or self.company
         key = self.caf_test_key
         name = x509.Name(
-            [x509.NameAttribute(NameOID.COMMON_NAME, "DTE synthetic test signer")]
+            [
+                x509.NameAttribute(NameOID.COMMON_NAME, "DTE synthetic test signer"),
+                x509.NameAttribute(NameOID.SERIAL_NUMBER, "12345678-5"),
+            ]
         )
         certificate = (
             x509.CertificateBuilder()

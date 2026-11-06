@@ -131,8 +131,7 @@ msgstr "ID"
 
 #. module: l10n_cl_dte_signing
 #: model:ir.model.fields,help:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__is_synthetic
-msgid ""
-"Identifies a certificate generated locally for the simulated Demo mode."
+msgid "Identifies a certificate generated locally for the simulated Demo mode."
 msgstr ""
 "Identifica un certificado generado localmente para el modo Demo simulado."
 
@@ -413,6 +412,36 @@ msgstr "Demo sintética"
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "The XML input is not well-formed: %s"
 msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:0
+msgid "A valid Chilean RUT is required."
+msgstr "Se requiere un RUT chileno válido."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Configure a valid Certification certificate with its private key."
+msgstr "Configure un certificado de Certificación válido con su clave privada."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Configure one non-synthetic Certification signing profile."
+msgstr "Configure un perfil de firma de Certificación no sintético."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The Certification signing certificate cannot be read."
+msgstr "No se puede leer el certificado de firma de Certificación."
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:0
+msgid "The signing certificate must identify one valid Chilean sender RUT."
+msgstr "El certificado de firma debe identificar un único RUT chileno válido del remitente."
 
 #~ msgid "Chilean DTE"
 #~ msgstr "DTE chileno"
