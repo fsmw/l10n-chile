@@ -6,7 +6,13 @@
     "author": "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
-    "depends": ["l10n_cl_dte_core", "l10n_cl_dte_xml", "queue_job"],
+    "depends": [
+        "l10n_cl_dte_core",
+        "l10n_cl_dte_xml",
+        "l10n_cl_dte_signing",
+        "queue_job",
+    ],
+    "external_dependencies": {"python": ["requests"]},
     "data": [
         "security/gateway_security.xml",
         "security/ir.model.access.csv",
