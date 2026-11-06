@@ -33,6 +33,13 @@
                         groups="l10n_cl_dte_core.group_dte_manager"
                         invisible="case_count or not parsed_structure"
                     />
+                    <button
+                        name="action_interpret_cases"
+                        type="object"
+                        string="Interpret Case Instructions"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="not case_count"
+                    />
                     <field
                         name="parse_state"
                         widget="statusbar"
@@ -70,6 +77,7 @@
                                 <field name="case_identifier" />
                                 <field name="document_code" />
                                 <field name="interpretation_state" />
+                                <field name="interpretation_version" optional="hide" />
                                 <field name="source_start_line" />
                                 <field name="source_end_line" />
                             </list>
@@ -89,6 +97,8 @@
                                     <group>
                                         <field name="instruction_text" />
                                         <field name="diagnostics" widget="json" />
+                                        <field name="interpretation_version" />
+                                        <field name="interpretation" widget="json" />
                                     </group>
                                 </sheet>
                             </form>
