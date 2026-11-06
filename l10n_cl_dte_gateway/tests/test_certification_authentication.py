@@ -1,7 +1,7 @@
 import base64
 import hashlib
 from copy import deepcopy
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import requests
 from cryptography.hazmat.primitives import hashes
@@ -90,6 +90,22 @@ class TestCertificationAuthentication(SigningTestCase):
             SignatureService().sign_authentication_seed(
                 self.company.with_user(self.dte_user), "certification", "42"
             )
+
+    def test_invalid_certificate_identity_fails_before_requesting_seed(self):
+        self.create_signing_profile(environment="certification")
+        session = self.session()
+        auth = CertificationAuthentication(session)
+        with (
+            patch.object(
+                SignatureService,
+                "certification_signing_identity",
+                side_effect=ValidationError("Synthetic invalid identity"),
+            ),
+            self.assertRaises(ValidationError),
+        ):
+            auth.token(self.company.with_user(self.dte_manager))
+        session.post.assert_not_called()
+        auth.close()
 
     def test_rejected_or_invalid_tokens_are_not_returned(self):
         self.create_signing_profile(environment="certification")
