@@ -10,6 +10,8 @@ from psycopg2 import IntegrityError
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from ..services.case_instruction_interpreter import INTERPRETER_VERSION
+
 
 class DteCertificationSet(models.Model):
     _name = "l10n_cl.dte.certification.set"
@@ -51,6 +53,19 @@ class DteCertificationSet(models.Model):
     )
     case_ids = fields.One2many("l10n_cl.dte.certification.case", "set_id", copy=False)
     case_count = fields.Integer(compute="_compute_case_count")
+    case_interpreted_count = fields.Integer(compute="_compute_case_coverage")
+    case_review_required_count = fields.Integer(compute="_compute_case_coverage")
+    case_unsupported_count = fields.Integer(compute="_compute_case_coverage")
+    case_pending_count = fields.Integer(compute="_compute_case_coverage")
+    case_coverage_state = fields.Selection(
+        [
+            ("pending", "Pending"),
+            ("complete", "Complete"),
+            ("review_required", "Review Required"),
+            ("unsupported", "Unsupported Cases"),
+        ],
+        compute="_compute_case_coverage",
+    )
 
     _sql_constraints = [
         (
@@ -64,6 +79,39 @@ class DteCertificationSet(models.Model):
     def _compute_case_count(self):
         for record in self:
             record.case_count = len(record.case_ids)
+
+    @api.depends(
+        "case_ids.interpretation_state",
+        "case_ids.interpretation_version",
+        "case_ids.document_code",
+    )
+    def _compute_case_coverage(self):
+        for record in self:
+            cases = record.case_ids
+            record.case_interpreted_count = len(
+                cases.filtered(lambda case: case.interpretation_state == "interpreted")
+            )
+            record.case_review_required_count = len(
+                cases.filtered(
+                    lambda case: case.interpretation_state == "review_required"
+                )
+            )
+            record.case_unsupported_count = len(
+                cases.filtered(lambda case: case.document_code == "unsupported")
+            )
+            record.case_pending_count = len(
+                cases.filtered(
+                    lambda case: case.interpretation_version != INTERPRETER_VERSION
+                )
+            )
+            if not cases or record.case_pending_count:
+                record.case_coverage_state = "pending"
+            elif record.case_unsupported_count:
+                record.case_coverage_state = "unsupported"
+            elif record.case_review_required_count:
+                record.case_coverage_state = "review_required"
+            else:
+                record.case_coverage_state = "complete"
 
     @api.model
     def _create_from_import(self, company, filename, encoded_source):
@@ -238,5 +286,39 @@ class DteCertificationSet(models.Model):
                 ),
                 "type": "success",
                 "sticky": False,
+            },
+        }
+
+    def action_check_case_coverage(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(
+                _("Only DTE managers can check certification case coverage.")
+            )
+        self.ensure_one()
+        if not self.case_ids:
+            raise UserError(_("Create case snapshots before checking coverage."))
+        if any(case.source_digest != self.source_digest for case in self.case_ids):
+            raise UserError(_("A case snapshot does not match its original SET."))
+        message = _(
+            "Cases: %(total)s; interpreted: %(interpreted)s; "
+            "review required: %(review)s; unsupported type: %(unsupported)s; "
+            "pending interpretation: %(pending)s."
+        ) % {
+            "total": self.case_count,
+            "interpreted": self.case_interpreted_count,
+            "review": self.case_review_required_count,
+            "unsupported": self.case_unsupported_count,
+            "pending": self.case_pending_count,
+        }
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Case coverage"),
+                "message": message,
+                "type": "success"
+                if self.case_coverage_state == "complete"
+                else "warning",
+                "sticky": True,
             },
         }

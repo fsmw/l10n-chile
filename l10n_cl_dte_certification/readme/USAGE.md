@@ -13,3 +13,8 @@ correction markers. It keeps source-line provenance for extracted values and
 reports unrecognized or incomplete instructions for review. It does not create
 accounting documents, resolve business partners or products, reserve folios, or
 send information to the SII.
+
+The case coverage summary separates interpreted cases from those needing
+review, unsupported document types, and cases not yet interpreted. The coverage
+check reports these counts and stays in warning state until every case has been
+reviewed successfully.

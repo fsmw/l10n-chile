@@ -141,3 +141,51 @@ class TestCaseInterpretationAction(TransactionCase):
         self.assertEqual(
             record.case_ids.interpretation["items"][0]["unit_price"], "100"
         )
+        self.assertEqual(record.case_coverage_state, "complete")
+        self.assertEqual(record.case_interpreted_count, 1)
+        self.assertEqual(record.case_pending_count, 0)
+        self.assertEqual(
+            record.action_check_case_coverage()["params"]["type"], "success"
+        )
+
+    def test_coverage_keeps_unsupported_case_visible_as_a_blocker(self):
+        company = self.env.company
+        manager = self.env["res.users"].create(
+            {
+                "name": "Synthetic Coverage Manager",
+                "login": "synthetic-coverage-manager",
+                "company_id": company.id,
+                "company_ids": [Command.set([company.id])],
+                "groups_id": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("l10n_cl_dte_core.group_dte_manager").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        source = (
+            b"SET A - NUMERO DE ATENCION: 123\n"
+            b"CASO 123-1\nDOCUMENTO TIPO DESCONOCIDO\n"
+        )
+        record = (
+            self.env["l10n_cl.dte.certification.set"]
+            .with_user(manager)
+            ._create_from_import(company, "unknown.txt", base64.b64encode(source))
+        )
+        record.action_parse_source()
+        record.action_materialize_cases()
+
+        self.assertEqual(record.case_pending_count, 1)
+        self.assertEqual(record.case_coverage_state, "pending")
+        record.action_interpret_cases()
+
+        self.assertEqual(record.case_unsupported_count, 1)
+        self.assertEqual(record.case_review_required_count, 1)
+        self.assertEqual(record.case_pending_count, 0)
+        self.assertEqual(record.case_coverage_state, "unsupported")
+        self.assertEqual(
+            record.action_check_case_coverage()["params"]["type"], "warning"
+        )
