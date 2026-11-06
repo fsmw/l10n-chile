@@ -47,7 +47,9 @@ class SiiEnvelopeSubmission(models.Model):
             ("sending", "Sending"),
             ("submitted", "Received by SII"),
             ("processing", "Processing"),
+            ("result_pending", "Processed; document results pending"),
             ("accepted", "Accepted"),
+            ("accepted_with_observations", "Accepted with observations"),
             ("rejected", "Rejected"),
             ("outcome_unknown", "Outcome Unknown"),
             ("error", "Transport Error"),
@@ -61,6 +63,9 @@ class SiiEnvelopeSubmission(models.Model):
     submitted_at = fields.Datetime(readonly=True, copy=False)
     last_checked_at = fields.Datetime(readonly=True, copy=False)
     attempt_ids = fields.One2many("l10n_cl.sii.envelope.attempt", "submission_id")
+    result_import_ids = fields.One2many(
+        "l10n_cl.sii.envelope.result.import", "submission_id"
+    )
 
     _sql_constraints = [
         (
@@ -204,7 +209,13 @@ class SiiEnvelopeSubmission(models.Model):
     def action_enqueue_status_query(self):
         self.ensure_one()
         if (
-            self.state not in {"submitted", "processing", "outcome_unknown"}
+            self.state
+            not in {
+                "submitted",
+                "processing",
+                "result_pending",
+                "outcome_unknown",
+            }
             or not self.track_id
         ):
             raise UserError(_("A TrackID is required to query SII status."))
@@ -241,7 +252,9 @@ class SiiEnvelopeSubmission(models.Model):
                 return True
             if result.get("is_simulated") or state not in {
                 "processing",
+                "result_pending",
                 "accepted",
+                "accepted_with_observations",
                 "rejected",
             }:
                 raise ValidationError(_("The SII status response is invalid."))
@@ -261,6 +274,23 @@ class SiiEnvelopeSubmission(models.Model):
             attempt._complete("failed", error_summary=str(error)[:1000])
             self._write_internal({"last_checked_at": fields.Datetime.now()})
         return True
+
+    def action_import_sii_result(self):
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only a DTE manager can import an SII result."))
+        if self.environment != "certification":
+            raise UserError(_("Manual result import is limited to Certification."))
+        if not self.track_id:
+            raise UserError(_("A TrackID is required to import an SII result."))
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Import SII Result XML"),
+            "res_model": "l10n_cl.sii.envelope.result.import.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_submission_id": self.id},
+        }
 
     def _verify_request(self):
         self.ensure_one()
@@ -285,7 +315,12 @@ class SiiEnvelopeAttempt(models.Model):
         related="submission_id.company_id", store=True, index=True
     )
     operation = fields.Selection(
-        [("send", "Send"), ("status", "Status Query")], required=True
+        [
+            ("send", "Send"),
+            ("status", "Status Query"),
+            ("result_import", "Import SII Result"),
+        ],
+        required=True,
     )
     started_at = fields.Datetime(required=True, readonly=True)
     finished_at = fields.Datetime(readonly=True)
@@ -308,6 +343,7 @@ class SiiEnvelopeAttempt(models.Model):
         copy=False,
         groups="l10n_cl_dte_core.group_dte_manager",
     )
+    response_filename = fields.Char(readonly=True)
     error_summary = fields.Char(readonly=True)
 
     @api.model_create_multi
@@ -325,12 +361,15 @@ class SiiEnvelopeAttempt(models.Model):
             }
         )
 
-    def _complete(self, state, response=None, error_summary=False):
+    def _complete(
+        self, state, response=None, error_summary=False, response_filename=False
+    ):
         self.ensure_one()
         values = {
             "state": state,
             "finished_at": fields.Datetime.now(),
             "error_summary": error_summary,
+            "response_filename": response_filename,
         }
         if response:
             values.update(

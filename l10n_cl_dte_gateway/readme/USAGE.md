@@ -11,6 +11,13 @@ It authenticates for each operation, retains the raw SII response, stores a
 successful upload TrackID, and classifies ambiguous upload failures without
 blindly resending. Production remains blocked and never falls back to Demo.
 
+For Certification, a manager can import the SII ``DTEMAIL`` result XML after
+the envelope reaches a processed result. The gateway reconciles each reported
+document by DTE type and folio against the submitted envelope and retains the
+source XML and per-document results as operator-supplied evidence. Importing
+this file does not change the envelope's fiscal state; aggregate QueryEstUp
+counts alone do not establish each document's outcome.
+
 Call ``l10n_cl.sii.gateway.factory.check_envelope_readiness(company_id,
 sender_vat, environment)`` to validate that the configured ``RutEnvia``
 matches the active Certification certificate holder and that the adapter

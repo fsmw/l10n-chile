@@ -18,7 +18,14 @@
                         type="object"
                         string="Query SII Status"
                         groups="l10n_cl_dte_core.group_dte_manager"
-                        invisible="state not in ['submitted', 'processing'] or not track_id"
+                        invisible="state not in ['submitted', 'processing', 'result_pending', 'outcome_unknown'] or not track_id"
+                    />
+                    <button
+                        name="action_import_sii_result"
+                        type="object"
+                        string="Import SII Result XML"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="environment != 'certification' or not track_id"
                     />
                     <field name="state" widget="statusbar" />
                 </header>
@@ -48,6 +55,92 @@
                             <field name="request_digest" />
                             <field name="response_digest" />
                             <field name="error_summary" />
+                        </list>
+                    </field>
+                    <field name="result_import_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="imported_at" />
+                            <field name="source_filename" />
+                            <field name="reconciliation_state" />
+                            <field name="expected_count" />
+                            <field name="accepted_count" />
+                            <field name="rejected_count" />
+                            <field name="repair_count" />
+                            <field name="indeterminate_count" />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sii_envelope_result_import_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.sii.envelope.result.import.wizard.form</field>
+        <field name="model">l10n_cl.sii.envelope.result.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import SII Result XML">
+                <group>
+                    <field name="submission_id" />
+                    <field name="result_file" filename="result_filename" />
+                    <field name="result_filename" invisible="1" />
+                </group>
+                <div class="alert alert-info" role="alert">
+                    Imported outcomes are operator supplied and do not change the
+                    envelope's fiscal state.
+                </div>
+                <footer>
+                    <button
+                        name="action_import"
+                        type="object"
+                        string="Import and reconcile"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sii_envelope_result_import_form" model="ir.ui.view">
+        <field name="name">l10n_cl.sii.envelope.result.import.form</field>
+        <field name="model">l10n_cl.sii.envelope.result.import</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <sheet>
+                    <group>
+                        <group string="Imported evidence">
+                            <field name="submission_id" />
+                            <field name="attempt_id" />
+                            <field name="imported_at" />
+                            <field name="imported_by_id" />
+                            <field name="source_filename" />
+                            <field name="source_digest" />
+                            <field name="verification_state" />
+                            <field name="source_xml" filename="source_xml_filename" />
+                            <field name="source_xml_filename" invisible="1" />
+                        </group>
+                        <group string="Reconciliation">
+                            <field name="sii_state" />
+                            <field name="reconciliation_state" />
+                            <field name="expected_count" />
+                            <field name="accepted_count" />
+                            <field name="rejected_count" />
+                            <field name="repair_count" />
+                            <field name="indeterminate_count" />
+                            <field name="discrepancy_summary" />
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="document_type" />
+                            <field name="folio" />
+                            <field name="issuer_vat" />
+                            <field name="receiver_vat" />
+                            <field name="issue_date" />
+                            <field name="state" />
+                            <field name="sii_state_code" />
+                            <field name="sii_detail" />
+                            <field name="document_digest" />
                         </list>
                     </field>
                 </sheet>
