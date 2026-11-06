@@ -10,3 +10,10 @@ Certification and Production currently have no transport adapters. The
 factory rejects those modes before queueing work or creating an attempt; it
 never falls back to Demo. Add and configure the real adapter before enabling
 either mode for outbound SII traffic.
+
+The Certification authentication client obtains a seed and signs the token
+request with the company's active, non-synthetic Certification certificate.
+It connects only to the fixed Certification host, verifies TLS, rejects HTTP
+redirects and bounds response sizes. Tokens remain in memory; callers must close
+the client to clear its session. This service does not submit envelopes or
+record fiscal acceptance.
