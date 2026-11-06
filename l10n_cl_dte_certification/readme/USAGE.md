@@ -26,3 +26,7 @@ and interpreter version for later operator mapping.
 Item quantities, prices, and discounts are checked with decimal arithmetic.
 Out-of-range values remain visible with their source evidence and put the case
 in review; they are never silently corrected.
+
+Global discounts, note references and reasons, note operations, text corrections,
+and interpretation diagnostics are also shown as structured, read-only case
+facts with their original line references.

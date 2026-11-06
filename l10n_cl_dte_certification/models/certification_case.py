@@ -51,6 +51,37 @@ class DteCertificationCase(models.Model):
     diagnostics = fields.Json(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    global_discount_percent = fields.Char(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    global_discount_source_line = fields.Integer(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    reference_case_identifier = fields.Char(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    reference_source_line = fields.Integer(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    reference_reason = fields.Text(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    reference_reason_source_line = fields.Integer(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    note_operation = fields.Selection(
+        [
+            ("cancel", "Cancel"),
+            ("return", "Return"),
+            ("text", "Text correction"),
+            ("amount", "Amount correction"),
+        ],
+        readonly=True,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+    text_correction = fields.Json(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
     interpretation_version = fields.Char(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
@@ -101,6 +132,19 @@ class DteCertificationCase(models.Model):
             super(DteCertificationCase, case.sudo()).write(
                 {
                     "interpretation_state": values["state"],
+                    "diagnostics": values["diagnostics"],
+                    "global_discount_percent": values["global_discount_percent"],
+                    "global_discount_source_line": values[
+                        "global_discount_source_line"
+                    ],
+                    "reference_case_identifier": values["reference_case_identifier"],
+                    "reference_source_line": values["reference_source_line"],
+                    "reference_reason": values["reference_reason"],
+                    "reference_reason_source_line": values[
+                        "reference_reason_source_line"
+                    ],
+                    "note_operation": values["note_operation"],
+                    "text_correction": values["text_correction"],
                     "interpretation_version": INTERPRETER_VERSION,
                     "interpretation": values,
                 }
