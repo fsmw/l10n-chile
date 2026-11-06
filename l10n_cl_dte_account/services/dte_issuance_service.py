@@ -140,13 +140,18 @@ class DteIssuanceService:
         return document
 
     def _enqueue_prepared(self, source, adapter, document):
+        # Serialize queueing with signature revision creation so the request
+        # always captures the current signature and freezes it before dispatch.
+        document.env.cr.execute(
+            "SELECT id FROM l10n_cl_electronic_document WHERE id = %s FOR UPDATE",
+            [document.id],
+        )
+        document.invalidate_recordset()
         if document.preparation_state == "queued":
             return self._resume_existing(source, document)
         if document.preparation_state != "signed":
             raise UserError(_("Only a signed DTE can be queued for submission."))
-        signed_artifacts = document.artifact_ids.filtered(
-            lambda artifact: artifact.role == "signed_xml"
-        )
+        signed_artifacts = document._get_signed_artifact()
         if len(signed_artifacts) != 1:
             raise UserError(_("A signed DTE needs one signed XML artifact."))
         signed_artifacts.action_verify_integrity()

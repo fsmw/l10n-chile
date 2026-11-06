@@ -25,9 +25,7 @@ class ElectronicSubmission(models.Model):
         if document.document_code not in {"61", "56"}:
             return super()._validate_document_payload(request_bytes)
         NoteXmlComposer().validate_document(request_bytes)
-        signed_artifacts = document.artifact_ids.filtered(
-            lambda item: item.role == "signed_xml"
-        )
+        signed_artifacts = document._get_signed_artifact()
         if len(signed_artifacts) != 1:
             raise ValidationError(
                 _("A DTE note submission requires exactly one signed XML artifact.")

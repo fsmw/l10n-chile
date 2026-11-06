@@ -1,3 +1,4 @@
+import base64
 from unittest.mock import patch
 
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -11,6 +12,29 @@ from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
 @tagged("post_install", "-at_install")
 class TestDteIssuance(DteInvoiceTestCase):
+    def test_revised_signature_is_frozen_and_sent_without_another_folio(self):
+        invoice = self._manager_invoice(self.make_invoice())
+        self.validate_authorization(document_code="33", folio_start=540, folio_end=545)
+        self.create_signing_profile()
+        adapter = invoice._get_dte_issuance_adapter("33")
+        document = DteIssuanceService().prepare(invoice, adapter, "33")
+        original = document._get_signed_artifact()
+        payload = base64.b64decode(original.content) + b"\n"
+        current = original._create_signature_revision(original, payload, "tests/18.0")
+        self.assertEqual(invoice.issue_dte(), document)
+        request = document.artifact_ids.filtered(
+            lambda item: item.role == "sii_request"
+        )
+        self.assertEqual(base64.b64decode(request.content), payload)
+        self.assertEqual(document._get_signed_artifact(), current)
+        self.assertEqual(len(self.env["l10n_cl.caf.folio"].search([])), 1)
+        submission = self.env["l10n_cl.electronic.submission"].search(
+            [("document_id", "=", document.id)]
+        )
+        submission._job_send_to_sii()
+        self.assertEqual(submission.state, "submitted")
+        self.assertTrue(original.action_verify_integrity())
+
     def _manager_invoice(self, invoice):
         return self.env["account.move"].with_user(self.dte_manager).browse(invoice.id)
 

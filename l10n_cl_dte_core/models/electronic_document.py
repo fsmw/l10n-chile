@@ -429,3 +429,34 @@ class ElectronicDocument(models.Model):
                     "actor_id": actor_id,
                 }
             )
+
+    def _get_signed_artifact(self):
+        """Resolve the single current signature, retaining all superseded evidence."""
+        self.ensure_one()
+        signed = self.artifact_ids.filtered(lambda item: item.role == "signed_xml")
+        current = signed - signed.mapped("supersedes_id")
+        if len(current) != 1:
+            raise ValidationError(_("A DTE needs exactly one current signed XML."))
+        return current
+
+    def _check_signature_revision(self):
+        """Let bounded correction workflows prove a revision is safe."""
+        return self._check_signature_regeneration()
+
+    def _check_signature_regeneration(self):
+        self.ensure_one()
+        self.check_access("write")
+        if not self.env.su and not self.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
+            raise AccessError(_("Only a DTE manager can regenerate signatures."))
+        if self.preparation_state != "signed" or self.fiscal_state != "unknown":
+            raise UserError(
+                _("Only signed DTE that have never been queued can be regenerated.")
+            )
+        if self.artifact_ids.filtered(
+            lambda artifact: artifact.role
+            in {"sii_request", "sii_response", "status_response"}
+        ):
+            raise UserError(_("DTE with transmission evidence cannot be regenerated."))
+        return True

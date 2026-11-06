@@ -47,6 +47,22 @@ class ElectronicArtifact(models.Model):
     byte_count = fields.Integer(readonly=True, copy=False)
     producer_version = fields.Char()
     created_at = fields.Datetime(default=fields.Datetime.now, readonly=True)
+    supersedes_id = fields.Many2one(
+        "l10n_cl.electronic.artifact",
+        string="Previous Signature",
+        readonly=True,
+        copy=False,
+        ondelete="restrict",
+        check_company=True,
+    )
+
+    _sql_constraints = [
+        (
+            "signature_successor_uniq",
+            "unique(supersedes_id)",
+            "A signature can only have one replacement.",
+        ),
+    ]
 
     @api.depends("document_id.sii_environment")
     def _compute_is_simulated(self):
@@ -56,6 +72,11 @@ class ElectronicArtifact(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """Calculate evidence metadata from the exact persisted bytes."""
+        if any(vals.get("supersedes_id") for vals in vals_list):
+            raise AccessError(_("Regenerate signatures through the document workflow."))
+        return super().create(self._prepare_evidence_values(vals_list))
+
+    def _prepare_evidence_values(self, vals_list):
         if not self.env.su and not self.env.user.has_group(
             "l10n_cl_dte_core.group_dte_manager"
         ):
@@ -75,13 +96,44 @@ class ElectronicArtifact(models.Model):
             vals["sha256"] = hashlib.sha256(raw_content).hexdigest()
             vals["byte_count"] = len(raw_content)
             normalized_vals_list.append(vals)
-        return super().create(normalized_vals_list)
+        return normalized_vals_list
+
+    def _create_signature_revision(self, previous, content, producer_version):
+        """Append a signed XML revision without changing any previous bytes."""
+        previous.ensure_one()
+        document = previous.document_id
+        self.env.cr.execute(
+            "SELECT id FROM l10n_cl_electronic_document WHERE id = %s FOR UPDATE",
+            [document.id],
+        )
+        document.invalidate_recordset()
+        document._check_signature_revision()
+        if previous != document._get_signed_artifact():
+            raise ValidationError(_("Only the current signature can be replaced."))
+        previous.action_verify_integrity()
+        values = self._prepare_evidence_values(
+            [
+                {
+                    "document_id": document.id,
+                    "role": "signed_xml",
+                    "supersedes_id": previous.id,
+                    "content": base64.b64encode(content),
+                    "mimetype": "application/xml",
+                    "encoding": previous.encoding,
+                    "producer_version": producer_version,
+                }
+            ]
+        )
+        return super().create(values)
 
     def write(self, vals):  # pylint: disable=method-required-super
         raise AccessError(_("DTE evidence is immutable."))
 
     def unlink(self):  # pylint: disable=method-required-super
         raise AccessError(_("DTE evidence cannot be deleted."))
+
+    def copy(self, default=None):  # pylint: disable=method-required-super
+        raise AccessError(_("DTE evidence cannot be duplicated."))
 
     def action_verify_integrity(self):
         """Recompute the digest and byte count from the stored content."""
