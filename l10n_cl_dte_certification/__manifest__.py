@@ -3,8 +3,8 @@
 
 {
     "name": "Chile - DTE Certification Sets",
-    "summary": "Preserve original SII certification set files",
-    "version": "18.0.1.0.0",
+    "summary": "Import and analyze original SII certification set files",
+    "version": "18.0.1.1.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
