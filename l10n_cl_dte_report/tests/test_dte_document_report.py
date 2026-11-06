@@ -7,11 +7,33 @@ import hashlib
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
+from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+    DteIssuanceService,
+)
+
 from .common import DteReportTestCase
 
 
 @tagged("post_install", "-at_install")
 class TestDteDocumentReport(DteReportTestCase):
+    def test_print_sample_uses_the_current_signature_after_revision(self):
+        invoice = self.make_invoice().with_user(self.dte_manager)
+        self.validate_authorization(document_code="33", folio_start=940, folio_end=945)
+        self.create_signing_profile()
+        adapter = invoice._get_dte_issuance_adapter("33")
+        document = DteIssuanceService().prepare(invoice, adapter, "33")
+        original = document._get_signed_artifact()
+        payload = base64.b64decode(original.content) + b"\n"
+        current = original._create_signature_revision(original, payload, "tests/18.0")
+        invoice.issue_dte()
+        sample = self.create_sample(document)
+        self.assertEqual(sample.signed_artifact_id, current)
+        self.assertNotEqual(sample.signed_artifact_id, original)
+        with self.mock_pdf_renderer():
+            sample.action_generate_pdf()
+        self.assertEqual(sample.state, "generated")
+        self.assertTrue(original.action_verify_integrity())
+
     def test_generate_sample_keeps_signed_source_and_pdf_digest(self):
         document = self.create_signed_document()
         signed_artifact = document.artifact_ids.filtered(

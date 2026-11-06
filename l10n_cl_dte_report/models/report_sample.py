@@ -105,9 +105,7 @@ class DteReportSample(models.Model):
                 raise ValidationError(
                     _("A print sample requires a prepared and signed DTE.")
                 )
-            artifacts = document.artifact_ids.filtered(
-                lambda item: item.role == "signed_xml"
-            )
+            artifacts = document._get_signed_artifact()
             if len(artifacts) != 1:
                 raise ValidationError(
                     _("The DTE must have exactly one signed XML evidence artifact.")

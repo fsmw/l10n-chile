@@ -25,3 +25,10 @@ Preparation states follow
 states are maintained separately and represent SII submission and
 response states. TrackID or transport receipt must not be interpreted as
 fiscal acceptance.
+
+Bounded correction workflows can append a signed XML revision before queueing.
+Each revision links to the previous signature, whose bytes and integrity
+metadata remain immutable. Exactly one current signature must exist; issuance,
+submission and printed samples resolve that version. Queueing locks the document
+before freezing its request bytes. A document with transmission evidence cannot
+be regenerated, and evidence cannot be copied to forge a revision.

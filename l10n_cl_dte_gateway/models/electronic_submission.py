@@ -157,7 +157,7 @@ class ElectronicSubmission(models.Model):
             raise UserError(_("Only a pending SII submission can be enqueued."))
         self._gateway()
         document = self.document_id
-        signed = document.artifact_ids.filtered(lambda item: item.role == "signed_xml")
+        signed = document._get_signed_artifact()
         if len(signed) != 1:
             raise ValidationError(
                 _("A submission needs exactly one signed DTE artifact.")
@@ -183,7 +183,7 @@ class ElectronicSubmission(models.Model):
             return True
         gateway = self._gateway()
         document = self.document_id
-        signed = document.artifact_ids.filtered(lambda item: item.role == "signed_xml")
+        signed = document._get_signed_artifact()
         if len(signed) != 1:
             raise ValidationError(
                 _("A submission needs exactly one signed DTE artifact.")
