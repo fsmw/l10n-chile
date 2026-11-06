@@ -34,6 +34,21 @@ class DteCertificationSet(models.Model):
     imported_by = fields.Many2one(
         "res.users", required=True, readonly=True, default=lambda self: self.env.user
     )
+    parse_state = fields.Selection(
+        [("pending", "Pending"), ("parsed", "Parsed"), ("blocked", "Blocked")],
+        required=True,
+        default="pending",
+        readonly=True,
+    )
+    parser_version = fields.Char(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    parsed_structure = fields.Json(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    parse_message = fields.Text(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
 
     _sql_constraints = [
         (
@@ -79,3 +94,54 @@ class DteCertificationSet(models.Model):
             raise ValidationError(
                 _("This source file is already registered for the company.")
             ) from error
+
+    def action_parse_source(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise ValidationError(_("Only DTE managers can parse a certification set."))
+        from ..services.set_structure_parser import (
+            PARSER_VERSION,
+            CertificationSetStructureParser,
+        )
+
+        for record in self:
+            source = base64.b64decode(record.source_file)
+            try:
+                structure = CertificationSetStructureParser(record.env).parse(source)
+            except ValidationError as error:
+                record.sudo().write(
+                    {
+                        "parse_state": "blocked",
+                        "parser_version": PARSER_VERSION,
+                        "parsed_structure": False,
+                        "parse_message": str(error),
+                    }
+                )
+            else:
+                has_blockers = bool(structure["diagnostics"])
+                record.sudo().write(
+                    {
+                        "parse_state": "blocked" if has_blockers else "parsed",
+                        "parser_version": PARSER_VERSION,
+                        "parsed_structure": structure,
+                        "parse_message": "\n".join(
+                            f"{item['code']}: {item['case']} "
+                            f"({item['source_text']})"
+                            for item in structure["diagnostics"]
+                        )
+                        or False,
+                    }
+                )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("SET analysis complete"),
+                "message": _(
+                    "Review the detected sections, cases, and any format block."
+                ),
+                "type": "success"
+                if all(record.parse_state == "parsed" for record in self)
+                else "warning",
+                "sticky": False,
+            },
+        }

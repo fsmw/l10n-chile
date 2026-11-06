@@ -18,6 +18,20 @@
         <field name="model">l10n_cl.dte.certification.set</field>
         <field name="arch" type="xml">
             <form create="false" edit="false" delete="false">
+                <header>
+                    <button
+                        name="action_parse_source"
+                        type="object"
+                        string="Analyze SET"
+                        class="oe_highlight"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field
+                        name="parse_state"
+                        widget="statusbar"
+                        statusbar_visible="pending,parsed,blocked"
+                    />
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -34,6 +48,11 @@
                     </group>
                     <group groups="l10n_cl_dte_core.group_dte_manager">
                         <field name="source_file" filename="source_filename" />
+                    </group>
+                    <group string="Structural analysis">
+                        <field name="parser_version" />
+                        <field name="parse_message" />
+                        <field name="parsed_structure" widget="json" />
                     </group>
                 </sheet>
             </form>
