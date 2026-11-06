@@ -144,6 +144,23 @@ class TestCaseInterpretationAction(TransactionCase):
         self.assertEqual(record.case_coverage_state, "complete")
         self.assertEqual(record.case_interpreted_count, 1)
         self.assertEqual(record.case_pending_count, 0)
+        self.assertEqual(len(record.case_ids.line_ids), 1)
+        case_line = record.case_ids.line_ids
+        self.assertEqual(case_line.item_name, "Servicio")
+        self.assertEqual(case_line.quantity, "1")
+        self.assertEqual(case_line.unit_price, "100")
+        self.assertEqual(case_line.source_line, 5)
+        self.assertEqual(case_line.source_digest, record.source_digest)
+        with self.assertRaises(UserError):
+            self.env["l10n_cl.dte.certification.case.line"].create(
+                {"case_id": case_line.case_id.id}
+            )
+        with self.assertRaises(UserError):
+            case_line.sudo().write({"unit_price": "999"})
+        with self.assertRaises(UserError):
+            case_line.sudo().unlink()
+        record.action_interpret_cases()
+        self.assertEqual(len(record.case_ids.line_ids), 1)
         self.assertEqual(
             record.action_check_case_coverage()["params"]["type"], "success"
         )

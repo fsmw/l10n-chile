@@ -57,6 +57,12 @@ class DteCertificationCase(models.Model):
     interpretation = fields.Json(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    line_ids = fields.One2many(
+        "l10n_cl.dte.certification.case.line",
+        "case_id",
+        copy=False,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
 
     _sql_constraints = [
         (
@@ -86,6 +92,7 @@ class DteCertificationCase(models.Model):
         return super(DteCertificationCase, self.sudo()).create(vals_list)
 
     def _interpret_from_instructions(self):
+        CaseLine = self.env["l10n_cl.dte.certification.case.line"]
         for case in self:
             values = interpret(
                 case.instruction_text, case.document_code, case.source_start_line
@@ -98,4 +105,24 @@ class DteCertificationCase(models.Model):
                     "interpretation": values,
                 }
             )
+            rows = values.get("items", [])
+            if case.line_ids:
+                existing = [
+                    {
+                        "sequence": line.sequence,
+                        "source_line": line.source_line,
+                        "name": line.item_name,
+                        "quantity": line.quantity or None,
+                        "unit_price": line.unit_price or None,
+                        "discount_percent": line.discount_percent or None,
+                        "uom": line.unit_of_measure or None,
+                    }
+                    for line in case.line_ids.sorted("sequence")
+                ]
+                if existing != rows:
+                    raise UserError(
+                        _("Interpreted details already exist and cannot be replaced.")
+                    )
+            elif rows:
+                CaseLine._create_from_interpretation(case, rows, INTERPRETER_VERSION)
         return True
