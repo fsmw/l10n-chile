@@ -1,0 +1,2 @@
+- FSMW
+- Odoo Community Association (OCA)

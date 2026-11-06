@@ -1,0 +1,8 @@
+<odoo>
+    <record id="rule_certification_set_company" model="ir.rule">
+        <field name="name">Certification set sources: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_certification_set" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
