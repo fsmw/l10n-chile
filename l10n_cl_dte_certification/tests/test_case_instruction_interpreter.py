@@ -98,6 +98,37 @@ class TestCaseInstructionInterpreter(TransactionCase):
             "uninterpreted_line", {item["code"] for item in result["diagnostics"]}
         )
 
+    def test_flags_out_of_range_item_decimals_without_losing_source_values(self):
+        result = interpret(
+            "CASO 123-5\nDOCUMENTO FACTURA ELECTRONICA\n"
+            "ITEM  CANTIDAD  PRECIO UNITARIO  DESCUENTO ITEM\n"
+            "Servicio A  0  100  101%",
+            "33",
+            1,
+        )
+
+        self.assertEqual(result["state"], "review_required")
+        self.assertEqual(result["items"][0]["quantity"], "0")
+        self.assertEqual(result["items"][0]["unit_price"], "100")
+        self.assertEqual(result["items"][0]["discount_percent"], "101")
+        self.assertEqual(
+            result["diagnostics"],
+            [
+                {
+                    "code": "item_value_out_of_range",
+                    "source_line": 4,
+                    "field": "quantity",
+                    "value": "0",
+                },
+                {
+                    "code": "item_value_out_of_range",
+                    "source_line": 4,
+                    "field": "discount_percent",
+                    "value": "101",
+                },
+            ],
+        )
+
 
 @tagged("post_install", "-at_install")
 class TestCaseInterpretationAction(TransactionCase):
