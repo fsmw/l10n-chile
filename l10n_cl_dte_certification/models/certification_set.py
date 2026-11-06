@@ -8,7 +8,7 @@ import hashlib
 from psycopg2 import IntegrityError
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class DteCertificationSet(models.Model):
@@ -49,6 +49,8 @@ class DteCertificationSet(models.Model):
     parse_message = fields.Text(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    case_ids = fields.One2many("l10n_cl.dte.certification.case", "set_id", copy=False)
+    case_count = fields.Integer(compute="_compute_case_count")
 
     _sql_constraints = [
         (
@@ -57,6 +59,11 @@ class DteCertificationSet(models.Model):
             "This source file is already registered for the company.",
         ),
     ]
+
+    @api.depends("case_ids")
+    def _compute_case_count(self):
+        for record in self:
+            record.case_count = len(record.case_ids)
 
     @api.model
     def _create_from_import(self, company, filename, encoded_source):
@@ -142,6 +149,70 @@ class DteCertificationSet(models.Model):
                 "type": "success"
                 if all(record.parse_state == "parsed" for record in self)
                 else "warning",
+                "sticky": False,
+            },
+        }
+
+    def action_materialize_cases(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can create case snapshots."))
+        Case = self.env["l10n_cl.dte.certification.case"]
+        for record in self:
+            structure = record.parsed_structure
+            if not structure or structure.get("source_digest") != record.source_digest:
+                raise UserError(
+                    _("Analyze the original SET before creating case snapshots.")
+                )
+            if structure.get("parser_version") != record.parser_version:
+                raise UserError(
+                    _("The parsed SET version does not match its snapshot.")
+                )
+            if record.case_ids:
+                raise UserError(
+                    _("Case snapshots already exist and cannot be replaced.")
+                )
+            values = []
+            sequence = 0
+            for section in structure.get("sections", []):
+                for case in section.get("cases", []):
+                    sequence += 1
+                    values.append(
+                        {
+                            "set_id": record.id,
+                            "company_id": record.company_id.id,
+                            "attention_number": section["attention_number"],
+                            "sequence": sequence,
+                            "section_sequence": case["sequence"],
+                            "case_identifier": case["identifier"],
+                            "document_code": case["document_code"],
+                            "source_start_line": case["source_start_line"],
+                            "source_end_line": case["source_end_line"],
+                            "instruction_text": case["instructions"],
+                            "source_digest": record.source_digest,
+                            "interpretation_state": (
+                                "unsupported"
+                                if case["document_code"] == "unsupported"
+                                else "identified"
+                            ),
+                            "diagnostics": [
+                                item
+                                for item in section.get("diagnostics", [])
+                                if item.get("case") == case["identifier"]
+                            ],
+                        }
+                    )
+            if not values:
+                raise UserError(_("The parsed SET contains no case snapshots."))
+            Case._create_from_structure(values)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Case snapshots created"),
+                "message": _(
+                    "The original case order and source lines were preserved."
+                ),
+                "type": "success",
                 "sticky": False,
             },
         }

@@ -26,6 +26,13 @@
                         class="oe_highlight"
                         groups="l10n_cl_dte_core.group_dte_manager"
                     />
+                    <button
+                        name="action_materialize_cases"
+                        type="object"
+                        string="Create Case Snapshots"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="case_count or not parsed_structure"
+                    />
                     <field
                         name="parse_state"
                         widget="statusbar"
@@ -53,6 +60,39 @@
                         <field name="parser_version" />
                         <field name="parse_message" />
                         <field name="parsed_structure" widget="json" />
+                    </group>
+                    <group string="Cases" groups="l10n_cl_dte_core.group_dte_manager">
+                        <field name="case_count" />
+                        <field name="case_ids" nolabel="1" readonly="1">
+                            <list create="false" edit="false" delete="false">
+                                <field name="sequence" />
+                                <field name="attention_number" />
+                                <field name="case_identifier" />
+                                <field name="document_code" />
+                                <field name="interpretation_state" />
+                                <field name="source_start_line" />
+                                <field name="source_end_line" />
+                            </list>
+                            <form create="false" edit="false" delete="false">
+                                <sheet>
+                                    <group>
+                                        <field name="case_identifier" />
+                                        <field name="attention_number" />
+                                        <field name="sequence" />
+                                        <field name="section_sequence" />
+                                        <field name="document_code" />
+                                        <field name="interpretation_state" />
+                                        <field name="source_digest" />
+                                        <field name="source_start_line" />
+                                        <field name="source_end_line" />
+                                    </group>
+                                    <group>
+                                        <field name="instruction_text" />
+                                        <field name="diagnostics" widget="json" />
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
                     </group>
                 </sheet>
             </form>

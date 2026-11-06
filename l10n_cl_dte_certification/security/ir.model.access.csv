@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_certification_set_user,certification set user,model_l10n_cl_dte_certification_set,l10n_cl_dte_core.group_dte_user,1,0,0,0
 access_certification_set_manager,certification set manager,model_l10n_cl_dte_certification_set,l10n_cl_dte_core.group_dte_manager,1,0,0,0
+access_certification_case_manager,certification case manager,model_l10n_cl_dte_certification_case,l10n_cl_dte_core.group_dte_manager,1,0,0,0
 access_certification_import_wizard_manager,certification import wizard manager,model_l10n_cl_dte_certification_import_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
