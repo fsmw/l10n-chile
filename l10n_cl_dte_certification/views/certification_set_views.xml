@@ -139,6 +139,25 @@
                                             </list>
                                         </field>
                                     </group>
+                                    <group string="Interpreted facts">
+                                        <group>
+                                            <field name="global_discount_percent" />
+                                            <field name="global_discount_source_line" />
+                                            <field name="reference_case_identifier" />
+                                            <field name="reference_source_line" />
+                                            <field name="note_operation" />
+                                        </group>
+                                        <group>
+                                            <field name="reference_reason" />
+                                            <field
+                                                name="reference_reason_source_line"
+                                            />
+                                            <field
+                                                name="text_correction"
+                                                widget="json"
+                                            />
+                                        </group>
+                                    </group>
                                 </sheet>
                             </form>
                         </field>

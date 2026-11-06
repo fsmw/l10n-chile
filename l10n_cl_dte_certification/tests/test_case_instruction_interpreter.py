@@ -153,7 +153,7 @@ class TestCaseInterpretationAction(TransactionCase):
         source = (
             b"SET A - NUMERO DE ATENCION: 123\nCASO 123-1\n"
             b"DOCUMENTO FACTURA ELECTRONICA\nITEM  CANTIDAD  PRECIO UNITARIO\n"
-            b"Servicio  1  100\n"
+            b"Servicio  1  100\nDESCUENTO GLOBAL 10%\n"
         )
         record = (
             self.env["l10n_cl.dte.certification.set"]
@@ -169,6 +169,8 @@ class TestCaseInterpretationAction(TransactionCase):
 
         self.assertEqual(record.case_ids.interpretation_state, "interpreted")
         self.assertEqual(record.case_ids.interpretation_version, INTERPRETER_VERSION)
+        self.assertEqual(record.case_ids.global_discount_percent, "10")
+        self.assertEqual(record.case_ids.global_discount_source_line, 6)
         self.assertEqual(
             record.case_ids.interpretation["items"][0]["unit_price"], "100"
         )
@@ -236,4 +238,65 @@ class TestCaseInterpretationAction(TransactionCase):
         self.assertEqual(record.case_coverage_state, "unsupported")
         self.assertEqual(
             record.action_check_case_coverage()["params"]["type"], "warning"
+        )
+
+    def test_manager_can_review_persisted_note_facts_and_diagnostics(self):
+        company = self.env.company
+        manager = self.env["res.users"].create(
+            {
+                "name": "Synthetic Note Interpretation Manager",
+                "login": "synthetic-note-interpretation-manager",
+                "company_id": company.id,
+                "company_ids": [Command.set([company.id])],
+                "groups_id": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("l10n_cl_dte_core.group_dte_manager").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        source = (
+            b"SET A - NUMERO DE ATENCION: 123\nCASO 123-2\n"
+            b"DOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            b"DICE: Giro anterior\nDEBE DECIR: Giro corregido\n"
+            b"Dato que requiere revision\n"
+        )
+        record = (
+            self.env["l10n_cl.dte.certification.set"]
+            .with_user(manager)
+            ._create_from_import(
+                company, "synthetic-note.txt", base64.b64encode(source)
+            )
+        )
+        record.action_parse_source()
+        record.action_materialize_cases()
+        record.action_interpret_cases()
+
+        case = record.case_ids
+        self.assertEqual(case.interpretation_state, "review_required")
+        self.assertEqual(case.reference_case_identifier, "123-1")
+        self.assertEqual(case.reference_source_line, 4)
+        self.assertEqual(case.reference_reason, "CORRIGE TEXTO")
+        self.assertEqual(case.reference_reason_source_line, 5)
+        self.assertEqual(case.note_operation, "text")
+        self.assertEqual(
+            case.text_correction,
+            [
+                {"source_line": 6, "text": "DICE: Giro anterior"},
+                {"source_line": 7, "text": "DEBE DECIR: Giro corregido"},
+            ],
+        )
+        self.assertEqual(
+            case.diagnostics,
+            [
+                {
+                    "code": "uninterpreted_line",
+                    "source_line": 8,
+                    "text": "Dato que requiere revision",
+                }
+            ],
         )
