@@ -171,8 +171,12 @@ class TestCertificationEnvelopeUpload(SigningTestCase):
         root = etree.fromstring(payload)
         state, summary = CertificationSiiEnvelopeGateway._map_query_state(root, "EPR")
 
-        self.assertEqual(state, "accepted")
-        self.assertEqual(summary, "SII processed: 1 accepted, 1 with repairs")
+        self.assertEqual(state, "result_pending")
+        self.assertEqual(
+            summary,
+            "SII processed aggregate: 1 accepted, 0 rejected, 1 with repairs; "
+            "per-document results require reconciliation",
+        )
 
     def test_query_failure_does_not_change_known_submission_state(self):
         submission = self.create_submission("synthetic-query-error")

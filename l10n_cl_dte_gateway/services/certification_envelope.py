@@ -113,23 +113,19 @@ class CertificationSiiEnvelopeGateway:
             return "processing", False
         if sii_state == "EPR":
             informed = _sum_values(payload, "INFORMADOS")
-            accepted = _sum_values(payload, "ACEPTADOS")
-            rejected = _sum_values(payload, "RECHAZADOS")
-            repairs = _sum_values(payload, "REPAROS")
+            accepted = _sum_optional_values(payload, "ACEPTADOS", "ACEPTA")
+            rejected = _sum_optional_values(payload, "RECHAZADOS", "RECHAZO")
+            repairs = _sum_optional_values(payload, "REPAROS", "REPARO")
             if informed < 1 or accepted + rejected + repairs != informed:
                 raise ValidationError(
                     _("The SII response has a missing or ambiguous %(field)s.")
                     % {"field": "document totals"}
                 )
-            if rejected:
-                return (
-                    "rejected",
-                    f"SII processed: {accepted} accepted, "
-                    f"{rejected} rejected, {repairs} with repairs",
-                )
             return (
-                "accepted",
-                f"SII processed: {accepted} accepted, {repairs} with repairs",
+                "result_pending",
+                f"SII processed aggregate: {accepted} accepted, "
+                f"{rejected} rejected, {repairs} with repairs; "
+                "per-document results require reconciliation",
             )
         if sii_state in {"RSC", "RFR", "RCT"}:
             return "rejected", False
@@ -176,5 +172,17 @@ def _sum_values(root, name):
         raise ValidationError(
             _("The SII response has a missing or ambiguous %(field)s.")
             % {"field": name}
+        )
+    return sum(int(value.strip()) for value in values)
+
+
+def _sum_optional_values(root, *names):
+    values = []
+    for name in names:
+        values.extend(root.xpath(".//*[local-name()=$name]/text()", name=name))
+    if any(not value.strip().isdigit() for value in values):
+        raise ValidationError(
+            _("The SII response has a missing or ambiguous %(field)s.")
+            % {"field": "/".join(names)}
         )
     return sum(int(value.strip()) for value in values)
