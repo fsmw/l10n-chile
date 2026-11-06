@@ -1,11 +1,44 @@
 from lxml import etree
 
-from odoo.addons.l10n_cl_dte_xml.services.xml_composer import SII_NAMESPACE
+from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
+    SII_NAMESPACE,
+    DteXmlComposer,
+)
 
 from .common import DteInvoiceTestCase
 
 
 class TestDteXmlComposer(DteInvoiceTestCase):
+    def test_discounted_lines_include_rounded_discount_amount(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
+        snapshot["lines"][0].update(
+            {
+                "quantity": "3",
+                "unit_price": "105",
+                "discount_percent": "10",
+                "subtotal": "284",
+            }
+        )
+        snapshot["totals"].update({"net": "284", "vat": "54", "total": "338"})
+        root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
+        detail = root.find(f"{{{SII_NAMESPACE}}}Documento/{{{SII_NAMESPACE}}}Detalle")
+        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoPct"), "10")
+        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto"), "32")
+        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}MontoItem"), "284")
+
+    def test_discount_amount_uses_decimal_half_up_rounding(self):
+        for quantity, price, percent, expected in [
+            ("3", "105", "10", 32),
+            ("7", "89", "25", 156),
+            ("0.5", "5", "20", 1),
+            ("1", "2", "10", 0),
+        ]:
+            with self.subTest(quantity=quantity, price=price, percent=percent):
+                self.assertEqual(
+                    DteXmlComposer.line_discount_amount(quantity, price, percent),
+                    expected,
+                )
+
     def test_type_33_xml_required_fields(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
 

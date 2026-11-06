@@ -12,6 +12,41 @@ from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
 
 
 class TestNoteXmlAndWizards(DteNoteTestCase):
+    def test_discounted_notes_include_rounded_discount_amounts(self):
+        _source, _target, _note, _caf, snapshot = self._credit_snapshot()
+        snapshot["lines"] = [
+            {
+                "name": "Synthetic item A",
+                "quantity": "3",
+                "unit_price": "105",
+                "discount_percent": "10",
+                "subtotal": "284",
+            },
+            {
+                "name": "Synthetic item B",
+                "quantity": "7",
+                "unit_price": "89",
+                "discount_percent": "25",
+                "subtotal": "467",
+            },
+        ]
+        snapshot["totals"].update({"net": "751", "vat": "143", "total": "894"})
+        for code in ["61", "56"]:
+            with self.subTest(code=code):
+                snapshot["document_code"] = code
+                root = etree.fromstring(
+                    NoteXmlComposer().compose_unsigned_document(snapshot)
+                )
+                details = root.findall(f".//{{{SII_NAMESPACE}}}Detalle")
+                self.assertEqual(
+                    [d.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto") for d in details],
+                    ["32", "156"],
+                )
+                self.assertEqual(
+                    [d.findtext(f"{{{SII_NAMESPACE}}}MontoItem") for d in details],
+                    ["284", "467"],
+                )
+
     def _credit_snapshot(self):
         source, target, _source_snapshot = self.create_accepted_source()
         caf = self.validate_authorization(

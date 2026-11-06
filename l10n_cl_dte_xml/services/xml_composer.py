@@ -3,7 +3,7 @@
 
 import html
 import re
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from functools import lru_cache
 from pathlib import Path
 
@@ -23,6 +23,12 @@ SII_NAMESPACE = "http://www.sii.cl/SiiDte"
 
 class DteXmlComposer:
     """Compose and validate supported electronic invoices and boletas."""
+
+    @staticmethod
+    def line_discount_amount(quantity, unit_price, discount_percent):
+        return (
+            Decimal(quantity) * Decimal(unit_price) * Decimal(discount_percent) / 100
+        ).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
     def compose_unsigned_document(self, snapshot):
         """Serialize a previously prepared DTE snapshot.
@@ -99,6 +105,12 @@ class DteXmlComposer:
             _add_text(detail, "PrcItem", line_data["unit_price"])
             if line_data.get("discount_percent"):
                 _add_text(detail, "DescuentoPct", line_data["discount_percent"])
+                discount = self.line_discount_amount(
+                    line_data["quantity"],
+                    line_data["unit_price"],
+                    line_data["discount_percent"],
+                )
+                _add_text(detail, "DescuentoMonto", str(discount))
             _add_text(detail, "MontoItem", line_data["subtotal"])
 
         global_discount = snapshot.get("global_discount")
