@@ -22,6 +22,7 @@ class SiiTransportError(UserError):
     def __init__(self, message, *, dispatched=False, response=None, code=None):
         super().__init__(message)
         self.dispatched = dispatched
+        self.outcome_unknown = dispatched
         self.response = response
         self.code = code
 

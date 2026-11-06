@@ -160,11 +160,27 @@ class SiiEnvelopeSubmission(models.Model):
                 raise ValidationError(
                     _("Certification and Production cannot accept simulated responses.")
                 )
-            if not isinstance(response, bytes) or not response or not track_id:
+            if not isinstance(response, bytes) or not response:
                 raise ValidationError(
                     _("SII did not return a TrackID and response evidence.")
                 )
-            attempt._complete("completed", response)
+            if result.get("state") == "error":
+                attempt._complete(
+                    "failed",
+                    response,
+                    error_summary=result.get("error_summary") or False,
+                )
+                self._write_internal({"state": "error"})
+                return True
+            if result.get("state") != "submitted" or not track_id:
+                raise ValidationError(
+                    _("SII did not return a TrackID and response evidence.")
+                )
+            attempt._complete(
+                "completed",
+                response,
+                error_summary=result.get("error_summary") or False,
+            )
             self._write_internal(
                 {
                     "state": "submitted",
@@ -175,8 +191,14 @@ class SiiEnvelopeSubmission(models.Model):
         except psycopg2.Error:
             raise
         except Exception as error:
-            attempt._complete("unknown", error_summary=str(error)[:1000])
-            self._write_internal({"state": "outcome_unknown"})
+            outcome_unknown = bool(getattr(error, "outcome_unknown", True))
+            attempt._complete(
+                "unknown" if outcome_unknown else "failed",
+                error_summary=str(error)[:1000],
+            )
+            self._write_internal(
+                {"state": "outcome_unknown" if outcome_unknown else "error"}
+            )
         return True
 
     def action_enqueue_status_query(self):
@@ -197,7 +219,9 @@ class SiiEnvelopeSubmission(models.Model):
             self.environment
         )
         attempt = self.env["l10n_cl.sii.envelope.attempt"]._create_for_operation(
-            self, "status"
+            self,
+            "status",
+            request_digest=hashlib.sha256(self.track_id.encode("utf-8")).hexdigest(),
         )
         try:
             result = gateway.query_envelope(
@@ -205,6 +229,16 @@ class SiiEnvelopeSubmission(models.Model):
             )
             response = result.get("raw_response")
             state = result.get("state")
+            if state == "error":
+                if not isinstance(response, bytes) or not response:
+                    raise ValidationError(_("The SII status response has no evidence."))
+                attempt._complete(
+                    "failed",
+                    response,
+                    error_summary=result.get("error_summary") or False,
+                )
+                self._write_internal({"last_checked_at": fields.Datetime.now()})
+                return True
             if result.get("is_simulated") or state not in {
                 "processing",
                 "accepted",
@@ -213,15 +247,19 @@ class SiiEnvelopeSubmission(models.Model):
                 raise ValidationError(_("The SII status response is invalid."))
             if not isinstance(response, bytes) or not response:
                 raise ValidationError(_("The SII status response has no evidence."))
-            attempt._complete("completed", response)
+            attempt._complete(
+                "completed",
+                response,
+                error_summary=result.get("error_summary") or False,
+            )
             self._write_internal(
                 {"state": state, "last_checked_at": fields.Datetime.now()}
             )
         except psycopg2.Error:
             raise
         except Exception as error:
-            attempt._complete("unknown", error_summary=str(error)[:1000])
-            self._write_internal({"state": "outcome_unknown"})
+            attempt._complete("failed", error_summary=str(error)[:1000])
+            self._write_internal({"last_checked_at": fields.Datetime.now()})
         return True
 
     def _verify_request(self):
@@ -277,13 +315,13 @@ class SiiEnvelopeAttempt(models.Model):
         raise UserError(_("Gateway attempts are created by transmission actions."))
 
     @api.model
-    def _create_for_operation(self, submission, operation):
+    def _create_for_operation(self, submission, operation, request_digest=None):
         return super().create(
             {
                 "submission_id": submission.id,
                 "operation": operation,
                 "started_at": fields.Datetime.now(),
-                "request_digest": submission.request_digest,
+                "request_digest": request_digest or submission.request_digest,
             }
         )
 
