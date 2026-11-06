@@ -40,6 +40,13 @@
                         groups="l10n_cl_dte_core.group_dte_manager"
                         invisible="not case_count"
                     />
+                    <button
+                        name="action_check_case_coverage"
+                        type="object"
+                        string="Check Case Coverage"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="not case_count"
+                    />
                     <field
                         name="parse_state"
                         widget="statusbar"
@@ -67,6 +74,17 @@
                         <field name="parser_version" />
                         <field name="parse_message" />
                         <field name="parsed_structure" widget="json" />
+                    </group>
+                    <group
+                        string="Case coverage"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    >
+                        <field name="case_coverage_state" widget="statusbar" />
+                        <field name="case_count" />
+                        <field name="case_interpreted_count" />
+                        <field name="case_review_required_count" />
+                        <field name="case_unsupported_count" />
+                        <field name="case_pending_count" />
                     </group>
                     <group string="Cases" groups="l10n_cl_dte_core.group_dte_manager">
                         <field name="case_count" />
