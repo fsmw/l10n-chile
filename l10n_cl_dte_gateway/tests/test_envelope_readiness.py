@@ -13,6 +13,7 @@ class TestSiiEnvelopeReadiness(SigningTestCase):
         super().setUp()
         self.company = self.company.with_user(self.dte_manager)
         self.company.sudo().write({"dte_sii_environment": "certification"})
+        self.company.partner_id.sudo().write({"vat": "12345678-5"})
         self.create_signing_profile(environment="certification")
         self.gateway_factory = self.env["l10n_cl.sii.gateway.factory"].with_user(
             self.dte_manager
@@ -58,15 +59,12 @@ class TestSiiEnvelopeReadiness(SigningTestCase):
         self.assertIn("must match", readiness["diagnostics"][0])
         get_gateway.assert_not_called()
 
-    def test_matching_sender_stays_blocked_without_verified_transport(self):
+    def test_matching_sender_is_ready_without_contacting_sii(self):
         readiness = self.gateway_factory.check_envelope_readiness(
             self.company.id, "12345678-5"
         )
 
-        self.assertFalse(readiness["ready"])
-        self.assertIn(
-            "No verified multi-DTE SII transport", readiness["diagnostics"][0]
-        )
+        self.assertEqual(readiness, {"ready": True, "diagnostics": []})
 
     def test_environment_mismatch_blocks_readiness(self):
         with patch.object(

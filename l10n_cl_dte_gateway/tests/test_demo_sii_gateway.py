@@ -1,5 +1,8 @@
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_cl_dte_gateway.services.certification_envelope import (
+    CertificationSiiEnvelopeGateway,
+)
 from odoo.addons.l10n_cl_dte_gateway.services.sii_gateway import DemoSiiGateway
 
 from .common import GatewayTestCase
@@ -72,8 +75,13 @@ class TestDemoSiiGateway(GatewayTestCase):
         with self.assertRaises(UserError):
             self.env["l10n_cl.sii.gateway.factory"].get_gateway("production")
 
-    def test_certification_envelope_requires_verified_transport(self):
+    def test_certification_envelope_factory_returns_live_adapter(self):
+        gateway = self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway(
+            "certification"
+        )
+
+        self.assertIsInstance(gateway, CertificationSiiEnvelopeGateway)
+
+    def test_production_envelope_requires_verified_transport(self):
         with self.assertRaisesRegex(UserError, "No verified multi-DTE SII transport"):
-            self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway(
-                "certification"
-            )
+            self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway("production")

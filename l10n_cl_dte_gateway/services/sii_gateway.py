@@ -9,6 +9,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
+from .certification_envelope import CertificationSiiEnvelopeGateway
 from .envelope_composer import SiiEnvelopeComposer
 
 DEMO_NAMESPACE = "urn:oca:l10n-chile:dte:demo:v1"
@@ -169,7 +170,9 @@ class SiiGatewayFactory(models.AbstractModel):
             raise UserError(
                 _("Certification-set envelopes cannot use the simulated Demo gateway.")
             )
-        if environment in {"certification", "production"}:
+        if environment == "certification":
+            return CertificationSiiEnvelopeGateway()
+        if environment == "production":
             raise UserError(
                 _(
                     "No verified multi-DTE SII transport is configured for "
