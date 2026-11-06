@@ -122,6 +122,9 @@ class SignatureService:
             raise ValidationError(_("Documento must have a unique ID attribute."))
         if root.xpath("./*[local-name()='Signature']"):
             raise ValidationError(_("The DTE already contains an XML signature."))
+        # SII verifies each DTE independently of the envelope's xsi namespace.
+        # Do not sign unused namespace bindings inherited from an old wrapper.
+        etree.cleanup_namespaces(root)
 
         signature = etree.SubElement(
             root, _qname("Signature"), nsmap={None: DS_NAMESPACE}
@@ -154,12 +157,14 @@ class SignatureService:
             xml_declaration=True,
             pretty_print=False,
         )
-        self.verify_signature(signed_xml)
+        self.verify_signature(signed_xml, sii_standalone=True)
         return signed_xml
 
-    def verify_signature(self, signed_xml, public_key=None):
+    def verify_signature(self, signed_xml, public_key=None, *, sii_standalone=False):
         """Verify one SII DTE XMLDSig and its digest; raise on any mismatch."""
         root = _parse_xml(signed_xml)
+        if sii_standalone:
+            etree.cleanup_namespaces(root)
         signatures = root.xpath("./*[local-name()='Signature']")
         documents = root.xpath("./*[local-name()='Documento']")
         if len(signatures) != 1 or len(documents) != 1:
@@ -201,13 +206,15 @@ class SignatureService:
             raise ValidationError(
                 _("The XML signature contains invalid Base64.")
             ) from error
-        digest_variant = self._verify_document_digest(document, expected_digest)
+        digest_variant = self._verify_document_digest(
+            document, expected_digest, allow_legacy=not sii_standalone
+        )
 
         key = public_key or self._public_key_from_key_info(signature)
         if not isinstance(key, rsa.RSAPublicKey):
             raise ValidationError(_("Only RSA XMLDSig public keys are supported."))
         signed_info_variant = self._verify_signed_info(
-            key, signature_bytes, signed_info
+            key, signature_bytes, signed_info, allow_legacy=not sii_standalone
         )
         if not signed_info_variant:
             raise ValidationError(_("The XML signature is invalid."))
@@ -475,7 +482,7 @@ class SignatureService:
             raise ValidationError(_("The electronic book XML signature is invalid."))
         return True
 
-    def _verify_document_digest(self, document, expected_digest):
+    def _verify_document_digest(self, document, expected_digest, *, allow_legacy=True):
         candidates = (
             ("inclusive", _canonicalize(document)),
             ("exclusive", _canonicalize(document, exclusive=True)),
@@ -484,19 +491,21 @@ class SignatureService:
                 _canonicalize_without_sii_namespace(document),
             ),
         )
-        for variant, payload in candidates:
+        for variant, payload in candidates if allow_legacy else candidates[:1]:
             digest = hashes.Hash(hashes.SHA1())
             digest.update(payload)
             if digest.finalize() == expected_digest:
                 return variant
         raise ValidationError(_("The Documento digest does not match."))
 
-    def _verify_signed_info(self, public_key, signature_bytes, signed_info):
+    def _verify_signed_info(
+        self, public_key, signature_bytes, signed_info, *, allow_legacy=True
+    ):
         candidates = (
             ("inclusive", _canonicalize(signed_info)),
             ("exclusive", _canonicalize(signed_info, exclusive=True)),
         )
-        for variant, payload in candidates:
+        for variant, payload in candidates if allow_legacy else candidates[:1]:
             try:
                 public_key.verify(
                     signature_bytes,
@@ -590,10 +599,27 @@ def _parse_xml(xml_bytes):
 
 def _canonicalize(element, exclusive=False):
     try:
-        return etree.tostring(
-            element, method="c14n", exclusive=exclusive, with_comments=False
+        # Direct C14N of a descendant can reset inherited default namespaces
+        # in nested nodes. Materialize every in-scope namespace at the subtree
+        # apex before canonicalizing, matching standalone XMLDSig processors.
+        standalone = etree.fromstring(
+            etree.tostring(element, encoding="UTF-8", with_tail=False),
+            parser=_safe_xml_parser(),
         )
-    except (etree.C14NError, ValueError) as error:
+        if not exclusive:
+            # Inclusive C14N 1.0 also inherits xml:* attributes from omitted
+            # ancestors. Preserve the nearest value without replacing local ones.
+            for ancestor in element.iterancestors():
+                for name, value in ancestor.attrib.items():
+                    if (
+                        name.startswith("{http://www.w3.org/XML/1998/namespace}")
+                        and name not in standalone.attrib
+                    ):
+                        standalone.set(name, value)
+        return etree.tostring(
+            standalone, method="c14n", exclusive=exclusive, with_comments=False
+        )
+    except (etree.C14NError, etree.XMLSyntaxError, ValueError) as error:
         raise ValidationError(_("The XML cannot be canonicalized.")) from error
 
 
