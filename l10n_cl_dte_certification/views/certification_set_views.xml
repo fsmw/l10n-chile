@@ -118,6 +118,27 @@
                                         <field name="interpretation_version" />
                                         <field name="interpretation" widget="json" />
                                     </group>
+                                    <group string="Interpreted details">
+                                        <field name="line_ids" nolabel="1" readonly="1">
+                                            <list
+                                                create="false"
+                                                edit="false"
+                                                delete="false"
+                                            >
+                                                <field name="sequence" />
+                                                <field name="source_line" />
+                                                <field name="item_name" />
+                                                <field name="quantity" />
+                                                <field name="unit_price" />
+                                                <field name="discount_percent" />
+                                                <field name="unit_of_measure" />
+                                                <field
+                                                    name="interpretation_version"
+                                                    optional="hide"
+                                                />
+                                            </list>
+                                        </field>
+                                    </group>
                                 </sheet>
                             </form>
                         </field>

@@ -18,3 +18,7 @@ The case coverage summary separates interpreted cases from those needing
 review, unsupported document types, and cases not yet interpreted. The coverage
 check reports these counts and stays in warning state until every case has been
 reviewed successfully.
+
+Recognized detail rows are materialized as ordered, immutable case-line
+snapshots. Each row retains its explicit values, source line, source digest,
+and interpreter version for later operator mapping.
