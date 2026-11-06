@@ -22,3 +22,7 @@ The module extends `account.move`, `account.move.line`,
 the accounting entries or create separate fiscal folio sequences.
 Production SII transport and certification-mode note issuance are
 outside this release.
+
+Discounted detail lines include both the percentage and its CLP amount.
+The discount amount uses decimal half-up rounding; the snapshot line
+subtotal is preserved.

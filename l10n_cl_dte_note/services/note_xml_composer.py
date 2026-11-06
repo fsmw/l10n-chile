@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
+    DteXmlComposer,
     _add_optional_text,
     _add_text,
     _dte_schema,
@@ -122,6 +123,12 @@ class NoteXmlComposer:
                 _add_text(detail, "PrcItem", line_data["unit_price"])
                 if line_data.get("discount_percent"):
                     _add_text(detail, "DescuentoPct", line_data["discount_percent"])
+                    discount = DteXmlComposer.line_discount_amount(
+                        line_data["quantity"],
+                        line_data["unit_price"],
+                        line_data["discount_percent"],
+                    )
+                    _add_text(detail, "DescuentoMonto", str(discount))
             _add_text(detail, "MontoItem", line_data["subtotal"])
         for index, ref in enumerate(refs, start=1):
             reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
