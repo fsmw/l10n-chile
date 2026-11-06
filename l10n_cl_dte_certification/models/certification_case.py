@@ -4,6 +4,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from ..services.case_instruction_interpreter import INTERPRETER_VERSION, interpret
+
 
 class DteCertificationCase(models.Model):
     _name = "l10n_cl.dte.certification.case"
@@ -37,11 +39,22 @@ class DteCertificationCase(models.Model):
     )
     source_digest = fields.Char(required=True, readonly=True, index=True)
     interpretation_state = fields.Selection(
-        [("identified", "Identified"), ("unsupported", "Unsupported")],
+        [
+            ("identified", "Identified"),
+            ("unsupported", "Unsupported"),
+            ("interpreted", "Interpreted"),
+            ("review_required", "Review Required"),
+        ],
         required=True,
         readonly=True,
     )
     diagnostics = fields.Json(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    interpretation_version = fields.Char(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    interpretation = fields.Json(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
 
@@ -62,6 +75,27 @@ class DteCertificationCase(models.Model):
     def create(self, vals_list):  # pylint: disable=method-required-super
         raise UserError(_("Cases are created from the analyzed original SET only."))
 
+    def write(self, vals):  # pylint: disable=method-required-super
+        raise UserError(_("Certification case snapshots are immutable."))
+
+    def unlink(self):  # pylint: disable=method-required-super
+        raise UserError(_("Certification case snapshots cannot be deleted."))
+
     @api.model
     def _create_from_structure(self, vals_list):
         return super(DteCertificationCase, self.sudo()).create(vals_list)
+
+    def _interpret_from_instructions(self):
+        for case in self:
+            values = interpret(
+                case.instruction_text, case.document_code, case.source_start_line
+            )
+            values["interpreter_version"] = INTERPRETER_VERSION
+            super(DteCertificationCase, case.sudo()).write(
+                {
+                    "interpretation_state": values["state"],
+                    "interpretation_version": INTERPRETER_VERSION,
+                    "interpretation": values,
+                }
+            )
+        return True

@@ -216,3 +216,27 @@ class DteCertificationSet(models.Model):
                 "sticky": False,
             },
         }
+
+    def action_interpret_cases(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can interpret certification cases."))
+        for record in self:
+            if not record.case_ids:
+                raise UserError(_("Create case snapshots before interpreting them."))
+            expected_digest = record.source_digest
+            if any(case.source_digest != expected_digest for case in record.case_ids):
+                raise UserError(_("A case snapshot does not match its original SET."))
+            record.case_ids._interpret_from_instructions()
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Case interpretation complete"),
+                "message": _(
+                    "Explicit case fields and source-line diagnostics "
+                    "are ready for review."
+                ),
+                "type": "success",
+                "sticky": False,
+            },
+        }
