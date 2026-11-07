@@ -8,7 +8,7 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,generated,partial,blocked"
+                        statusbar_visible="draft,generated,prepared,partial,blocked"
                     />
                     <button
                         name="action_open_generation_wizard"
@@ -16,6 +16,12 @@
                         string="Generate Draft Documents"
                         class="oe_highlight"
                         invisible="state not in ['draft', 'partial']"
+                    />
+                    <button
+                        name="action_prepare_dte"
+                        type="object"
+                        string="Prepare Signed DTEs"
+                        invisible="state not in ['generated', 'partial', 'prepared']"
                     />
                 </header>
                 <sheet>
@@ -41,9 +47,12 @@
                                 <field name="case_identifier" />
                                 <field name="document_code" />
                                 <field name="generation_state" />
+                                <field name="preparation_state" />
+                                <field name="document_id" />
                                 <field name="move_id" />
                                 <field name="partner_id" optional="hide" />
                                 <field name="generation_message" optional="hide" />
+                                <field name="preparation_message" optional="hide" />
                                 <field name="referenced_line_id" />
                                 <field name="snapshot_digest" optional="hide" />
                             </list>
@@ -55,9 +64,12 @@
                                         <field name="case_identifier" />
                                         <field name="document_code" />
                                         <field name="generation_state" />
+                                        <field name="preparation_state" />
+                                        <field name="document_id" />
                                         <field name="move_id" />
                                         <field name="partner_id" />
                                         <field name="generation_message" />
+                                        <field name="preparation_message" />
                                         <field name="referenced_line_id" />
                                         <field name="source_digest" />
                                         <field name="snapshot_digest" />

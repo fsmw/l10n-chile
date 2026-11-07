@@ -45,6 +45,7 @@ class DteCertificationRun(models.Model):
         [
             ("draft", "Draft"),
             ("generated", "Documents Generated"),
+            ("prepared", "DTE Prepared"),
             ("partial", "Partially Generated"),
             ("blocked", "Blocked"),
         ],
@@ -75,8 +76,64 @@ class DteCertificationRun(models.Model):
             "context": {"default_run_id": self.id},
         }
 
+    def action_prepare_dte(self):
+        """Prepare signed DTEs offline for generated certification cases."""
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can prepare certification DTEs."))
+        if self.company_id != self.env.company:
+            raise UserError(_("Use the execution company as the active company."))
+        if self.company_id.dte_sii_environment != "certification":
+            raise UserError(_("Certification DTEs require Certification mode."))
+        if self.state not in {"generated", "partial", "prepared"}:
+            raise UserError(_("Generate the execution documents first."))
+
+        from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+            DteIssuanceService,
+        )
+
+        for line in self.line_ids.sorted("sequence"):
+            if line.generation_state != "generated" or line.document_id:
+                continue
+            try:
+                with self.env.cr.savepoint():
+                    line._check_preparation_source()
+                    if line.document_code in {"56", "61"}:
+                        line._link_certification_note_target()
+                    move = line.move_id.with_user(self.env.user)
+                    adapter = move._get_dte_issuance_adapter(line.document_code)
+                    document = DteIssuanceService().prepare(
+                        move, adapter, line.document_code
+                    )
+                    line._record_preparation_result(document, "prepared")
+            except (UserError, ValidationError) as error:
+                line._record_preparation_result(False, "failed", str(error))
+
+        prepared = self.line_ids.filtered(
+            lambda line: line.generation_state == "generated"
+            and line.preparation_state == "prepared"
+        )
+        failed = self.line_ids.filtered(
+            lambda line: line.generation_state == "generated"
+            and line.preparation_state == "failed"
+        )
+        generated = self.line_ids.filtered(
+            lambda line: line.generation_state == "generated"
+        )
+        state = (
+            "prepared"
+            if generated
+            and len(generated) == len(self.line_ids)
+            and len(prepared) == len(generated)
+            else "partial"
+            if prepared or failed
+            else "blocked"
+        )
+        self._record_generation_state(state)
+        return self.action_open()
+
     def _record_generation_state(self, state):
-        if state not in {"generated", "partial", "blocked"}:
+        if state not in {"generated", "prepared", "partial", "blocked"}:
             raise ValidationError(_("Invalid execution generation state."))
         return super(DteCertificationRun, self.sudo()).write({"state": state})
 
@@ -307,6 +364,7 @@ class DteCertificationRunLine(models.Model):
     move_id = fields.Many2one(
         "account.move", readonly=True, ondelete="restrict", check_company=True
     )
+    move_digest = fields.Char(readonly=True, index=True)
     generation_state = fields.Selection(
         [
             ("pending", "Pending"),
@@ -320,6 +378,24 @@ class DteCertificationRunLine(models.Model):
         index=True,
     )
     generation_message = fields.Char(readonly=True)
+    selected = fields.Boolean(readonly=True, default=True)
+    document_id = fields.Many2one(
+        "l10n_cl.electronic.document",
+        readonly=True,
+        ondelete="restrict",
+        check_company=True,
+    )
+    preparation_state = fields.Selection(
+        [
+            ("pending", "Pending"),
+            ("prepared", "DTE Prepared"),
+            ("failed", "Failed"),
+        ],
+        required=True,
+        readonly=True,
+        default="pending",
+    )
+    preparation_message = fields.Char(readonly=True)
     partner_id = fields.Many2one(
         "res.partner", readonly=True, check_company=True, ondelete="restrict"
     )
@@ -352,7 +428,120 @@ class DteCertificationRunLine(models.Model):
         return super(DteCertificationRunLine, self.sudo()).create(values)
 
     def _record_generation_result(self, values):
-        allowed = {"move_id", "generation_state", "generation_message", "partner_id"}
+        allowed = {
+            "move_id",
+            "generation_state",
+            "generation_message",
+            "partner_id",
+        }
         if set(values) - allowed:
             raise ValidationError(_("Invalid generation result fields."))
+        if values.get("generation_state") == "generated":
+            move = self.env["account.move"].browse(values.get("move_id")).exists()
+            if len(move) != 1:
+                raise ValidationError(
+                    _("A generated case must be linked to one accounting draft.")
+                )
+            values["move_digest"] = self._digest_move(move)
         return super(DteCertificationRunLine, self.sudo()).write(values)
+
+    @staticmethod
+    def _digest_move(move):
+        values = {
+            "company_id": move.company_id.id,
+            "move_type": move.move_type,
+            "journal_id": move.journal_id.id,
+            "partner_id": move.partner_id.id,
+            "invoice_date": fields.Date.to_date(move.invoice_date).isoformat(),
+            "document_code": str(move.l10n_latam_document_type_id.code),
+            "currency_id": move.currency_id.id,
+            "lines": [
+                {
+                    "name": line.name,
+                    "quantity": line.quantity,
+                    "price_unit": line.price_unit,
+                    "discount": line.discount,
+                    "tax_ids": sorted(line.tax_ids.ids),
+                    "account_id": line.account_id.id,
+                    "uom_id": line.product_uom_id.id,
+                }
+                for line in move.invoice_line_ids.filtered(
+                    lambda line: line.display_type == "product"
+                ).sorted("sequence")
+            ],
+        }
+        return _canonical_digest(values)
+
+    def _check_preparation_source(self):
+        self.ensure_one()
+        run = self.run_id
+        move = self.move_id
+        if (
+            self.generation_state != "generated"
+            or not move
+            or move.dte_certification_run_line_id != self
+            or move.company_id != run.company_id
+            or move.state != "draft"
+            or str(move.l10n_latam_document_type_id.code) != self.document_code
+            or self.source_digest != run.set_digest
+            or self.snapshot_digest != _canonical_digest(self.snapshot)
+            or self.move_digest != self._digest_move(move)
+            or run.company_id.dte_sii_environment != "certification"
+        ):
+            raise ValidationError(
+                _("The generated certification document no longer matches its case.")
+            )
+        return True
+
+    def _link_certification_note_target(self):
+        self.ensure_one()
+        target = self.referenced_line_id
+        move = self.move_id
+        if (
+            not target
+            or target.run_id != self.run_id
+            or target.sequence >= self.sequence
+            or target.generation_state != "generated"
+            or target.preparation_state != "prepared"
+            or not target.document_id
+            or target.document_id.preparation_state != "signed"
+            or target.document_id.source_move_id != target.move_id
+        ):
+            raise ValidationError(
+                _("Prepare the referenced case before this certification note.")
+            )
+        snapshot = self.snapshot
+        if (
+            snapshot.get("reference_target_document_code") != target.document_code
+            or not snapshot.get("reference_code")
+            or not snapshot.get("reference_reason")
+        ):
+            raise ValidationError(_("The certification note reference is incomplete."))
+        move.write(
+            {
+                "dte_note_target_document_id": target.document_id.id,
+                "dte_note_operation": snapshot.get("note_operation"),
+                "dte_note_reason": snapshot.get("reference_reason"),
+            }
+        )
+        return True
+
+    def _record_preparation_result(self, document, state, message=False):
+        self.ensure_one()
+        if state not in {"prepared", "failed"}:
+            raise ValidationError(_("Invalid certification preparation result."))
+        if state == "prepared" and (
+            not document
+            or document.company_id != self.company_id
+            or document.source_move_id != self.move_id
+            or document.document_code != self.document_code
+            or document.preparation_state != "signed"
+        ):
+            raise ValidationError(_("The prepared DTE does not match this case."))
+        return super(DteCertificationRunLine, self.sudo()).write(
+            {
+                "document_id": document.id if document else False,
+                "preparation_state": state,
+                "preparation_message": (message or False)[:2000],
+            }
+        )

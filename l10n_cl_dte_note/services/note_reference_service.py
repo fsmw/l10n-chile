@@ -320,7 +320,14 @@ class NoteReferenceService:
             raise ValidationError(
                 _("Enter a DTE reference reason of 1 to 90 characters.")
             )
-        code = "1" if move.dte_note_operation == "cancel" else "3"
+        code = {
+            "cancel": "1",
+            "text": "2",
+            "return": "3",
+            "amount": "3",
+        }.get(move.dte_note_operation)
+        if not code:
+            raise ValidationError(_("Choose a valid DTE note operation."))
         return {
             "document_code": target_document.document_code,
             "folio": target_document.folio,
