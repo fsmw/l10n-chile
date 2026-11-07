@@ -164,7 +164,6 @@ class CaseGenerationService:
                 ).id,
                 "reversed_entry_id": target_line.move_id.id,
                 "dte_certification_run_line_id": line.id,
-                **self._certification_note_values(line),
                 "invoice_line_ids": [
                     Command.create(
                         {
@@ -381,7 +380,6 @@ class CaseGenerationService:
                     ).id,
                     "reversed_entry_id": target.move_id.id,
                     "dte_certification_run_line_id": line.id,
-                    **self._certification_note_values(line),
                     "invoice_line_ids": [Command.create(row) for row in rows],
                 }
             )
@@ -539,7 +537,6 @@ class CaseGenerationService:
                     ).id,
                     "reversed_entry_id": target.move_id.id,
                     "dte_certification_run_line_id": line.id,
-                    **self._certification_note_values(line),
                     "invoice_line_ids": [Command.create(row) for row in rows],
                 }
             )
@@ -572,7 +569,6 @@ class CaseGenerationService:
                 ).id,
                 "debit_origin_id": target_line.move_id.id,
                 "dte_certification_run_line_id": line.id,
-                **self._certification_note_values(line),
                 "invoice_line_ids": [
                     Command.create(
                         {
@@ -726,7 +722,6 @@ class CaseGenerationService:
                     ).id,
                     "debit_origin_id": note.id,
                     "dte_certification_run_line_id": line.id,
-                    **self._certification_note_values(line),
                     "invoice_line_ids": [Command.create(row) for row in rows],
                 }
             )
@@ -740,13 +735,6 @@ class CaseGenerationService:
             )
             created |= line
         return created
-
-    @staticmethod
-    def _certification_note_values(line):
-        return {
-            "dte_note_operation": line.snapshot.get("note_operation"),
-            "dte_note_reason": line.snapshot.get("reference_reason"),
-        }
 
     def _check_monetary_note_cancellation_target(self, line, target, root, rows):
         note = target.move_id
