@@ -1,6 +1,8 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import hashlib
+import json
 from datetime import datetime
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -31,20 +33,17 @@ class NoteSnapshotService:
             raise ValidationError(
                 move.env._("Only DTE note types 61 and 56 are supported.")
             )
+        certification_line = self._certification_run_line(move, document_code)
         if (
-            move.state != "posted"
-            or move.l10n_latam_document_type_id.code != document_code
-        ):
+            move.state != "posted" and not certification_line
+        ) or move.l10n_latam_document_type_id.code != document_code:
             raise ValidationError(
                 move.env._(
                     "Publish the accounting note with its selected DTE type "
                     "before issuing."
                 )
             )
-        certification_case = bool(
-            "dte_certification_run_line_id" in move._fields
-            and move.dte_certification_run_line_id
-        )
+        certification_case = bool(certification_line)
         if move.currency_id.name != "CLP" or (
             move.company_id.dte_sii_environment != "demo" and not certification_case
         ):
@@ -68,7 +67,25 @@ class NoteSnapshotService:
             ) from error
         self._validate_caf(move, document_code)
         effects, amounts = self._move_effects(move)
-        if amounts["total"] <= 0 and move.dte_note_operation != "text":
+        target_line = (
+            self._certification_run_line(
+                move.dte_note_target_document_id.source_move_id, "61"
+            )
+            if move.dte_note_target_document_id
+            else False
+        )
+        text_cancel = bool(
+            certification_case
+            and document_code == "56"
+            and move.dte_note_operation == "cancel"
+            and target_line
+            and target_line.snapshot.get("note_operation") == "text"
+        )
+        if (
+            amounts["total"] <= 0
+            and move.dte_note_operation != "text"
+            and not text_cancel
+        ):
             raise ValidationError(
                 move.env._("A DTE note must have a positive fiscal amount.")
             )
@@ -92,13 +109,28 @@ class NoteSnapshotService:
             amounts,
             reference_service,
         )
-        return {"root": root, "effects": effects, "amounts": amounts}
+        return {
+            "root": root,
+            "effects": effects,
+            "amounts": amounts,
+            "certification": certification_case,
+        }
 
     def _validate_adjustment(
         self, move, document_code, target, root, effects, amounts, reference_service
     ):
         available = reference_service.calculate_available_amounts(root)
         if move.dte_note_operation == "text":
+            return
+        target_line = self._certification_run_line(target.source_move_id, "61")
+        if (
+            document_code == "56"
+            and move.dte_note_operation == "cancel"
+            and target.document_code == "61"
+            and target_line
+            and target_line.snapshot.get("note_operation") == "text"
+            and amounts["total"] == 0
+        ):
             return
         if document_code == "61":
             if move.dte_note_operation == "cancel":
@@ -224,7 +256,7 @@ class NoteSnapshotService:
             "document_timestamp": now,
             "ted_timestamp": now,
             "company_id": company.id,
-            "sii_environment": "demo",
+            "sii_environment": ("certification" if result["certification"] else "demo"),
             "issuer": issuer_snapshot,
             "receiver": source["receiver"],
             "totals": self._format_totals(amounts),
@@ -254,6 +286,27 @@ class NoteSnapshotService:
 
     def _move_effects(self, move):
         self.env = move.env
+        run_line = (
+            move.dte_certification_run_line_id
+            if "dte_certification_run_line_id" in move._fields
+            else self.env["l10n_cl.dte.certification.run.line"]
+        )
+        target_line = (
+            self._certification_run_line(
+                move.dte_note_target_document_id.source_move_id, "61"
+            )
+            if move.dte_note_target_document_id
+            else False
+        )
+        if run_line and (
+            move.dte_note_operation == "text"
+            or (
+                move.dte_note_operation == "cancel"
+                and target_line
+                and target_line.snapshot.get("note_operation") == "text"
+            )
+        ):
+            return [], {"net": 0, "exempt": 0, "vat": 0, "total": 0}
         lines = move.invoice_line_ids.filtered(
             lambda line: line.display_type == "product"
         )
@@ -388,6 +441,33 @@ class NoteSnapshotService:
                 )
             )
         return result, amount_values
+
+    @staticmethod
+    def _certification_run_line(move, document_code):
+        if "dte_certification_run_line_id" not in move._fields:
+            return False
+        line = move.dte_certification_run_line_id
+        if not line:
+            return False
+        if (
+            line.move_id != move
+            or line.generation_state != "generated"
+            or line.document_code != str(document_code)
+            or line.source_digest != line.run_id.set_digest
+            or line.snapshot_digest
+            != hashlib.sha256(
+                json.dumps(
+                    line.snapshot,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
+            or line.run_id.company_id != move.company_id
+            or move.company_id.dte_sii_environment != "certification"
+        ):
+            return False
+        return line
 
     def _allocate_vat(self, vat_total, lines):
         return NoteAdjustmentService(self.env).allocate_vat(vat_total, lines)

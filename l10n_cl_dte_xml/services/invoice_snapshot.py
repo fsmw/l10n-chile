@@ -1,6 +1,8 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import hashlib
+import json
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
 from zoneinfo import ZoneInfo
@@ -50,10 +52,12 @@ class InvoiceSnapshotService:
             raise ValidationError(_("The taxable invoice has no posted VAT amount."))
 
         current_timestamp = self._chile_timestamp()
+        certification = self._is_certification_draft(move, document_code)
         return {
             "company_id": company.id,
             "document_code": document_code,
             "folio": folio_number,
+            "certification": certification,
             "issue_date": fields.Date.to_date(move.invoice_date).isoformat(),
             "document_timestamp": current_timestamp,
             "ted_timestamp": current_timestamp,
@@ -79,9 +83,15 @@ class InvoiceSnapshotService:
                 _("DTE type %(code)s is not supported by this issuance flow.")
                 % {"code": document_code}
             )
-        if move.state != "posted" or move.move_type != "out_invoice":
+        certification = self._is_certification_draft(move, document_code)
+        if (move.state != "posted" and not certification) or (
+            move.move_type != "out_invoice"
+        ):
             raise ValidationError(
-                _("A DTE can only be created from a posted customer invoice.")
+                _(
+                    "A DTE can only be created from a posted customer invoice "
+                    "or a generated certification draft."
+                )
             )
         if move.l10n_latam_document_type_id.code != document_code:
             raise ValidationError(
@@ -102,6 +112,30 @@ class InvoiceSnapshotService:
             )
         activity_code = company.dte_sii_activity_code.strip()
         return company, activity_code
+
+    @staticmethod
+    def _is_certification_draft(move, document_code):
+        if "dte_certification_run_line_id" not in move._fields:
+            return False
+        line = move.dte_certification_run_line_id
+        return bool(
+            line
+            and line.move_id == move
+            and line.generation_state == "generated"
+            and line.document_code == str(document_code)
+            and line.source_digest == line.run_id.set_digest
+            and line.snapshot_digest
+            == hashlib.sha256(
+                json.dumps(
+                    line.snapshot,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
+            and line.run_id.company_id == move.company_id
+            and move.company_id.dte_sii_environment == "certification"
+        )
 
     def _validate_caf(self, caf_authorization, company, folio_number, document_code):
         if caf_authorization.company_id != company:

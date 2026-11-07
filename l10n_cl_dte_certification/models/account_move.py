@@ -4,6 +4,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+from ..services.certification_note_adapter import CertificationNoteAdapter
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -15,6 +17,35 @@ class AccountMove(models.Model):
         index=True,
         ondelete="restrict",
     )
+
+    def _get_dte_issuance_adapter(self, document_code):
+        self.ensure_one()
+        if self.dte_certification_run_line_id and str(document_code) in {"56", "61"}:
+            return CertificationNoteAdapter()
+        return super()._get_dte_issuance_adapter(document_code)
+
+    def write(self, vals):
+        certification_moves = self.filtered("dte_certification_run_line_id")
+        allowed_note_link = {
+            "dte_note_target_document_id",
+            "dte_note_operation",
+            "dte_note_reason",
+        }
+        if certification_moves and set(vals) - allowed_note_link:
+            raise UserError(
+                _(
+                    "Generated certification drafts are immutable. Create a new "
+                    "execution to change their fiscal data."
+                )
+            )
+        if certification_moves and any(
+            move.dte_certification_run_line_id.document_id
+            for move in certification_moves
+        ):
+            raise UserError(
+                _("A certification draft cannot change after its DTE is prepared.")
+            )
+        return super().write(vals)
 
     def action_post(self):
         if self.filtered("dte_certification_run_line_id"):

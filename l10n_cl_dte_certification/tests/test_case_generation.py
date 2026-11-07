@@ -79,6 +79,8 @@ class TestCertificationCaseGeneration(DteInvoiceTestCase):
         self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
         with self.assertRaisesRegex(UserError, "cannot be posted"):
             line.move_id.action_post()
+        with self.assertRaisesRegex(UserError, "immutable"):
+            line.move_id.write({"invoice_date": "2026-01-02"})
 
     def test_missing_partner_fails_before_any_draft_is_created(self):
         before = self.env["account.move"].search_count([])
