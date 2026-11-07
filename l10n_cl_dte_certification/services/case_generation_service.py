@@ -40,14 +40,19 @@ class CaseGenerationService:
             lambda line: line.document_code == "61"
             and line.snapshot.get("note_operation") == "text"
         )
-        supported_lines = invoice_lines | correction_lines
+        text_cancellation_lines = lines.filtered(
+            lambda line: line.document_code == "56"
+            and line.snapshot.get("note_operation") == "cancel"
+            and line.snapshot.get("reference_target_document_code") == "61"
+        )
+        supported_lines = invoice_lines | correction_lines | text_cancellation_lines
         if any(line.generation_state != "pending" for line in supported_lines):
             raise UserError(_("Only pending certification cases can be generated."))
         if not supported_lines:
             raise ValidationError(
                 _(
-                    "Select a pending document of type 33 or 34, or a text-correction "
-                    "credit note of type 61."
+                    "Select a pending document of type 33 or 34, a text-correction "
+                    "credit note of type 61, or its zero-value type-56 cancellation."
                 )
             )
         self._check_journal(journal, run.company_id)
@@ -57,6 +62,8 @@ class CaseGenerationService:
 
         for line in correction_lines:
             self._validate_text_correction_snapshot(line, lines)
+        for line in text_cancellation_lines:
+            self._validate_text_cancellation_snapshot(line, lines)
 
         prepared = []
         for line in invoice_lines:
@@ -134,6 +141,10 @@ class CaseGenerationService:
             )
             created |= line
 
+        created |= self._generate_text_cancellation_drafts(
+            run, text_cancellation_lines, lines, journal, income_account
+        )
+
         for line in lines - supported_lines:
             if line.generation_state == "pending":
                 line._record_generation_result(
@@ -150,6 +161,52 @@ class CaseGenerationService:
             lambda item: item.generation_state in {"pending", "failed", "unsupported"}
         )
         run._record_generation_state("partial" if remaining else "generated")
+        return created
+
+    def _generate_text_cancellation_drafts(
+        self, run, cancellation_lines, selected_lines, journal, income_account
+    ):
+        """Create draft-only type-56 cancellations for zero-value type-61 notes."""
+        created = self.env["l10n_cl.dte.certification.run.line"]
+        for line in cancellation_lines.sorted("sequence"):
+            target_line = self._check_text_cancellation_target(line, selected_lines)
+            values = {
+                "move_type": "out_invoice",
+                "company_id": run.company_id.id,
+                "journal_id": journal.id,
+                "partner_id": target_line.partner_id.id,
+                "invoice_date": run.emission_date,
+                "l10n_latam_document_type_id": self._document_type(
+                    journal, "56", internal_type="debit_note"
+                ).id,
+                "debit_origin_id": target_line.move_id.id,
+                "dte_certification_run_line_id": line.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "name": _(
+                                "Cancellation of zero-value text correction "
+                                "(no monetary effect)"
+                            ),
+                            "quantity": 1,
+                            "price_unit": 0,
+                            "discount": 0,
+                            "account_id": income_account.id,
+                            "tax_ids": [Command.clear()],
+                        }
+                    )
+                ],
+            }
+            move = self.env["account.move"].create(values)
+            line._record_generation_result(
+                {
+                    "move_id": move.id,
+                    "partner_id": target_line.partner_id.id,
+                    "generation_state": "generated",
+                    "generation_message": False,
+                }
+            )
+            created |= line
         return created
 
     def _check_journal(self, journal, company):
@@ -324,6 +381,105 @@ class CaseGenerationService:
                     case=line.case_identifier,
                 )
             )
+
+    def _validate_text_cancellation_snapshot(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "61"
+            or target.sequence >= line.sequence
+            or target.snapshot.get("note_operation") != "text"
+        ):
+            raise ValidationError(
+                _(
+                    "Type-56 case %(case)s must cancel an earlier type-61 "
+                    "text-correction case in the same execution.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state == "pending" and target not in selected_lines:
+            raise ValidationError(
+                _(
+                    "Select the referenced type-61 correction along with case "
+                    "%(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state not in {"pending", "generated"}:
+            raise ValidationError(
+                _(
+                    "The referenced type-61 correction for case %(case)s is not "
+                    "available for draft generation.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            line.snapshot.get("reference_code") != "1"
+            or line.snapshot.get("reference_target_document_code") != "61"
+            or not line.snapshot.get("reference_reason")
+            or line.snapshot.get("text_correction_content")
+        ):
+            raise ValidationError(
+                _(
+                    "Type-56 cancellation case %(case)s has inconsistent reference "
+                    "data.",
+                    case=line.case_identifier,
+                )
+            )
+        if line.snapshot_digest != self._snapshot_digest(line.snapshot):
+            raise ValidationError(
+                _(
+                    "Case %(case)s no longer matches its execution snapshot.",
+                    case=line.case_identifier,
+                )
+            )
+        if line.source_digest != line.run_id.set_digest:
+            raise ValidationError(
+                _(
+                    "Case %(case)s no longer matches its original SET.",
+                    case=line.case_identifier,
+                )
+            )
+
+    def _check_text_cancellation_target(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            target
+            and target.generation_state == "pending"
+            and target not in selected_lines
+        ):
+            raise ValidationError(
+                _(
+                    "Select the referenced type-61 correction along with case "
+                    "%(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "61"
+            or target.snapshot.get("note_operation") != "text"
+            or target.sequence >= line.sequence
+            or target.generation_state != "generated"
+            or not target.move_id
+            or target.move_id.state != "draft"
+            or target.move_id.dte_certification_run_line_id != target
+            or target.move_id.move_type != "out_refund"
+            or target.move_id.reversed_entry_id != target.referenced_line_id.move_id
+            or not target.partner_id
+            or target.move_id.partner_id != target.partner_id
+            or target.move_id.amount_total != 0
+        ):
+            raise ValidationError(
+                _(
+                    "Type-56 case %(case)s requires its earlier generated "
+                    "zero-value type-61 text correction draft.",
+                    case=line.case_identifier,
+                )
+            )
+        return target
 
     @staticmethod
     def _snapshot_digest(snapshot):

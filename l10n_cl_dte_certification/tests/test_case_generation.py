@@ -162,3 +162,86 @@ class TestCertificationCaseGeneration(DteInvoiceTestCase):
 
         self.assertEqual(self.env["account.move"].search_count([]), before)
         self.assertEqual(self.execution.state, "draft")
+
+    def test_generates_zero_value_debit_note_for_text_correction_cancellation(self):
+        source = (
+            b"SET TEST - NUMERO DE ATENCION: 654\n"
+            b"CASO 654-1\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"ITEM  CANTIDAD  PRECIO UNITARIO  UNIDAD MEDIDA\n"
+            b"Synthetic service  2  1250  UN\n"
+            b"CASO 654-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 654-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            b"DICE: Old activity\nDEBE DECIR: Corrected activity\n"
+            b"CASO 654-3\nDOCUMENTO NOTA DE DEBITO ELECTRONICA\n"
+            b"REFERENCIA CASO 654-2\n"
+            b"RAZON REFERENCIA: ANULA NOTA DE CREDITO\n"
+        )
+        certification_set = self.env[
+            "l10n_cl.dte.certification.set"
+        ]._create_from_import(
+            self.company,
+            "synthetic-text-correction-cancellation.txt",
+            base64.b64encode(source),
+        )
+        certification_set.action_parse_source()
+        certification_set.action_materialize_cases()
+        certification_set.action_interpret_cases()
+        execution = self.env["l10n_cl.dte.certification.run"]._create_from_selection(
+            certification_set, certification_set.case_ids
+        )
+        invoice_line = execution.line_ids.filtered(
+            lambda item: item.document_code == "33"
+        )
+        correction_line = execution.line_ids.filtered(
+            lambda item: item.document_code == "61"
+        )
+        cancellation_line = execution.line_ids.filtered(
+            lambda item: item.document_code == "56"
+        )
+        folios_before = self.env["l10n_cl.caf.folio"].search_count([])
+        moves_before = self.env["account.move"].search_count([])
+
+        with self.assertRaisesRegex(
+            ValidationError, "Select the referenced type-61 correction"
+        ):
+            CaseGenerationService(self.env).generate(
+                execution,
+                journal=self.journal,
+                income_account=self.income_account,
+                selected_lines=cancellation_line,
+            )
+        self.assertEqual(self.env["account.move"].search_count([]), moves_before)
+        self.assertEqual(execution.state, "draft")
+
+        created_lines = CaseGenerationService(self.env).generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=invoice_line | correction_line | cancellation_line,
+        )
+
+        self.assertEqual(
+            set(created_lines.ids),
+            {invoice_line.id, correction_line.id, cancellation_line.id},
+        )
+        invoice = invoice_line.move_id
+        correction = correction_line.move_id
+        cancellation = cancellation_line.move_id
+        self.assertEqual(execution.state, "generated")
+        self.assertEqual(correction.move_type, "out_refund")
+        self.assertEqual(correction.l10n_latam_document_type_id.code, "61")
+        self.assertEqual(correction.reversed_entry_id, invoice)
+        self.assertEqual(correction.amount_total, 0)
+        self.assertEqual(cancellation.move_type, "out_invoice")
+        self.assertEqual(cancellation.l10n_latam_document_type_id.code, "56")
+        self.assertEqual(cancellation.debit_origin_id, correction)
+        self.assertEqual(cancellation.partner_id, correction.partner_id)
+        self.assertEqual(cancellation.amount_total, 0)
+        self.assertFalse(cancellation.invoice_line_ids.tax_ids)
+        self.assertEqual(cancellation.state, "draft")
+        self.assertEqual(cancellation.dte_certification_run_line_id, cancellation_line)
+        self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
+        with self.assertRaisesRegex(UserError, "cannot be posted"):
+            cancellation.action_post()
