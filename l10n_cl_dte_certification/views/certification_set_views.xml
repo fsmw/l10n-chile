@@ -151,6 +151,7 @@
                                             <field name="global_discount_percent" />
                                             <field name="global_discount_source_line" />
                                             <field name="reference_case_identifier" />
+                                            <field name="referenced_case_id" />
                                             <field name="reference_source_line" />
                                             <field name="note_operation" />
                                         </group>

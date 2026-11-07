@@ -293,6 +293,7 @@ class DteCertificationSet(models.Model):
                     )
                 )
             record.case_ids._interpret_from_instructions()
+            record._resolve_case_references()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -322,6 +323,7 @@ class DteCertificationSet(models.Model):
             if any(case.source_digest != record.source_digest for case in stale_cases):
                 raise UserError(_("A case snapshot does not match its original SET."))
             stale_cases._interpret_from_instructions(audit_reinterpretation=True)
+            record._resolve_case_references()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -335,6 +337,65 @@ class DteCertificationSet(models.Model):
                 "sticky": False,
             },
         }
+
+    def _resolve_case_references(self):
+        """Close interpreted references within their own attention section."""
+        self.ensure_one()
+        cases = self.case_ids.sorted("sequence")
+        by_section_and_identifier = {
+            (case.attention_number, case.case_identifier): case for case in cases
+        }
+        reference_diagnostics = {
+            "reference_case_not_found",
+            "reference_case_not_preceding",
+            "reference_case_document_type_mismatch",
+        }
+        for case in cases:
+            values = case.interpretation or {}
+            diagnostics = [
+                item
+                for item in (case.diagnostics or [])
+                if item.get("code") not in reference_diagnostics
+            ]
+            target = False
+            identifier = case.reference_case_identifier
+            if identifier:
+                candidate = by_section_and_identifier.get(
+                    (case.attention_number, identifier)
+                )
+                if not candidate:
+                    diagnostics.append(
+                        {
+                            "code": "reference_case_not_found",
+                            "source_line": case.reference_source_line,
+                            "case_identifier": identifier,
+                        }
+                    )
+                elif candidate.sequence >= case.sequence:
+                    diagnostics.append(
+                        {
+                            "code": "reference_case_not_preceding",
+                            "source_line": case.reference_source_line,
+                            "case_identifier": identifier,
+                        }
+                    )
+                elif (
+                    values.get("reference_document_code")
+                    and candidate.document_code != values["reference_document_code"]
+                ):
+                    diagnostics.append(
+                        {
+                            "code": "reference_case_document_type_mismatch",
+                            "source_line": case.reference_reason_source_line,
+                            "case_identifier": identifier,
+                            "expected_document_code": values["reference_document_code"],
+                            "actual_document_code": candidate.document_code,
+                        }
+                    )
+                else:
+                    target = candidate
+            case._set_resolved_reference(target, diagnostics)
+        return True
 
     def action_check_case_coverage(self):
         if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):

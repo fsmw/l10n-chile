@@ -36,3 +36,8 @@ source reason remains intact for `RazonRef`. Unknown reasons and note/document
 type mismatches require review. When a newer interpreter is introduced, a DTE
 manager must explicitly reinterpret outdated cases; the previous and new
 interpretations are retained in an immutable history.
+
+Interpreted note references are linked to one case in the same attention
+section. Missing targets, targets that occur later in the SET, and targets
+with an incompatible document type stay in review and cannot be used for
+generation.
