@@ -139,21 +139,13 @@ class DteXmlComposer:
         if not isinstance(references, list) or len(references) > 40:
             raise ValidationError(_("A DTE supports at most 40 references."))
         for index, reference_data in enumerate(references, start=1):
-            if not isinstance(reference_data, dict) or set(reference_data) != {
-                "line_number",
-                "document_type",
-                "folio",
-                "date",
-                "reason",
-            }:
-                raise ValidationError(_("The DTE reference is invalid."))
-            if reference_data["line_number"] != index:
-                raise ValidationError(_("DTE reference numbers must be sequential."))
+            reference_code = _validate_reference_data(reference_data, index)
             reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
             _add_text(reference, "NroLinRef", index)
             _add_text(reference, "TpoDocRef", reference_data["document_type"])
             _add_text(reference, "FolioRef", reference_data["folio"])
             _add_text(reference, "FchRef", reference_data["date"])
+            _add_optional_text(reference, "CodRef", reference_code)
             _add_text(reference, "RazonRef", reference_data["reason"])
 
         ted_xml = snapshot.get("ted_xml")
@@ -263,6 +255,22 @@ def _add_text(parent, name, value):
     element = etree.SubElement(parent, f"{{{SII_NAMESPACE}}}{name}")
     element.text = _format_value(value)
     return element
+
+
+def _validate_reference_data(reference_data, index):
+    required_fields = {"line_number", "document_type", "folio", "date", "reason"}
+    if (
+        not isinstance(reference_data, dict)
+        or not required_fields.issubset(reference_data)
+        or set(reference_data) - required_fields - {"reference_code"}
+    ):
+        raise ValidationError(_("The DTE reference is invalid."))
+    if reference_data["line_number"] != index:
+        raise ValidationError(_("DTE reference numbers must be sequential."))
+    reference_code = reference_data.get("reference_code")
+    if reference_code not in {None, "1", "2", "3"}:
+        raise ValidationError(_("The DTE reference code is invalid."))
+    return reference_code
 
 
 def _add_optional_text(parent, name, value):
