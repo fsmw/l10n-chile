@@ -101,6 +101,9 @@ class DteCertificationCase(models.Model):
     text_correction = fields.Json(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    text_correction_content = fields.Json(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
     interpretation_history_ids = fields.One2many(
         "l10n_cl.dte.certification.interpretation.event",
         "case_id",
@@ -181,6 +184,7 @@ class DteCertificationCase(models.Model):
                     "reference_code_source_line": values["reference_code_source_line"],
                     "note_operation": values["note_operation"],
                     "text_correction": values["text_correction"],
+                    "text_correction_content": values["text_correction_content"],
                     "interpretation_version": INTERPRETER_VERSION,
                     "interpretation": values,
                 }

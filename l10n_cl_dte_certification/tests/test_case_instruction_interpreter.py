@@ -68,6 +68,63 @@ class TestCaseInstructionInterpreter(TransactionCase):
                 {"source_line": 26, "text": "DEBE DECIR: Giro corregido"},
             ],
         )
+        self.assertEqual(
+            result["text_correction_content"],
+            [
+                {
+                    "kind": "dice",
+                    "value": "Giro anterior",
+                    "source_line": 25,
+                    "source_end_line": 25,
+                },
+                {
+                    "kind": "debe_decir",
+                    "value": "Giro corregido",
+                    "source_line": 26,
+                    "source_end_line": 26,
+                },
+            ],
+        )
+
+    def test_requires_both_nonempty_correction_values(self):
+        result = interpret(
+            "CASO 123-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            "REFERENCIA CASO 123-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            "DICE: Giro anterior\nDEBE DECIR:\n",
+            "61",
+            1,
+        )
+
+        self.assertEqual(
+            result["text_correction_content"],
+            [
+                {
+                    "kind": "dice",
+                    "value": "Giro anterior",
+                    "source_line": 5,
+                    "source_end_line": 5,
+                }
+            ],
+        )
+        self.assertIn(
+            "text_correction_content_missing_or_ambiguous",
+            {item["code"] for item in result["diagnostics"]},
+        )
+
+    def test_rejects_duplicate_correction_markers(self):
+        result = interpret(
+            "CASO 123-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            "REFERENCIA CASO 123-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            "DICE: Giro anterior\nDICE: Giro previo\n"
+            "DEBE DECIR: Giro corregido",
+            "61",
+            1,
+        )
+
+        self.assertIn(
+            "text_correction_content_missing_or_ambiguous",
+            {item["code"] for item in result["diagnostics"]},
+        )
 
     def test_maps_note_reasons_to_exact_sii_reference_codes(self):
         cases = [

@@ -83,7 +83,7 @@ class TestCertificationRunSnapshots(TransactionCase):
                 "discount_percent": False,
                 "unit_of_measure": "UN",
                 "source_digest": self.certification_set.source_digest,
-                "interpretation_version": "sii_case_instructions_v2",
+                "interpretation_version": "sii_case_instructions_v3",
             },
         )
         self.assertEqual(
@@ -91,6 +91,23 @@ class TestCertificationRunSnapshots(TransactionCase):
             [
                 {"source_line": 10, "text": "DICE: Actividad anterior"},
                 {"source_line": 11, "text": "DEBE DECIR: Actividad corregida"},
+            ],
+        )
+        self.assertEqual(
+            note_line.snapshot["text_correction_content"],
+            [
+                {
+                    "kind": "dice",
+                    "value": "Actividad anterior",
+                    "source_line": 10,
+                    "source_end_line": 10,
+                },
+                {
+                    "kind": "debe_decir",
+                    "value": "Actividad corregida",
+                    "source_line": 11,
+                    "source_end_line": 11,
+                },
             ],
         )
         self.assertEqual(self.env["account.move"].search_count([]), moves_before)
