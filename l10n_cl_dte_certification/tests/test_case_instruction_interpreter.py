@@ -366,13 +366,91 @@ class TestCaseInterpretationAction(TransactionCase):
                 {"source_line": 7, "text": "DEBE DECIR: Giro corregido"},
             ],
         )
-        self.assertEqual(
+        self.assertIn(
+            {
+                "code": "uninterpreted_line",
+                "source_line": 8,
+                "text": "Dato que requiere revision",
+            },
             case.diagnostics,
-            [
-                {
-                    "code": "uninterpreted_line",
-                    "source_line": 8,
-                    "text": "Dato que requiere revision",
-                }
-            ],
         )
+        self.assertIn(
+            "reference_case_not_found",
+            {item["code"] for item in case.diagnostics},
+        )
+
+    def test_interpretation_closes_note_references_before_they_can_be_generated(self):
+        company = self.env.company
+        manager = self.env["res.users"].create(
+            {
+                "name": "Synthetic Reference Manager",
+                "login": "synthetic-reference-manager",
+                "company_id": company.id,
+                "company_ids": [Command.set([company.id])],
+                "groups_id": [
+                    Command.set(
+                        [
+                            self.env.ref("base.group_user").id,
+                            self.env.ref("l10n_cl_dte_core.group_dte_manager").id,
+                        ]
+                    )
+                ],
+            }
+        )
+        source = (
+            b"SET A - NUMERO DE ATENCION: 123\n"
+            b"CASO 123-1\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"CASO 123-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            b"DICE: Texto antiguo\nDEBE DECIR: Texto nuevo\n"
+            b"CASO 123-3\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-99\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            b"DICE: Texto antiguo\nDEBE DECIR: Texto nuevo\n"
+            b"CASO 123-4\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-5\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+            b"DICE: Texto antiguo\nDEBE DECIR: Texto nuevo\n"
+            b"CASO 123-5\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"CASO 123-6\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-1\n"
+            b"RAZON REFERENCIA: ANULA NOTA DE CREDITO\n"
+            b"SET B - NUMERO DE ATENCION: 456\n"
+            b"CASO 456-1\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 123-1\nRAZON REFERENCIA: CORRIGE TEXTO\n"
+        )
+        record = (
+            self.env["l10n_cl.dte.certification.set"]
+            .with_user(manager)
+            ._create_from_import(
+                company, "synthetic-reference-closure.txt", base64.b64encode(source)
+            )
+        )
+        record.action_parse_source()
+        record.action_materialize_cases()
+        record.action_interpret_cases()
+
+        cases = {case.case_identifier: case for case in record.case_ids}
+        self.assertEqual(cases["123-2"].referenced_case_id, cases["123-1"])
+        self.assertEqual(cases["123-2"].interpretation_state, "interpreted")
+        self.assertFalse(cases["123-3"].referenced_case_id)
+        self.assertIn(
+            "reference_case_not_found",
+            {item["code"] for item in cases["123-3"].diagnostics},
+        )
+        self.assertEqual(cases["123-3"].interpretation["state"], "review_required")
+        self.assertIn(
+            "reference_case_not_preceding",
+            {item["code"] for item in cases["123-4"].diagnostics},
+        )
+        self.assertIn(
+            "reference_case_document_type_mismatch",
+            {item["code"] for item in cases["123-6"].diagnostics},
+        )
+        cross_section_case = record.case_ids.filtered(
+            lambda case: case.case_identifier == "456-1"
+        )
+        self.assertFalse(cross_section_case.referenced_case_id)
+        self.assertIn(
+            "reference_case_not_found",
+            {item["code"] for item in cross_section_case.diagnostics},
+        )
+        self.assertEqual(record.case_review_required_count, 6)

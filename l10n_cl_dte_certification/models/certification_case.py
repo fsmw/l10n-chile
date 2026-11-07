@@ -60,6 +60,13 @@ class DteCertificationCase(models.Model):
     reference_case_identifier = fields.Char(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    referenced_case_id = fields.Many2one(
+        "l10n_cl.dte.certification.case",
+        readonly=True,
+        ondelete="restrict",
+        check_company=True,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
     reference_source_line = fields.Integer(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
@@ -209,3 +216,23 @@ class DteCertificationCase(models.Model):
                     values,
                 )
         return True
+
+    def _set_resolved_reference(self, target, diagnostics):
+        """Persist the deterministic reference closure from the SET service."""
+        self.ensure_one()
+        values = self.interpretation or {}
+        values["diagnostics"] = diagnostics
+        interpretation_state = (
+            "review_required"
+            if diagnostics and self.interpretation_state != "unsupported"
+            else self.interpretation_state
+        )
+        values["state"] = interpretation_state
+        return super(DteCertificationCase, self.sudo()).write(
+            {
+                "referenced_case_id": target.id if target else False,
+                "diagnostics": diagnostics,
+                "interpretation_state": interpretation_state,
+                "interpretation": values,
+            }
+        )
