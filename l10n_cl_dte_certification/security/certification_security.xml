@@ -22,4 +22,16 @@
         <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]" />
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
+    <record id="rule_certification_run_company" model="ir.rule">
+        <field name="name">Certification executions: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_certification_run" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_certification_run_line_company" model="ir.rule">
+        <field name="name">Execution case snapshots: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_certification_run_line" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>

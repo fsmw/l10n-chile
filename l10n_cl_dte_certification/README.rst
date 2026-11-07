@@ -86,6 +86,14 @@ section. Missing targets, targets that occur later in the SET, and
 targets with an incompatible document type stay in review and cannot be
 used for generation.
 
+After every case has been interpreted successfully, DTE managers can
+create an execution from the certification set. The selection must
+include every case referenced by a selected note and the complete chain
+of earlier references. The execution stores immutable, hashed snapshots
+of the selected instructions, interpretation, detail rows, references,
+and source evidence. Creating an execution does not create accounting
+documents, reserve folios, or send data to the SII.
+
 Bug Tracker
 ===========
 

@@ -20,6 +20,14 @@
             <form create="false" edit="false" delete="false">
                 <header>
                     <button
+                        name="action_open_execution_wizard"
+                        type="object"
+                        string="New Execution"
+                        class="oe_highlight"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="case_coverage_state != 'complete'"
+                    />
+                    <button
                         name="action_parse_source"
                         type="object"
                         string="Analyze SET"
@@ -220,6 +228,21 @@
                                     </group>
                                 </sheet>
                             </form>
+                        </field>
+                    </group>
+                    <group
+                        string="Executions"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    >
+                        <field name="execution_ids" nolabel="1" readonly="1">
+                            <list create="false" edit="false" delete="false">
+                                <field name="revision" />
+                                <field name="name" />
+                                <field name="emission_date" />
+                                <field name="state" />
+                                <field name="line_count" />
+                                <field name="snapshot_digest" optional="hide" />
+                            </list>
                         </field>
                     </group>
                 </sheet>
