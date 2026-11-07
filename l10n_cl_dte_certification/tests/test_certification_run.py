@@ -159,3 +159,21 @@ class TestCertificationRunSnapshots(TransactionCase):
             )
         with self.assertRaises(UserError):
             self.env["l10n_cl.dte.certification.run.line"].sudo().create({"run_id": 1})
+
+    def test_envelope_export_rejects_unprepared_cases(self):
+        run = (
+            self.env["l10n_cl.dte.certification.run"]
+            .with_user(self.manager)
+            ._create_from_selection(
+                self.certification_set,
+                self.certification_set.case_ids.sorted("sequence"),
+            )
+        )
+        run.company_id.sudo().write({"dte_sii_environment": "certification"})
+        run._record_generation_state("prepared")
+
+        with self.assertRaisesRegex(ValidationError, "no longer matches"):
+            run.action_export_envelope()
+
+        self.assertFalse(run.envelope_xml)
+        self.assertFalse(run.envelope_digest)
