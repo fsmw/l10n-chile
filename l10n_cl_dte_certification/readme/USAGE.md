@@ -55,3 +55,10 @@ case is prepared, Export Certification Envelope validates the frozen case links 
 XML evidence, composes and schema-validates a signed EnvioDTE, and saves its exact bytes
 and SHA-256 digest for repeatable download. This is an offline export only; it does not
 authenticate to, upload to, or query the SII.
+
+After reviewing the stored XML and digest, a DTE manager can explicitly submit that
+envelope through the configured Certification gateway. The execution links to one durable
+gateway record, which retains the request, TrackID, status attempts, and response evidence.
+If transport outcome is uncertain, the workflow preserves that state and does not retry the
+upload automatically; operators must inspect the transmission record and recover through
+the SII portal before taking further action.
