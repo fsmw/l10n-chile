@@ -62,6 +62,15 @@ class CaseGenerationService:
                 and line.snapshot.get("reference_target_document_code") == "61"
             )
         )
+        monetary_cancellation_lines = text_cancellation_lines.filtered(
+            lambda line: (
+                line.referenced_line_id.snapshot.get("note_operation")
+                in {"return", "cancel"}
+            )
+        )
+        text_only_cancellation_lines = (
+            text_cancellation_lines - monetary_cancellation_lines
+        )
         supported_lines = (
             invoice_lines
             | correction_lines
@@ -85,6 +94,7 @@ class CaseGenerationService:
             any(line.document_code == "33" for line in invoice_lines)
             or return_lines
             or invoice_cancellation_lines
+            or monetary_cancellation_lines
         ):
             self._check_vat(vat_tax, run.company_id)
 
@@ -97,7 +107,10 @@ class CaseGenerationService:
             invoice_cancellation_lines, lines, vat_tax, income_account
         )
         for line in text_cancellation_lines:
-            self._validate_text_cancellation_snapshot(line, lines)
+            self._validate_note_cancellation_snapshot(line, lines)
+        monetary_cancellation_rows = self._prepare_monetary_note_cancellations(
+            monetary_cancellation_lines, lines, vat_tax, income_account
+        )
 
         prepared = []
         for line in invoice_lines:
@@ -176,10 +189,13 @@ class CaseGenerationService:
             created |= line
 
         created |= self._generate_text_cancellation_drafts(
-            run, text_cancellation_lines, lines, journal, income_account
+            run, text_only_cancellation_lines, lines, journal, income_account
         )
         created |= self._generate_return_drafts(run, return_rows, journal)
         created |= self._generate_invoice_cancellations(run, cancellation_rows, journal)
+        created |= self._generate_monetary_note_cancellations(
+            run, monetary_cancellation_rows, journal
+        )
 
         for line in lines - supported_lines:
             if line.generation_state == "pending":
@@ -581,6 +597,198 @@ class CaseGenerationService:
             created |= line
         return created
 
+    def _prepare_monetary_note_cancellations(
+        self, cancellation_lines, selected_lines, vat_tax, account
+    ):
+        """Build type-56 lines as the exact inverse of a monetary type-61 note."""
+        prepared = []
+        for line in cancellation_lines.sorted("sequence"):
+            target = line.referenced_line_id
+            operation = target.snapshot.get("note_operation")
+            root = target.referenced_line_id
+            if operation == "return":
+                self._check_return_target(target, selected_lines)
+                source_details = root.snapshot.get("details") or []
+                note_details = target.snapshot.get("details") or []
+            else:
+                root = self._check_invoice_cancellation_target(target, selected_lines)
+                self._check_invoice_cancellation_balance(target, root, selected_lines)
+                source_details = root.snapshot.get("details") or []
+                note_details = source_details
+            rows = self._monetary_note_rows(
+                line, target, note_details, source_details, vat_tax, account
+            )
+            self._check_duplicate_note_cancellation(line, target, selected_lines)
+            prepared.append((line, target, root, rows))
+        return prepared
+
+    def _monetary_note_rows(
+        self, line, target, note_details, source_details, vat_tax, account
+    ):
+        rows = []
+        full_cancellation = target.snapshot.get("note_operation") == "cancel"
+        for detail in note_details:
+            name = detail.get("name")
+            matches = [item for item in source_details if item.get("name") == name]
+            if full_cancellation:
+                source = detail
+            elif len(matches) == 1:
+                source = matches[0]
+            else:
+                source = None
+            if not name or not source:
+                raise ValidationError(
+                    _(
+                        "The monetary effect of type-61 case %(case)s cannot be "
+                        "matched uniquely to its invoice snapshot.",
+                        case=target.case_identifier,
+                    )
+                )
+            try:
+                quantity = self._decimal(detail.get("quantity"), positive=True)
+                source_quantity = self._decimal(source.get("quantity"), positive=True)
+                price = self._decimal(source.get("unit_price"), allow_zero=True)
+                discount = self._decimal(
+                    source.get("discount_percent") or "0", allow_zero=True
+                )
+                if discount > 100 or quantity > source_quantity:
+                    raise ValueError("invalid note amount")
+            except (InvalidOperation, ValueError) as error:
+                raise ValidationError(
+                    _(
+                        "The monetary effect of type-61 case %(case)s is invalid.",
+                        case=target.case_identifier,
+                    )
+                ) from error
+            rows.append(
+                {
+                    "name": name,
+                    "quantity": float(quantity),
+                    "price_unit": float(price),
+                    "discount": float(discount),
+                    "account_id": account.id,
+                    "tax_ids": [Command.set([vat_tax.id])],
+                }
+            )
+        if not rows:
+            raise ValidationError(
+                _(
+                    "Type-56 case %(case)s references a type-61 note without a "
+                    "monetary effect.",
+                    case=line.case_identifier,
+                )
+            )
+        return rows
+
+    def _check_duplicate_note_cancellation(self, line, target, selected_lines):
+        duplicate = line.run_id.line_ids.filtered(
+            lambda item: (
+                item != line
+                and item.document_code == "56"
+                and item.referenced_line_id == target
+                and (item.generation_state == "generated" or item in selected_lines)
+            )
+        )
+        if duplicate:
+            raise ValidationError(
+                _(
+                    "Type-61 case %(case)s already has another selected or "
+                    "generated type-56 cancellation.",
+                    case=target.case_identifier,
+                )
+            )
+
+    def _generate_monetary_note_cancellations(self, run, prepared, journal):
+        """Create type-56 debit drafts after checking the generated type-61 note."""
+        created = self.env["l10n_cl.dte.certification.run.line"]
+        for line, target, root, rows in prepared:
+            note = self._check_monetary_note_cancellation_target(
+                line, target, root, rows
+            )
+            note_rows = note.invoice_line_ids.filtered(
+                lambda item: item.display_type == "product"
+            )
+            for row, note_row in zip(rows, note_rows, strict=True):
+                row["account_id"] = note_row.account_id.id
+            move = self.env["account.move"].create(
+                {
+                    "move_type": "out_invoice",
+                    "company_id": run.company_id.id,
+                    "journal_id": journal.id,
+                    "partner_id": target.partner_id.id,
+                    "invoice_date": run.emission_date,
+                    "l10n_latam_document_type_id": self._document_type(
+                        journal, "56", internal_type="debit_note"
+                    ).id,
+                    "debit_origin_id": note.id,
+                    "dte_certification_run_line_id": line.id,
+                    "invoice_line_ids": [Command.create(row) for row in rows],
+                }
+            )
+            line._record_generation_result(
+                {
+                    "move_id": move.id,
+                    "partner_id": target.partner_id.id,
+                    "generation_state": "generated",
+                    "generation_message": False,
+                }
+            )
+            created |= line
+        return created
+
+    def _check_monetary_note_cancellation_target(self, line, target, root, rows):
+        note = target.move_id
+        if (
+            target.generation_state != "generated"
+            or not note
+            or note.state != "draft"
+            or note.move_type != "out_refund"
+            or note.l10n_latam_document_type_id.code != "61"
+            or note.dte_certification_run_line_id != target
+            or note.reversed_entry_id != root.move_id
+            or note.partner_id != root.partner_id
+            or target.partner_id != root.partner_id
+            or not root.move_id
+            or root.move_id.state != "draft"
+        ):
+            raise ValidationError(
+                _(
+                    "Type-56 case %(case)s requires its earlier generated "
+                    "monetary type-61 draft and matching invoice root.",
+                    case=line.case_identifier,
+                )
+            )
+        self._assert_move_matches_snapshot_rows(note, rows, target)
+        return note
+
+    def _assert_move_matches_snapshot_rows(self, move, rows, run_line):
+        move_rows = move.invoice_line_ids.filtered(
+            lambda item: item.display_type == "product"
+        )
+        if len(move_rows) != len(rows):
+            raise ValidationError(
+                _(
+                    "Generated type-61 case %(case)s no longer matches its "
+                    "immutable monetary snapshot.",
+                    case=run_line.case_identifier,
+                )
+            )
+        for row, move_row in zip(rows, move_rows, strict=True):
+            if (
+                move_row.name != row["name"]
+                or move_row.quantity != row["quantity"]
+                or move_row.price_unit != row["price_unit"]
+                or move_row.discount != row["discount"]
+                or set(move_row.tax_ids.ids) != set(row["tax_ids"][0][2])
+            ):
+                raise ValidationError(
+                    _(
+                        "Generated type-61 case %(case)s no longer matches its "
+                        "immutable monetary snapshot.",
+                        case=run_line.case_identifier,
+                    )
+                )
+
     def _check_journal(self, journal, company):
         if (
             not journal
@@ -754,19 +962,19 @@ class CaseGenerationService:
                 )
             )
 
-    def _validate_text_cancellation_snapshot(self, line, selected_lines):
+    def _validate_note_cancellation_snapshot(self, line, selected_lines):
         target = line.referenced_line_id
         if (
             not target
             or target.run_id != line.run_id
             or target.document_code != "61"
             or target.sequence >= line.sequence
-            or target.snapshot.get("note_operation") != "text"
+            or target.snapshot.get("note_operation") not in {"text", "return", "cancel"}
         ):
             raise ValidationError(
                 _(
                     "Type-56 case %(case)s must cancel an earlier type-61 "
-                    "text-correction case in the same execution.",
+                    "case in the same execution.",
                     case=line.case_identifier,
                 )
             )
@@ -791,11 +999,29 @@ class CaseGenerationService:
             or line.snapshot.get("reference_target_document_code") != "61"
             or not line.snapshot.get("reference_reason")
             or line.snapshot.get("text_correction_content")
+            or target.snapshot_digest != self._snapshot_digest(target.snapshot)
+            or target.source_digest != line.run_id.set_digest
         ):
             raise ValidationError(
                 _(
                     "Type-56 cancellation case %(case)s has inconsistent reference "
                     "data.",
+                    case=line.case_identifier,
+                )
+            )
+        operation = target.snapshot.get("note_operation")
+        if operation in {"return", "cancel"} and (
+            not target.referenced_line_id
+            or target.referenced_line_id.run_id != line.run_id
+            or target.referenced_line_id.document_code != "33"
+            or target.snapshot.get("reference_target_document_code") != "33"
+            or target.snapshot.get("reference_code")
+            != ("3" if operation == "return" else "1")
+        ):
+            raise ValidationError(
+                _(
+                    "Type-56 case %(case)s references a type-61 note with an "
+                    "inconsistent invoice root.",
                     case=line.case_identifier,
                 )
             )
