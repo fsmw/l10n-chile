@@ -29,6 +29,20 @@
                         string="Export Certification Envelope"
                         invisible="state != 'prepared'"
                     />
+                    <button
+                        name="action_send_certification_envelope"
+                        type="object"
+                        string="Send Certification Envelope to SII"
+                        invisible="state != 'prepared' or not envelope_xml or sii_submission_id"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_open_sii_submission"
+                        type="object"
+                        string="Open SII Transmission"
+                        invisible="not sii_submission_id"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
                 </header>
                 <sheet>
                     <group>
@@ -58,6 +72,7 @@
                         <field name="envelope_filename" />
                         <field name="envelope_digest" />
                         <field name="envelope_built_at" />
+                        <field name="sii_submission_id" />
                     </group>
                     <group string="Frozen Cases">
                         <field name="line_ids" nolabel="1" readonly="1">

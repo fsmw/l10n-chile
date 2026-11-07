@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
@@ -177,3 +178,49 @@ class TestCertificationRunSnapshots(TransactionCase):
 
         self.assertFalse(run.envelope_xml)
         self.assertFalse(run.envelope_digest)
+
+    def test_submit_envelope_creates_one_linked_gateway_record(self):
+        run = (
+            self.env["l10n_cl.dte.certification.run"]
+            .with_user(self.manager)
+            ._create_from_selection(
+                self.certification_set,
+                self.certification_set.case_ids.sorted("sequence"),
+            )
+        )
+        run.company_id.sudo().write({"dte_sii_environment": "certification"})
+        run._record_generation_state("prepared")
+        envelope = (
+            b'<EnvioDTE xmlns="http://www.sii.cl/SiiDte"><SetDTE>'
+            b"<Caratula><RutEnvia>12345678-5</RutEnvia></Caratula>"
+            b"</SetDTE></EnvioDTE>"
+        )
+        run._record_exported_envelope(envelope)
+        gateway_factory = self.env["l10n_cl.sii.gateway.factory"]
+        submission_model = self.env["l10n_cl.sii.envelope.submission"]
+
+        with (
+            patch.object(type(run.line_ids), "_validate_envelope_case_result"),
+            patch(
+                "odoo.addons.l10n_cl_dte_certification.models.certification_run.SiiEnvelopeComposer.validate"
+            ),
+            patch(
+                "odoo.addons.l10n_cl_dte_certification.models.certification_run.SiiEnvelopeComposer.get_sender_vat",
+                return_value="12345678-5",
+            ),
+            patch.object(type(gateway_factory), "_get_ready_envelope_gateway"),
+            patch.object(
+                type(submission_model),
+                "action_enqueue_send",
+                return_value={"type": "ir.actions.act_window"},
+            ) as enqueue_send,
+        ):
+            first_action = run.action_send_certification_envelope()
+            submission_id = run.sii_submission_id.id
+            second_action = run.action_send_certification_envelope()
+
+        self.assertTrue(submission_id)
+        self.assertEqual(first_action, second_action)
+        self.assertEqual(submission_model.search_count([]), 1)
+        self.assertEqual(run.sii_submission_id.request_digest, run.envelope_digest)
+        self.assertEqual(enqueue_send.call_count, 2)
