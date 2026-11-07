@@ -1,0 +1,88 @@
+<odoo>
+    <record id="view_certification_run_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.run.form</field>
+        <field name="model">l10n_cl.dte.certification.run</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <header>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,blocked"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="set_id" />
+                            <field name="revision" />
+                            <field name="emission_date" />
+                            <field name="created_by" />
+                        </group>
+                        <group>
+                            <field name="company_id" />
+                            <field name="set_digest" />
+                            <field name="snapshot_digest" />
+                            <field name="line_count" />
+                        </group>
+                    </group>
+                    <group string="Frozen Cases">
+                        <field name="line_ids" nolabel="1" readonly="1">
+                            <list create="false" edit="false" delete="false">
+                                <field name="sequence" />
+                                <field name="case_identifier" />
+                                <field name="document_code" />
+                                <field name="referenced_line_id" />
+                                <field name="snapshot_digest" optional="hide" />
+                            </list>
+                            <form create="false" edit="false" delete="false">
+                                <sheet>
+                                    <group>
+                                        <field name="sequence" />
+                                        <field name="case_id" />
+                                        <field name="case_identifier" />
+                                        <field name="document_code" />
+                                        <field name="referenced_line_id" />
+                                        <field name="source_digest" />
+                                        <field name="snapshot_digest" />
+                                    </group>
+                                    <field name="snapshot" widget="json" />
+                                </sheet>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_certification_run_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.run.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.run.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Certification Execution">
+                <group>
+                    <field name="set_id" />
+                    <field name="case_ids" nolabel="1">
+                        <list create="false" delete="true" editable="bottom">
+                            <field name="sequence" readonly="1" />
+                            <field name="case_identifier" readonly="1" />
+                            <field name="document_code" readonly="1" />
+                            <field name="interpretation_state" readonly="1" />
+                            <field name="referenced_case_id" readonly="1" />
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button
+                        name="action_create_execution"
+                        type="object"
+                        string="Create Execution"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

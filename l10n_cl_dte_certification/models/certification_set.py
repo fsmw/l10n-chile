@@ -52,6 +52,9 @@ class DteCertificationSet(models.Model):
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
     case_ids = fields.One2many("l10n_cl.dte.certification.case", "set_id", copy=False)
+    execution_ids = fields.One2many(
+        "l10n_cl.dte.certification.run", "set_id", copy=False
+    )
     case_count = fields.Integer(compute="_compute_case_count")
     case_interpreted_count = fields.Integer(compute="_compute_case_coverage")
     case_review_required_count = fields.Integer(compute="_compute_case_coverage")
@@ -428,5 +431,26 @@ class DteCertificationSet(models.Model):
                 if self.case_coverage_state == "complete"
                 else "warning",
                 "sticky": True,
+            },
+        }
+
+    def action_open_execution_wizard(self):
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can create certification executions."))
+        if self.case_coverage_state != "complete":
+            raise UserError(
+                _("Interpret and review all SET cases before creating an execution.")
+            )
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Select Cases for Execution"),
+            "res_model": "l10n_cl.dte.certification.run.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_set_id": self.id,
+                "active_model": self._name,
+                "active_id": self.id,
             },
         }
