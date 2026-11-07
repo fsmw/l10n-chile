@@ -23,6 +23,12 @@
                         string="Prepare Signed DTEs"
                         invisible="state not in ['generated', 'partial', 'prepared']"
                     />
+                    <button
+                        name="action_export_envelope"
+                        type="object"
+                        string="Export Certification Envelope"
+                        invisible="state != 'prepared'"
+                    />
                 </header>
                 <sheet>
                     <group>
@@ -39,6 +45,19 @@
                             <field name="snapshot_digest" />
                             <field name="line_count" />
                         </group>
+                    </group>
+                    <group
+                        string="Offline Envelope Evidence"
+                        invisible="not envelope_xml"
+                    >
+                        <field
+                            name="envelope_xml"
+                            filename="envelope_filename"
+                            widget="binary"
+                        />
+                        <field name="envelope_filename" />
+                        <field name="envelope_digest" />
+                        <field name="envelope_built_at" />
                     </group>
                     <group string="Frozen Cases">
                         <field name="line_ids" nolabel="1" readonly="1">

@@ -49,3 +49,9 @@ The execution stores immutable, hashed snapshots of the selected instructions,
 interpretation, detail rows, references, and source evidence. Creating an
 execution does not create accounting documents, reserve folios, or send data to
 the SII.
+
+DTE managers can generate drafts and prepare signed DTEs for the execution. Once every
+case is prepared, Export Certification Envelope validates the frozen case links and signed
+XML evidence, composes and schema-validates a signed EnvioDTE, and saves its exact bytes
+and SHA-256 digest for repeatable download. This is an offline export only; it does not
+authenticate to, upload to, or query the SII.

@@ -1,11 +1,21 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import base64
+import binascii
 import hashlib
 import json
 
+from lxml import etree
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.l10n_cl_dte_gateway.services.envelope_composer import (
+    SiiEnvelopeComposer,
+)
+from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
+from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
 
 def _canonical_digest(value):
@@ -60,6 +70,16 @@ class DteCertificationRun(models.Model):
         copy=False,
     )
     line_count = fields.Integer(compute="_compute_line_count")
+    envelope_xml = fields.Binary(
+        string="Certification Envelope",
+        attachment=True,
+        readonly=True,
+        copy=False,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+    envelope_filename = fields.Char(readonly=True, copy=False)
+    envelope_digest = fields.Char(readonly=True, copy=False, index=True)
+    envelope_built_at = fields.Datetime(readonly=True, copy=False)
 
     def action_open_generation_wizard(self):
         self.ensure_one()
@@ -110,12 +130,16 @@ class DteCertificationRun(models.Model):
                 line._record_preparation_result(False, "failed", str(error))
 
         prepared = self.line_ids.filtered(
-            lambda line: line.generation_state == "generated"
-            and line.preparation_state == "prepared"
+            lambda line: (
+                line.generation_state == "generated"
+                and line.preparation_state == "prepared"
+            )
         )
         failed = self.line_ids.filtered(
-            lambda line: line.generation_state == "generated"
-            and line.preparation_state == "failed"
+            lambda line: (
+                line.generation_state == "generated"
+                and line.preparation_state == "failed"
+            )
         )
         generated = self.line_ids.filtered(
             lambda line: line.generation_state == "generated"
@@ -131,6 +155,92 @@ class DteCertificationRun(models.Model):
         )
         self._record_generation_state(state)
         return self.action_open()
+
+    def action_export_envelope(self):
+        """Build and download a validated envelope without contacting the SII."""
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can export certification envelopes."))
+        if self.company_id != self.env.company:
+            raise UserError(_("Use the execution company as the active company."))
+        if self.company_id.dte_sii_environment != "certification":
+            raise UserError(_("Certification envelopes require Certification mode."))
+        self.env.cr.execute(
+            "SELECT id FROM l10n_cl_dte_certification_run WHERE id = %s FOR UPDATE",
+            [self.id],
+        )
+        self.invalidate_recordset(
+            ["envelope_xml", "envelope_filename", "envelope_digest"]
+        )
+        if self.envelope_xml:
+            try:
+                stored_envelope = base64.b64decode(self.envelope_xml, validate=True)
+            except (binascii.Error, TypeError, ValueError) as error:
+                raise ValidationError(
+                    _("The stored certification envelope is not valid base64 content.")
+                ) from error
+            if hashlib.sha256(stored_envelope).hexdigest() != self.envelope_digest:
+                raise ValidationError(
+                    _("The stored certification envelope failed its integrity check.")
+                )
+            return self._download_envelope()
+        if self.state != "prepared" or not self.line_ids:
+            raise UserError(_("Prepare every DTE before exporting the envelope."))
+
+        documents = []
+        for line in self.line_ids.sorted("sequence"):
+            line._validate_envelope_case_result()
+            artifact = line.document_id._get_signed_artifact()
+            artifact.action_verify_integrity()
+            try:
+                content = base64.b64decode(artifact.content, validate=True)
+            except (binascii.Error, TypeError, ValueError) as error:
+                raise ValidationError(
+                    _("The signed DTE evidence is not valid base64 content.")
+                ) from error
+            documents.append(content)
+
+        signature_service = SignatureService()
+        _certificate, sender_vat = signature_service.certification_signing_identity(
+            self.company_id
+        )
+        run_key = hashlib.sha256(
+            f"{self.set_id.id}:{self.revision}:{self.snapshot_digest}".encode()
+        ).hexdigest()[:24]
+        envelope = SiiEnvelopeComposer().compose(
+            self.company_id,
+            documents,
+            {
+                "id": f"Set-{run_key}",
+                "sender_vat": sender_vat,
+                "resolution_number": self.company_id.dte_sii_resolution_number,
+                "resolution_date": self.company_id.dte_sii_resolution_date,
+            },
+            signature_service=signature_service,
+        )
+        digest = hashlib.sha256(envelope).hexdigest()
+        attention_number = self.line_ids.sorted("sequence")[0].case_id.attention_number
+        filename = f"SET-{attention_number}-{self.revision}.xml"
+        super(DteCertificationRun, self.sudo()).write(
+            {
+                "envelope_xml": base64.b64encode(envelope),
+                "envelope_filename": filename,
+                "envelope_digest": digest,
+                "envelope_built_at": fields.Datetime.now(),
+            }
+        )
+        return self._download_envelope()
+
+    def _download_envelope(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_url",
+            "url": (
+                f"/web/content/{self._name}/{self.id}/envelope_xml/"
+                f"{self.envelope_filename}?download=true"
+            ),
+            "target": "download",
+        }
 
     def _record_generation_state(self, state):
         if state not in {"generated", "prepared", "partial", "blocked"}:
@@ -545,3 +655,70 @@ class DteCertificationRunLine(models.Model):
                 "preparation_message": (message or False)[:2000],
             }
         )
+
+    def _validate_envelope_case_result(self):
+        """Ensure the signed electronic document still belongs to this frozen case."""
+        self.ensure_one()
+        document = self.document_id
+        if (
+            self.generation_state != "generated"
+            or self.preparation_state != "prepared"
+            or not document
+            or document.preparation_state != "signed"
+            or document.sii_environment != "certification"
+            or document.company_id != self.company_id
+            or document.document_code != self.document_code
+            or document.source_move_id != self.move_id
+            or self.move_id.dte_certification_run_line_id != self
+            or self.move_id.company_id != self.company_id
+            or self.move_id.state != "draft"
+            or self.move_digest != self._digest_move(self.move_id)
+            or self.snapshot_digest != _canonical_digest(self.snapshot)
+        ):
+            raise ValidationError(
+                _("The signed DTE no longer matches its frozen certification case.")
+            )
+        artifact = document._get_signed_artifact()
+        artifact.action_verify_integrity()
+        try:
+            signed_xml = base64.b64decode(artifact.content, validate=True)
+        except (binascii.Error, TypeError, ValueError) as error:
+            raise ValidationError(
+                _("The signed DTE evidence is not valid base64 content.")
+            ) from error
+        parser = etree.XMLParser(
+            resolve_entities=False, no_network=True, load_dtd=False
+        )
+        try:
+            root = etree.fromstring(signed_xml, parser=parser)
+        except (ValueError, etree.XMLSyntaxError) as error:
+            raise ValidationError(
+                _("The signed DTE XML is not well formed.")
+            ) from error
+        namespace = "{http://www.sii.cl/SiiDte}"
+        encabezado = root.find(f"{namespace}Documento/{namespace}Encabezado")
+        id_doc = (
+            encabezado.find(f"{namespace}IdDoc") if encabezado is not None else None
+        )
+        emisor = (
+            encabezado.find(f"{namespace}Emisor") if encabezado is not None else None
+        )
+        receptor = (
+            encabezado.find(f"{namespace}Receptor") if encabezado is not None else None
+        )
+        if (
+            root.tag != f"{namespace}DTE"
+            or id_doc is None
+            or emisor is None
+            or receptor is None
+            or id_doc.findtext(f"{namespace}TipoDTE") != self.document_code
+            or id_doc.findtext(f"{namespace}Folio") != str(document.folio)
+            or normalize_rut(emisor.findtext(f"{namespace}RUTEmisor"))
+            != normalize_rut(self.company_id.partner_id.vat)
+            or normalize_rut(receptor.findtext(f"{namespace}RUTRecep"))
+            != normalize_rut(self.move_id.partner_id.vat)
+        ):
+            raise ValidationError(
+                _("The signed DTE fiscal identity differs from its frozen case.")
+            )
+        return True
