@@ -7,7 +7,7 @@ import re
 import unicodedata
 from decimal import Decimal
 
-INTERPRETER_VERSION = "sii_case_instructions_v1"
+INTERPRETER_VERSION = "sii_case_instructions_v2"
 _COLUMN_NAMES = {
     "CANTIDAD": "quantity",
     "PRECIO UNITARIO": "unit_price",
@@ -15,6 +15,16 @@ _COLUMN_NAMES = {
     "UNIDAD MEDIDA": "uom",
     "UNIDAD DE MEDIDA": "uom",
     "DESCUENTO ITEM": "discount_percent",
+}
+_NOTE_REASONS = {
+    "ANULA FACTURA": ("cancel", "1", "33"),
+    "ANULA NOTA DE CREDITO": ("cancel", "1", "61"),
+    "DEVOLUCION DE MERCADERIAS": ("return", "3", "33"),
+    "CORRIGE GIRO": ("text", "2", "33"),
+    "CORRIGE GIRO DEL RECEPTOR": ("text", "2", "33"),
+    "CORRIGE TEXTO": ("text", "2", "33"),
+    "CORRIGE MONTO": ("amount", "3", "33"),
+    "MODIFICA MONTO": ("amount", "3", "33"),
 }
 
 
@@ -74,6 +84,9 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
         "reference_reason": None,
         "reference_reason_source_line": None,
         "note_operation": None,
+        "reference_code": None,
+        "reference_document_code": None,
+        "reference_code_source_line": None,
         "text_correction": [],
         "diagnostics": [],
     }
@@ -114,16 +127,22 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
             )
             result["reference_reason_source_line"] = source_line
             normalized_reason = _label(result["reference_reason"])
-            if "ANULA" in normalized_reason:
-                result["note_operation"] = "cancel"
-            elif "DEVOLUCION" in normalized_reason:
-                result["note_operation"] = "return"
-            elif any(
-                word in normalized_reason for word in ("CORRIGE GIRO", "CORRIGE TEXTO")
-            ):
-                result["note_operation"] = "text"
-            elif "MODIFICA MONTO" in normalized_reason:
-                result["note_operation"] = "amount"
+            reason = _NOTE_REASONS.get(normalized_reason)
+            if reason:
+                (
+                    result["note_operation"],
+                    result["reference_code"],
+                    result["reference_document_code"],
+                ) = reason
+                result["reference_code_source_line"] = source_line
+            else:
+                result["diagnostics"].append(
+                    {
+                        "code": "note_reason_unsupported",
+                        "source_line": source_line,
+                        "text": result["reference_reason"],
+                    }
+                )
             continue
         discount = re.search(r"DESCUENTO GLOBAL[^%]*?(\d+(?:\.\d+)?)\s*%", label)
         if discount:
@@ -201,6 +220,38 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
                 {
                     "code": "note_reason_missing_or_unrecognized",
                     "source_line": source_start_line,
+                }
+            )
+        expected_note_code = {
+            "cancel": {"56", "61"},
+            "return": {"61"},
+            "text": {"61"},
+            "amount": {"61"},
+        }
+        if (
+            result["note_operation"]
+            and document_code not in expected_note_code[result["note_operation"]]
+        ):
+            result["diagnostics"].append(
+                {
+                    "code": "note_operation_document_type_mismatch",
+                    "source_line": result["reference_reason_source_line"],
+                    "document_code": document_code,
+                    "operation": result["note_operation"],
+                }
+            )
+        expected_note_code = {"33": "61", "61": "56"}.get(
+            result["reference_document_code"]
+        )
+        if expected_note_code and document_code != expected_note_code:
+            result["diagnostics"].append(
+                {
+                    "code": "note_reference_document_type_mismatch",
+                    "source_line": result["reference_reason_source_line"],
+                    "document_code": document_code,
+                    "expected_reference_document_code": result[
+                        "reference_document_code"
+                    ],
                 }
             )
     if result["global_discount_percent"] and document_code != "33":

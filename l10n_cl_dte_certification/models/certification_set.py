@@ -57,6 +57,7 @@ class DteCertificationSet(models.Model):
     case_review_required_count = fields.Integer(compute="_compute_case_coverage")
     case_unsupported_count = fields.Integer(compute="_compute_case_coverage")
     case_pending_count = fields.Integer(compute="_compute_case_coverage")
+    case_outdated_count = fields.Integer(compute="_compute_case_coverage")
     case_coverage_state = fields.Selection(
         [
             ("pending", "Pending"),
@@ -102,6 +103,12 @@ class DteCertificationSet(models.Model):
             record.case_pending_count = len(
                 cases.filtered(
                     lambda case: case.interpretation_version != INTERPRETER_VERSION
+                )
+            )
+            record.case_outdated_count = len(
+                cases.filtered(
+                    lambda case: case.interpretation_version
+                    and case.interpretation_version != INTERPRETER_VERSION
                 )
             )
             if not cases or record.case_pending_count:
@@ -274,6 +281,17 @@ class DteCertificationSet(models.Model):
             expected_digest = record.source_digest
             if any(case.source_digest != expected_digest for case in record.case_ids):
                 raise UserError(_("A case snapshot does not match its original SET."))
+            if any(
+                case.interpretation_version
+                and case.interpretation_version != INTERPRETER_VERSION
+                for case in record.case_ids
+            ):
+                raise UserError(
+                    _(
+                        "This SET contains older interpretations. Use the explicit "
+                        "reinterpretation action to update them."
+                    )
+                )
             record.case_ids._interpret_from_instructions()
         return {
             "type": "ir.actions.client",
@@ -283,6 +301,35 @@ class DteCertificationSet(models.Model):
                 "message": _(
                     "Explicit case fields and source-line diagnostics "
                     "are ready for review."
+                ),
+                "type": "success",
+                "sticky": False,
+            },
+        }
+
+    def action_reinterpret_cases(self):
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can reinterpret certification cases."))
+        for record in self:
+            stale_cases = record.case_ids.filtered(
+                lambda case: case.interpretation_version
+                and case.interpretation_version != INTERPRETER_VERSION
+            )
+            if not stale_cases:
+                raise UserError(
+                    _("This SET has no older case interpretations to update.")
+                )
+            if any(case.source_digest != record.source_digest for case in stale_cases):
+                raise UserError(_("A case snapshot does not match its original SET."))
+            stale_cases._interpret_from_instructions(audit_reinterpretation=True)
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Case reinterpretation complete"),
+                "message": _(
+                    "The previous and current interpretations were recorded "
+                    "in the case history."
                 ),
                 "type": "success",
                 "sticky": False,

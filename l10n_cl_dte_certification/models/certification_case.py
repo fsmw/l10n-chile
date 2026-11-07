@@ -69,6 +69,18 @@ class DteCertificationCase(models.Model):
     reference_reason_source_line = fields.Integer(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
     )
+    reference_code = fields.Selection(
+        [
+            ("1", "1 - Cancels"),
+            ("2", "2 - Corrects text"),
+            ("3", "3 - Corrects amounts"),
+        ],
+        readonly=True,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+    reference_code_source_line = fields.Integer(
+        readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
     note_operation = fields.Selection(
         [
             ("cancel", "Cancel"),
@@ -81,6 +93,11 @@ class DteCertificationCase(models.Model):
     )
     text_correction = fields.Json(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
+    )
+    interpretation_history_ids = fields.One2many(
+        "l10n_cl.dte.certification.interpretation.event",
+        "case_id",
+        groups="l10n_cl_dte_core.group_dte_manager",
     )
     interpretation_version = fields.Char(
         readonly=True, groups="l10n_cl_dte_core.group_dte_manager"
@@ -122,9 +139,19 @@ class DteCertificationCase(models.Model):
     def _create_from_structure(self, vals_list):
         return super(DteCertificationCase, self.sudo()).create(vals_list)
 
-    def _interpret_from_instructions(self):
+    def _interpret_from_instructions(self, audit_reinterpretation=False):
         CaseLine = self.env["l10n_cl.dte.certification.case.line"]
         for case in self:
+            previous_version = case.interpretation_version
+            previous_interpretation = case.interpretation
+            if previous_version and previous_version != INTERPRETER_VERSION:
+                if not audit_reinterpretation:
+                    raise UserError(
+                        _(
+                            "This case uses an older interpreter. Use the explicit "
+                            "reinterpretation action to update it."
+                        )
+                    )
             values = interpret(
                 case.instruction_text, case.document_code, case.source_start_line
             )
@@ -143,6 +170,8 @@ class DteCertificationCase(models.Model):
                     "reference_reason_source_line": values[
                         "reference_reason_source_line"
                     ],
+                    "reference_code": values["reference_code"],
+                    "reference_code_source_line": values["reference_code_source_line"],
                     "note_operation": values["note_operation"],
                     "text_correction": values["text_correction"],
                     "interpretation_version": INTERPRETER_VERSION,
@@ -169,4 +198,14 @@ class DteCertificationCase(models.Model):
                     )
             elif rows:
                 CaseLine._create_from_interpretation(case, rows, INTERPRETER_VERSION)
+            if previous_version and previous_version != INTERPRETER_VERSION:
+                case.env[
+                    "l10n_cl.dte.certification.interpretation.event"
+                ]._create_from_reinterpretation(
+                    case,
+                    previous_version,
+                    previous_interpretation,
+                    INTERPRETER_VERSION,
+                    values,
+                )
         return True

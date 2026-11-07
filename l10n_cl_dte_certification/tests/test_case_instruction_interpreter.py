@@ -56,6 +56,9 @@ class TestCaseInstructionInterpreter(TransactionCase):
         self.assertEqual(result["reference_case_identifier"], "123-1")
         self.assertEqual(result["reference_source_line"], 23)
         self.assertEqual(result["note_operation"], "text")
+        self.assertEqual(result["reference_code"], "2")
+        self.assertEqual(result["reference_code_source_line"], 24)
+        self.assertEqual(result["reference_document_code"], "33")
         self.assertEqual(result["reference_reason"], "CORRIGE TEXTO")
         self.assertEqual(result["reference_reason_source_line"], 24)
         self.assertEqual(
@@ -64,6 +67,53 @@ class TestCaseInstructionInterpreter(TransactionCase):
                 {"source_line": 25, "text": "   DICE: Giro anterior"},
                 {"source_line": 26, "text": "DEBE DECIR: Giro corregido"},
             ],
+        )
+
+    def test_maps_note_reasons_to_exact_sii_reference_codes(self):
+        cases = [
+            ("ANULA FACTURA", "61", "cancel", "1", "33"),
+            ("ANULA NOTA DE CREDITO", "56", "cancel", "1", "61"),
+            ("DEVOLUCIÓN DE MERCADERÍAS", "61", "return", "3", "33"),
+            ("CORRIGE GIRO DEL RECEPTOR", "61", "text", "2", "33"),
+            ("MODIFICA MONTO", "61", "amount", "3", "33"),
+        ]
+        for reason, document_code, operation, reference_code, target_code in cases:
+            with self.subTest(reason=reason, document_code=document_code):
+                result = interpret(
+                    "CASO 123-2\nREFERENCIA CASO 123-1\n" f"RAZON REFERENCIA: {reason}",
+                    document_code,
+                    1,
+                )
+                self.assertEqual(result["note_operation"], operation)
+                self.assertEqual(result["reference_code"], reference_code)
+                self.assertEqual(result["reference_document_code"], target_code)
+                self.assertEqual(result["reference_reason"], reason)
+                self.assertEqual(result["state"], "interpreted")
+
+    def test_rejects_unrecognized_reason_and_inconsistent_note_type(self):
+        unknown = interpret(
+            "CASO 123-2\nREFERENCIA CASO 123-1\n"
+            "RAZON REFERENCIA: ANULA SIN ESPECIFICAR DOCUMENTO",
+            "61",
+            1,
+        )
+        self.assertIsNone(unknown["note_operation"])
+        self.assertIsNone(unknown["reference_code"])
+        self.assertIn(
+            "note_reason_unsupported",
+            {item["code"] for item in unknown["diagnostics"]},
+        )
+
+        mismatch = interpret(
+            "CASO 123-2\nREFERENCIA CASO 123-1\n" "RAZON REFERENCIA: CORRIGE TEXTO",
+            "56",
+            1,
+        )
+        self.assertEqual(mismatch["reference_code"], "2")
+        self.assertEqual(mismatch["state"], "review_required")
+        self.assertIn(
+            "note_operation_document_type_mismatch",
+            {item["code"] for item in mismatch["diagnostics"]},
         )
 
     def test_does_not_guess_missing_note_reference_or_discard_unknown_lines(self):
@@ -175,6 +225,7 @@ class TestCaseInterpretationAction(TransactionCase):
             record.case_ids.interpretation["items"][0]["unit_price"], "100"
         )
         self.assertEqual(record.case_coverage_state, "complete")
+        self.assertEqual(record.case_outdated_count, 0)
         self.assertEqual(record.case_interpreted_count, 1)
         self.assertEqual(record.case_pending_count, 0)
         self.assertEqual(len(record.case_ids.line_ids), 1)
@@ -197,6 +248,31 @@ class TestCaseInterpretationAction(TransactionCase):
         self.assertEqual(
             record.action_check_case_coverage()["params"]["type"], "success"
         )
+
+        self.env.cr.execute(
+            "UPDATE l10n_cl_dte_certification_case "
+            "SET interpretation_version = %s WHERE id = %s",
+            ("sii_case_instructions_v1", record.case_ids.id),
+        )
+        record.case_ids.invalidate_recordset(["interpretation_version"])
+        record.invalidate_recordset(["case_pending_count", "case_outdated_count"])
+        self.assertEqual(record.case_outdated_count, 1)
+        with self.assertRaises(UserError):
+            record.action_interpret_cases()
+        source_digest = record.case_ids.source_digest
+        record.action_reinterpret_cases()
+        record.invalidate_recordset(["case_pending_count", "case_outdated_count"])
+        self.assertEqual(record.case_outdated_count, 0)
+        event = record.case_ids.interpretation_history_ids
+        self.assertEqual(len(event), 1)
+        self.assertEqual(event.from_interpreter_version, "sii_case_instructions_v1")
+        self.assertEqual(event.to_interpreter_version, INTERPRETER_VERSION)
+        self.assertEqual(event.actor_id, manager)
+        self.assertEqual(record.case_ids.source_digest, source_digest)
+        with self.assertRaises(UserError):
+            event.sudo().write({"sequence": 2})
+        with self.assertRaises(UserError):
+            event.sudo().unlink()
 
     def test_coverage_keeps_unsupported_case_visible_as_a_blocker(self):
         company = self.env.company
