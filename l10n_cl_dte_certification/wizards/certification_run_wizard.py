@@ -26,7 +26,11 @@ class DteCertificationRunWizard(models.TransientModel):
     @api.model
     def default_get(self, field_names):
         values = super().default_get(field_names)
-        set_id = values.get("set_id") or self.env.context.get("active_id")
+        set_id = (
+            values.get("set_id")
+            or self.env.context.get("default_set_id")
+            or self.env.context.get("active_id")
+        )
         if set_id and "case_ids" in field_names:
             record = self.env["l10n_cl.dte.certification.set"].browse(set_id)
             values["case_ids"] = [fields.Command.set(record.case_ids.ids)]

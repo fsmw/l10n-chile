@@ -8,7 +8,14 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,blocked"
+                        statusbar_visible="draft,generated,partial,blocked"
+                    />
+                    <button
+                        name="action_open_generation_wizard"
+                        type="object"
+                        string="Generate Draft Documents"
+                        class="oe_highlight"
+                        invisible="state not in ['draft', 'partial']"
                     />
                 </header>
                 <sheet>
@@ -33,6 +40,10 @@
                                 <field name="sequence" />
                                 <field name="case_identifier" />
                                 <field name="document_code" />
+                                <field name="generation_state" />
+                                <field name="move_id" />
+                                <field name="partner_id" optional="hide" />
+                                <field name="generation_message" optional="hide" />
                                 <field name="referenced_line_id" />
                                 <field name="snapshot_digest" optional="hide" />
                             </list>
@@ -43,6 +54,10 @@
                                         <field name="case_id" />
                                         <field name="case_identifier" />
                                         <field name="document_code" />
+                                        <field name="generation_state" />
+                                        <field name="move_id" />
+                                        <field name="partner_id" />
+                                        <field name="generation_message" />
                                         <field name="referenced_line_id" />
                                         <field name="source_digest" />
                                         <field name="snapshot_digest" />
@@ -78,6 +93,39 @@
                         name="action_create_execution"
                         type="object"
                         string="Create Execution"
+                        class="oe_highlight"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="view_certification_generation_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.generation.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.generation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Certification Drafts">
+                <group>
+                    <field name="run_id" />
+                    <field name="company_id" invisible="1" />
+                    <field name="journal_id" />
+                    <field name="income_account_id" />
+                    <field name="vat_tax_id" />
+                </group>
+                <field name="line_ids" nolabel="1">
+                    <list create="false" delete="true" editable="bottom">
+                        <field name="sequence" readonly="1" />
+                        <field name="case_identifier" readonly="1" />
+                        <field name="document_code" readonly="1" />
+                        <field name="selected" />
+                        <field name="partner_id" />
+                    </list>
+                </field>
+                <footer>
+                    <button
+                        name="action_generate"
+                        type="object"
+                        string="Generate Drafts"
                         class="oe_highlight"
                     />
                     <button string="Cancel" special="cancel" />

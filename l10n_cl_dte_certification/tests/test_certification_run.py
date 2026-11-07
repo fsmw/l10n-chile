@@ -80,7 +80,7 @@ class TestCertificationRunSnapshots(TransactionCase):
                 "name": "Servicio sintetico",
                 "quantity": "2",
                 "unit_price": "1250",
-                "discount_percent": None,
+                "discount_percent": False,
                 "unit_of_measure": "UN",
                 "source_digest": self.certification_set.source_digest,
                 "interpretation_version": "sii_case_instructions_v2",

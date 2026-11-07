@@ -42,7 +42,12 @@ class DteCertificationRun(models.Model):
     set_digest = fields.Char(required=True, readonly=True, index=True)
     snapshot_digest = fields.Char(required=True, readonly=True, index=True)
     state = fields.Selection(
-        [("draft", "Draft"), ("blocked", "Blocked")],
+        [
+            ("draft", "Draft"),
+            ("generated", "Documents Generated"),
+            ("partial", "Partially Generated"),
+            ("blocked", "Blocked"),
+        ],
         required=True,
         readonly=True,
         default="draft",
@@ -54,6 +59,26 @@ class DteCertificationRun(models.Model):
         copy=False,
     )
     line_count = fields.Integer(compute="_compute_line_count")
+
+    def action_open_generation_wizard(self):
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(
+                _("Only DTE managers can generate certification documents.")
+            )
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Generate Certification Drafts"),
+            "res_model": "l10n_cl.dte.certification.generation.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_run_id": self.id},
+        }
+
+    def _record_generation_state(self, state):
+        if state not in {"generated", "partial", "blocked"}:
+            raise ValidationError(_("Invalid execution generation state."))
+        return super(DteCertificationRun, self.sudo()).write({"state": state})
 
     _sql_constraints = [
         (
@@ -278,6 +303,25 @@ class DteCertificationRunLine(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    move_id = fields.Many2one(
+        "account.move", readonly=True, ondelete="restrict", check_company=True
+    )
+    generation_state = fields.Selection(
+        [
+            ("pending", "Pending"),
+            ("generated", "Draft Generated"),
+            ("unsupported", "Unsupported"),
+            ("failed", "Failed"),
+        ],
+        required=True,
+        readonly=True,
+        default="pending",
+        index=True,
+    )
+    generation_message = fields.Char(readonly=True)
+    partner_id = fields.Many2one(
+        "res.partner", readonly=True, check_company=True, ondelete="restrict"
+    )
 
     _sql_constraints = [
         (
@@ -305,3 +349,9 @@ class DteCertificationRunLine(models.Model):
     @api.model
     def _create_from_snapshot(self, values):
         return super(DteCertificationRunLine, self.sudo()).create(values)
+
+    def _record_generation_result(self, values):
+        allowed = {"move_id", "generation_state", "generation_message", "partner_id"}
+        if set(values) - allowed:
+            raise ValidationError(_("Invalid generation result fields."))
+        return super(DteCertificationRunLine, self.sudo()).write(values)
