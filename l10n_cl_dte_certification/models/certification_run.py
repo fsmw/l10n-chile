@@ -88,6 +88,12 @@ class DteCertificationRun(models.Model):
         ondelete="restrict",
         check_company=True,
     )
+    result_reconciliation_ids = fields.One2many(
+        "l10n_cl.dte.certification.run.result",
+        "run_id",
+        readonly=True,
+        copy=False,
+    )
 
     def action_open_generation_wizard(self):
         self.ensure_one()
@@ -329,10 +335,24 @@ class DteCertificationRun(models.Model):
                     "idempotency_key": submission_key,
                 }
             )
-        super(DteCertificationRun, self.sudo()).write(
+        self._record_sii_submission(submission)
+        return submission.action_enqueue_send()
+
+    def _record_sii_submission(self, submission):
+        self.ensure_one()
+        if submission.company_id != self.company_id:
+            raise ValidationError(_("The SII transmission belongs to another company."))
+        if submission.environment != "certification":
+            raise ValidationError(
+                _("The linked SII transmission is not Certification.")
+            )
+        if submission.request_digest != self.envelope_digest:
+            raise ValidationError(
+                _("The SII transmission does not match this execution envelope.")
+            )
+        return super(DteCertificationRun, self.sudo()).write(
             {"sii_submission_id": submission.id}
         )
-        return submission.action_enqueue_send()
 
     def action_open_sii_submission(self):
         self.ensure_one()
@@ -341,6 +361,119 @@ class DteCertificationRun(models.Model):
         if not self.sii_submission_id:
             raise UserError(_("This execution has no SII transmission record yet."))
         return self.sii_submission_id.action_open()
+
+    def action_reconcile_sii_result(self):
+        """Link the latest structurally reconciled gateway result to frozen cases."""
+        self.ensure_one()
+        if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise UserError(_("Only DTE managers can reconcile SII results."))
+        if self.company_id != self.env.company:
+            raise UserError(_("Use the execution company as the active company."))
+        self.env.cr.execute(
+            "SELECT id FROM l10n_cl_dte_certification_run WHERE id = %s FOR UPDATE",
+            [self.id],
+        )
+        self.invalidate_recordset(["sii_submission_id", "result_reconciliation_ids"])
+        submission = self.sii_submission_id
+        if not submission or submission.environment != "certification":
+            raise UserError(_("This execution has no Certification transmission."))
+        if not submission.track_id:
+            raise UserError(_("The SII transmission needs a TrackID first."))
+        if (
+            submission.company_id != self.company_id
+            or submission.request_digest != self.envelope_digest
+        ):
+            raise ValidationError(
+                _("The SII transmission does not match this execution envelope.")
+            )
+        imported = submission.result_import_ids.sorted(
+            key=lambda item: (item.imported_at, item.id), reverse=True
+        )[:1]
+        if not imported:
+            raise UserError(
+                _("Import the SII result XML from the transmission before reconciling.")
+            )
+        if imported.reconciliation_state != "reconciled":
+            raise UserError(
+                _("The imported SII result has discrepancies and needs review first.")
+            )
+        existing = self.env["l10n_cl.dte.certification.run.result"].search(
+            [("run_id", "=", self.id), ("source_digest", "=", imported.source_digest)],
+            limit=1,
+        )
+        if existing:
+            return existing.action_open()
+
+        case_by_identity = {}
+        for run_line in self.line_ids:
+            if not run_line.document_id:
+                raise ValidationError(
+                    _("Prepare every frozen case before reconciling the SII result.")
+                )
+            identity = (
+                run_line.document_code,
+                str(run_line.document_id.folio),
+            )
+            if identity in case_by_identity:
+                raise ValidationError(
+                    _("The execution repeats a DTE type and folio identity.")
+                )
+            case_by_identity[identity] = run_line
+        if imported.expected_count != len(case_by_identity) or len(
+            imported.line_ids
+        ) != len(case_by_identity):
+            raise ValidationError(
+                _("The imported result does not cover every frozen execution case.")
+            )
+
+        result_line_values = []
+        matched = set()
+        for imported_line in imported.line_ids:
+            identity = (imported_line.document_type, imported_line.folio)
+            run_line = case_by_identity.get(identity)
+            if not run_line or identity in matched:
+                raise ValidationError(
+                    _("The imported result contains an unknown or duplicate case.")
+                )
+            expected_issuer = normalize_rut(self.company_id.partner_id.vat)
+            expected_receiver = normalize_rut(run_line.partner_id.vat)
+            if (
+                normalize_rut(imported_line.issuer_vat) != expected_issuer
+                or normalize_rut(imported_line.receiver_vat) != expected_receiver
+            ):
+                raise ValidationError(
+                    _("The imported result identity differs from the frozen case.")
+                )
+            matched.add(identity)
+            result_line_values.append(
+                {
+                    "run_line_id": run_line.id,
+                    "gateway_result_line_id": imported_line.id,
+                    "document_type": identity[0],
+                    "folio": identity[1],
+                    "state": imported_line.state,
+                    "sii_state_code": imported_line.sii_state_code,
+                    "sii_detail": imported_line.sii_detail,
+                }
+            )
+        result = self.env["l10n_cl.dte.certification.run.result"]._create_from_import(
+            {
+                "run_id": self.id,
+                "submission_id": submission.id,
+                "result_import_id": imported.id,
+                "source_digest": imported.source_digest,
+                "reconciled_at": fields.Datetime.now(),
+                "reconciled_by_id": self.env.user.id,
+                "sii_state": imported.sii_state,
+                "expected_count": imported.expected_count,
+                "accepted_count": imported.accepted_count,
+                "rejected_count": imported.rejected_count,
+                "repair_count": imported.repair_count,
+                "indeterminate_count": imported.indeterminate_count,
+            },
+            result_line_values,
+        )
+        return result.action_open()
 
     def _record_generation_state(self, state):
         if state not in {"generated", "prepared", "partial", "blocked"}:
@@ -752,7 +885,7 @@ class DteCertificationRunLine(models.Model):
             {
                 "document_id": document.id if document else False,
                 "preparation_state": state,
-                "preparation_message": (message or False)[:2000],
+                "preparation_message": (message or "")[:2000] or False,
             }
         )
 

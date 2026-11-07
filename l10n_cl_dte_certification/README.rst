@@ -94,6 +94,29 @@ of the selected instructions, interpretation, detail rows, references,
 and source evidence. Creating an execution does not create accounting
 documents, reserve folios, or send data to the SII.
 
+DTE managers can generate drafts and prepare signed DTEs for the
+execution. Once every case is prepared, Export Certification Envelope
+validates the frozen case links and signed XML evidence, composes and
+schema-validates a signed EnvioDTE, and saves its exact bytes and
+SHA-256 digest for repeatable download. This is an offline export only;
+it does not authenticate to, upload to, or query the SII.
+
+After reviewing the stored XML and digest, a DTE manager can explicitly
+submit that envelope through the configured Certification gateway. The
+execution links to one durable gateway record, which retains the
+request, TrackID, status attempts, and response evidence. If transport
+outcome is uncertain, the workflow preserves that state and does not
+retry the upload automatically; operators must inspect the transmission
+record and recover through the SII portal before taking further action.
+
+After importing the SII result XML on the transmission record, a DTE
+manager can reconcile the imported EPR against the frozen execution
+cases. The snapshot matches issuer, receiver, document type, folio, and
+the exact submitted-envelope digest; it displays the reported result and
+detail per case while preserving the gateway's operator-attestation
+label. It does not verify the supplied result signature, change the
+DTE/accounting state, or approve a portal certification stage.
+
 Bug Tracker
 ===========
 

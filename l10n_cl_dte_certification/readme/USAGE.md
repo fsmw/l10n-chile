@@ -62,3 +62,10 @@ gateway record, which retains the request, TrackID, status attempts, and respons
 If transport outcome is uncertain, the workflow preserves that state and does not retry the
 upload automatically; operators must inspect the transmission record and recover through
 the SII portal before taking further action.
+
+After importing the SII result XML on the transmission record, a DTE manager can reconcile
+the imported EPR against the frozen execution cases. The snapshot matches issuer, receiver,
+document type, folio, and the exact submitted-envelope digest; it displays the reported result
+and detail per case while preserving the gateway's operator-attestation label. It does not
+verify the supplied result signature, change the DTE/accounting state, or approve a portal
+certification stage.

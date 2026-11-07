@@ -3,4 +3,5 @@ from . import test_certification_case_snapshots
 from . import test_case_instruction_interpreter
 from . import test_set_structure_parser
 from . import test_certification_run
+from . import test_certification_result_reconciliation
 from . import test_case_generation

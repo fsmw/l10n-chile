@@ -43,6 +43,13 @@
                         invisible="not sii_submission_id"
                         groups="l10n_cl_dte_core.group_dte_manager"
                     />
+                    <button
+                        name="action_reconcile_sii_result"
+                        type="object"
+                        string="Reconcile Imported SII Result"
+                        invisible="not sii_submission_id"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
                 </header>
                 <sheet>
                     <group>
@@ -113,6 +120,27 @@
                             </form>
                         </field>
                     </group>
+                    <notebook>
+                        <page string="SII Result History">
+                            <field
+                                name="result_reconciliation_ids"
+                                nolabel="1"
+                                readonly="1"
+                            >
+                                <list create="false" edit="false" delete="false">
+                                    <field name="reconciled_at" />
+                                    <field name="reconciled_by_id" />
+                                    <field name="sii_state" />
+                                    <field name="expected_count" />
+                                    <field name="accepted_count" />
+                                    <field name="rejected_count" />
+                                    <field name="repair_count" />
+                                    <field name="indeterminate_count" />
+                                    <field name="source_digest" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
