@@ -245,3 +245,129 @@ class TestCertificationCaseGeneration(DteInvoiceTestCase):
         self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
         with self.assertRaisesRegex(UserError, "cannot be posted"):
             cancellation.action_post()
+
+    def _return_execution(self, returned_quantities, duplicate_invoice_item=False):
+        if isinstance(returned_quantities, str):
+            returned_quantities = [returned_quantities]
+        source = (
+            b"SET TEST - NUMERO DE ATENCION: 777\n"
+            b"CASO 777-1\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"ITEM  CANTIDAD  PRECIO UNITARIO  UNIDAD MEDIDA  DESCUENTO ITEM\n"
+            b"Servicio de prueba  2  1250  UN  10%\n"
+        )
+        if duplicate_invoice_item:
+            source += b"Servicio de prueba  1  500  UN  0%\n"
+        for sequence, quantity in enumerate(returned_quantities, start=2):
+            source += (
+                f"CASO 777-{sequence}\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+                "REFERENCIA CASO 777-1\n"
+                "RAZON REFERENCIA: DEVOLUCION DE MERCADERIAS\n"
+                "ITEM  CANTIDAD  UNIDAD MEDIDA\n"
+                f"Servicio de prueba  {quantity}  UN\n"
+            ).encode()
+        certification_set = self.env[
+            "l10n_cl.dte.certification.set"
+        ]._create_from_import(
+            self.company, "synthetic-return-source.txt", base64.b64encode(source)
+        )
+        certification_set.action_parse_source()
+        certification_set.action_materialize_cases()
+        certification_set.action_interpret_cases()
+        execution = self.env["l10n_cl.dte.certification.run"]._create_from_selection(
+            certification_set, certification_set.case_ids
+        )
+        return execution, execution.line_ids.sorted("sequence")
+
+    def test_generates_partial_return_from_immutable_invoice_snapshot(self):
+        execution, lines = self._return_execution("1")
+        invoice_line, return_line = lines
+        folios_before = self.env["l10n_cl.caf.folio"].search_count([])
+
+        created = CaseGenerationService(self.env).generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=lines,
+        )
+
+        self.assertEqual(set(created.ids), set(lines.ids))
+        invoice = invoice_line.move_id
+        note = return_line.move_id
+        self.assertEqual(note.move_type, "out_refund")
+        self.assertEqual(note.l10n_latam_document_type_id.code, "61")
+        self.assertEqual(note.reversed_entry_id, invoice)
+        self.assertEqual(note.state, "draft")
+        self.assertEqual(note.partner_id, invoice.partner_id)
+        self.assertEqual(note.invoice_line_ids.quantity, 1)
+        self.assertEqual(note.invoice_line_ids.price_unit, 1250)
+        self.assertEqual(note.invoice_line_ids.discount, 10)
+        self.assertEqual(note.invoice_line_ids.tax_ids, self.tax_19)
+        self.assertEqual(note.amount_total, 1339)
+        self.assertEqual(execution.state, "generated")
+        self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
+        with self.assertRaisesRegex(UserError, "cannot be posted"):
+            note.action_post()
+
+    def test_return_over_original_quantity_fails_before_creating_any_draft(self):
+        execution, lines = self._return_execution("3")
+        invoice_line = lines[0]
+        before = self.env["account.move"].search_count([])
+
+        with self.assertRaisesRegex(ValidationError, "exceeds the remaining"):
+            CaseGenerationService(self.env).generate(
+                execution,
+                journal=self.journal,
+                vat_tax=self.tax_19,
+                income_account=self.income_account,
+                partner_by_line={invoice_line.id: self.receiver},
+                selected_lines=lines,
+            )
+
+        self.assertEqual(self.env["account.move"].search_count([]), before)
+        self.assertEqual(execution.state, "draft")
+
+    def test_later_return_cannot_exceed_balance_after_prior_generated_return(self):
+        execution, lines = self._return_execution(["1", "2"])
+        invoice_line, first_return, second_return = lines
+        generator = CaseGenerationService(self.env)
+        generator.generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=invoice_line | first_return,
+        )
+        before = self.env["account.move"].search_count([])
+
+        with self.assertRaisesRegex(ValidationError, "exceeds the remaining"):
+            generator.generate(
+                execution,
+                journal=self.journal,
+                vat_tax=self.tax_19,
+                income_account=self.income_account,
+                selected_lines=second_return,
+            )
+
+        self.assertEqual(self.env["account.move"].search_count([]), before)
+        self.assertEqual(second_return.generation_state, "pending")
+
+    def test_return_with_ambiguous_source_item_fails_before_draft_creation(self):
+        execution, lines = self._return_execution("1", duplicate_invoice_item=True)
+        invoice_line = lines[0]
+        before = self.env["account.move"].search_count([])
+
+        with self.assertRaisesRegex(ValidationError, "exactly one invoice line"):
+            CaseGenerationService(self.env).generate(
+                execution,
+                journal=self.journal,
+                vat_tax=self.tax_19,
+                income_account=self.income_account,
+                partner_by_line={invoice_line.id: self.receiver},
+                selected_lines=lines,
+            )
+
+        self.assertEqual(self.env["account.move"].search_count([]), before)
+        self.assertEqual(execution.state, "draft")

@@ -37,31 +37,46 @@ class CaseGenerationService:
         partners = partner_by_line or {}
         invoice_lines = lines.filtered(lambda line: line.document_code in {"33", "34"})
         correction_lines = lines.filtered(
-            lambda line: line.document_code == "61"
-            and line.snapshot.get("note_operation") == "text"
+            lambda line: (
+                line.document_code == "61"
+                and line.snapshot.get("note_operation") == "text"
+            )
+        )
+        return_lines = lines.filtered(
+            lambda line: (
+                line.document_code == "61"
+                and line.snapshot.get("note_operation") == "return"
+            )
         )
         text_cancellation_lines = lines.filtered(
-            lambda line: line.document_code == "56"
-            and line.snapshot.get("note_operation") == "cancel"
-            and line.snapshot.get("reference_target_document_code") == "61"
+            lambda line: (
+                line.document_code == "56"
+                and line.snapshot.get("note_operation") == "cancel"
+                and line.snapshot.get("reference_target_document_code") == "61"
+            )
         )
-        supported_lines = invoice_lines | correction_lines | text_cancellation_lines
+        supported_lines = (
+            invoice_lines | correction_lines | return_lines | text_cancellation_lines
+        )
         if any(line.generation_state != "pending" for line in supported_lines):
             raise UserError(_("Only pending certification cases can be generated."))
         if not supported_lines:
             raise ValidationError(
                 _(
                     "Select a pending document of type 33 or 34, a text-correction "
-                    "credit note of type 61, or its zero-value type-56 cancellation."
+                    "or return credit note of type 61, or its type-56 cancellation."
                 )
             )
         self._check_journal(journal, run.company_id)
         self._check_income_account(income_account, run.company_id)
-        if any(line.document_code == "33" for line in invoice_lines):
+        if any(line.document_code == "33" for line in invoice_lines) or return_lines:
             self._check_vat(vat_tax, run.company_id)
 
         for line in correction_lines:
             self._validate_text_correction_snapshot(line, lines)
+        return_rows = self._prepare_return_drafts(
+            return_lines, lines, vat_tax, income_account
+        )
         for line in text_cancellation_lines:
             self._validate_text_cancellation_snapshot(line, lines)
 
@@ -144,6 +159,7 @@ class CaseGenerationService:
         created |= self._generate_text_cancellation_drafts(
             run, text_cancellation_lines, lines, journal, income_account
         )
+        created |= self._generate_return_drafts(run, return_rows, journal)
 
         for line in lines - supported_lines:
             if line.generation_state == "pending":
@@ -161,6 +177,185 @@ class CaseGenerationService:
             lambda item: item.generation_state in {"pending", "failed", "unsupported"}
         )
         run._record_generation_state("partial" if remaining else "generated")
+        return created
+
+    def _prepare_return_drafts(self, return_lines, selected_lines, vat_tax, account):
+        """Validate return quantities and derive amounts from invoice snapshots."""
+        planned = {}
+        prepared = []
+        for line in return_lines.sorted("sequence"):
+            target = self._check_return_target(line, selected_lines)
+            source_details = target.snapshot.get("details") or []
+            note_details = line.snapshot.get("details") or []
+            if not note_details:
+                raise ValidationError(
+                    _(
+                        "Return case %(case)s has no item quantities.",
+                        case=line.case_identifier,
+                    )
+                )
+            rows = []
+            seen_names = set()
+            for detail in note_details:
+                name = detail.get("name")
+                if not name or name in seen_names:
+                    raise ValidationError(
+                        _(
+                            "Return case %(case)s has a missing or repeated item name.",
+                            case=line.case_identifier,
+                        )
+                    )
+                seen_names.add(name)
+                matches = [item for item in source_details if item.get("name") == name]
+                if len(matches) != 1:
+                    raise ValidationError(
+                        _(
+                            "Return item %(item)s in case %(case)s does not match "
+                            "exactly one invoice line.",
+                            item=name,
+                            case=line.case_identifier,
+                        )
+                    )
+                source = matches[0]
+                try:
+                    quantity = self._decimal(detail.get("quantity"), positive=True)
+                    original_quantity = self._decimal(
+                        source.get("quantity"), positive=True
+                    )
+                    price = self._decimal(source.get("unit_price"), allow_zero=True)
+                    discount = self._decimal(
+                        source.get("discount_percent") or "0", allow_zero=True
+                    )
+                    if discount > 100:
+                        raise ValueError("invalid discount")
+                except (InvalidOperation, ValueError) as error:
+                    raise ValidationError(
+                        _(
+                            "Return or source invoice values are invalid for "
+                            "case %(case)s.",
+                            case=line.case_identifier,
+                        )
+                    ) from error
+                key = (target.id, name)
+                returned = planned.get(key)
+                if returned is None:
+                    returned = self._previous_return_quantity(target, name)
+                if quantity + returned > original_quantity:
+                    raise ValidationError(
+                        _(
+                            "Return quantity for %(item)s in case %(case)s "
+                            "exceeds the remaining invoice quantity.",
+                            item=name,
+                            case=line.case_identifier,
+                        )
+                    )
+                planned[key] = returned + quantity
+                rows.append(
+                    {
+                        "name": name,
+                        "quantity": float(quantity),
+                        "price_unit": float(price),
+                        "discount": float(discount),
+                        "account_id": account.id,
+                        "tax_ids": [Command.set([vat_tax.id])],
+                    }
+                )
+            prepared.append((line, target, rows))
+        return prepared
+
+    def _previous_return_quantity(self, target, name):
+        """Sum already generated return quantities linked to the same invoice."""
+        total = Decimal("0")
+        for prior in target.run_id.line_ids.filtered(
+            lambda item: (
+                item.document_code == "61"
+                and item.snapshot.get("note_operation") == "return"
+                and item.referenced_line_id == target
+                and item.generation_state == "generated"
+            )
+        ):
+            for detail in prior.snapshot.get("details") or []:
+                if detail.get("name") == name:
+                    total += self._decimal(detail.get("quantity"), positive=True)
+        return total
+
+    def _check_return_target(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            target
+            and target.generation_state == "pending"
+            and target not in selected_lines
+        ):
+            raise ValidationError(
+                _(
+                    "Select the referenced invoice along with return case %(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "33"
+            or target.sequence >= line.sequence
+            or line.snapshot.get("reference_code") != "3"
+            or line.snapshot.get("reference_target_document_code") != "33"
+            or not line.snapshot.get("reference_reason")
+            or target.generation_state not in {"pending", "generated"}
+            or line.snapshot_digest != self._snapshot_digest(line.snapshot)
+            or line.source_digest != line.run_id.set_digest
+            or target.snapshot_digest != self._snapshot_digest(target.snapshot)
+            or target.source_digest != line.run_id.set_digest
+        ):
+            raise ValidationError(
+                _(
+                    "Return case %(case)s requires a valid earlier "
+                    "type-33 invoice in this execution.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state == "generated" and (
+            not target.move_id
+            or target.move_id.state != "draft"
+            or target.move_id.move_type != "out_invoice"
+            or target.move_id.dte_certification_run_line_id != target
+        ):
+            raise ValidationError(
+                _(
+                    "The referenced invoice for return case %(case)s is "
+                    "unavailable for draft generation.",
+                    case=line.case_identifier,
+                )
+            )
+        return target
+
+    def _generate_return_drafts(self, run, prepared, journal):
+        """Create linked type-61 return drafts without reserving CAF folios."""
+        created = self.env["l10n_cl.dte.certification.run.line"]
+        for line, target, rows in prepared:
+            move = self.env["account.move"].create(
+                {
+                    "move_type": "out_refund",
+                    "company_id": run.company_id.id,
+                    "journal_id": journal.id,
+                    "partner_id": target.partner_id.id,
+                    "invoice_date": run.emission_date,
+                    "l10n_latam_document_type_id": self._document_type(
+                        journal, "61", internal_type="credit_note"
+                    ).id,
+                    "reversed_entry_id": target.move_id.id,
+                    "dte_certification_run_line_id": line.id,
+                    "invoice_line_ids": [Command.create(row) for row in rows],
+                }
+            )
+            line._record_generation_result(
+                {
+                    "move_id": move.id,
+                    "partner_id": target.partner_id.id,
+                    "generation_state": "generated",
+                    "generation_message": False,
+                }
+            )
+            created |= line
         return created
 
     def _generate_text_cancellation_drafts(
