@@ -462,3 +462,96 @@ class TestCertificationCaseGeneration(DteInvoiceTestCase):
 
         self.assertEqual(self.env["account.move"].search_count([]), before)
         self.assertEqual(cancellation_line.generation_state, "pending")
+
+    def _monetary_note_cancellation_execution(self, operation):
+        source = (
+            b"SET TEST - NUMERO DE ATENCION: 999\n"
+            b"CASO 999-1\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"ITEM  CANTIDAD  PRECIO UNITARIO  UNIDAD MEDIDA  DESCUENTO ITEM\n"
+            b"Servicio de prueba  2  1250  UN  10%\n"
+        )
+        if operation == "return":
+            source += (
+                b"CASO 999-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+                b"REFERENCIA CASO 999-1\n"
+                b"RAZON REFERENCIA: DEVOLUCION DE MERCADERIAS\n"
+                b"ITEM  CANTIDAD  UNIDAD MEDIDA\n"
+                b"Servicio de prueba  1  UN\n"
+            )
+        else:
+            source += (
+                b"CASO 999-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+                b"REFERENCIA CASO 999-1\nRAZON REFERENCIA: ANULA FACTURA\n"
+            )
+        source += (
+            b"CASO 999-3\nDOCUMENTO NOTA DE DEBITO ELECTRONICA\n"
+            b"REFERENCIA CASO 999-2\n"
+            b"RAZON REFERENCIA: ANULA NOTA DE CREDITO\n"
+        )
+        certification_set = self.env[
+            "l10n_cl.dte.certification.set"
+        ]._create_from_import(
+            self.company,
+            "synthetic-monetary-note-cancellation.txt",
+            base64.b64encode(source),
+        )
+        certification_set.action_parse_source()
+        certification_set.action_materialize_cases()
+        certification_set.action_interpret_cases()
+        execution = self.env["l10n_cl.dte.certification.run"]._create_from_selection(
+            certification_set, certification_set.case_ids
+        )
+        return execution, execution.line_ids.sorted("sequence")
+
+    def test_generates_debit_cancellation_for_monetary_return_note(self):
+        execution, lines = self._monetary_note_cancellation_execution("return")
+        invoice_line, return_line, cancellation_line = lines
+        folios_before = self.env["l10n_cl.caf.folio"].search_count([])
+
+        created = CaseGenerationService(self.env).generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=lines,
+        )
+
+        note = return_line.move_id
+        cancellation = cancellation_line.move_id
+        self.assertEqual(set(created.ids), set(lines.ids))
+        self.assertEqual(cancellation.move_type, "out_invoice")
+        self.assertEqual(cancellation.l10n_latam_document_type_id.code, "56")
+        self.assertEqual(cancellation.debit_origin_id, note)
+        self.assertEqual(cancellation.state, "draft")
+        self.assertEqual(cancellation.amount_total, note.amount_total)
+        self.assertEqual(cancellation.invoice_line_ids.quantity, 1)
+        self.assertEqual(cancellation.invoice_line_ids.price_unit, 1250)
+        self.assertEqual(cancellation.invoice_line_ids.discount, 10)
+        self.assertEqual(cancellation.invoice_line_ids.tax_ids, self.tax_19)
+        self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
+        with self.assertRaisesRegex(UserError, "cannot be posted"):
+            cancellation.action_post()
+
+    def test_generates_debit_cancellation_for_full_invoice_cancellation_note(self):
+        execution, lines = self._monetary_note_cancellation_execution("cancel")
+        invoice_line, note_line, cancellation_line = lines
+
+        CaseGenerationService(self.env).generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=lines,
+        )
+
+        note = note_line.move_id
+        cancellation = cancellation_line.move_id
+        self.assertEqual(note.amount_total, invoice_line.move_id.amount_total)
+        self.assertEqual(cancellation.debit_origin_id, note)
+        self.assertEqual(cancellation.l10n_latam_document_type_id.code, "56")
+        self.assertEqual(cancellation.amount_total, note.amount_total)
+        self.assertEqual(cancellation.invoice_line_ids.quantity, 2)
+        self.assertEqual(cancellation.invoice_line_ids.price_unit, 1250)
+        self.assertEqual(cancellation.invoice_line_ids.discount, 10)
