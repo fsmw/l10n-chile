@@ -1,5 +1,7 @@
 from lxml import etree
 
+from odoo.exceptions import ValidationError
+
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
     DteXmlComposer,
@@ -60,6 +62,43 @@ class TestDteXmlComposer(DteInvoiceTestCase):
         self.assertEqual(root.findtext(f".//{{{SII_NAMESPACE}}}TipoDTE"), "34")
         self.assertEqual(root.findtext(f".//{{{SII_NAMESPACE}}}MntExe"), "1000")
         self.assertFalse(root.find(f".//{{{SII_NAMESPACE}}}IVA"))
+
+    def test_reference_code_is_serialized_separately_from_reason(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
+        snapshot["references"] = [
+            {
+                "line_number": 1,
+                "document_type": "33",
+                "folio": "42",
+                "date": "2026-11-06",
+                "reference_code": "2",
+                "reason": "CORRIGE TEXTO",
+            }
+        ]
+
+        root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
+        reference = root.find(f".//{{{SII_NAMESPACE}}}Referencia")
+
+        self.assertEqual(reference.findtext(f"{{{SII_NAMESPACE}}}CodRef"), "2")
+        self.assertEqual(
+            reference.findtext(f"{{{SII_NAMESPACE}}}RazonRef"), "CORRIGE TEXTO"
+        )
+
+    def test_invalid_reference_code_is_rejected(self):
+        _invoice, snapshot, _authorization = self.valid_invoice_snapshot("33")
+        snapshot["references"] = [
+            {
+                "line_number": 1,
+                "document_type": "33",
+                "folio": "42",
+                "date": "2026-11-06",
+                "reference_code": "4",
+                "reason": "invalid",
+            }
+        ]
+
+        with self.assertRaisesRegex(ValidationError, "reference code"):
+            DteXmlComposer().compose_unsigned_document(snapshot)
 
     def test_xml_matches_schema(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
