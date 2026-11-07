@@ -371,3 +371,94 @@ class TestCertificationCaseGeneration(DteInvoiceTestCase):
 
         self.assertEqual(self.env["account.move"].search_count([]), before)
         self.assertEqual(execution.state, "draft")
+
+    def _invoice_cancellation_execution(self, include_return=False):
+        source = (
+            b"SET TEST - NUMERO DE ATENCION: 888\n"
+            b"CASO 888-1\nDOCUMENTO FACTURA ELECTRONICA\n"
+            b"ITEM  CANTIDAD  PRECIO UNITARIO  UNIDAD MEDIDA  DESCUENTO ITEM\n"
+            b"Servicio de prueba  2  1250  UN  10%\n"
+        )
+        if include_return:
+            source += (
+                b"CASO 888-2\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+                b"REFERENCIA CASO 888-1\n"
+                b"RAZON REFERENCIA: DEVOLUCION DE MERCADERIAS\n"
+                b"ITEM  CANTIDAD  UNIDAD MEDIDA\n"
+                b"Servicio de prueba  1  UN\n"
+            )
+        source += (
+            b"CASO 888-3\nDOCUMENTO NOTA DE CREDITO ELECTRONICA\n"
+            b"REFERENCIA CASO 888-1\nRAZON REFERENCIA: ANULA FACTURA\n"
+        )
+        certification_set = self.env[
+            "l10n_cl.dte.certification.set"
+        ]._create_from_import(
+            self.company,
+            "synthetic-invoice-cancellation-source.txt",
+            base64.b64encode(source),
+        )
+        certification_set.action_parse_source()
+        certification_set.action_materialize_cases()
+        certification_set.action_interpret_cases()
+        execution = self.env["l10n_cl.dte.certification.run"]._create_from_selection(
+            certification_set, certification_set.case_ids
+        )
+        return execution, execution.line_ids.sorted("sequence")
+
+    def test_generates_full_invoice_cancellation_from_snapshot(self):
+        execution, lines = self._invoice_cancellation_execution()
+        invoice_line, cancellation_line = lines
+        folios_before = self.env["l10n_cl.caf.folio"].search_count([])
+
+        created = CaseGenerationService(self.env).generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=lines,
+        )
+
+        self.assertEqual(set(created.ids), set(lines.ids))
+        invoice = invoice_line.move_id
+        cancellation = cancellation_line.move_id
+        self.assertEqual(cancellation.move_type, "out_refund")
+        self.assertEqual(cancellation.l10n_latam_document_type_id.code, "61")
+        self.assertEqual(cancellation.reversed_entry_id, invoice)
+        self.assertEqual(cancellation.partner_id, invoice.partner_id)
+        self.assertEqual(cancellation.state, "draft")
+        self.assertEqual(cancellation.invoice_line_ids.quantity, 2)
+        self.assertEqual(cancellation.invoice_line_ids.price_unit, 1250)
+        self.assertEqual(cancellation.invoice_line_ids.discount, 10)
+        self.assertEqual(cancellation.invoice_line_ids.tax_ids, self.tax_19)
+        self.assertEqual(cancellation.amount_total, invoice.amount_total)
+        self.assertEqual(self.env["l10n_cl.caf.folio"].search_count([]), folios_before)
+        with self.assertRaisesRegex(UserError, "cannot be posted"):
+            cancellation.action_post()
+
+    def test_invoice_cancellation_blocks_after_generated_return(self):
+        execution, lines = self._invoice_cancellation_execution(include_return=True)
+        invoice_line, return_line, cancellation_line = lines
+        generator = CaseGenerationService(self.env)
+        generator.generate(
+            execution,
+            journal=self.journal,
+            vat_tax=self.tax_19,
+            income_account=self.income_account,
+            partner_by_line={invoice_line.id: self.receiver},
+            selected_lines=invoice_line | return_line,
+        )
+        before = self.env["account.move"].search_count([])
+
+        with self.assertRaisesRegex(ValidationError, "another monetary adjustment"):
+            generator.generate(
+                execution,
+                journal=self.journal,
+                vat_tax=self.tax_19,
+                income_account=self.income_account,
+                selected_lines=cancellation_line,
+            )
+
+        self.assertEqual(self.env["account.move"].search_count([]), before)
+        self.assertEqual(cancellation_line.generation_state, "pending")
