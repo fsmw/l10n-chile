@@ -173,6 +173,12 @@
                                             <field
                                                 name="text_correction"
                                                 widget="json"
+                                                string="Source correction lines"
+                                            />
+                                            <field
+                                                name="text_correction_content"
+                                                widget="json"
+                                                string="Correction content for DTE"
                                             />
                                         </group>
                                     </group>

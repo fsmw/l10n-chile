@@ -211,6 +211,7 @@ class DteCertificationRun(models.Model):
                 "reference_code_source_line": case.reference_code_source_line,
                 "note_operation": case.note_operation,
                 "text_correction": case.text_correction or [],
+                "text_correction_content": case.text_correction_content or [],
             }
             snapshot_rows.append(snapshot)
             line_values.append((case, snapshot))

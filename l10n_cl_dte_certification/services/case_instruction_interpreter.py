@@ -7,7 +7,7 @@ import re
 import unicodedata
 from decimal import Decimal
 
-INTERPRETER_VERSION = "sii_case_instructions_v2"
+INTERPRETER_VERSION = "sii_case_instructions_v3"
 _COLUMN_NAMES = {
     "CANTIDAD": "quantity",
     "PRECIO UNITARIO": "unit_price",
@@ -88,6 +88,7 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
         "reference_document_code": None,
         "reference_code_source_line": None,
         "text_correction": [],
+        "text_correction_content": [],
         "diagnostics": [],
     }
     supported = document_code in {"33", "34", "56", "61"}
@@ -275,10 +276,37 @@ def interpret(instruction_text, document_code, source_start_line):  # noqa: C901
         markers = [_label(item["text"]) for item in result["text_correction"]]
         has_dice = any(re.match(r"^(DONDE\s+)?DICE\b", value) for value in markers)
         has_debe_decir = any(re.match(r"^DEBE\s+DECIR\b", value) for value in markers)
+        for item in result["text_correction"]:
+            match = re.match(r"^\s*(?:DONDE\s+)?DICE\s*:\s*(.*)$", item["text"], re.I)
+            kind = "dice"
+            if not match:
+                match = re.match(r"^\s*DEBE\s+DECIR\s*:\s*(.*)$", item["text"], re.I)
+                kind = "debe_decir"
+            if match:
+                value = match.group(1).strip()
+                if value:
+                    result["text_correction_content"].append(
+                        {
+                            "kind": kind,
+                            "value": value,
+                            "source_line": item["source_line"],
+                            "source_end_line": item["source_line"],
+                        }
+                    )
         if not has_dice or not has_debe_decir:
             result["diagnostics"].append(
                 {
                     "code": "incomplete_text_correction",
+                    "source_line": result["text_correction"][0]["source_line"],
+                }
+            )
+        elif sorted(item["kind"] for item in result["text_correction_content"]) != [
+            "debe_decir",
+            "dice",
+        ]:
+            result["diagnostics"].append(
+                {
+                    "code": "text_correction_content_missing_or_ambiguous",
                     "source_line": result["text_correction"][0]["source_line"],
                 }
             )
