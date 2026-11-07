@@ -224,3 +224,37 @@ class TestCertificationRunSnapshots(TransactionCase):
         self.assertEqual(submission_model.search_count([]), 1)
         self.assertEqual(run.sii_submission_id.request_digest, run.envelope_digest)
         self.assertEqual(enqueue_send.call_count, 2)
+
+    def test_reconcile_result_requires_an_imported_gateway_result(self):
+        run = (
+            self.env["l10n_cl.dte.certification.run"]
+            .with_user(self.manager)
+            ._create_from_selection(
+                self.certification_set,
+                self.certification_set.case_ids.sorted("sequence"),
+            )
+        )
+        run.company_id.sudo().write({"dte_sii_environment": "certification"})
+        run._record_generation_state("prepared")
+        envelope = b"synthetic envelope evidence"
+        run._record_exported_envelope(envelope)
+        submission = (
+            self.env["l10n_cl.sii.envelope.submission"]
+            .with_user(self.manager)
+            ._create_from_workflow(
+                {
+                    "name": "Synthetic certification result",
+                    "company_id": run.company_id.id,
+                    "environment": "certification",
+                    "request_xml": base64.b64encode(envelope),
+                    "request_filename": "synthetic.xml",
+                    "request_digest": run.envelope_digest,
+                    "idempotency_key": "synthetic-certification-result",
+                }
+            )
+        )
+        submission._write_internal({"state": "submitted", "track_id": "123456789"})
+        run._record_sii_submission(submission)
+
+        with self.assertRaisesRegex(UserError, "Import the SII result XML"):
+            run.action_reconcile_sii_result()

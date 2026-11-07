@@ -1,0 +1,48 @@
+<odoo>
+    <record id="view_certification_run_result_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.run.result.form</field>
+        <field name="model">l10n_cl.dte.certification.run.result</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Operator-supplied SII result evidence. This reconciliation does
+                        not verify the source XML signature or approve a certification stage.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="run_id" />
+                            <field name="submission_id" />
+                            <field name="result_import_id" />
+                            <field name="verification_state" widget="badge" />
+                        </group>
+                        <group>
+                            <field name="sii_state" />
+                            <field name="reconciled_at" />
+                            <field name="reconciled_by_id" />
+                            <field name="source_digest" />
+                        </group>
+                    </group>
+                    <group string="Reported Totals">
+                        <field name="expected_count" />
+                        <field name="accepted_count" />
+                        <field name="rejected_count" />
+                        <field name="repair_count" />
+                        <field name="indeterminate_count" />
+                    </group>
+                    <field name="line_ids" nolabel="1" readonly="1">
+                        <list create="false" edit="false" delete="false">
+                            <field name="sequence" />
+                            <field name="case_identifier" />
+                            <field name="document_type" />
+                            <field name="folio" />
+                            <field name="state" />
+                            <field name="sii_state_code" />
+                            <field name="sii_detail" />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
