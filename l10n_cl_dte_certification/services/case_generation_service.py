@@ -36,16 +36,27 @@ class CaseGenerationService:
             raise ValidationError(_("Select cases from this execution."))
         partners = partner_by_line or {}
         invoice_lines = lines.filtered(lambda line: line.document_code in {"33", "34"})
-        if any(line.generation_state != "pending" for line in invoice_lines):
+        correction_lines = lines.filtered(
+            lambda line: line.document_code == "61"
+            and line.snapshot.get("note_operation") == "text"
+        )
+        supported_lines = invoice_lines | correction_lines
+        if any(line.generation_state != "pending" for line in supported_lines):
             raise UserError(_("Only pending certification cases can be generated."))
-        if not invoice_lines:
+        if not supported_lines:
             raise ValidationError(
-                _("Select at least one pending document of type 33 or 34.")
+                _(
+                    "Select a pending document of type 33 or 34, or a text-correction "
+                    "credit note of type 61."
+                )
             )
         self._check_journal(journal, run.company_id)
         self._check_income_account(income_account, run.company_id)
         if any(line.document_code == "33" for line in invoice_lines):
             self._check_vat(vat_tax, run.company_id)
+
+        for line in correction_lines:
+            self._validate_text_correction_snapshot(line, lines)
 
         prepared = []
         for line in invoice_lines:
@@ -78,7 +89,52 @@ class CaseGenerationService:
             )
             created |= line
 
-        for line in lines.filtered(lambda item: item.document_code not in {"33", "34"}):
+        for line in correction_lines.sorted("sequence"):
+            target_line = self._check_text_correction_target(line, lines)
+            partner = target_line.partner_id
+            if not partner:
+                raise ValidationError(
+                    _(
+                        "The referenced invoice for case %(case)s has no customer.",
+                        case=line.case_identifier,
+                    )
+                )
+            values = {
+                "move_type": "out_refund",
+                "company_id": run.company_id.id,
+                "journal_id": journal.id,
+                "partner_id": partner.id,
+                "invoice_date": run.emission_date,
+                "l10n_latam_document_type_id": self._document_type(
+                    journal, "61", internal_type="credit_note"
+                ).id,
+                "reversed_entry_id": target_line.move_id.id,
+                "dte_certification_run_line_id": line.id,
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "name": _("Text correction (no monetary effect)"),
+                            "quantity": 1,
+                            "price_unit": 0,
+                            "discount": 0,
+                            "account_id": income_account.id,
+                            "tax_ids": [Command.clear()],
+                        }
+                    )
+                ],
+            }
+            move = self.env["account.move"].create(values)
+            line._record_generation_result(
+                {
+                    "move_id": move.id,
+                    "partner_id": partner.id,
+                    "generation_state": "generated",
+                    "generation_message": False,
+                }
+            )
+            created |= line
+
+        for line in lines - supported_lines:
             if line.generation_state == "pending":
                 line._record_generation_result(
                     {
@@ -167,7 +223,117 @@ class CaseGenerationService:
                 )
             )
 
-    def _document_type(self, journal, code):
+    def _check_text_correction_target(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            target
+            and target.generation_state == "pending"
+            and target not in selected_lines
+        ):
+            raise ValidationError(
+                _(
+                    "Select the referenced invoice along with text-correction "
+                    "case %(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "33"
+            or target.sequence >= line.sequence
+            or target.generation_state != "generated"
+            or not target.move_id
+            or target.move_id.state != "draft"
+            or target.move_id.dte_certification_run_line_id != target
+            or target.move_id.move_type != "out_invoice"
+        ):
+            raise ValidationError(
+                _(
+                    "Text-correction case %(case)s requires its earlier generated "
+                    "type-33 draft in the same execution.",
+                    case=line.case_identifier,
+                )
+            )
+        return target
+
+    def _validate_text_correction_snapshot(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "33"
+            or target.sequence >= line.sequence
+        ):
+            raise ValidationError(
+                _(
+                    "Text-correction case %(case)s requires an earlier type-33 "
+                    "invoice in the same execution.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state == "pending" and target not in selected_lines:
+            raise ValidationError(
+                _(
+                    "Select the referenced invoice along with text-correction "
+                    "case %(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state not in {"pending", "generated"}:
+            raise ValidationError(
+                _(
+                    "The referenced invoice for text-correction case %(case)s "
+                    "is not available for draft generation.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            line.snapshot.get("reference_code") != "2"
+            or line.snapshot.get("reference_target_document_code") != "33"
+            or not line.snapshot.get("reference_reason")
+        ):
+            raise ValidationError(
+                _(
+                    "Text-correction case %(case)s has incomplete reference data.",
+                    case=line.case_identifier,
+                )
+            )
+        content = line.snapshot.get("text_correction_content") or []
+        if sorted(item.get("kind") for item in content) != [
+            "debe_decir",
+            "dice",
+        ] or any(not item.get("value") for item in content):
+            raise ValidationError(
+                _(
+                    "Text-correction case %(case)s has incomplete correction text.",
+                    case=line.case_identifier,
+                )
+            )
+        if line.snapshot_digest != self._snapshot_digest(line.snapshot):
+            raise ValidationError(
+                _(
+                    "Case %(case)s no longer matches its execution snapshot.",
+                    case=line.case_identifier,
+                )
+            )
+        if line.source_digest != line.run_id.set_digest:
+            raise ValidationError(
+                _(
+                    "Case %(case)s no longer matches its original SET.",
+                    case=line.case_identifier,
+                )
+            )
+
+    @staticmethod
+    def _snapshot_digest(snapshot):
+        return hashlib.sha256(
+            json.dumps(
+                snapshot, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
+
+    def _document_type(self, journal, code, internal_type="invoice"):
         country = journal.company_id.country_id
         if not country or country.code != "CL":
             raise ValidationError(
@@ -177,7 +343,7 @@ class CaseGenerationService:
             [
                 ("country_id", "=", country.id),
                 ("code", "=", code),
-                ("internal_type", "=", "invoice"),
+                ("internal_type", "=", internal_type),
             ]
         )
         if len(types) != 1:
