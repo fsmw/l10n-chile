@@ -48,6 +48,13 @@ class CaseGenerationService:
                 and line.snapshot.get("note_operation") == "return"
             )
         )
+        invoice_cancellation_lines = lines.filtered(
+            lambda line: (
+                line.document_code == "61"
+                and line.snapshot.get("note_operation") == "cancel"
+                and line.snapshot.get("reference_target_document_code") == "33"
+            )
+        )
         text_cancellation_lines = lines.filtered(
             lambda line: (
                 line.document_code == "56"
@@ -56,7 +63,11 @@ class CaseGenerationService:
             )
         )
         supported_lines = (
-            invoice_lines | correction_lines | return_lines | text_cancellation_lines
+            invoice_lines
+            | correction_lines
+            | return_lines
+            | invoice_cancellation_lines
+            | text_cancellation_lines
         )
         if any(line.generation_state != "pending" for line in supported_lines):
             raise UserError(_("Only pending certification cases can be generated."))
@@ -64,18 +75,26 @@ class CaseGenerationService:
             raise ValidationError(
                 _(
                     "Select a pending document of type 33 or 34, a text-correction "
-                    "or return credit note of type 61, or its type-56 cancellation."
+                    "or a cancellation/return credit note of type 61, or its "
+                    "type-56 cancellation."
                 )
             )
         self._check_journal(journal, run.company_id)
         self._check_income_account(income_account, run.company_id)
-        if any(line.document_code == "33" for line in invoice_lines) or return_lines:
+        if (
+            any(line.document_code == "33" for line in invoice_lines)
+            or return_lines
+            or invoice_cancellation_lines
+        ):
             self._check_vat(vat_tax, run.company_id)
 
         for line in correction_lines:
             self._validate_text_correction_snapshot(line, lines)
         return_rows = self._prepare_return_drafts(
             return_lines, lines, vat_tax, income_account
+        )
+        cancellation_rows = self._prepare_invoice_cancellations(
+            invoice_cancellation_lines, lines, vat_tax, income_account
         )
         for line in text_cancellation_lines:
             self._validate_text_cancellation_snapshot(line, lines)
@@ -160,6 +179,7 @@ class CaseGenerationService:
             run, text_cancellation_lines, lines, journal, income_account
         )
         created |= self._generate_return_drafts(run, return_rows, journal)
+        created |= self._generate_invoice_cancellations(run, cancellation_rows, journal)
 
         for line in lines - supported_lines:
             if line.generation_state == "pending":
@@ -330,6 +350,163 @@ class CaseGenerationService:
 
     def _generate_return_drafts(self, run, prepared, journal):
         """Create linked type-61 return drafts without reserving CAF folios."""
+        created = self.env["l10n_cl.dte.certification.run.line"]
+        for line, target, rows in prepared:
+            move = self.env["account.move"].create(
+                {
+                    "move_type": "out_refund",
+                    "company_id": run.company_id.id,
+                    "journal_id": journal.id,
+                    "partner_id": target.partner_id.id,
+                    "invoice_date": run.emission_date,
+                    "l10n_latam_document_type_id": self._document_type(
+                        journal, "61", internal_type="credit_note"
+                    ).id,
+                    "reversed_entry_id": target.move_id.id,
+                    "dte_certification_run_line_id": line.id,
+                    "invoice_line_ids": [Command.create(row) for row in rows],
+                }
+            )
+            line._record_generation_result(
+                {
+                    "move_id": move.id,
+                    "partner_id": target.partner_id.id,
+                    "generation_state": "generated",
+                    "generation_message": False,
+                }
+            )
+            created |= line
+        return created
+
+    def _prepare_invoice_cancellations(
+        self, cancellation_lines, selected_lines, vat_tax, account
+    ):
+        """Derive full type-61 reversals from unadjusted type-33 snapshots."""
+        prepared = []
+        for line in cancellation_lines.sorted("sequence"):
+            target = self._check_invoice_cancellation_target(line, selected_lines)
+            self._check_invoice_cancellation_balance(line, target, selected_lines)
+            details = target.snapshot.get("details") or []
+            if not details:
+                raise ValidationError(
+                    _(
+                        "Invoice cancellation case %(case)s references an invoice "
+                        "without detail lines.",
+                        case=line.case_identifier,
+                    )
+                )
+            rows = []
+            for detail in details:
+                try:
+                    quantity = self._decimal(detail.get("quantity"), positive=True)
+                    price = self._decimal(detail.get("unit_price"), allow_zero=True)
+                    discount = self._decimal(
+                        detail.get("discount_percent") or "0", allow_zero=True
+                    )
+                    if discount > 100:
+                        raise ValueError("invalid discount")
+                except (InvalidOperation, ValueError) as error:
+                    raise ValidationError(
+                        _(
+                            "Referenced invoice values are invalid for case %(case)s.",
+                            case=line.case_identifier,
+                        )
+                    ) from error
+                if not detail.get("name"):
+                    raise ValidationError(
+                        _(
+                            "Referenced invoice case %(case)s has an unnamed "
+                            "detail line.",
+                            case=target.case_identifier,
+                        )
+                    )
+                rows.append(
+                    {
+                        "name": detail["name"],
+                        "quantity": float(quantity),
+                        "price_unit": float(price),
+                        "discount": float(discount),
+                        "account_id": account.id,
+                        "tax_ids": [Command.set([vat_tax.id])],
+                    }
+                )
+            prepared.append((line, target, rows))
+        return prepared
+
+    def _check_invoice_cancellation_target(self, line, selected_lines):
+        target = line.referenced_line_id
+        if (
+            target
+            and target.generation_state == "pending"
+            and target not in selected_lines
+        ):
+            raise ValidationError(
+                _(
+                    "Select the referenced invoice along with cancellation case "
+                    "%(case)s.",
+                    case=line.case_identifier,
+                )
+            )
+        if (
+            not target
+            or target.run_id != line.run_id
+            or target.document_code != "33"
+            or target.sequence >= line.sequence
+            or line.snapshot.get("reference_code") != "1"
+            or line.snapshot.get("reference_target_document_code") != "33"
+            or not line.snapshot.get("reference_reason")
+            or target.generation_state not in {"pending", "generated"}
+            or line.snapshot_digest != self._snapshot_digest(line.snapshot)
+            or line.source_digest != line.run_id.set_digest
+            or target.snapshot_digest != self._snapshot_digest(target.snapshot)
+            or target.source_digest != line.run_id.set_digest
+        ):
+            raise ValidationError(
+                _(
+                    "Invoice cancellation case %(case)s requires a valid earlier "
+                    "type-33 invoice in this execution.",
+                    case=line.case_identifier,
+                )
+            )
+        if target.generation_state == "generated" and (
+            not target.move_id
+            or target.move_id.state != "draft"
+            or target.move_id.move_type != "out_invoice"
+            or target.move_id.dte_certification_run_line_id != target
+            or not target.partner_id
+            or target.move_id.partner_id != target.partner_id
+        ):
+            raise ValidationError(
+                _(
+                    "The referenced invoice for cancellation case %(case)s is "
+                    "unavailable for draft generation.",
+                    case=line.case_identifier,
+                )
+            )
+        return target
+
+    def _check_invoice_cancellation_balance(self, line, target, selected_lines):
+        adjustments = target.run_id.line_ids.filtered(
+            lambda item: (
+                item != line
+                and item.referenced_line_id == target
+                and item.document_code == "61"
+                and item.snapshot.get("note_operation") in {"return", "cancel"}
+                and (item.generation_state == "generated" or item in selected_lines)
+            )
+        )
+        if adjustments:
+            raise ValidationError(
+                _(
+                    "Invoice cancellation case %(case)s cannot reverse the full "
+                    "invoice because another monetary adjustment is generated "
+                    "or selected.",
+                    case=line.case_identifier,
+                )
+            )
+
+    def _generate_invoice_cancellations(self, run, prepared, journal):
+        """Create full type-61 cancellation drafts without consuming CAF folios."""
         created = self.env["l10n_cl.dte.certification.run.line"]
         for line, target, rows in prepared:
             move = self.env["account.move"].create(
