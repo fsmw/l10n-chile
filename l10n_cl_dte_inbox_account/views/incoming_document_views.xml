@@ -1,0 +1,44 @@
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_document_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_prepare_vendor_bill"
+                    type="object"
+                    string="Prepare Vendor Bill"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+                    invisible="state != 'reviewed' or document_code not in ['33', '34'] or account_binding_ids"
+                />
+                <button
+                    name="action_open_vendor_bill"
+                    type="object"
+                    string="Vendor Bill"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+                    invisible="not account_binding_ids"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Vendor Bill"
+                    name="incoming_account"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+                >
+                    <field name="account_binding_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="move_id" />
+                            <field name="operation" />
+                            <field name="linked_at" />
+                            <field name="linked_by_id" />
+                            <field name="move_state" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<!-- Copyright 2026 FSMW -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="incoming_account_binding_menu"
+        name="Vendor Bills"
+        parent="l10n_cl_dte_inbox.menu_incoming_dte"
+        action="incoming_account_binding_action"
+        sequence="40"
+        groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+    />
+    <menuitem
+        id="incoming_account_mapping_menu"
+        name="Purchase Mappings"
+        parent="l10n_cl_dte_inbox.menu_incoming_dte"
+        action="incoming_account_mapping_action"
+        sequence="50"
+        groups="l10n_cl_dte_inbox_account.group_inbox_account_manager"
+    />
+</odoo>
