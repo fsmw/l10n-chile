@@ -133,6 +133,7 @@ class InvoiceSnapshotService:
                     separators=(",", ":"),
                 ).encode("utf-8")
             ).hexdigest()
+            and line.move_digest == line._digest_move(move)
             and line.run_id.company_id == move.company_id
             and move.company_id.dte_sii_environment == "certification"
         )

@@ -364,6 +364,7 @@ class DteCertificationRunLine(models.Model):
     move_id = fields.Many2one(
         "account.move", readonly=True, ondelete="restrict", check_company=True
     )
+    move_digest = fields.Char(readonly=True, index=True)
     generation_state = fields.Selection(
         [
             ("pending", "Pending"),
@@ -427,10 +428,49 @@ class DteCertificationRunLine(models.Model):
         return super(DteCertificationRunLine, self.sudo()).create(values)
 
     def _record_generation_result(self, values):
-        allowed = {"move_id", "generation_state", "generation_message", "partner_id"}
+        allowed = {
+            "move_id",
+            "generation_state",
+            "generation_message",
+            "partner_id",
+        }
         if set(values) - allowed:
             raise ValidationError(_("Invalid generation result fields."))
+        if values.get("generation_state") == "generated":
+            move = self.env["account.move"].browse(values.get("move_id")).exists()
+            if len(move) != 1:
+                raise ValidationError(
+                    _("A generated case must be linked to one accounting draft.")
+                )
+            values["move_digest"] = self._digest_move(move)
         return super(DteCertificationRunLine, self.sudo()).write(values)
+
+    @staticmethod
+    def _digest_move(move):
+        values = {
+            "company_id": move.company_id.id,
+            "move_type": move.move_type,
+            "journal_id": move.journal_id.id,
+            "partner_id": move.partner_id.id,
+            "invoice_date": fields.Date.to_date(move.invoice_date).isoformat(),
+            "document_code": str(move.l10n_latam_document_type_id.code),
+            "currency_id": move.currency_id.id,
+            "lines": [
+                {
+                    "name": line.name,
+                    "quantity": line.quantity,
+                    "price_unit": line.price_unit,
+                    "discount": line.discount,
+                    "tax_ids": sorted(line.tax_ids.ids),
+                    "account_id": line.account_id.id,
+                    "uom_id": line.product_uom_id.id,
+                }
+                for line in move.invoice_line_ids.filtered(
+                    lambda line: line.display_type == "product"
+                ).sorted("sequence")
+            ],
+        }
+        return _canonical_digest(values)
 
     def _check_preparation_source(self):
         self.ensure_one()
@@ -445,6 +485,7 @@ class DteCertificationRunLine(models.Model):
             or str(move.l10n_latam_document_type_id.code) != self.document_code
             or self.source_digest != run.set_digest
             or self.snapshot_digest != _canonical_digest(self.snapshot)
+            or self.move_digest != self._digest_move(move)
             or run.company_id.dte_sii_environment != "certification"
         ):
             raise ValidationError(

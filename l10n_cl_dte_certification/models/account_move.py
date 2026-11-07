@@ -26,24 +26,31 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         certification_moves = self.filtered("dte_certification_run_line_id")
-        allowed_note_link = {
+        fiscal_fields = {
+            "move_type",
+            "company_id",
+            "journal_id",
+            "partner_id",
+            "invoice_date",
+            "currency_id",
+            "l10n_latam_document_type_id",
+            "reversed_entry_id",
+            "debit_origin_id",
+            "invoice_line_ids",
             "dte_note_target_document_id",
             "dte_note_operation",
             "dte_note_reason",
         }
-        if certification_moves and set(vals) - allowed_note_link:
-            raise UserError(
-                _(
-                    "Generated certification drafts are immutable. Create a new "
-                    "execution to change their fiscal data."
-                )
-            )
         if certification_moves and any(
             move.dte_certification_run_line_id.document_id
+            and fiscal_fields.intersection(vals)
             for move in certification_moves
         ):
             raise UserError(
-                _("A certification draft cannot change after its DTE is prepared.")
+                _(
+                    "A certification draft cannot change fiscal data after DTE "
+                    "preparation."
+                )
             )
         return super().write(vals)
 

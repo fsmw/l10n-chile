@@ -289,7 +289,7 @@ class NoteSnapshotService:
         run_line = (
             move.dte_certification_run_line_id
             if "dte_certification_run_line_id" in move._fields
-            else self.env["l10n_cl.dte.certification.run.line"]
+            else False
         )
         target_line = (
             self._certification_run_line(
@@ -463,6 +463,7 @@ class NoteSnapshotService:
                     separators=(",", ":"),
                 ).encode("utf-8")
             ).hexdigest()
+            or line.move_digest != line._digest_move(move)
             or line.run_id.company_id != move.company_id
             or move.company_id.dte_sii_environment != "certification"
         ):
