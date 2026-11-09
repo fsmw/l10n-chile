@@ -39,8 +39,12 @@ class TestProductionAuthenticationAndResponses(TransactionCase):
         auth = ProductionSiiAuthentication(session=session)
         self.assertEqual(auth.base_url, "https://palena.sii.cl")
         self.assertFalse(session.trust_env)
-        with self.assertRaises(SiiTransportError):
-            auth.post("https://attacker.invalid/collect")
+        with patch(
+            "odoo.addons.l10n_cl_dte_gateway.services.certification_auth._",
+            lambda message: message,
+        ):
+            with self.assertRaises(SiiTransportError):
+                auth.post("https://attacker.invalid/collect")
         auth.close()
         self.assertTrue(session.closed)
 
@@ -68,8 +72,12 @@ class TestProductionAuthenticationAndResponses(TransactionCase):
         self.assertEqual(result["state"], "submitted")
         self.assertEqual(result["track_id"], "12345")
         self.assertEqual(result["raw_response"], valid)
-        with self.assertRaises(ValidationError):
-            parse_upload(valid, "60803000-K", "12345678-5")
+        with patch(
+            "odoo.addons.l10n_cl_dte_gateway.services.production_response_parser._",
+            lambda message: message,
+        ):
+            with self.assertRaises(ValidationError):
+                parse_upload(valid, "60803000-K", "12345678-5")
 
     def test_status_parser_checks_track_id_and_reconciles_totals(self):
         inner = (
@@ -85,8 +93,12 @@ class TestProductionAuthenticationAndResponses(TransactionCase):
         result = parse_status(etree.tostring(root), "12345")
         self.assertEqual(result["state"], "accepted")
         self.assertEqual(result["counts"][0]["ACEPTADOS"], 1)
-        with self.assertRaises(ValidationError):
-            parse_status(etree.tostring(root), "54321")
+        with patch(
+            "odoo.addons.l10n_cl_dte_gateway.services.production_response_parser._",
+            lambda message: message,
+        ):
+            with self.assertRaises(ValidationError):
+                parse_status(etree.tostring(root), "54321")
 
     def test_status_parser_rejects_inconsistent_document_counters(self):
         inner = (
@@ -99,5 +111,9 @@ class TestProductionAuthenticationAndResponses(TransactionCase):
         body = etree.SubElement(root, "{http://schemas.xmlsoap.org/soap/envelope/}Body")
         response = etree.SubElement(body, "getEstUpResponse")
         etree.SubElement(response, "getEstUpReturn").text = inner
-        with self.assertRaises(ValidationError):
-            parse_status(etree.tostring(root), "12345")
+        with patch(
+            "odoo.addons.l10n_cl_dte_gateway.services.production_response_parser._",
+            lambda message: message,
+        ):
+            with self.assertRaises(ValidationError):
+                parse_status(etree.tostring(root), "12345")
