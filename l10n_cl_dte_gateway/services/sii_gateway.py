@@ -174,6 +174,10 @@ class SiiGatewayFactory(models.AbstractModel):
             raise UserError(
                 _("Certification-set envelopes cannot use the simulated Demo gateway.")
             )
+        if environment == "production":
+            from .production_transport import ProductionSiiTransport
+
+            return ProductionSiiTransport()
         if environment == "certification":
             return CertificationSiiEnvelopeGateway()
         if environment == "production":
