@@ -10,7 +10,8 @@ Certification envelopes use the SII seed/token SOAP services, certificate-signed
 authentication, multipart DTEUpload, and QueryEstUp on `maullin.sii.cl`. Configure
 one valid Certification signing profile, its private key, and the issuer and
 authorized sender RUTs. Tokens remain in memory and are never stored in attempts.
-Production envelopes and real single-document transport remain disabled.
+Production transport uses a separate signing profile and production CAF records;
+never reuse Certification material as Production evidence.
 
 From a certification execution, use **Test SII Authentication** to check the
 certificate without sending a DTE. Successful authentication records a 30-minute
@@ -78,3 +79,13 @@ TrackID and the original envelope. QueryEstUp does not provide individual
 rejection reasons; obtain those from the validation result sent by SII to the
 company's registered contact email. An EPR document rejection does not unlock
 the cover-only correction or authorize an automatic resend.
+# Production preparation
+
+A Production SII Readiness guide is being scaffolded for the DTE configuration
+area. It is not available to users until its marked implementation tasks are
+completed. Its intended scope is the company's production signing profile and
+CAF/folio coverage.
+
+This review is local only. It does not contact or certify the company with the
+SII, test SII authentication, change the company's environment, reserve folios,
+or issue a DTE. A successful local result is not an SII approval.
