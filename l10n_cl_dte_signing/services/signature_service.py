@@ -337,12 +337,8 @@ class SignatureService:
 
     def sign_envelope(self, company, environment, unsigned_xml):
         """Sign the SetDTE inside an already assembled SII EnvioDTE."""
-        if not company.env.su and not company.env.user.has_group(
-            "l10n_cl_dte_core.group_dte_manager"
-        ):
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
-        if environment not in {"certification", "production"}:
-            raise ValidationError(_("A real SII environment is required."))
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
             [
                 ("company_id", "=", company.id),
