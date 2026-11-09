@@ -17,7 +17,9 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
+    SII_XML_DECLARATION,
     SignatureService,
+    _without_xml_declaration,
 )
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
@@ -113,7 +115,7 @@ class SiiEnvelopeComposer:
         type_counts = Counter()
         issuer_vat = None
         for content in signed_documents:
-            DteXmlComposer().validate_document(content)
+            DteXmlComposer().validate_document(content, strict_sii=True)
             dte = _parse(content)
             if dte.tag != _tag("DTE"):
                 raise ValidationError(_("The envelope contains a non-DTE element."))
@@ -175,10 +177,14 @@ class SiiEnvelopeComposer:
             subtotal = etree.SubElement(cover, _tag("SubTotDTE"))
             _add(subtotal, "TpoDTE", code)
             _add(subtotal, "NroDTE", count)
-        for dte in dtes:
-            set_dte.append(dte)
         unsigned = etree.tostring(
             root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=False
+        )
+        unsigned = unsigned.replace(
+            b"</SetDTE>",
+            b"".join(_without_xml_declaration(content) for content in signed_documents)
+            + b"</SetDTE>",
+            1,
         )
         envelope = signature_service.sign_envelope(company, "certification", unsigned)
         self.validate(
@@ -186,7 +192,36 @@ class SiiEnvelopeComposer:
         )
         return envelope
 
+    @staticmethod
+    def validate_upload_format(envelope_bytes):
+        root = _parse(envelope_bytes)
+        lines = envelope_bytes.splitlines()
+        if (
+            len(lines) < 3
+            or lines[0] != SII_XML_DECLARATION
+            or not lines[1].startswith(b"<EnvioDTE ")
+            or lines[1].count(b">") != 1
+            or not lines[1].endswith(b">")
+            or root.get(f"{{{XSI}}}schemaLocation") != f"{SII} EnvioDTE_v10.xsd"
+        ):
+            raise ValidationError(
+                _(
+                    "The SII upload requires the ISO-8859-1 XML declaration on "
+                    "line 1 and the complete EnvioDTE schema location on line 2. "
+                    "Prepare a corrected envelope before sending."
+                )
+            )
+        numbers = root.xpath(
+            "./*[local-name()='SetDTE']/*[local-name()='Caratula']/*[local-name()='NroResol']/text()"
+        )
+        if numbers != ["0"]:
+            raise ValidationError(
+                _("Certification envelopes must use resolution number 0.")
+            )
+        return True
+
     def validate(self, envelope_bytes, expected_count=None, signature_service=None):
+        self.validate_upload_format(envelope_bytes)
         root = _parse(envelope_bytes)
         if root.tag != _tag("EnvioDTE"):
             raise ValidationError(_("The XML root must be EnvioDTE."))
@@ -210,7 +245,8 @@ class SiiEnvelopeComposer:
             raise ValidationError(_("The envelope has duplicate XML identifiers."))
         for dte in dtes:
             DteXmlComposer().validate_document(
-                etree.tostring(dte, encoding="ISO-8859-1", xml_declaration=True)
+                etree.tostring(dte, encoding="ISO-8859-1", xml_declaration=True),
+                strict_sii=True,
             )
         cover = set_dte.find(_tag("Caratula"))
         expected_counts = Counter()

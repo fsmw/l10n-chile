@@ -1,0 +1,29 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_certificate_upload_wizard_view_form" model="ir.ui.view">
+        <field
+            name="name"
+        >l10n_cl.dte.certification.certificate.upload.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.certificate.upload.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload Certification Certificate">
+                <group>
+                    <field name="set_id" options="{'no_open': True}" />
+                    <field name="certificate_filename" invisible="1" />
+                    <field name="certificate_file" filename="certificate_filename" />
+                    <field name="certificate_password" password="True" />
+                </group>
+                <footer>
+                    <button
+                        name="action_import"
+                        type="object"
+                        string="Upload and Configure"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="receiver_confirmation_wizard_action" model="ir.actions.act_window">
+        <field name="name">Confirm Certification Receiver</field>
+        <field name="res_model">l10n_cl.dte.certification.receiver.confirmation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="receiver_confirmation_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.receiver.confirmation.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.receiver.confirmation.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Synthetic test partners are allowed only for local debugging and
+                    block official SII set submission.
+                </div>
+                <group>
+                    <field name="case_id" />
+                    <field name="partner_id" />
+                    <field name="classification" />
+                    <field
+                        name="verification_reference"
+                        invisible="classification != 'existing_customer'"
+                        required="classification == 'existing_customer'"
+                    />
+                    <field name="attestation_notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Confirm Classification"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

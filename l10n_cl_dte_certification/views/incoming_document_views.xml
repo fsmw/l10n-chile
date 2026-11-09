@@ -1,0 +1,17 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_form_certification" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form.certification</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_document_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_link_to_active_certification_stage" type="object" string="Link to Active Exchange Stage" invisible="certification_stage_id or sii_environment != 'certification'" groups="l10n_cl_dte_core.group_dte_manager" />
+            </xpath>
+            <xpath expr="//group[.//field[@name='xml_sha256']]" position="inside">
+                <field name="certification_stage_id" groups="l10n_cl_dte_core.group_dte_manager" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

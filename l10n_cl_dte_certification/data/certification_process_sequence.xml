@@ -1,0 +1,11 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="certification_process_sequence" model="ir.sequence">
+        <field name="name">SII Certification Process</field>
+        <field name="code">l10n_cl.dte.certification.process</field>
+        <field name="prefix">CERT/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

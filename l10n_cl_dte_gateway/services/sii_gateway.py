@@ -166,6 +166,10 @@ class SiiGatewayFactory(models.AbstractModel):
     @api.model
     def get_envelope_gateway(self, environment):
         """Return a verified multi-DTE transport adapter for the selected mode."""
+        if environment == "certification":
+            from .certification_transport import CertificationSiiTransport
+
+            return CertificationSiiTransport()
         if environment == "demo":
             raise UserError(
                 _("Certification-set envelopes cannot use the simulated Demo gateway.")

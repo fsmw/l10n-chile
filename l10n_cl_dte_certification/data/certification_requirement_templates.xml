@@ -1,0 +1,430 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record
+        id="cert_req_accepted_postulation"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">accepted_postulation</field>
+        <field
+            name="name"
+        >SII postulation accepted and Certification access granted</field>
+        <field name="sequence">5</field>
+        <field name="applicability">conditional</field>
+        <field name="mandatory" eval="False" />
+        <field name="external_result" eval="True" />
+        <field name="normative_title">SII Postulation for electronic invoicing</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/destacados/factura_electronica/postulacion.htm</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_existing_authorization"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">existing_authorization</field>
+        <field
+            name="name"
+        >Existing SII authorization and Certification access verified</field>
+        <field name="sequence">6</field>
+        <field name="applicability">conditional</field>
+        <field name="mandatory" eval="False" />
+        <field name="external_result" eval="True" />
+        <field name="normative_title">SII Certification and Testing Environment</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">reviewed-2026-11-04</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_source"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_source</field>
+        <field name="name">Assigned set source and full case coverage</field>
+        <field name="sequence">10</field>
+        <field
+            name="normative_title"
+        >SII Certification Process and assigned set instructions</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_folio"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_folios</field>
+        <field
+            name="name"
+        >Authorized certification CAF and folios per document type</field>
+        <field name="sequence">20</field>
+        <field name="normative_title">SII assigned set instructions</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_coverage"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_case_coverage</field>
+        <field name="name">One correctly ordered DTE for every assigned case</field>
+        <field name="sequence">15</field>
+        <field name="normative_title">SII assigned set instructions</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_receiver"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_receiver</field>
+        <field
+            name="name"
+        >Existing external receivers and distinct invoice RUTs verified</field>
+        <field name="sequence">16</field>
+        <field name="normative_title">SII assigned set instructions</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_xml"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_xml_signature</field>
+        <field
+            name="name"
+        >Complete XML, TED and digital signatures for every case</field>
+        <field name="sequence">30</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/instructivo.htm</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_sii_result"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_sii_result</field>
+        <field
+            name="name"
+        >Official SII review result for the complete assigned set</field>
+        <field name="sequence">35</field>
+        <field name="external_result" eval="True" />
+        <field
+            name="normative_title"
+        >SII Instructions for Construction of Test Set</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_iev"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_iev</field>
+        <field
+            name="name"
+        >Sales book (IEV) for the assigned set prepared and reconciled</field>
+        <field name="sequence">40</field>
+        <field
+            name="normative_title"
+        >SII Instructions for Construction of Test Set</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_assigned_set_iec"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">assigned_set</field>
+        <field name="code">assigned_set_iec</field>
+        <field
+            name="name"
+        >Purchase book (IEC) prepared when a purchase set is assigned</field>
+        <field name="sequence">41</field>
+        <field name="applicability">conditional</field>
+        <field name="mandatory" eval="False" />
+        <field
+            name="normative_title"
+        >SII Instructions for Construction of Test Set</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/inst_set_pruebas.pdf</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_simulation_set"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">simulation_set</field>
+        <field name="code">simulation_cases</field>
+        <field name="name">SII simulation scenarios executed in Certification</field>
+        <field name="sequence">10</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_simulation_result"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">simulation_set</field>
+        <field name="code">simulation_sii_results</field>
+        <field
+            name="name"
+        >SII responses for all requested simulation cases retained</field>
+        <field name="sequence">20</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+        <field name="external_result" eval="True" />
+    </record>
+    <record
+        id="cert_req_exchange"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">information_exchange</field>
+        <field name="code">bidirectional_exchange</field>
+        <field
+            name="name"
+        >Required incoming, outgoing and acknowledgement exchanges</field>
+        <field name="sequence">10</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+        <field name="applicability">conditional</field>
+        <field name="mandatory" eval="False" />
+        <field name="external_result" eval="True" />
+    </record>
+    <record
+        id="cert_req_exchange_sii_instructions"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">information_exchange</field>
+        <field name="code">exchange_assigned_instructions</field>
+        <field
+            name="name"
+        >All exchange directions and acknowledgements requested by SII</field>
+        <field name="sequence">20</field>
+        <field name="applicability">conditional</field>
+        <field name="mandatory" eval="False" />
+        <field
+            name="normative_title"
+        >Current taxpayer-specific SII exchange instructions</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_printed_samples"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">printed_samples</field>
+        <field name="code">printed_sample_coverage</field>
+        <field name="name">Required one-page PDF samples and TED barcode</field>
+        <field name="sequence">10</field>
+        <field name="normative_title">SII Manual de Muestras Impresas</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/manual_muestras_impresas.pdf</field>
+        <field name="normative_version">2014-07-v4</field>
+    </record>
+    <record
+        id="cert_req_printed_package"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">printed_samples</field>
+        <field name="code">printed_sample_portal_result</field>
+        <field name="name">Uploaded sample package and SII result retained</field>
+        <field name="sequence">20</field>
+        <field name="normative_title">SII Manual de Muestras Impresas</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/manual_muestras_impresas.pdf</field>
+        <field name="normative_version">2014-07-v4</field>
+        <field name="external_result" eval="True" />
+    </record>
+    <record
+        id="cert_req_compliance_declaration"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_declaration_receipt</field>
+        <field name="name">Compliance declaration submitted and result retained</field>
+        <field name="sequence">10</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+        <field name="external_result" eval="True" />
+    </record>
+    <record
+        id="cert_req_compliance_caf"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_caf_access_control</field>
+        <field
+            name="name"
+        >CAF custody, storage and access control procedures verified</field>
+        <field name="sequence">20</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_folio"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_unique_foliation</field>
+        <field
+            name="name"
+        >Unique controlled assignment of authorized folios verified</field>
+        <field name="sequence">21</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_backup"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_backups</field>
+        <field
+            name="name"
+        >Generated documents and information backup procedures verified</field>
+        <field name="sequence">22</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_outbound"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_sii_outbound</field>
+        <field name="name">SII document submission procedures verified</field>
+        <field name="sequence">23</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_exchange"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_document_exchange</field>
+        <field
+            name="name"
+        >Sending and receiving documents with other taxpayers verified</field>
+        <field name="sequence">24</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_reconciliation"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_sii_reconciliation</field>
+        <field
+            name="name"
+        >Reconciliation of accepted, rejected and observed SII submissions verified</field>
+        <field name="sequence">25</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_compliance_contingencies"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">compliance_declaration</field>
+        <field name="code">compliance_contingency_management</field>
+        <field
+            name="name"
+        >Operational contingency management procedures verified</field>
+        <field name="sequence">26</field>
+        <field
+            name="normative_title"
+        >SII Certification Process - Compliance requirements</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/servicios_online/1039-proceso_certificacion-1184.html</field>
+        <field name="normative_version">reviewed-2026-11-03</field>
+    </record>
+    <record
+        id="cert_req_issuer_registration"
+        model="l10n_cl.dte.certification.requirement.template"
+    >
+        <field name="stage_code">issuer_registration</field>
+        <field name="code">issuer_registration_resolution</field>
+        <field name="name">Electronic issuer registration resolution recorded</field>
+        <field name="sequence">10</field>
+        <field name="normative_title">SII Certification Process</field>
+        <field
+            name="normative_url"
+        >https://www.sii.cl/factura_electronica/factura_mercado/proceso_certificacion.htm</field>
+        <field name="normative_version">2026-11-03</field>
+        <field name="external_result" eval="True" />
+    </record>
+</odoo>

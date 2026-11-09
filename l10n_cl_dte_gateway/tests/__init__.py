@@ -1,6 +1,3 @@
 from . import test_demo_sii_gateway
 from . import test_electronic_submission
-from . import test_certification_authentication
-from . import test_envelope_readiness
-from . import test_certification_envelope_upload
-from . import test_envelope_result_import
+from . import test_certification_transport

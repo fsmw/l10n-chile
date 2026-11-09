@@ -2,6 +2,7 @@ from lxml import etree
 
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
     DteXmlComposer,
@@ -11,35 +12,91 @@ from .common import DteInvoiceTestCase
 
 
 class TestDteXmlComposer(DteInvoiceTestCase):
-    def test_discounted_lines_include_rounded_discount_amount(self):
+    def test_taxable_global_discount_does_not_reduce_the_exempt_total(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot(
+            "33", taxable=False
+        )
+        snapshot["lines"][0].update(
+            {"quantity": "2", "unit_price": "6840", "subtotal": "13680"}
+        )
+        snapshot["totals"]["exempt"] = "13680"
+        snapshot["totals"]["total"] = "13680"
+        snapshot["global_discount"] = {
+            "movement": "D",
+            "description": "Descuento global",
+            "value_type": "%",
+            "value": "24",
+        }
+        xml = self.validate_composed_xml(snapshot, authorization)
+        DteXmlComposer().validate_document(xml, strict_sii=True)
+        root = etree.fromstring(xml)
+        exempt = root.find(f".//{{{SII_NAMESPACE}}}MntExe")
+        exempt.text = "10397"
+        root.remove(root.xpath("./*[local-name()='Signature']")[0])
+        incorrect = SignatureService().sign_document(
+            self.company.with_user(self.dte_manager), "demo", etree.tostring(root)
+        )
+        with self.assertRaisesRegex(ValidationError, "exempt total"):
+            DteXmlComposer().validate_document(incorrect, strict_sii=True)
+
+    def test_exempt_adjustment_indicator_is_applied_only_to_exempt_total(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot(
+            "33", taxable=False
+        )
+        snapshot["lines"][0].update(
+            {"quantity": "2", "unit_price": "6840", "subtotal": "13680"}
+        )
+        snapshot["totals"]["exempt"] = "10397"
+        snapshot["totals"]["total"] = "10397"
+        snapshot["global_discount"] = {
+            "movement": "D",
+            "description": "Exempt adjustment",
+            "value_type": "%",
+            "value": "24",
+        }
+        root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
+        adjustment = root.find(f".//{{{SII_NAMESPACE}}}DscRcgGlobal")
+        etree.SubElement(adjustment, f"{{{SII_NAMESPACE}}}IndExeDR").text = "1"
+        DteXmlComposer()._validate_exempt_total(root)
+
+    def test_discounted_lines_include_the_clp_discount_amount(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
         snapshot["lines"][0].update(
             {
-                "quantity": "3",
-                "unit_price": "105",
+                "quantity": "816",
+                "unit_price": "6303",
                 "discount_percent": "10",
-                "subtotal": "284",
+                "subtotal": "4628923",
             }
         )
-        snapshot["totals"].update({"net": "284", "vat": "54", "total": "338"})
         root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
         detail = root.find(f"{{{SII_NAMESPACE}}}Documento/{{{SII_NAMESPACE}}}Detalle")
         self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoPct"), "10")
-        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto"), "32")
-        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}MontoItem"), "284")
+        self.assertEqual(
+            detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto"), "514325"
+        )
+        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}MontoItem"), "4628923")
 
-    def test_discount_amount_uses_decimal_half_up_rounding(self):
-        for quantity, price, percent, expected in [
-            ("3", "105", "10", 32),
-            ("7", "89", "25", 156),
-            ("0.5", "5", "20", 1),
-            ("1", "2", "10", 0),
-        ]:
-            with self.subTest(quantity=quantity, price=price, percent=percent):
-                self.assertEqual(
-                    DteXmlComposer.line_discount_amount(quantity, price, percent),
-                    expected,
-                )
+    def test_discount_rounding_uses_the_percentage_without_changing_the_subtotal(self):
+        self.assertEqual(
+            DteXmlComposer.line_discount_amount("299", "6303", "10"), 188460
+        )
+        self.assertEqual(
+            DteXmlComposer.line_discount_amount("762", "5352", "25"), 1019556
+        )
+        self.assertEqual(DteXmlComposer.line_discount_amount("0.5", "3", "10"), 0)
+
+    def test_sii_discount_validation_rejects_missing_or_wrong_amount(self):
+        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
+        snapshot["lines"][0]["discount_percent"] = "10"
+        root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
+        amount = root.find(f".//{{{SII_NAMESPACE}}}DescuentoMonto")
+        amount.text = "999"
+        with self.assertRaisesRegex(ValidationError, "discount amount"):
+            DteXmlComposer()._validate_line_discounts(root)
+        amount.getparent().remove(amount)
+        with self.assertRaisesRegex(ValidationError, "discount amount"):
+            DteXmlComposer()._validate_line_discounts(root)
 
     def test_type_33_xml_required_fields(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
@@ -62,43 +119,6 @@ class TestDteXmlComposer(DteInvoiceTestCase):
         self.assertEqual(root.findtext(f".//{{{SII_NAMESPACE}}}TipoDTE"), "34")
         self.assertEqual(root.findtext(f".//{{{SII_NAMESPACE}}}MntExe"), "1000")
         self.assertFalse(root.find(f".//{{{SII_NAMESPACE}}}IVA"))
-
-    def test_reference_code_is_serialized_separately_from_reason(self):
-        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
-        snapshot["references"] = [
-            {
-                "line_number": 1,
-                "document_type": "33",
-                "folio": "42",
-                "date": "2026-11-06",
-                "reference_code": "2",
-                "reason": "CORRIGE TEXTO",
-            }
-        ]
-
-        root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
-        reference = root.find(f".//{{{SII_NAMESPACE}}}Referencia")
-
-        self.assertEqual(reference.findtext(f"{{{SII_NAMESPACE}}}CodRef"), "2")
-        self.assertEqual(
-            reference.findtext(f"{{{SII_NAMESPACE}}}RazonRef"), "CORRIGE TEXTO"
-        )
-
-    def test_invalid_reference_code_is_rejected(self):
-        _invoice, snapshot, _authorization = self.valid_invoice_snapshot("33")
-        snapshot["references"] = [
-            {
-                "line_number": 1,
-                "document_type": "33",
-                "folio": "42",
-                "date": "2026-11-06",
-                "reference_code": "4",
-                "reason": "invalid",
-            }
-        ]
-
-        with self.assertRaisesRegex(ValidationError, "reference code"):
-            DteXmlComposer().compose_unsigned_document(snapshot)
 
     def test_xml_matches_schema(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")

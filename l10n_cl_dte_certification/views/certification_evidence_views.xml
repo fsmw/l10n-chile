@@ -1,0 +1,78 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_evidence_view_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.evidence.list</field>
+        <field name="model">l10n_cl.dte.certification.evidence</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="stage_id" />
+                <field name="evidence_type" />
+                <field name="origin" />
+                <field name="captured_at" />
+                <field name="external_reference" />
+                <field name="sha256" />
+                <field name="verification_state" />
+            </list>
+        </field>
+    </record>
+    <record id="certification_evidence_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.evidence.form</field>
+        <field name="model">l10n_cl.dte.certification.evidence</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_verify_integrity"
+                        type="object"
+                        string="Verify Integrity"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_mark_source_verified"
+                        type="object"
+                        string="Verify Source"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field name="verification_state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        Do not attach passwords, private keys, PFX files, cookies or
+                        authentication tokens as certification evidence.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="process_id" readonly="1" />
+                            <field name="stage_id" readonly="1" />
+                            <field name="requirement_id" readonly="1" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="name" />
+                            <field name="evidence_type" />
+                            <field name="origin" />
+                        </group>
+                        <group>
+                            <field name="attachment_id" />
+                            <field name="mimetype" />
+                            <field name="sha256" />
+                            <field name="captured_at" />
+                            <field name="captured_by" />
+                            <field name="external_reference" />
+                            <field name="source_url" />
+                            <field name="verified_at" />
+                            <field name="verified_by" />
+                        </group>
+                    </group>
+                    <field name="notes" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="certification_evidence_action" model="ir.actions.act_window">
+        <field name="name">Certification Evidence</field>
+        <field name="res_model">l10n_cl.dte.certification.evidence</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

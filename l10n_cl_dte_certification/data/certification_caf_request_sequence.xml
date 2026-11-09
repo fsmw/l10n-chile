@@ -1,0 +1,11 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="certification_caf_request_sequence" model="ir.sequence">
+        <field name="name">Certification CAF Request</field>
+        <field name="code">l10n_cl.dte.certification.caf.request</field>
+        <field name="prefix">CAF/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

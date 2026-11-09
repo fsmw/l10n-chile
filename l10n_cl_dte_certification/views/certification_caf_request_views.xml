@@ -1,0 +1,180 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_caf_request_view_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.caf.request.list</field>
+        <field name="model">l10n_cl.dte.certification.caf.request</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="name" />
+                <field name="requested_at" />
+                <field name="requested_by" />
+                <field name="environment" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+    <record id="certification_caf_request_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.caf.request.form</field>
+        <field name="model">l10n_cl.dte.certification.caf.request</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_process"
+                        type="object"
+                        string="Process Now"
+                        invisible="state != 'queued'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_recover_cafs"
+                        type="object"
+                        string="Recover CAFs from SII"
+                        invisible="state != 'uncertain'"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel Queued Lines"
+                        invisible="not has_queued_lines or state not in ['queued', 'failed', 'partial', 'uncertain']"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <field name="has_queued_lines" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="set_id" />
+                            <field name="company_id" />
+                            <field name="environment" />
+                        </group>
+                        <group>
+                            <field name="requested_by" />
+                            <field name="requested_at" />
+                            <field name="started_at" />
+                            <field name="completed_at" />
+                        </group>
+                    </group>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="state != 'uncertain'"
+                    >
+                        The SII may have issued the folios. Odoo checks authorized ranges to recover the CAF automatically. Use Recover CAFs from SII to check again; this does not request new folios.
+                    </div>
+                    <group invisible="not diagnostic_code">
+                        <field name="diagnostic_code" />
+                        <field name="diagnostic_message" />
+                    </group>
+                    <field name="line_ids" readonly="1">
+                        <list create="0" delete="0">
+                            <field name="document_code" />
+                            <field name="requested_quantity" />
+                            <field name="state" />
+                            <field name="folio_start" />
+                            <field name="folio_end" />
+                            <field name="caf_id" />
+                            <field name="caf_digest" optional="hide" />
+                            <field name="error_code" optional="hide" />
+                            <field name="error_message" optional="hide" />
+                            <field name="recovery_message" />
+                            <field name="sii_maximum_known" column_invisible="1" />
+                            <field
+                                name="sii_maximum_quantity"
+                                invisible="not sii_maximum_known"
+                            />
+                            <field name="last_recovery_at" optional="hide" />
+                            <field name="recovery_attempt_count" optional="hide" />
+                            <field name="recovery_error_code" optional="hide" />
+                            <button
+                                name="action_recover_caf"
+                                type="object"
+                                string="Recover CAF from SII"
+                                invisible="state != 'uncertain'"
+                                groups="l10n_cl_dte_core.group_dte_manager"
+                            />
+                            <button
+                                name="action_open_reconcile_wizard"
+                                type="object"
+                                string="Reconcile"
+                                invisible="state != 'uncertain'"
+                                groups="l10n_cl_dte_core.group_dte_manager"
+                            />
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="certification_caf_request_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.caf.request.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.caf.request.wizard</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <div class="alert alert-warning" role="alert">
+                    This action requests real folios in the SII Certification environment (IDK 100). Confirm each document type and quantity before submitting.
+                </div>
+                <group>
+                    <field name="set_id" />
+                    <field name="available_document_type_ids" invisible="1" />
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom" create="1" delete="1">
+                        <field
+                            name="document_type_id"
+                            domain="[('id', 'in', parent.available_document_type_ids)]"
+                            options="{'no_create': True, 'no_quick_create': True}"
+                        />
+                        <field name="requested_quantity" />
+                    </list>
+                </field>
+                <footer>
+                    <button
+                        name="action_confirm_request"
+                        type="object"
+                        string="Confirm and Queue CAF Request"
+                        class="btn-primary"
+                        confirm="The SII will allocate real Certification folios. An uncertain result must be reconciled and will never be retried automatically. Continue?"
+                    />
+                    <button string="Discard" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_caf_reconcile_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.caf.reconcile.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.caf.reconcile.wizard</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <div class="alert alert-warning" role="alert">
+                    Select the CAF recovered from “Folios ya autorizados”. Reconciliation does not contact the SII.
+                </div>
+                <group>
+                    <field name="line_id" />
+                    <field
+                        name="caf_id"
+                        options="{'no_create': True, 'no_quick_create': True}"
+                    />
+                    <field
+                        name="note"
+                        placeholder="How was this CAF recovered and verified?"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Reconcile CAF"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
