@@ -153,6 +153,10 @@ class SiiGatewayFactory(models.AbstractModel):
     def get_gateway(self, environment):
         if environment == "demo":
             return DemoSiiGateway()
+        if environment == "production":
+            from .production_gateway import ProductionSiiGateway
+
+            return ProductionSiiGateway()
         if environment in {"certification", "production"}:
             raise UserError(
                 _(
