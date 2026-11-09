@@ -15,6 +15,8 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from .certificate_identity import certificate_sender_rut
+
 DS_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#"
 C14N_URI = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
 RSA_SHA1_URI = DS_NAMESPACE + "rsa-sha1"
@@ -24,6 +26,44 @@ SII_XML_DECLARATION = b'<?xml version="1.0" encoding="ISO-8859-1"?>'
 
 class SignatureService:
     """Create and verify the SII's TED FRMT and DTE XMLDSig signatures."""
+
+    def certification_signing_identity(self, company):
+        """Return the active Certification certificate and its holder RUT."""
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(
+                _("Only a DTE manager can inspect the signing certificate.")
+            )
+        profiles = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", "certification"),
+                ("active", "=", True),
+            ]
+        )
+        if len(profiles) != 1 or profiles.is_synthetic:
+            raise UserError(
+                _("Configure one non-synthetic Certification signing profile.")
+            )
+        certificate = profiles.sudo().certificate_id
+        if (
+            not certificate
+            or certificate.company_id != company
+            or not certificate.active
+            or not certificate.is_valid
+            or not certificate.private_key_id
+            or certificate.private_key_id.public
+        ):
+            raise UserError(
+                _("Configure a valid Certification certificate with its private key.")
+            )
+        try:
+            pem = base64.b64decode(certificate.pem_certificate, validate=True)
+            parsed = x509.load_pem_x509_certificate(pem)
+        except (ValueError, TypeError) as error:
+            raise ValidationError(
+                _("The configured Certification certificate is invalid.")
+            ) from error
+        return certificate, certificate_sender_rut(parsed)
 
     def sign_ted(self, company, caf_authorization, dd_xml):
         """Sign the serialized TED/DD with the private key embedded in its CAF."""

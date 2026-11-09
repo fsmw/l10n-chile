@@ -7,10 +7,19 @@
         <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_document_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_link_to_active_certification_stage" type="object" string="Link to Active Exchange Stage" invisible="certification_stage_id or sii_environment != 'certification'" groups="l10n_cl_dte_core.group_dte_manager" />
+                <button
+                    name="action_link_to_active_certification_stage"
+                    type="object"
+                    string="Link to Active Exchange Stage"
+                    invisible="certification_stage_id or sii_environment != 'certification'"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
             </xpath>
             <xpath expr="//group[.//field[@name='xml_sha256']]" position="inside">
-                <field name="certification_stage_id" groups="l10n_cl_dte_core.group_dte_manager" />
+                <field
+                    name="certification_stage_id"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
             </xpath>
         </field>
     </record>

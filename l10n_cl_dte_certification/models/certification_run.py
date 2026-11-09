@@ -17,6 +17,8 @@ from odoo.addons.l10n_cl_dte_gateway.services.envelope_composer import (
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
+from ..services.access import check_certification_access
+
 
 def _canonical_digest(value):
     payload = json.dumps(
@@ -70,6 +72,7 @@ class DteCertificationRun(models.Model):
         copy=False,
     )
     line_count = fields.Integer(compute="_compute_line_count")
+    can_operate = fields.Boolean(compute="_compute_can_operate")
     envelope_xml = fields.Binary(
         string="Certification Envelope",
         attachment=True,
@@ -94,6 +97,21 @@ class DteCertificationRun(models.Model):
         readonly=True,
         copy=False,
     )
+
+    @api.depends_context("uid", "company")
+    def _compute_can_operate(self):
+        company = self.env.company
+        can_operate = (
+            self.env.user.has_group("l10n_cl_dte_core.group_dte_manager")
+            and company in self.env.companies
+            and company.dte_sii_environment == "certification"
+        )
+        for run in self:
+            run.can_operate = bool(can_operate and run.company_id == company)
+
+    def _check_execution_access(self):
+        self.ensure_one()
+        check_certification_access(self.env, self.company_id)
 
     def action_open_generation_wizard(self):
         self.ensure_one()

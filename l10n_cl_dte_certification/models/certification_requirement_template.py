@@ -33,7 +33,6 @@ class DteCertificationRequirementTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
     mandatory = fields.Boolean(required=True, default=True)
     external_result = fields.Boolean(
-        string="External Result",
         help="This requirement is satisfied only by a verified external result.",
     )
     applicability = fields.Selection(

@@ -48,7 +48,10 @@
                             <field name="process_id" readonly="1" />
                             <field name="stage_id" readonly="1" />
                             <field name="requirement_id" readonly="1" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
                             <field name="name" />
                             <field name="evidence_type" />
                             <field name="origin" />

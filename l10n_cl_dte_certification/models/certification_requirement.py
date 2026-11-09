@@ -37,7 +37,7 @@ class DteCertificationProcessRequirement(models.Model):
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(required=True, default=10)
     mandatory = fields.Boolean(default=True, required=True)
-    external_result = fields.Boolean(string="External Result", readonly=True)
+    external_result = fields.Boolean(readonly=True)
     applicability = fields.Selection(
         [
             ("required", "Required"),
@@ -343,6 +343,7 @@ class DteCertificationProcessRequirement(models.Model):
         """Update requirement state from a validated checklist action."""
         return super().write(vals)
 
+    # pylint: disable=method-required-super
     def unlink(self):
         """Retain checklist history."""
         raise UserError(_("Certification requirements are retained as audit evidence."))

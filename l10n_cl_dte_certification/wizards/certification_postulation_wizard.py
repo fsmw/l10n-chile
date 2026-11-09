@@ -189,9 +189,7 @@ class DteCertificationPostulationWizard(models.TransientModel):
                 "evidence_sha256": evidence.sha256,
                 "supplemental": is_supplemental,
                 "previous_evidence_ids": (
-                    (requirement.evidence_ids - evidence).ids
-                    if is_supplemental
-                    else []
+                    (requirement.evidence_ids - evidence).ids if is_supplemental else []
                 ),
                 "superseded_evidence_ids": superseded_evidence.ids,
                 "supplemental_reason": self.notes if is_supplemental else False,

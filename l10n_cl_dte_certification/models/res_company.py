@@ -53,7 +53,7 @@ class ResCompany(models.Model):
         for vals in vals_list:
             self._check_certification_environment_values(vals)
         companies = super().create(vals_list)
-        companies.filtered(
+        companies.sudo().filtered(
             lambda company: company.dte_sii_environment == "certification"
         )._ensure_certification_accounting_defaults()
         return companies

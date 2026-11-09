@@ -203,12 +203,6 @@ class DteXmlComposer:
             signature_service.verify_signature(xml_bytes)
         return True
 
-    @staticmethod
-    def line_discount_amount(quantity, unit_price, discount_percent):
-        return (
-            Decimal(quantity) * Decimal(unit_price) * Decimal(discount_percent) / 100
-        ).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
-
     def _validate_line_discounts(self, root):
         prefix = f"{{{SII_NAMESPACE}}}"
         for detail in root.findall(prefix + "Documento/" + prefix + "Detalle"):

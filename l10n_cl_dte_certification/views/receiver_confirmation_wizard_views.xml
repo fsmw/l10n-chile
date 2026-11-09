@@ -3,13 +3,19 @@
 <odoo>
     <record id="receiver_confirmation_wizard_action" model="ir.actions.act_window">
         <field name="name">Confirm Certification Receiver</field>
-        <field name="res_model">l10n_cl.dte.certification.receiver.confirmation.wizard</field>
+        <field
+            name="res_model"
+        >l10n_cl.dte.certification.receiver.confirmation.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
     <record id="receiver_confirmation_wizard_view_form" model="ir.ui.view">
-        <field name="name">l10n_cl.dte.certification.receiver.confirmation.wizard.form</field>
-        <field name="model">l10n_cl.dte.certification.receiver.confirmation.wizard</field>
+        <field
+            name="name"
+        >l10n_cl.dte.certification.receiver.confirmation.wizard.form</field>
+        <field
+            name="model"
+        >l10n_cl.dte.certification.receiver.confirmation.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <div class="alert alert-warning" role="alert">

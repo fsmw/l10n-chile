@@ -3,4 +3,5 @@ cryptography
 pdf417gen
 pycurl
 pypdf
+python-stdnum
 requests

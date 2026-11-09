@@ -48,6 +48,7 @@ class DteCertificationProcessEvent(models.Model):
     details = fields.Json(readonly=True)
 
     @api.model_create_multi
+    # pylint: disable=method-required-super
     def create(self, vals_list):
         """Create events only from a validated workflow transition."""
         raise AccessError(
@@ -96,10 +97,12 @@ class DteCertificationProcessEvent(models.Model):
             normalized.append(values)
         return super(DteCertificationProcessEvent, self.sudo()).create(normalized)
 
+    # pylint: disable=method-required-super
     def write(self, vals):
         """Keep event history immutable."""
         raise AccessError(_("Certification events are immutable."))
 
+    # pylint: disable=method-required-super
     def unlink(self):
         """Keep event history immutable."""
         raise AccessError(_("Certification events are retained as audit evidence."))

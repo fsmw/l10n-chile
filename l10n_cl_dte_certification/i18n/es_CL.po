@@ -703,6 +703,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_set.py:0
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_import_wizard.py:0
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_request_wizard.py:0
 msgid "CAF configuration is frozen for this set."
 msgstr ""
@@ -7334,58 +7335,72 @@ msgstr "El set asignado no tiene tipos de documento para certificar."
 #~ "certifican al contribuyente. Cada etapa oficial del SII requiere su "
 #~ "propia evidencia."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "SII Assigned Test Set"
 msgstr "Set de pruebas ya asignado por el SII"
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Choose SII Assigned Test Set when the SII has already granted Certification access and assigned a test set. The official SETMAIL decision is still required to close that first stage."
 msgstr "Elija Set de pruebas ya asignado por el SII cuando el SII ya haya concedido acceso al ambiente de Certificación y asignado un set. Se requiere el resultado oficial SETMAIL para cerrar esa primera etapa."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Link the SII-assigned test set before starting this certification."
 msgstr "Vincule el set de pruebas asignado por el SII antes de iniciar esta certificación."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "The complete assigned set must have an accepted SII envelope. Record its official SETMAIL result in the Assigned Test Set stage."
 msgstr "El envío completo del set asignado debe estar aceptado por el SII. Registre su resultado oficial SETMAIL en la etapa Set de pruebas asignado."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "This certification process has already started."
 msgstr "Este proceso de certificación ya se inició."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "This action is only for an SII-assigned test-set dossier."
 msgstr "Esta acción solo corresponde a un expediente con un set de pruebas asignado por el SII."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "This dossier already contains postulation evidence or a reference. Continue with its existing SII postulation path."
 msgstr "Este expediente ya contiene una referencia o evidencia de postulación. Continúe por la ruta de postulación SII registrada."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_process_views.xml:0
 msgid "Continue the SII-assigned test set"
 msgstr "Continúe con el set de pruebas asignado por el SII"
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_process_views.xml:0
 msgid "Start this dossier, open the Assigned Test Set stage, run its preflight, and register the official SETMAIL result. When SII accepts the set, Odoo advances the current stage to Simulation Set. Do not create a new postulation or request another assigned set."
 msgstr "Inicie este expediente, abra la etapa Set de pruebas asignado, ejecute la revisión previa y registre el resultado oficial SETMAIL. Cuando el SII acepte el set, Odoo avanzará a Simulación. No cree otra postulación ni solicite otro set asignado."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_set_views.xml:0
 msgid "Next: close the Assigned Test Set stage in Odoo"
 msgstr "Siguiente: cierre en Odoo la etapa Set de pruebas asignado"
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_set_views.xml:0
 msgid "SII accepted every document in this assigned set. If you have already declared its progress in the SII portal, continue here and register the official SETMAIL decision to close this stage. Odoo advances the dossier to Simulation only after that result is recorded."
 msgstr "El SII aceptó todos los documentos de este set asignado. Si ya declaró su avance en el portal del SII, continúe aquí y registre el resultado oficial SETMAIL para cerrar esta etapa. Odoo avanzará el expediente a Simulación una vez registrado ese resultado."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_set_views.xml:0
 msgid "If you have not declared this progress in SII yet, use the menu link above and enter the TrackID and submission date. Once the SII has issued its SETMAIL result, open the assigned-set stage and choose “Register SETMAIL Result”. Attach the email or result file and record its shipment identifier."
 msgstr "Si aún no declaró este avance en el SII, use el enlace al menú e ingrese el TrackID y la fecha de envío. Cuando el SII emita el resultado SETMAIL, abra la etapa Set de pruebas asignado y elija “Registrar resultado SETMAIL”. Adjunte el correo o archivo de resultado e ingrese su identificador de envío."
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_set_views.xml:0
 msgid "Start Basic Set Certification Cycle"
 msgstr "Iniciar ciclo de certificación del Set Básico"
 
+#. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/views/certification_set_views.xml:0
 msgid "Odoo starts a dossier from this SII-assigned set. You do not need to create another postulation or request another assigned set. The Assigned Test Set stage remains open until its official SETMAIL result is recorded."
 msgstr "Odoo inicia un expediente desde este set asignado por el SII. No necesita crear otra postulación ni solicitar otro set. La etapa Set de pruebas asignado permanecerá abierta hasta registrar el resultado oficial SETMAIL."

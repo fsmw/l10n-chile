@@ -21,6 +21,7 @@ class DteCertificationImportWizardSection(models.TransientModel):
     attention_number = fields.Char(required=True, readonly=True)
     case_count = fields.Integer(readonly=True)
     document_summary = fields.Char(readonly=True)
+
     @api.depends("attention_number", "case_count", "document_summary")
     def _compute_name(self):
         for section in self:
@@ -46,4 +47,3 @@ class DteCertificationImportWizardSection(models.TransientModel):
             )
             if other_sections:
                 raise ValidationError(_("SET attention numbers must be unique."))
-

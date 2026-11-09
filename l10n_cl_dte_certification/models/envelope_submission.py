@@ -175,14 +175,19 @@ class DteCertificationRun(models.Model):
         "envelope_submission_ids.attempt_ids.state",
         "envelope_digest",
         "can_operate",
-        "set_id.state",
+        "set_id.parse_state",
+        "set_id.case_coverage_state",
     )
     def _compute_envelope_submission_count(self):
         for run in self:
             run.envelope_submission_count = len(run.envelope_submission_ids)
             latest = run.envelope_submission_ids[:1]
             rejected = False
-            if latest and run.can_operate and run.set_id.state == "ready":
+            set_is_ready = (
+                run.set_id.parse_state == "parsed"
+                and run.set_id.case_coverage_state == "complete"
+            )
+            if latest and run.can_operate and set_is_ready:
                 try:
                     rejected = all(
                         submission._verified_schema_rejection()
@@ -195,7 +200,7 @@ class DteCertificationRun(models.Model):
             )
             run.can_prepare_sii_submission = bool(
                 run.can_operate
-                and run.set_id.state == "ready"
+                and set_is_ready
                 and (
                     not latest
                     or (rejected and latest.request_digest != run.envelope_digest)
@@ -203,7 +208,7 @@ class DteCertificationRun(models.Model):
             )
             run.can_query_sii_status = bool(
                 run.can_operate
-                and run.set_id.state == "ready"
+                and set_is_ready
                 and latest.track_id
                 and latest.state in {"submitted", "processing", "outcome_unknown"}
             )

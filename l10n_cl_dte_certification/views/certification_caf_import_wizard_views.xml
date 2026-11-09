@@ -12,7 +12,12 @@
                     <field name="caf_filename" />
                 </group>
                 <footer>
-                    <button name="action_import" type="object" string="Validate and Add" class="btn-primary" />
+                    <button
+                        name="action_import"
+                        type="object"
+                        string="Validate and Add"
+                        class="btn-primary"
+                    />
                     <button string="Cancel" special="cancel" />
                 </footer>
             </form>

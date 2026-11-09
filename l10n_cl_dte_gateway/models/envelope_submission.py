@@ -34,6 +34,10 @@ class SiiEnvelopeSubmission(models.Model):
     _order = "create_date desc, id desc"
     _check_company_auto = True
 
+    result_import_ids = fields.One2many(
+        "l10n_cl.sii.envelope.result.import", "submission_id", readonly=True
+    )
+
     name = fields.Char(required=True, readonly=True, copy=False, index=True)
     company_id = fields.Many2one(
         "res.company",
@@ -732,7 +736,12 @@ class SiiEnvelopeAttempt(models.Model):
         related="submission_id.company_id", store=True, index=True
     )
     operation = fields.Selection(
-        [("send", "Send"), ("status", "Status Query")], required=True
+        [
+            ("send", "Send"),
+            ("status", "Status Query"),
+            ("result_import", "Import Result"),
+        ],
+        required=True,
     )
     started_at = fields.Datetime(required=True, readonly=True)
     finished_at = fields.Datetime(readonly=True)
@@ -763,13 +772,13 @@ class SiiEnvelopeAttempt(models.Model):
         raise UserError(_("Gateway attempts are created by transmission actions."))
 
     @api.model
-    def _create_for_operation(self, submission, operation):
+    def _create_for_operation(self, submission, operation, request_digest=None):
         attempt = super().create(
             {
                 "submission_id": submission.id,
                 "operation": operation,
                 "started_at": fields.Datetime.now(),
-                "request_digest": submission.request_digest,
+                "request_digest": request_digest or submission.request_digest,
             }
         )
         # Inverse cache updates append records without reapplying _order.

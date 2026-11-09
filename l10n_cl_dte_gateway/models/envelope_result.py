@@ -72,7 +72,7 @@ class SiiEnvelopeResultImport(models.Model):
 
     @api.model
     def _create_from_wizard(self, values, line_values):
-        result = super().create(values)
+        result = super(SiiEnvelopeResultImport, self.sudo()).create(values)
         for line in line_values:
             self.env["l10n_cl.sii.envelope.result.line"]._create_from_wizard(
                 {**line, "import_id": result.id}
@@ -145,7 +145,7 @@ class SiiEnvelopeResultLine(models.Model):
 
     @api.model
     def _create_from_wizard(self, values):
-        return super().create(values)
+        return super(SiiEnvelopeResultLine, self.sudo()).create(values)
 
     def write(self, values):  # pylint: disable=method-required-super
         raise UserError(_("Imported SII document results are immutable."))

@@ -52,6 +52,10 @@ def upload_response(status="0", track="123"):
 
 
 class TestCertificationTransport(SigningTestCase):
+    def setUp(self):
+        super().setUp()
+        self.env["res.lang"]._activate_lang("es_CL")
+
     def test_epr_summary_exposes_verified_document_counters(self):
         submission = self.submission()
         submission._write_internal({"track_id": "123"})

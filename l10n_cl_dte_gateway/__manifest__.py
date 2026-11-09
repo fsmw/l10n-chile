@@ -12,7 +12,7 @@
         "l10n_cl_dte_signing",
         "queue_job",
     ],
-    "external_dependencies": {"python": ["requests"]},
+    "external_dependencies": {"python": ["pycurl", "requests"]},
     "data": [
         "security/gateway_security.xml",
         "security/ir.model.access.csv",

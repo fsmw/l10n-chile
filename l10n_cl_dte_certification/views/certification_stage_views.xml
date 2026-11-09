@@ -70,7 +70,10 @@
                     <group>
                         <group>
                             <field name="process_id" readonly="1" />
-                            <field name="company_id" groups="base.group_multi_company" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
                             <field name="code" readonly="1" />
                             <field name="sequence" readonly="1" />
                         </group>
@@ -135,17 +138,44 @@
                                             <field name="code" readonly="1" />
                                             <field name="name" readonly="1" />
                                             <field name="mandatory" readonly="1" />
-                                            <field name="external_result" readonly="1" />
+                                            <field
+                                                name="external_result"
+                                                readonly="1"
+                                            />
                                             <field name="applicability" readonly="1" />
-                                            <field name="requires_operational_control_review" invisible="1" />
-                                            <field name="applicability_reason" invisible="applicability != 'conditional'" />
-                                            <field name="control_owner_id" invisible="not requires_operational_control_review" />
-                                            <field name="procedure_version" invisible="not requires_operational_control_review" />
-                                            <field name="last_review_date" invisible="not requires_operational_control_review" />
-                                            <field name="control_result" invisible="not requires_operational_control_review" />
-                                            <field name="normative_title" readonly="1" />
+                                            <field
+                                                name="requires_operational_control_review"
+                                                invisible="1"
+                                            />
+                                            <field
+                                                name="applicability_reason"
+                                                invisible="applicability != 'conditional'"
+                                            />
+                                            <field
+                                                name="control_owner_id"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="procedure_version"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="last_review_date"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="control_result"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="normative_title"
+                                                readonly="1"
+                                            />
                                             <field name="normative_url" readonly="1" />
-                                            <field name="normative_version" readonly="1" />
+                                            <field
+                                                name="normative_version"
+                                                readonly="1"
+                                            />
                                             <field name="diagnostic" readonly="1" />
                                         </group>
                                         <group string="Supporting Evidence">
@@ -181,7 +211,10 @@
                                 <field name="certification_run_ids" />
                                 <field name="electronic_submission_ids" />
                                 <field name="incoming_document_ids" />
-                                <field name="report_sample_package_id" invisible="code != 'printed_samples'" />
+                                <field
+                                    name="report_sample_package_id"
+                                    invisible="code != 'printed_samples'"
+                                />
                             </group>
                         </page>
                     </notebook>
