@@ -730,12 +730,15 @@ msgstr ""
 
 #. module: l10n_cl_dte_core
 #: model:ir.model.fields,help:l10n_cl_dte_core.field_res_company__dte_sii_resolution_number
-msgid "Resolution number authorizing the company to issue electronic tax documents."
+msgid ""
+"Resolution number authorizing the company to issue electronic tax documents."
 msgstr ""
 
 #. module: l10n_cl_dte_core
 #: model:ir.model.fields,help:l10n_cl_dte_core.field_res_company__dte_sii_regional_office
-msgid "Select the SII regional office associated with the company's registered address."
+msgid ""
+"Select the SII regional office associated with the company's registered "
+"address."
 msgstr ""
 
 #. module: l10n_cl_dte_core
@@ -766,4 +769,54 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
 msgid "Invoicing"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_res_company__dte_sii_sender_vat
+msgid "SII Authorized Sender RUT"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "DTE with transmission evidence cannot be regenerated."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Only the current signature can be replaced."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.fields,field_description:l10n_cl_dte_core.field_l10n_cl_electronic_artifact__supersedes_id
+msgid "Previous Signature"
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "A DTE needs exactly one current signed XML."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Only signed DTE that have never been queued can be regenerated."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "DTE evidence cannot be duplicated."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_document.py:0
+msgid "Only a DTE manager can regenerate signatures."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: code:addons/l10n_cl_dte_core/models/electronic_artifact.py:0
+msgid "Regenerate signatures through the document workflow."
+msgstr ""
+
+#. module: l10n_cl_dte_core
+#: model:ir.model.constraint,message:l10n_cl_dte_core.constraint_l10n_cl_electronic_artifact_signature_successor_uniq
+msgid "A signature can only have one replacement."
 msgstr ""

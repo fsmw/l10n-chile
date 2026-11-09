@@ -1,0 +1,1398 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_cl_dte_gateway
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-01 23:54+0000\n"
+"PO-Revision-Date: 2026-11-01 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.10.3\n"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_electronic_submission_submission_document_uniq
+msgid "A DTE has one submission record."
+msgstr "Un DTE tiene un único registro de envío."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A DTE is required for an SII submission."
+msgstr "Se requiere un DTE para el envío al SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A Demo scenario is immutable after the first attempt."
+msgstr "El escenario Demo no puede cambiarse después del primer intento."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A TrackID is required before status can be queried."
+msgstr "Se requiere un TrackID antes de consultar el estado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "A completed transport attempt cannot be changed."
+msgstr "No se puede modificar un intento de transporte completado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "A submission needs exactly one signed DTE artifact."
+msgstr "Un envío requiere exactamente un artefacto DTE firmado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "A transport attempt can only be completed once."
+msgstr "Un intento de transporte solo se puede completar una vez."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__accepted
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__accepted
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__accepted
+msgid "Accepted"
+msgstr "Aceptado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__attempt_ids
+msgid "Attempt"
+msgstr "Intento"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__certification
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__environment__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__company_id
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__state__completed
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__completed
+msgid "Completed"
+msgstr "Completado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__completed_at
+msgid "Completed At"
+msgstr "Completado el"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_list
+msgid "DEMO / SIMULADO"
+msgstr "DEMO / SIMULADO"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_sii_gateway_factory
+msgid "DTE SII Gateway Factory"
+msgstr "Factoría de pasarelas SII para DTE"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_electronic_submission
+msgid "DTE SII Submission"
+msgstr "Envío DTE al SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_submission_attempt
+msgid "DTE SII Transport Attempt"
+msgstr "Intento de transporte DTE al SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__demo
+msgid "Demo / Simulated"
+msgstr "Demo / Simulado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__demo_scenario
+msgid "Demo Scenario"
+msgstr "Escenario Demo"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Demo response scenarios can only be set for Demo submissions."
+msgstr "Los escenarios de respuesta solo se pueden configurar en envíos Demo."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__document_id
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__environment
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__environment
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Environment"
+msgstr "Entorno"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__error_code
+msgid "Error Code"
+msgstr "Código de error"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__error_summary
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__error_summary
+msgid "Error Summary"
+msgstr "Resumen del error"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__state__failed
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__failed
+msgid "Failed"
+msgstr "Fallido"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__idempotency_key
+msgid "Idempotency Key"
+msgstr "Clave de idempotencia"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__is_simulated
+msgid "Is Simulated"
+msgstr "Es simulado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__last_checked_at
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__last_checked_at
+msgid "Last Checked At"
+msgstr "Última consulta"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid ""
+"No SII transport adapter is installed for %(environment)s. The DTE has not "
+"been sent."
+msgstr ""
+"No hay un adaptador de transporte SII instalado para %(environment)s. El DTE"
+" no se ha enviado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a DTE manager can select a Demo scenario."
+msgstr "Solo un responsable DTE puede seleccionar un escenario Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a pending SII submission can be enqueued."
+msgstr "Solo se puede poner en cola un envío al SII pendiente."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a submission with an unknown outcome can be reconciled."
+msgstr "Solo se puede conciliar un envío cuyo resultado sea desconocido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Only a submitted DTE with a TrackID can be queried."
+msgstr "Solo se puede consultar un DTE enviado que tenga TrackID."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Only the unknown-then-reconciled Demo scenario can be reconciled."
+msgstr ""
+"Solo se puede conciliar el escenario Demo «desconocido y luego conciliado»."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__operation
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__operation
+msgid "Operation"
+msgstr "Operación"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__outcome_unknown
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__unknown
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__outcome_unknown
+msgid "Outcome Unknown"
+msgstr "Resultado del SII por confirmar"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__pending
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__pending
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__processing
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__processing
+msgid "Processing"
+msgstr "En proceso"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__processing_then_accepted
+msgid "Processing then Accepted"
+msgstr "En proceso y luego aceptado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__environment__production
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__environment__production
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Query SII Status"
+msgstr "Consultar estado del SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__query
+msgid "Query Status"
+msgstr "Consultar estado"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Queue Submission"
+msgstr "Poner envío en cola"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__reconcile
+msgid "Reconcile Outcome"
+msgstr "Conciliar resultado"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Reconcile Unknown Outcome"
+msgstr "Conciliar resultado desconocido"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__rejected
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__rejected
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__rejected
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__request_digest
+msgid "Request Digest"
+msgstr "Resumen criptográfico de la solicitud"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__response_digest
+msgid "Response Digest"
+msgstr "Resumen criptográfico de la respuesta"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.actions.act_window,name:l10n_cl_dte_gateway.action_electronic_submission
+#: model:ir.ui.menu,name:l10n_cl_dte_gateway.menu_electronic_submissions
+msgid "SII Submissions"
+msgstr "Envíos al SII"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Select a valid Demo response scenario."
+msgstr "Seleccione un escenario de respuesta Demo válido."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__operation__send
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__operation__send
+msgid "Send"
+msgstr "Envío"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__sending
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__sending
+msgid "Sending"
+msgstr "Enviando"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_submission_attempt__state__started
+msgid "Started"
+msgstr "Iniciado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__started_at
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__started_at
+msgid "Started At"
+msgstr "Iniciado el"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_submission_attempt__submission_id
+msgid "Submission"
+msgstr "Envío"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_electronic_submission_submission_idempotency_uniq
+msgid "Submission key must be unique."
+msgstr "La clave del envío debe ser única."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Submission records are retained as audit evidence."
+msgstr "Los registros de envío se conservan como evidencia de auditoría."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "Submission state can only change through workflow actions."
+msgstr ""
+"El estado del envío solo puede cambiar mediante acciones del flujo de "
+"trabajo."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__submitted
+msgid "Submitted"
+msgstr "Enviado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__submitted_at
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__submitted_at
+msgid "Submitted At"
+msgstr "Enviado el"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The DTE SII environment is invalid."
+msgstr "El entorno SII del DTE no es válido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo TrackID does not match its submission identity."
+msgstr "El TrackID Demo no coincide con la identidad del envío."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo adapter returned a response without its simulation marker."
+msgstr "El adaptador Demo devolvió una respuesta sin la marca de simulación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "The Demo gateway only accepts the Demo environment."
+msgstr "La pasarela Demo solo acepta el entorno Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The Demo scenario can only be changed before a Demo send."
+msgstr "El escenario Demo solo se puede cambiar antes del envío Demo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII adapter returned an invalid receipt."
+msgstr "El adaptador del SII devolvió un comprobante no válido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII adapter returned no raw response."
+msgstr "El adaptador del SII no devolvió una respuesta sin procesar."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII status adapter returned an unknown state."
+msgstr "El adaptador de estado del SII devolvió un estado desconocido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The SII status adapter returned no response."
+msgstr "El adaptador de estado del SII no devolvió una respuesta."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The reconciliation adapter returned no confirmed SII receipt."
+msgstr ""
+"El adaptador de conciliación no devolvió un comprobante del SII confirmado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment must match the immutable DTE mode."
+msgstr "El entorno del envío debe coincidir con el modo inmutable del DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "The submission environment no longer matches its DTE snapshot."
+msgstr "El entorno del envío ya no coincide con la copia guardada en el DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/electronic_submission.py:0
+msgid "This submission is not eligible for status polling."
+msgstr "Este envío no cumple los requisitos para consultar su estado."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_electronic_submission__track_id
+msgid "Track"
+msgstr "Consultar seguimiento"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__state__error
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__error
+msgid "Transport Error"
+msgstr "Error de transporte"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "Transport attempt identity and request data are immutable."
+msgstr ""
+"La identidad y los datos de solicitud del intento de transporte son "
+"inmutables."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/submission_attempt.py:0
+msgid "Transport attempts are retained as audit evidence."
+msgstr "Los intentos de transporte se conservan como evidencia de auditoría."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_electronic_submission__demo_scenario__unknown_then_reconciled
+msgid "Unknown then Reconciled"
+msgstr "Desconocido y luego conciliado"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Demo"
+msgstr "Demo"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "In Progress"
+msgstr "En curso"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Needs Attention"
+msgstr "Requiere atención"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_list
+msgid "Simulated"
+msgstr "Simulado"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_search
+msgid "Status"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Transport Attempts"
+msgstr "Intentos de transporte"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_electronic_submission_form
+msgid "Transport Timeline"
+msgstr "Cronología de transporte"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "A TrackID is required to query SII status."
+msgstr "Se necesita un TrackID para consultar el estado en el SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "A signed DTE lacks fiscal identification."
+msgstr "Un DTE firmado no tiene identificación tributaria."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "A signed envelope is required."
+msgstr "Se necesita un sobre firmado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "A valid SII TrackID is required."
+msgstr "Se necesita un TrackID válido del SII."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__accepted_with_observations
+msgid "Accepted with Observations"
+msgstr "Aceptado con reparos"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "All DTE in an envelope need the same issuer."
+msgstr "Todos los DTE del sobre deben tener el mismo emisor."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "An EnvioDTE needs between 1 and 2000 documents."
+msgstr "Un EnvioDTE debe contener entre 1 y 2000 documentos."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "An envelope DTE is missing its header."
+msgstr "Un DTE del sobre no tiene encabezado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "An envelope contains multiple issuers."
+msgstr "El sobre contiene varios emisores."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Certification and Production cannot accept simulated responses."
+msgstr "Certificación y Producción no pueden aceptar respuestas simuladas."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid "Certification-set envelopes cannot use the simulated Demo gateway."
+msgstr ""
+"Los sobres de certificación no pueden usar el transporte simulado de "
+"demostración."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "Configure a valid Certification certificate with its private key."
+msgstr ""
+"Configure un certificado vigente para Certificación con su clave privada."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "Configure one non-synthetic Certification signing profile."
+msgstr ""
+"Configure un perfil de firma de Certificación con un certificado real."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "Configure valid Chilean issuer and authorized sender RUTs."
+msgstr ""
+"Configure RUT chilenos válidos para el emisor y el remitente autorizado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "DTE and SetDTE identifiers must be unique."
+msgstr "Los identificadores de DTE y SetDTE deben ser únicos."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Envelope Evidence"
+msgstr "Evidencia del sobre"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "Envelope XML must be bytes without a DTD."
+msgstr "El XML del sobre debe ser una secuencia de bytes sin DTD."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_sii_envelope_submission_envelope_idempotency_uniq
+msgid "Envelope key must be unique."
+msgstr "La clave del sobre debe ser única."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Envelope transmission state changes through gateway actions."
+msgstr "El estado del envío cambia mediante las acciones de transmisión."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__finished_at
+msgid "Finished At"
+msgstr "Fecha de término"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Gateway attempts are created by transmission actions."
+msgstr "Los intentos se crean mediante las acciones de transmisión."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/sii_gateway.py:0
+msgid ""
+"No verified multi-DTE SII transport is configured for %(environment)s. The "
+"envelope has not been sent."
+msgstr ""
+"No hay un transporte de sobres con varios DTE configurado y verificado para "
+"%(environment)s. El sobre no se ha enviado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "Offline certification envelopes require Certification mode."
+msgstr ""
+"Los sobres locales de certificación requieren el ambiente de Certificación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Only a DTE manager can submit an SII envelope."
+msgstr "Solo un administrador de DTE puede enviar un sobre al SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "Only a DTE manager can use the Certification transport."
+msgstr ""
+"Solo un administrador de DTE puede usar el transporte de Certificación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Only a pending envelope can be sent."
+msgstr "Solo se puede enviar un sobre pendiente."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "Only a signed EnvioDTE envelope can be transmitted."
+msgstr "Solo se puede transmitir un sobre EnvioDTE firmado."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__partially_accepted
+msgid "Partially Accepted"
+msgstr "Aceptado parcialmente"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Queue SII Envelope"
+msgstr "Poner envío al SII en cola"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_submission__state__submitted
+msgid "Received by SII"
+msgstr "Recibido por el SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__request_filename
+msgid "Request Filename"
+msgstr "Nombre del archivo enviado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__request_xml
+msgid "Request Xml"
+msgstr "XML enviado"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_attempt__response_xml
+msgid "Response Xml"
+msgstr "XML de respuesta"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__result_counts
+msgid "Result Counts"
+msgstr "Resumen por tipo de documento"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__state__running
+msgid "Running"
+msgstr "En curso"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII Envelope Submission"
+msgstr "Envío del sobre al SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_sii_envelope_attempt
+msgid "SII Envelope Transmission Attempt"
+msgstr "Intento de envío del sobre al SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model,name:l10n_cl_dte_gateway.model_l10n_cl_sii_envelope_submission
+msgid "SII Multi-DTE Envelope Submission"
+msgstr "Envío al SII de un sobre con varios DTE"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "SII XML responses must not contain a document type declaration."
+msgstr ""
+"Las respuestas XML del SII no deben contener una declaración de tipo de "
+"documento."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/signing_profile.py:0
+msgid "SII authentication proof can only be recorded by the transport."
+msgstr ""
+"Solo el transporte puede registrar la comprobación de autenticación del SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "SII did not authorize an authentication seed."
+msgstr "El SII no autorizó una semilla de autenticación."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII did not return a TrackID and response evidence."
+msgstr "El SII no devolvió un TrackID y evidencia de la respuesta."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "SII did not return an upload receipt."
+msgstr "El SII no devolvió un comprobante de recepción."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII envelope attempts are immutable."
+msgstr "Los intentos de envío al SII no se pueden modificar."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII envelope attempts are retained as fiscal evidence."
+msgstr "Los intentos de envío al SII se conservan como evidencia tributaria."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII envelope history is retained as fiscal evidence."
+msgstr "El historial de envíos al SII se conserva como evidencia tributaria."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII envelope submissions are created from a validated workflow."
+msgstr "Los envíos de sobres al SII se crean desde un proceso validado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "SII rejected certificate authentication (code %(code)s)."
+msgstr "El SII rechazó la autenticación con certificado (código %(code)s)."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "SII returned HTTP %(status)s. The operation was not confirmed."
+msgstr "El SII devolvió HTTP %(status)s. La operación no fue confirmada."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "SII returned a SOAP fault. The operation was not confirmed."
+msgstr "El SII devolvió un error SOAP. La operación no fue confirmada."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "SII returned an invalid TrackID."
+msgstr "El SII devolvió un TrackID inválido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "SII returned an invalid authentication token."
+msgstr "El SII devolvió un token de autenticación inválido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "SII returned an unexpected SOAP envelope."
+msgstr "El SII devolvió un sobre SOAP inesperado."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_dte_signing_profile__sii_auth_identity_digest
+msgid "Sii Auth Identity Digest"
+msgstr "Huella de identidad autenticada en el SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_dte_signing_profile__sii_auth_verified_until
+msgid "Sii Auth Verified Until"
+msgstr "Autenticación del SII verificada hasta"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__operation__status
+msgid "Status Query"
+msgstr "Consulta de estado"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The DTE issuer differs from the envelope company."
+msgstr "El emisor del DTE no coincide con la compañía del sobre."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII XML response is empty or exceeds the allowed size."
+msgstr "La respuesta XML del SII está vacía o supera el tamaño permitido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII dispatch claim is not valid for this envelope."
+msgstr "El registro de despacho no es válido para este sobre."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII document counters are inconsistent."
+msgstr ""
+"Las cantidades de documentos informadas por el SII son inconsistentes."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII document counters do not reconcile."
+msgstr "Las cantidades de documentos informadas por el SII no cuadran."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII document counters must be nonnegative integers."
+msgstr ""
+"Las cantidades de documentos del SII deben ser números enteros no negativos."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "The SII envelope must have one cover sheet."
+msgstr "El sobre del SII debe tener una carátula."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII outcome could not be verified (%(error)s)."
+msgstr "No se pudo comprobar el resultado del SII (%(error)s)."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII response does not cover every DTE in this envelope."
+msgstr "La respuesta del SII no incluye todos los DTE de este sobre."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "The SII response exceeds the allowed size."
+msgstr "La respuesta del SII supera el tamaño permitido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII response has a missing or ambiguous %(field)s."
+msgstr "El campo %(field)s falta o es ambiguo en la respuesta del SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII response is not valid XML."
+msgstr "La respuesta del SII no es un XML válido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII status could not be verified (%(error)s)."
+msgstr "No se pudo comprobar el estado en el SII (%(error)s)."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII status response belongs to a different TrackID."
+msgstr "La respuesta de estado del SII corresponde a otro TrackID."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII status response has no evidence."
+msgstr "La respuesta de estado del SII no tiene evidencia."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The SII status response is invalid."
+msgstr "La respuesta de estado del SII es inválida."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_response_parser.py:0
+msgid "The SII upload receipt belongs to a different issuer or sender."
+msgstr ""
+"El comprobante de recepción del SII corresponde a otro emisor o remitente."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The XML root must be EnvioDTE."
+msgstr "El elemento raíz del XML debe ser EnvioDTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The certification envelope header is incomplete."
+msgstr "La carátula del sobre de certificación está incompleta."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_auth.py:0
+msgid "The connection with SII could not be completed."
+msgstr "No se pudo completar la conexión con el SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope XML is not well formed: %s"
+msgstr "El XML del sobre tiene un formato incorrecto: %s"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The envelope company or environment is invalid."
+msgstr "La compañía o el ambiente del sobre es inválido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope contains a non-DTE element."
+msgstr "El sobre contiene un elemento que no es un DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope cover does not match its DTE."
+msgstr "La carátula del sobre no coincide con sus DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The envelope digest does not match its bytes."
+msgstr "La huella del sobre no coincide con su contenido."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope document count differs from the input."
+msgstr "La cantidad de documentos del sobre no coincide con la entrada."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope does not comply with SII EnvioDTE v10: %s"
+msgstr "El sobre no cumple el esquema EnvioDTE v10 del SII: %s"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope has duplicate XML identifiers."
+msgstr "El sobre contiene identificadores XML duplicados."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope header field %s is required."
+msgstr "El campo %s de la carátula del sobre es obligatorio."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid ""
+"The envelope issuer or sender differs from the transport configuration."
+msgstr ""
+"El emisor o remitente del sobre no coincide con la configuración del "
+"transporte."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The envelope mode differs from the company mode."
+msgstr "El ambiente del sobre no coincide con el de la compañía."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:0
+msgid "The envelope repeats a DTE subtotal type."
+msgstr "El sobre repite un tipo de subtotal DTE."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The stored SII envelope fingerprint changed."
+msgstr "La huella del sobre del SII almacenado ha cambiado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid "This SII envelope transport is restricted to Certification."
+msgstr "Este transporte de sobres del SII está restringido a Certificación."
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.constraint,message:l10n_cl_dte_gateway.constraint_l10n_cl_sii_envelope_submission_envelope_digest_company_uniq
+msgid "This signed envelope is already registered."
+msgstr "Este sobre firmado ya está registrado."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Transmission"
+msgstr "Transmisión"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__transport_code
+msgid "Transport Code"
+msgstr "Código de respuesta del SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields.selection,name:l10n_cl_dte_gateway.selection__l10n_cl_sii_envelope_attempt__state__unknown
+msgid "Unknown"
+msgstr "Por confirmar"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:0
+msgid ""
+"Use Test SII Authentication successfully before validating this set. "
+"Authentication proof expires after 30 minutes or a change of identity."
+msgstr ""
+"Use «Probar autenticación del SII» y obtenga un resultado correcto antes de "
+"validar este set. La comprobación vence después de 30 minutos o al cambiar "
+"la identidad."
+
+#. module: l10n_cl_dte_gateway
+#: code:addons/l10n_cl_dte_gateway/models/electronic_document.py:0
+msgid "DTE with an SII submission cannot be regenerated."
+msgstr ""
+"No se pueden regenerar las firmas de DTE que tengan un registro de envío al "
+"SII."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "SII Response"
+msgstr "Respuesta del SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_code
+msgid "Last SII Response Code"
+msgstr "Código de respuesta del SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_detail
+msgid "Original SII Message"
+msgstr "Mensaje original del SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_notice
+msgid "SII Response Summary"
+msgstr "Resultado informado por el SII"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_warning
+msgid "Response Verification"
+msgstr "Verificación de la respuesta"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_received_at
+msgid "Response Received At"
+msgstr "Fecha de respuesta"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid ""
+"The issuer or sender in the receipt differs from the envelope configuration."
+" The transmission result remains unconfirmed."
+msgstr ""
+"El RUT del emisor o del remitente de la respuesta no coincide con la "
+"configuración del sobre. El resultado del envío sigue por confirmar."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The stored SII response fingerprint changed."
+msgstr "La huella de la respuesta del SII guardada ha cambiado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Review the original SII message."
+msgstr "Revisa el mensaje original del SII."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The file character encoding was rejected."
+msgstr "El SII rechazó la codificación de caracteres del archivo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII reported a reception rejection (code %(code)s). %(reason)s"
+msgstr "El SII informó un rechazo de recepción (código %(code)s). %(reason)s"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "No TrackID was assigned."
+msgstr "No se asignó un TrackID."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The stored SII response format is not recognized."
+msgstr "No se reconoce el formato de la respuesta del SII guardada."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid ""
+"The stored SII response could not be verified. Review the transmission "
+"evidence."
+msgstr ""
+"No se pudo verificar la respuesta del SII guardada. Revisa la evidencia del "
+"envío."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Response Details"
+msgstr "Detalle de la respuesta"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "File"
+msgstr "Archivo"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Transmission Identifier"
+msgstr "Identificador del envío"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Envelope Fingerprint"
+msgstr "Huella del sobre"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/certification_transport.py:73
+msgid "The SII sender RUT must match the signing certificate holder."
+msgstr ""
+"El RUT del remitente al SII debe corresponder al titular del certificado de "
+"firma."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:167
+msgid ""
+"The SII upload requires the ISO-8859-1 XML declaration on line 1 and the "
+"complete EnvioDTE schema location on line 2. Prepare a corrected envelope "
+"before sending."
+msgstr ""
+"El envío al SII requiere la declaración XML ISO-8859-1 en la primera línea y"
+" la ubicación completa del esquema EnvioDTE en la segunda. Prepara un sobre "
+"corregido antes de enviarlo."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:496
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:536
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:539
+msgid "Only a verified reception rejection can be corrected."
+msgstr "Sólo se puede corregir un rechazo de recepción verificado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:507
+msgid "The envelope issuer differs from the company."
+msgstr "El emisor del sobre no corresponde a la compañía."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:514
+msgid "The original envelope signing identity is ambiguous."
+msgstr "No se pudo identificar de forma única al firmante del sobre original."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:529
+msgid "A complete original SII rejection receipt is required."
+msgstr "Se requiere la respuesta original completa del rechazo del SII."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Refresh Response"
+msgstr "Actualizar respuesta"
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid ""
+"The transmission runs in the background. Use Refresh Response to load its "
+"result. Query SII Status becomes available when the SII assigns a TrackID."
+msgstr ""
+"El envío se procesa en segundo plano. Usa «Actualizar respuesta» para ver el"
+" resultado. «Consultar estado del SII» estará disponible cuando el SII "
+"asigne un TrackID."
+
+#. module: l10n_cl_dte_gateway
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid ""
+"The SII received the envelope. This does not yet confirm acceptance of its "
+"DTE. Use Query SII Status, then Refresh Response to load the result."
+msgstr ""
+"El SII recibió el sobre. Esto todavía no confirma la aceptación de sus DTE. "
+"Usa «Consultar estado del SII» y luego «Actualizar respuesta» para ver el "
+"resultado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:515
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:560
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:563
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:582
+msgid "Only a verified envelope rejection can be corrected."
+msgstr "Sólo se puede corregir un rechazo del sobre verificado."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/services/envelope_composer.py:178
+msgid "Certification envelopes must use resolution number 0."
+msgstr "Los sobres de Certificación deben usar el número de resolución 0."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:179
+msgid "SII rejected the envelope (%(code)s): %(reason)s"
+msgstr "El SII rechazó el sobre (%(code)s): %(reason)s"
+
+#~ msgid "Companies"
+#~ msgstr "Compañías"
+
+#~ msgid "DTE SII Environment"
+#~ msgstr "Entorno SII del DTE"
+
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Document Type"
+msgstr "Tipo de documento"
+
+#. module: l10n_cl_dte_gateway
+#: model:ir.model.fields,field_description:l10n_cl_dte_gateway.field_l10n_cl_sii_envelope_submission__response_document_summary
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_gateway.view_sii_envelope_submission_form
+msgid "Document Results"
+msgstr "Resultado de los documentos"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Informed Documents"
+msgstr "Informados"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Accepted Documents"
+msgstr "Aceptados"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Rejected Documents"
+msgstr "Rechazados"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "Documents with Observations"
+msgstr "Con reparos"
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "SII processed %(total)s DTE: %(accepted)s accepted, %(rejected)s rejected and %(observed)s accepted with observations."
+msgstr "El SII procesó %(total)s DTE: %(accepted)s aceptados, %(rejected)s rechazados y %(observed)s aceptados con reparos."
+
+#. module: l10n_cl_dte_gateway
+#. odoo-python
+#: code:addons/l10n_cl_dte_gateway/models/envelope_submission.py:0
+msgid "The status response does not include the individual rejection reasons."
+msgstr "La respuesta de estado no incluye los motivos individuales de rechazo."

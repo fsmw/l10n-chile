@@ -39,14 +39,7 @@ class DteXmlComposer:
         _require_supported_snapshot(snapshot)
         root = etree.Element(
             f"{{{SII_NAMESPACE}}}DTE",
-            nsmap=(
-                {
-                    None: SII_NAMESPACE,
-                    "xsi": "http://www.w3.org/2001/XMLSchema-instance",
-                }
-                if snapshot.get("certification")
-                else {None: SII_NAMESPACE}
-            ),
+            nsmap={None: SII_NAMESPACE},
             version="1.0",
         )
         document_code = str(snapshot["document_code"])
@@ -179,7 +172,7 @@ class DteXmlComposer:
             snapshot, caf_authorization, signature_service
         )
 
-    def validate_document(self, xml_bytes, signature_service=None):
+    def validate_document(self, xml_bytes, signature_service=None, *, strict_sii=False):
         """Check SII XSD, TED FRMT, and the DTE XMLDSig before dispatch."""
         root = _parse_document(xml_bytes)
         if root.tag != f"{{{SII_NAMESPACE}}}DTE":
@@ -202,8 +195,66 @@ class DteXmlComposer:
         if dd is None or caf is None or not frmt:
             raise ValidationError(_("The TED is missing DD, CAF, or FRMT."))
         signature_service.verify_ted(_extract_dd_bytes(xml_bytes), frmt, caf)
-        signature_service.verify_signature(xml_bytes)
+        if strict_sii:
+            self._validate_line_discounts(root)
+            self._validate_exempt_total(root)
+            signature_service.verify_signature(xml_bytes, sii_standalone=True)
+        else:
+            signature_service.verify_signature(xml_bytes)
         return True
+
+    def _validate_line_discounts(self, root):
+        prefix = f"{{{SII_NAMESPACE}}}"
+        for detail in root.findall(prefix + "Documento/" + prefix + "Detalle"):
+            percent = detail.findtext(prefix + "DescuentoPct")
+            if percent is None:
+                continue
+            amount = detail.findtext(prefix + "DescuentoMonto")
+            expected = self.line_discount_amount(
+                detail.findtext(prefix + "QtyItem"),
+                detail.findtext(prefix + "PrcItem"),
+                percent,
+            )
+            if amount is None or Decimal(amount) != expected:
+                raise ValidationError(
+                    _("The DTE detail discount amount is missing or inconsistent.")
+                )
+
+    @staticmethod
+    def _validate_exempt_total(root):
+        prefix = f"{{{SII_NAMESPACE}}}"
+        document = root.find(prefix + "Documento")
+        expected = sum(
+            (
+                Decimal(detail.findtext(prefix + "MontoItem"))
+                for detail in document.findall(prefix + "Detalle")
+                if detail.findtext(prefix + "IndExe") == "1"
+            ),
+            Decimal(0),
+        )
+        for adjustment in document.findall(prefix + "DscRcgGlobal"):
+            if adjustment.findtext(prefix + "IndExeDR") != "1":
+                continue
+            amount = Decimal(adjustment.findtext(prefix + "ValorDR"))
+            if adjustment.findtext(prefix + "TpoValor") == "%":
+                amount = expected * amount / 100
+            amount = amount.quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+            expected += (
+                amount if adjustment.findtext(prefix + "TpoMov") == "R" else -amount
+            )
+        actual = Decimal(
+            document.findtext(
+                prefix + "Encabezado/" + prefix + "Totales/" + prefix + "MntExe"
+            )
+            or "0"
+        )
+        if actual != expected:
+            raise ValidationError(
+                _(
+                    "The DTE exempt total differs from its detail "
+                    "and exempt adjustments."
+                )
+            )
 
 
 def _parse_document(xml_bytes):

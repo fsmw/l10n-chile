@@ -1,0 +1,36 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="receiver_activity_wizard_view_form" model="ir.ui.view">
+        <field
+            name="name"
+        >l10n_cl.dte.certification.receiver.activity.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.receiver.activity.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Correct Receiver Activity">
+                <p>
+                    Enter the activity shown on the referenced invoice and the
+                    corrected activity, using the source you have verified.
+                    These values complete the credit note detail; the original
+                    SII file, customer record and invoice amounts are preserved.
+                </p>
+                <group>
+                    <field name="case_id" readonly="1" />
+                    <field name="previous_activity" />
+                    <field name="corrected_activity" />
+                    <field name="verification_reference" />
+                </group>
+                <field name="correction_preview" readonly="1" />
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Confirm Correction"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

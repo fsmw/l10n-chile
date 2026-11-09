@@ -16,10 +16,12 @@
         "l10n_cl_dte_account",
         "l10n_cl_dte_note",
         "l10n_cl_dte_gateway",
+        "l10n_cl_dte_report",
     ],
     "data": [
         "security/certification_security.xml",
         "security/ir.model.access.csv",
+        "security/certification_process_security.xml",
         "views/certification_run_views.xml",
         "views/certification_run_result_views.xml",
         "views/certification_set_views.xml",

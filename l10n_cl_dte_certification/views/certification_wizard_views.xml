@@ -1,0 +1,256 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_evidence_wizard_action" model="ir.actions.act_window">
+        <field name="name">Attach Certification Evidence</field>
+        <field name="res_model">l10n_cl.dte.certification.evidence.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record
+        id="certification_manual_result_wizard_action"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Register SII Result</field>
+        <field name="res_model">l10n_cl.dte.certification.manual.result.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="certification_submission_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.submission.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.submission.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Upload the exported envelope through the SII Certification portal first.
+                    This form records the operator-confirmed upload; it does not contact SII.
+                </div>
+                <group>
+                    <field name="stage_id" />
+                    <field name="expected_payload_digest" readonly="1" />
+                    <field name="confirms_exact_payload" />
+                    <field name="external_reference" />
+                    <field name="submitted_at" />
+                    <field name="receipt_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Record Portal Upload"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_reopen_stage_wizard_action" model="ir.actions.act_window">
+        <field name="name">Reopen Certification Stage</field>
+        <field name="res_model">l10n_cl.dte.certification.reopen.stage.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="certification_evidence_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.evidence.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.evidence.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Never attach private keys, certificates, passwords, tokens or cookies.
+                </div>
+                <group>
+                    <field name="stage_id" />
+                    <field name="requirement_id" />
+                    <field name="name" />
+                    <field name="evidence_type" />
+                    <field name="origin" />
+                    <field name="upload_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="external_reference" />
+                    <field name="source_url" />
+                    <field name="notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_create_evidence"
+                        type="object"
+                        string="Attach Evidence"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_manual_result_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.manual.result.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.manual.result.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    A manual outcome requires an official portal or SII email attachment.
+                </div>
+                <group>
+                    <field name="stage_id" />
+                    <field name="requirement_id" />
+                    <field name="result" />
+                    <field name="decision_date" />
+                    <field name="source" />
+                    <field name="external_reference" />
+                    <field
+                        name="resolution_number"
+                        invisible="stage_id.code != 'issuer_registration'"
+                        required="stage_id.code == 'issuer_registration' and result == 'accepted'"
+                    />
+                    <field
+                        name="authorized_document_types"
+                        invisible="stage_id.code != 'issuer_registration'"
+                        required="stage_id.code == 'issuer_registration' and result == 'accepted'"
+                    />
+                    <field name="evidence_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Register Result"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_postulation_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.postulation.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.postulation.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    This records evidence that the SII accepted the initial postulation
+                    and granted access to Certification. Attach a screenshot from
+                    “Ver estado de postulación” or the official acceptance notice.
+                    SETMAIL files report the assigned test-set result and belong to the
+                    assigned-set stage. This does not submit a new SII application.
+                </div>
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    invisible="not is_supplemental"
+                >
+                    Prior evidence will be retained. Explain why this additional
+                    evidence is being attached in Notes.
+                </div>
+                <group>
+                    <field name="process_id" />
+                    <field name="is_supplemental" invisible="1" />
+                    <field name="application_reference" />
+                    <field name="source_url" widget="url" readonly="1" />
+                    <field name="accepted_at" />
+                    <field name="evidence_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="notes" required="is_supplemental" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Record Acceptance"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_reopen_stage_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.reopen.stage.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.reopen.stage.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="process_id" />
+                    <field name="stage_id" />
+                    <field name="reason" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Reopen Stage"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_authorization_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.authorization.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.authorization.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Attach evidence that the taxpayer is already authorized and has
+                    access to the SII Certification environment. This is reviewed by
+                    the operator; Odoo does not verify authorization with the SII.
+                </div>
+                <group>
+                    <field name="process_id" />
+                    <field name="evidence_date" />
+                    <field name="external_reference" />
+                    <field name="source_url" />
+                    <field name="evidence_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Record Existing Authorization"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="certification_stage_submission_wizard_view_form" model="ir.ui.view">
+        <field
+            name="name"
+        >l10n_cl.dte.certification.stage.submission.wizard.form</field>
+        <field name="model">l10n_cl.dte.certification.stage.submission.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    This records an operator-reviewed portal action. It does not
+                    query the SII or represent an accepted certification result.
+                </div>
+                <group>
+                    <field name="stage_id" />
+                    <field name="confirms_operation" />
+                    <field name="external_reference" />
+                    <field name="submitted_at" />
+                    <field name="evidence_file" filename="filename" />
+                    <field name="filename" invisible="1" />
+                    <field name="notes" />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Record Portal Action"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -8,6 +8,8 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
+
 
 def parse_xml(content):
     """Read bounded external XML without DTDs, entities or network resolution."""
@@ -58,3 +60,95 @@ def soap_payload(content, operation):
         count=1,
     )
     return parse_xml(payload.encode("UTF-8"))
+
+
+def parse_upload(content, issuer, sender):
+    root = parse_xml(content)
+    if etree.QName(root).localname != "RECEPCIONDTE":
+        raise ValidationError(_("SII did not return an upload receipt."))
+
+    if normalize_rut(text(root, "RUTCOMPANY")) != normalize_rut(
+        issuer
+    ) or normalize_rut(text(root, "RUTSENDER")) != normalize_rut(sender):
+        raise ValidationError(
+            _("The SII upload receipt belongs to a different issuer or sender.")
+        )
+    code = text(root, "STATUS")
+    if code != "0":
+        return {
+            "state": "rejected",
+            "track_id": "",
+            "transport_code": code,
+            "raw_response": content,
+        }
+    track = text(root, "TRACKID")
+    if not track.isdigit() or int(track) <= 0:
+        raise ValidationError(_("SII returned an invalid TrackID."))
+    return {
+        "state": "submitted",
+        "track_id": track,
+        "transport_code": code,
+        "raw_response": content,
+    }
+
+
+def parse_status(content, track_id):
+    root = soap_payload(content, "getEstUp")
+    returned_track = text(root, "TRACKID", required=False)
+    if returned_track and returned_track != track_id:
+        raise ValidationError(
+            _("The SII status response belongs to a different TrackID.")
+        )
+    code = text(root, "ESTADO")
+    result = {
+        "state": "outcome_unknown",
+        "track_id": track_id,
+        "transport_code": code,
+        "raw_response": content,
+        "counts": [],
+    }
+    if code in {"RSC", "RFR", "RCT"}:
+        result["state"] = "rejected"
+    elif code in {"SOK", "CRT", "FOK", "PDR", "PRD", "REC"}:
+        result["state"] = "processing"
+    elif code == "EPR" and returned_track:
+        for body in root.xpath(
+            ".//*[./*[local-name()='TIPO_DOCTO'] and ./*[local-name()='INFORMADOS']]"
+        ):
+            columns = {
+                name: body.xpath("./*[local-name()=$name]/text()", name=name)
+                for name in (
+                    "TIPO_DOCTO",
+                    "INFORMADOS",
+                    "ACEPTADOS",
+                    "RECHAZADOS",
+                    "REPAROS",
+                )
+            }
+            if len({len(values) for values in columns.values()}) != 1:
+                raise ValidationError(_("The SII document counters are inconsistent."))
+            for values in zip(*columns.values(), strict=True):
+                if not all(value.strip().isdigit() for value in values):
+                    raise ValidationError(
+                        _("The SII document counters must be nonnegative integers.")
+                    )
+                row = dict(zip(columns, map(int, values), strict=True))
+                if (
+                    row["INFORMADOS"]
+                    != row["ACEPTADOS"] + row["RECHAZADOS"] + row["REPAROS"]
+                ):
+                    raise ValidationError(
+                        _("The SII document counters do not reconcile.")
+                    )
+                result["counts"].append(row)
+        counts = result["counts"]
+        if counts and sum(row["INFORMADOS"] for row in counts) > 0:
+            rejected = sum(row["RECHAZADOS"] for row in counts)
+            informed = sum(row["INFORMADOS"] for row in counts)
+            observed = sum(row["REPAROS"] for row in counts)
+            result["state"] = (
+                ("rejected" if rejected == informed else "partially_accepted")
+                if rejected
+                else ("accepted_with_observations" if observed else "accepted")
+            )
+    return result

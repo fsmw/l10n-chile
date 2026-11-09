@@ -245,6 +245,34 @@ class NoteReferenceService:
             )
         root = target_document.note_root_document_id or target_document
         if code == "56" and target_code == "61":
+            if not target_document.note_root_document_id:
+                # SET adapters retain note provenance in the run and signed
+                # snapshots instead of the Demo document-chain fields.
+                credit_move = target_document.source_move_id
+                original = credit_move.dte_note_target_document_id
+                if (
+                    credit_move.dte_certification_run_line_id.id != target_line.id
+                    or not original
+                ):
+                    raise ValidationError(
+                        _("The referenced credit note has no supported fiscal root.")
+                    )
+                snapshot = self.read_original_snapshot(target_document)
+                references = [
+                    reference
+                    for reference in snapshot.get("references", [])
+                    if isinstance(reference, dict)
+                    and reference.get("document_type") != "SET"
+                ]
+                if (
+                    len(references) != 1
+                    or str(references[0].get("document_type")) != original.document_code
+                    or str(references[0].get("folio")) != str(original.folio)
+                ):
+                    raise ValidationError(
+                        _("The referenced credit note has no supported fiscal root.")
+                    )
+                root = self.validate_reference(credit_move, original)
             if not root or root.document_code not in self.ROOT_DOCUMENT_CODES:
                 raise ValidationError(
                     _("The referenced credit note has no supported fiscal root.")

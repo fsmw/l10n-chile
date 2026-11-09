@@ -15,6 +15,10 @@
                                 groups="l10n_cl_dte_core.group_dte_manager"
                             />
                             <field name="dte_sii_regional_office" />
+                            <field
+                                name="dte_sii_sender_vat"
+                                groups="l10n_cl_dte_core.group_dte_manager"
+                            />
                         </group>
                         <group>
                             <field name="dte_sii_resolution_number" />

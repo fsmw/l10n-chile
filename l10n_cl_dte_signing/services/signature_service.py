@@ -21,10 +21,49 @@ DS_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#"
 C14N_URI = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
 RSA_SHA1_URI = DS_NAMESPACE + "rsa-sha1"
 SHA1_URI = DS_NAMESPACE + "sha1"
+SII_XML_DECLARATION = b'<?xml version="1.0" encoding="ISO-8859-1"?>'
 
 
 class SignatureService:
     """Create and verify the SII's TED FRMT and DTE XMLDSig signatures."""
+
+    def certification_signing_identity(self, company):
+        """Return the active Certification certificate and its holder RUT."""
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(
+                _("Only a DTE manager can inspect the signing certificate.")
+            )
+        profiles = company.env["l10n_cl.dte.signing.profile"].search(
+            [
+                ("company_id", "=", company.id),
+                ("sii_environment", "=", "certification"),
+                ("active", "=", True),
+            ]
+        )
+        if len(profiles) != 1 or profiles.is_synthetic:
+            raise UserError(
+                _("Configure one non-synthetic Certification signing profile.")
+            )
+        certificate = profiles.sudo().certificate_id
+        if (
+            not certificate
+            or certificate.company_id != company
+            or not certificate.active
+            or not certificate.is_valid
+            or not certificate.private_key_id
+            or certificate.private_key_id.public
+        ):
+            raise UserError(
+                _("Configure a valid Certification certificate with its private key.")
+            )
+        try:
+            pem = base64.b64decode(certificate.pem_certificate, validate=True)
+            parsed = x509.load_pem_x509_certificate(pem)
+        except (ValueError, TypeError) as error:
+            raise ValidationError(
+                _("The configured Certification certificate is invalid.")
+            ) from error
+        return certificate, certificate_sender_rut(parsed)
 
     def sign_ted(self, company, caf_authorization, dd_xml):
         """Sign the serialized TED/DD with the private key embedded in its CAF."""
@@ -226,15 +265,19 @@ class SignatureService:
             "signed_info_canonicalization": signed_info_variant,
         }
 
-    def certification_signing_identity(self, company):
-        """Return the active Certification certificate and its personal holder RUT."""
+    def sign_authentication_seed(self, company, environment, seed):
+        """Sign SII's enveloped getToken request without persisting credentials."""
         self.env = company.env
+        if environment != "certification" or not str(seed).isdigit():
+            raise ValidationError(
+                _("A numeric Certification authentication seed is required.")
+            )
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
             [
                 ("company_id", "=", company.id),
-                ("sii_environment", "=", "certification"),
+                ("sii_environment", "=", environment),
                 ("active", "=", True),
             ]
         )
@@ -254,24 +297,6 @@ class SignatureService:
             raise UserError(
                 _("Configure a valid Certification certificate with its private key.")
             )
-        try:
-            certificate_data = base64.b64decode(
-                certificate.pem_certificate, validate=True
-            )
-            parsed_certificate = x509.load_pem_x509_certificate(certificate_data)
-        except (TypeError, ValueError, binascii.Error) as error:
-            raise ValidationError(
-                _("The Certification signing certificate cannot be read.")
-            ) from error
-        return certificate, certificate_sender_rut(parsed_certificate)
-
-    def sign_authentication_seed(self, company, environment, seed):
-        """Sign SII's enveloped getToken request without persisting credentials."""
-        if environment != "certification" or not str(seed).isdigit():
-            raise ValidationError(
-                _("A numeric Certification authentication seed is required.")
-            )
-        certificate, _sender_rut = self.certification_signing_identity(company)
         root = etree.Element("getToken")
         etree.SubElement(etree.SubElement(root, "item"), "Semilla").text = str(seed)
         digest = hashes.Hash(hashes.SHA1())
@@ -365,8 +390,29 @@ class SignatureService:
             signature, _qname("SignatureValue")
         ).text = signature_bytes.decode("ascii")
         self._add_key_info(signature, certificate)
-        envelope = etree.tostring(
-            root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=False
+        # Preserve every inner signed DTE byte. Re-serializing the wrapper can
+        # change their independent namespace context at the SII receiver.
+        body = _without_xml_declaration(unsigned_xml)
+        opening_end = body.index(b">") + 1
+        if not body[opening_end:].startswith(b"\n"):
+            body = body[:opening_end] + b"\n" + body[opening_end:]
+        before, closing, after = body.rpartition(b"</EnvioDTE>")
+        if not closing or after.strip():
+            raise ValidationError(_("The XML root element must be EnvioDTE."))
+        envelope = (
+            SII_XML_DECLARATION
+            + b"\n"
+            + before
+            + b"\n"
+            + etree.tostring(
+                signature,
+                encoding="ISO-8859-1",
+                xml_declaration=False,
+                with_tail=False,
+            )
+            + b"\n"
+            + closing
+            + after
         )
         self.verify_envelope_signature(envelope)
         return envelope
@@ -673,6 +719,10 @@ def _parse_xml(xml_bytes):
         raise ValidationError(
             _("The XML input is not well-formed: %s") % error
         ) from error
+
+
+def _without_xml_declaration(xml_bytes):
+    return re.sub(rb"^\s*<\?xml[^?]*\?>\s*", b"", xml_bytes, count=1).lstrip()
 
 
 def _canonicalize(element, exclusive=False):

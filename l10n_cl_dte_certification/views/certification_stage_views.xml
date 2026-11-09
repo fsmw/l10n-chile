@@ -1,0 +1,225 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_stage_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.process.stage.form</field>
+        <field name="model">l10n_cl.dte.certification.process.stage</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0">
+                <header>
+                    <button
+                        name="action_begin"
+                        type="object"
+                        string="Begin Stage"
+                        invisible="state != 'pending'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_run_preflight"
+                        type="object"
+                        string="Run Preflight"
+                        invisible="state not in ('in_progress', 'blocked')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_submit"
+                        type="object"
+                        string="Submit / Record Portal Submission"
+                        invisible="state != 'ready'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_poll_result"
+                        type="object"
+                        string="Query SII"
+                        invisible="state not in ('submitted', 'waiting_sii')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_accept_manual_result"
+                        type="object"
+                        string="Register Portal Result"
+                        invisible="state not in ('submitted', 'waiting_sii', 'rejected') or can_record_existing_sii_result"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_accept_manual_result"
+                        type="object"
+                        string="Register SETMAIL Result"
+                        class="btn-primary"
+                        invisible="not can_record_existing_sii_result"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_open_evidence_wizard"
+                        type="object"
+                        string="Attach Evidence"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Reconcile"
+                        invisible="state not in ('submitted', 'waiting_sii', 'accepted')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <field name="can_record_existing_sii_result" invisible="1" />
+                    <group>
+                        <group>
+                            <field name="process_id" readonly="1" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="code" readonly="1" />
+                            <field name="sequence" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="external_reference" readonly="1" />
+                            <field name="submission_channel" readonly="1" />
+                            <field name="submitted_payload_digest" readonly="1" />
+                            <field name="source_document_version" />
+                            <field name="source_url" />
+                            <field name="started_at" />
+                            <field name="submitted_at" />
+                            <field name="decided_at" />
+                        </group>
+                    </group>
+                    <group string="SII Result">
+                        <field name="sii_status" />
+                        <field name="sii_message" />
+                        <field name="diagnostics" />
+                    </group>
+                    <notebook>
+                        <page string="Checklist">
+                            <field name="requirement_ids">
+                                <list create="0" delete="0">
+                                    <field name="sequence" />
+                                    <field name="code" />
+                                    <field name="name" />
+                                    <field name="mandatory" />
+                                    <field name="external_result" />
+                                    <field name="applicability" />
+                                    <field name="state" />
+                                    <field name="normative_version" />
+                                </list>
+                                <form create="0" delete="0">
+                                    <header>
+                                        <button
+                                            name="action_mark_ready"
+                                            type="object"
+                                            string="Mark Ready"
+                                            class="btn-primary"
+                                            invisible="state != 'pending'"
+                                            groups="l10n_cl_dte_core.group_dte_manager"
+                                        />
+                                        <button
+                                            name="action_accept"
+                                            type="object"
+                                            string="Accept Requirement"
+                                            invisible="state != 'ready'"
+                                            groups="l10n_cl_dte_core.group_dte_manager"
+                                        />
+                                        <button
+                                            name="action_mark_not_applicable"
+                                            type="object"
+                                            string="Mark Not Applicable"
+                                            invisible="applicability != 'conditional' or state != 'pending'"
+                                            groups="l10n_cl_dte_core.group_dte_manager"
+                                        />
+                                        <field name="state" widget="statusbar" />
+                                    </header>
+                                    <sheet>
+                                        <group>
+                                            <field name="stage_id" readonly="1" />
+                                            <field name="code" readonly="1" />
+                                            <field name="name" readonly="1" />
+                                            <field name="mandatory" readonly="1" />
+                                            <field
+                                                name="external_result"
+                                                readonly="1"
+                                            />
+                                            <field name="applicability" readonly="1" />
+                                            <field
+                                                name="requires_operational_control_review"
+                                                invisible="1"
+                                            />
+                                            <field
+                                                name="applicability_reason"
+                                                invisible="applicability != 'conditional'"
+                                            />
+                                            <field
+                                                name="control_owner_id"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="procedure_version"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="last_review_date"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="control_result"
+                                                invisible="not requires_operational_control_review"
+                                            />
+                                            <field
+                                                name="normative_title"
+                                                readonly="1"
+                                            />
+                                            <field name="normative_url" readonly="1" />
+                                            <field
+                                                name="normative_version"
+                                                readonly="1"
+                                            />
+                                            <field name="diagnostic" readonly="1" />
+                                        </group>
+                                        <group string="Supporting Evidence">
+                                            <field name="evidence_ids" readonly="1">
+                                                <list create="0" delete="0">
+                                                    <field name="name" />
+                                                    <field name="evidence_type" />
+                                                    <field name="origin" />
+                                                    <field name="sha256" />
+                                                    <field name="verification_state" />
+                                                </list>
+                                            </field>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Evidence">
+                            <field name="evidence_ids" readonly="1">
+                                <list create="0" delete="0">
+                                    <field name="name" />
+                                    <field name="evidence_type" />
+                                    <field name="origin" />
+                                    <field name="external_reference" />
+                                    <field name="sha256" />
+                                    <field name="verification_state" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Related Operations">
+                            <group>
+                                <field name="certification_set_id" />
+                                <field name="certification_run_ids" />
+                                <field name="electronic_submission_ids" />
+                                <field name="incoming_document_ids" />
+                                <field
+                                    name="report_sample_package_id"
+                                    invisible="code != 'printed_samples'"
+                                />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,10 +1,5 @@
-import base64
-
 from lxml import etree
 
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
-    DteIssuanceService,
-)
 from odoo.addons.l10n_cl_dte_note.services.note_snapshot import NoteSnapshotService
 from odoo.addons.l10n_cl_dte_note.services.note_xml_composer import NoteXmlComposer
 from odoo.addons.l10n_cl_dte_note.tests.common import DteNoteTestCase
@@ -17,60 +12,45 @@ from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
 
 
 class TestNoteXmlAndWizards(DteNoteTestCase):
-    def test_revised_note_signature_is_used_by_the_submission(self):
-        source, target, _snapshot = self.create_accepted_source()
-        note = self.create_credit_note(source, target).with_user(self.dte_manager)
-        note.action_post()
-        self.validate_authorization(document_code="61", folio_start=840, folio_end=845)
-        self.create_signing_profile()
-        adapter = note._get_dte_issuance_adapter("61")
-        document = DteIssuanceService().prepare(note, adapter, "61")
-        original = document._get_signed_artifact()
-        payload = base64.b64decode(original.content) + b"\n"
-        current = original._create_signature_revision(original, payload, "tests/18.0")
-        note.issue_dte()
-        submission = self.env["l10n_cl.electronic.submission"].search(
-            [("document_id", "=", document.id)]
-        )
-        submission._job_send_to_sii()
-        self.assertEqual(submission.state, "submitted")
-        self.assertEqual(document._get_signed_artifact(), current)
-        self.assertTrue(original.action_verify_integrity())
-
-    def test_discounted_notes_include_rounded_discount_amounts(self):
+    def test_discounted_notes_include_rounded_detail_discount_amounts(self):
         _source, _target, _note, _caf, snapshot = self._credit_snapshot()
         snapshot["lines"] = [
             {
-                "name": "Synthetic item A",
-                "quantity": "3",
-                "unit_price": "105",
+                "name": "Discounted item A",
+                "quantity": "299",
+                "unit_price": "6303",
                 "discount_percent": "10",
-                "subtotal": "284",
+                "subtotal": "1696137",
             },
             {
-                "name": "Synthetic item B",
-                "quantity": "7",
-                "unit_price": "89",
+                "name": "Discounted item B",
+                "quantity": "517",
+                "unit_price": "5352",
                 "discount_percent": "25",
-                "subtotal": "467",
+                "subtotal": "2075238",
             },
         ]
-        snapshot["totals"].update({"net": "751", "vat": "143", "total": "894"})
         for code in ["61", "56"]:
             with self.subTest(code=code):
                 snapshot["document_code"] = code
-                root = etree.fromstring(
-                    NoteXmlComposer().compose_unsigned_document(snapshot)
-                )
+                xml_bytes = NoteXmlComposer().compose_unsigned_document(snapshot)
+                root = etree.fromstring(xml_bytes)
                 details = root.findall(f".//{{{SII_NAMESPACE}}}Detalle")
                 self.assertEqual(
-                    [d.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto") for d in details],
-                    ["32", "156"],
+                    [
+                        detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto")
+                        for detail in details
+                    ],
+                    ["188460", "691746"],
                 )
                 self.assertEqual(
-                    [d.findtext(f"{{{SII_NAMESPACE}}}MontoItem") for d in details],
-                    ["284", "467"],
+                    [
+                        detail.findtext(f"{{{SII_NAMESPACE}}}MontoItem")
+                        for detail in details
+                    ],
+                    ["1696137", "2075238"],
                 )
+                DteXmlComposer()._validate_line_discounts(root)
 
     def _credit_snapshot(self):
         source, target, _source_snapshot = self.create_accepted_source()

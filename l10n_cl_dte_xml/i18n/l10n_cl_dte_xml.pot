@@ -354,3 +354,15 @@ msgstr ""
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
 msgid "DTE types 33 and 34 require an identified recipient; use the applicable boleta type for an anonymous final consumer."
 msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE detail discount amount is missing or inconsistent."
+msgstr ""
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE exempt total differs from its detail and exempt adjustments."
+msgstr ""

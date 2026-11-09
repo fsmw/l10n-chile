@@ -93,6 +93,11 @@ class ResCompany(models.Model):
         required=True,
         groups="l10n_cl_dte_core.group_dte_manager",
     )
+    dte_sii_sender_vat = fields.Char(
+        string="SII Authorized Sender RUT",
+        groups="l10n_cl_dte_core.group_dte_manager",
+        help="RUT authorized by SII to transmit the company's electronic documents.",
+    )
     dte_sii_resolution_number = fields.Char(
         string="SII Resolution Number",
         help=(

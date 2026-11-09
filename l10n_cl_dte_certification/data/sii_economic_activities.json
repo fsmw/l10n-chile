@@ -1,0 +1,4728 @@
+{
+  "schema": 1,
+  "version": "sii_activities_20261105",
+  "source_url": "https://www.sii.cl/ayudas/ayudas_por_servicios/1956-codigos-1959.html",
+  "retrieved_on": "2026-11-05",
+  "source_sha256": "6434aae619ce33f415c6233528d9563572fb9166f9e0888413f7c914b29a8518",
+  "activities_sha256": "54aa466181f08d5604f783c911d98b4182fbd0f89055d3db2c63dfae60dcbfaf",
+  "activities": [
+    {
+      "code": "011101",
+      "name": "CULTIVO DE TRIGO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011102",
+      "name": "CULTIVO DE MAÍZ",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011103",
+      "name": "CULTIVO DE AVENA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011104",
+      "name": "CULTIVO DE CEBADA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011105",
+      "name": "CULTIVO DE OTROS CEREALES (EXCEPTO TRIGO, MAÍZ, AVENA Y CEBADA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011106",
+      "name": "CULTIVO DE POROTOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011107",
+      "name": "CULTIVO DE LUPINO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011108",
+      "name": "CULTIVO DE OTRAS LEGUMBRES (EXCEPTO POROTOS Y LUPINO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011109",
+      "name": "CULTIVO DE SEMILLAS DE RAPS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011110",
+      "name": "CULTIVO DE SEMILLAS DE MARAVILLA (GIRASOL)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011111",
+      "name": "CULTIVO DE SEMILLAS DE CEREALES, LEGUMBRES Y OLEAGINOSAS (EXCEPTO SEMILLAS DE RAPS Y MARAVILLA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011200",
+      "name": "CULTIVO DE ARROZ",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011301",
+      "name": "CULTIVO DE PAPAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011302",
+      "name": "CULTIVO DE CAMOTES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011303",
+      "name": "CULTIVO DE OTROS TUBÉRCULOS (EXCEPTO PAPAS Y CAMOTES)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011304",
+      "name": "CULTIVO DE REMOLACHA AZUCARERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011305",
+      "name": "CULTIVO DE SEMILLAS DE HORTALIZAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011306",
+      "name": "CULTIVO DE HORTALIZAS Y MELONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011400",
+      "name": "CULTIVO DE CAÑA DE AZÚCAR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011500",
+      "name": "CULTIVO DE TABACO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011600",
+      "name": "CULTIVO DE PLANTAS DE FIBRA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011901",
+      "name": "CULTIVO DE FLORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011902",
+      "name": "CULTIVOS FORRAJEROS EN PRADERAS MEJORADAS O SEMBRADAS; CULTIVOS SUPLEMENTARIOS FORRAJEROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "011903",
+      "name": "CULTIVOS DE SEMILLAS DE FLORES; CULTIVO DE SEMILLAS DE PLANTAS FORRAJERAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012111",
+      "name": "CULTIVO DE UVA DESTINADA A LA PRODUCCIÓN DE PISCO Y AGUARDIENTE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012112",
+      "name": "CULTIVO DE UVA DESTINADA A LA PRODUCCIÓN DE VINO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012120",
+      "name": "CULTIVO DE UVA PARA MESA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012200",
+      "name": "CULTIVO DE FRUTAS TROPICALES Y SUBTROPICALES (INCLUYE EL CULTIVO DE PALTAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012300",
+      "name": "CULTIVO DE CÍTRICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012400",
+      "name": "CULTIVO DE FRUTAS DE PEPITA Y DE HUESO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012501",
+      "name": "CULTIVO DE SEMILLAS DE FRUTAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012502",
+      "name": "CULTIVO DE OTROS FRUTOS Y NUECES DE ÁRBOLES Y ARBUSTOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012600",
+      "name": "CULTIVO DE FRUTOS OLEAGINOSOS (INCLUYE EL CULTIVO DE ACEITUNAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012700",
+      "name": "CULTIVO DE PLANTAS CON LAS QUE SE PREPARAN BEBIDAS (INCLUYE EL CULTIVO DE CAFÉ, TÉ Y MATE)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012801",
+      "name": "CULTIVO DE ESPECIAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012802",
+      "name": "CULTIVO DE PLANTAS AROMÁTICAS, MEDICINALES Y FARMACÉUTICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "012900",
+      "name": "CULTIVO DE OTRAS PLANTAS PERENNES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "013000",
+      "name": "CULTIVO DE PLANTAS VIVAS INCLUIDA LA PRODUCCIÓN EN VIVEROS (EXCEPTO VIVEROS FORESTALES)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014101",
+      "name": "CRÍA DE GANADO BOVINO PARA LA PRODUCCIÓN LECHERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014102",
+      "name": "CRÍA DE GANADO BOVINO PARA LA PRODUCCIÓN DE CARNE O COMO GANADO REPRODUCTOR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014200",
+      "name": "CRÍA DE CABALLOS Y OTROS EQUINOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014300",
+      "name": "CRÍA DE LLAMAS, ALPACAS, VICUÑAS, GUANACOS Y OTROS CAMÉLIDOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014410",
+      "name": "CRÍA DE OVEJAS (OVINOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014420",
+      "name": "CRÍA DE CABRAS (CAPRINOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014500",
+      "name": "CRÍA DE CERDOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014601",
+      "name": "CRÍA DE AVES DE CORRAL PARA LA PRODUCCIÓN DE CARNE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014602",
+      "name": "CRÍA DE AVES DE CORRAL PARA LA PRODUCCIÓN DE HUEVOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014901",
+      "name": "APICULTURA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "014909",
+      "name": "CRÍA DE OTROS ANIMALES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "015000",
+      "name": "CULTIVO DE PRODUCTOS AGRÍCOLAS EN COMBINACIÓN CON LA CRÍA DE ANIMALES (EXPLOTACIÓN MIXTA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "016100",
+      "name": "ACTIVIDADES DE APOYO A LA AGRICULTURA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "016200",
+      "name": "ACTIVIDADES DE APOYO A LA GANADERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "016300",
+      "name": "ACTIVIDADES POSCOSECHA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "016400",
+      "name": "TRATAMIENTO DE SEMILLAS PARA PROPAGACIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "017000",
+      "name": "CAZA ORDINARIA Y MEDIANTE TRAMPAS Y ACTIVIDADES DE SERVICIOS CONEXAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "021001",
+      "name": "EXPLOTACIÓN DE VIVEROS FORESTALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "021002",
+      "name": "SILVICULTURA Y OTRAS ACTIVIDADES FORESTALES (EXCEPTO EXPLOTACIÓN DE VIVEROS FORESTALES)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "022000",
+      "name": "EXTRACCIÓN DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "023000",
+      "name": "RECOLECCIÓN DE PRODUCTOS FORESTALES DISTINTOS DE LA MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "024001",
+      "name": "SERVICIOS DE FORESTACIÓN A CAMBIO DE UNA RETRIBUCIÓN O POR CONTRATA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "024002",
+      "name": "SERVICIOS DE CORTA DE MADERA A CAMBIO DE UNA RETRIBUCIÓN O POR CONTRATA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "024003",
+      "name": "SERVICIOS DE EXTINCIÓN Y PREVENCIÓN DE INCENDIOS FORESTALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "024009",
+      "name": "OTROS SERVICIOS DE APOYO A LA SILVICULTURA N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "031110",
+      "name": "PESCA MARÍTIMA INDUSTRIAL, EXCEPTO DE BARCOS FACTORÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "031120",
+      "name": "PESCA MARÍTIMA ARTESANAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "031130",
+      "name": "RECOLECCIÓN Y EXTRACCIÓN DE PRODUCTOS MARINOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "031140",
+      "name": "SERVICIOS RELACIONADOS CON LA PESCA MARÍTIMA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "031200",
+      "name": "PESCA DE AGUA DULCE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "032110",
+      "name": "CULTIVO Y CRIANZA DE PECES MARINOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "032120",
+      "name": "CULTIVO, REPRODUCCIÓN Y MANEJO DE ALGAS MARINAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "032130",
+      "name": "REPRODUCCIÓN Y CRÍA DE MOLUSCOS, CRUSTÁCEOS Y GUSANOS MARINOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "032140",
+      "name": "SERVICIOS RELACIONADOS CON LA ACUICULTURA MARINA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "032200",
+      "name": "ACUICULTURA DE AGUA DULCE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "040000",
+      "name": "EXTRACCIÓN Y PROCESAMIENTO DE COBRE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "051000",
+      "name": "EXTRACCIÓN DE CARBÓN DE PIEDRA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "052000",
+      "name": "EXTRACCIÓN DE LIGNITO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "061000",
+      "name": "EXTRACCIÓN DE PETRÓLEO CRUDO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "062000",
+      "name": "EXTRACCIÓN DE GAS NATURAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "071000",
+      "name": "EXTRACCIÓN DE MINERALES DE HIERRO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "072100",
+      "name": "EXTRACCIÓN DE MINERALES DE URANIO Y TORIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "072910",
+      "name": "EXTRACCIÓN DE ORO Y PLATA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "072991",
+      "name": "EXTRACCIÓN DE ZINC Y PLOMO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "072992",
+      "name": "EXTRACCIÓN DE MANGANESO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "072999",
+      "name": "EXTRACCIÓN DE OTROS MINERALES METALÍFEROS NO FERROSOS N.C.P. (EXCEPTO ZINC, PLOMO Y MANGANESO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "081000",
+      "name": "EXTRACCIÓN DE PIEDRA, ARENA Y ARCILLA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "089110",
+      "name": "EXTRACCIÓN Y PROCESAMIENTO DE LITIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "089190",
+      "name": "EXTRACCIÓN DE MINERALES PARA LA FABRICACIÓN DE ABONOS Y PRODUCTOS QUÍMICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "089200",
+      "name": "EXTRACCIÓN DE TURBA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "089300",
+      "name": "EXTRACCIÓN DE SAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "089900",
+      "name": "EXPLOTACIÓN DE OTRAS MINAS Y CANTERAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "091001",
+      "name": "ACTIVIDADES DE APOYO PARA LA EXTRACCIÓN DE PETRÓLEO Y GAS NATURAL PRESTADOS POR EMPRESAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "091002",
+      "name": "ACTIVIDADES DE APOYO PARA LA EXTRACCIÓN DE PETRÓLEO Y GAS NATURAL PRESTADOS POR PROFESIONALES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "099001",
+      "name": "ACTIVIDADES DE APOYO PARA LA EXPLOTACIÓN DE OTRAS MINAS Y CANTERAS PRESTADOS POR EMPRESAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "099002",
+      "name": "ACTIVIDADES DE APOYO PARA LA EXPLOTACIÓN DE OTRAS MINAS Y CANTERAS PRESTADOS POR PROFESIONALES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "101011",
+      "name": "EXPLOTACIÓN DE MATADEROS DE BOVINOS, OVINOS, EQUINOS, CAPRINOS, PORCINOS Y CAMÉLIDOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "101019",
+      "name": "EXPLOTACIÓN DE MATADEROS DE AVES Y DE OTROS TIPOS DE ANIMALES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "101020",
+      "name": "ELABORACIÓN Y CONSERVACIÓN DE CARNE Y PRODUCTOS CÁRNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102010",
+      "name": "PRODUCCIÓN DE HARINA DE PESCADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102020",
+      "name": "ELABORACIÓN Y CONSERVACIÓN DE SALMÓNIDOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102030",
+      "name": "ELABORACIÓN Y CONSERVACIÓN DE OTROS PESCADOS, EN PLANTAS EN TIERRA (EXCEPTO BARCOS FACTORÍA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102040",
+      "name": "ELABORACIÓN Y CONSERVACIÓN DE CRUSTÁCEOS, MOLUSCOS Y OTROS PRODUCTOS ACUÁTICOS, EN PLANTAS EN TIERRA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102050",
+      "name": "ACTIVIDADES DE ELABORACIÓN Y CONSERVACIÓN DE PESCADO, REALIZADAS EN BARCOS FACTORÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "102060",
+      "name": "ELABORACIÓN Y PROCESAMIENTO DE ALGAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "103000",
+      "name": "ELABORACIÓN Y CONSERVACIÓN DE FRUTAS, LEGUMBRES Y HORTALIZAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "104000",
+      "name": "ELABORACIÓN DE ACEITES Y GRASAS DE ORIGEN VEGETAL Y ANIMAL (EXCEPTO ELABORACIÓN DE MANTEQUILLA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "105000",
+      "name": "ELABORACIÓN DE PRODUCTOS LÁCTEOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "106101",
+      "name": "MOLIENDA DE TRIGO: PRODUCCIÓN DE HARINA, SÉMOLA Y GRÁNULOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "106102",
+      "name": "MOLIENDA DE ARROZ; PRODUCCIÓN DE HARINA DE ARROZ",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "106109",
+      "name": "ELABORACIÓN DE OTROS PRODUCTOS DE MOLINERÍA N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "106200",
+      "name": "ELABORACIÓN DE ALMIDONES Y PRODUCTOS DERIVADOS DEL ALMIDÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107100",
+      "name": "ELABORACIÓN DE PRODUCTOS DE PANADERÍA Y PASTELERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107200",
+      "name": "ELABORACIÓN DE AZÚCAR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107300",
+      "name": "ELABORACIÓN DE CACAO, CHOCOLATE Y DE PRODUCTOS DE CONFITERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107400",
+      "name": "ELABORACIÓN DE MACARRONES, FIDEOS, ALCUZCUZ Y PRODUCTOS FARINÁCEOS SIMILARES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107500",
+      "name": "ELABORACIÓN DE COMIDAS Y PLATOS PREPARADOS ENVASADOS, ROTULADOS Y CON INFORMACIÓN NUTRICIONAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107901",
+      "name": "ELABORACIÓN DE TÉ, CAFÉ, MATE E INFUSIONES DE HIERBAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107902",
+      "name": "ELABORACIÓN DE LEVADURAS NATURALES O ARTIFICIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107903",
+      "name": "ELABORACIÓN DE VINAGRES, MOSTAZAS, MAYONESAS Y CONDIMENTOS EN GENERAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "107909",
+      "name": "ELABORACIÓN DE OTROS PRODUCTOS ALIMENTICIOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "108000",
+      "name": "ELABORACIÓN DE PIENSOS PREPARADOS PARA ANIMALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110110",
+      "name": "ELABORACIÓN DE PISCO (INDUSTRIAS PISQUERAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110120",
+      "name": "DESTILACIÓN, RECTIFICACIÓN Y MEZCLAS DE BEBIDAS ALCOHÓLICAS; EXCEPTO PISCO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110200",
+      "name": "ELABORACIÓN DE VINOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110300",
+      "name": "ELABORACIÓN DE BEBIDAS MALTEADAS Y DE MALTA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110401",
+      "name": "ELABORACIÓN DE BEBIDAS NO ALCOHÓLICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "110402",
+      "name": "PRODUCCIÓN DE AGUAS MINERALES Y OTRAS AGUAS EMBOTELLADAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "120001",
+      "name": "ELABORACIÓN DE CIGARROS Y CIGARRILLOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "120009",
+      "name": "ELABORACIÓN DE OTROS PRODUCTOS DE TABACO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "131100",
+      "name": "PREPARACIÓN E HILATURA DE FIBRAS TEXTILES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "131200",
+      "name": "TEJEDURA DE PRODUCTOS TEXTILES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "131300",
+      "name": "ACABADO DE PRODUCTOS TEXTILES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "139100",
+      "name": "FABRICACIÓN DE TEJIDOS DE PUNTO Y GANCHILLO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "139200",
+      "name": "FABRICACIÓN DE ARTÍCULOS CONFECCIONADOS DE MATERIALES TEXTILES, EXCEPTO PRENDAS DE VESTIR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "139300",
+      "name": "FABRICACIÓN DE TAPICES Y ALFOMBRAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "139400",
+      "name": "FABRICACIÓN DE CUERDAS, CORDELES, BRAMANTES Y REDES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "139900",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS TEXTILES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "141001",
+      "name": "FABRICACIÓN DE PRENDAS DE VESTIR DE MATERIALES TEXTILES Y SIMILARES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "141002",
+      "name": "FABRICACIÓN DE PRENDAS DE VESTIR DE CUERO NATURAL O ARTIFICIAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "141003",
+      "name": "FABRICACIÓN DE ACCESORIOS DE VESTIR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "141004",
+      "name": "FABRICACIÓN DE ROPA DE TRABAJO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "142000",
+      "name": "FABRICACIÓN DE ARTÍCULOS DE PIEL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "143000",
+      "name": "FABRICACIÓN DE ARTÍCULOS DE PUNTO Y GANCHILLO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "151100",
+      "name": "CURTIDO Y ADOBO DE CUEROS; ADOBO Y TEÑIDO DE PIELES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "151200",
+      "name": "FABRICACIÓN DE MALETAS, BOLSOS Y ARTÍCULOS SIMILARES, ARTÍCULOS DE TALABARTERÍA Y GUARNICIONERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "152000",
+      "name": "FABRICACIÓN DE CALZADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "161000",
+      "name": "ASERRADO Y ACEPILLADURA DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "162100",
+      "name": "FABRICACIÓN DE HOJAS DE MADERA PARA ENCHAPADO Y TABLEROS A BASE DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "162200",
+      "name": "FABRICACIÓN DE PARTES Y PIEZAS DE CARPINTERÍA PARA EDIFICIOS Y CONSTRUCCIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "162300",
+      "name": "FABRICACIÓN DE RECIPIENTES DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "162900",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS DE MADERA, DE ARTÍCULOS DE CORCHO, PAJA Y MATERIALES TRENZABLES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "170110",
+      "name": "FABRICACIÓN DE CELULOSA Y OTRAS PASTAS DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "170190",
+      "name": "FABRICACIÓN DE PAPEL Y CARTÓN PARA SU POSTERIOR USO INDUSTRIAL N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "170200",
+      "name": "FABRICACIÓN DE PAPEL Y CARTÓN ONDULADO Y DE ENVASES DE PAPEL Y CARTÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "170900",
+      "name": "FABRICACIÓN DE OTROS ARTÍCULOS DE PAPEL Y CARTÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "181101",
+      "name": "IMPRESIÓN DE LIBROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "181109",
+      "name": "OTRAS ACTIVIDADES DE IMPRESIÓN N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "181200",
+      "name": "ACTIVIDADES DE SERVICIOS RELACIONADAS CON LA IMPRESIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "182000",
+      "name": "REPRODUCCIÓN DE GRABACIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "191000",
+      "name": "FABRICACIÓN DE PRODUCTOS DE HORNOS DE COQUE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "192000",
+      "name": "FABRICACIÓN DE PRODUCTOS DE LA REFINACIÓN DEL PETRÓLEO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "201101",
+      "name": "FABRICACIÓN DE CARBÓN VEGETAL (EXCEPTO ACTIVADO); FABRICACIÓN DE BRIQUETAS DE CARBÓN VEGETAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "201109",
+      "name": "FABRICACIÓN DE OTRAS SUSTANCIAS QUÍMICAS BÁSICAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "201200",
+      "name": "FABRICACIÓN DE ABONOS Y COMPUESTOS DE NITRÓGENO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "201300",
+      "name": "FABRICACIÓN DE PLÁSTICOS Y CAUCHO SINTÉTICO EN FORMAS PRIMARIAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "202100",
+      "name": "FABRICACIÓN DE PLAGUICIDAS Y OTROS PRODUCTOS QUÍMICOS DE USO AGROPECUARIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "202200",
+      "name": "FABRICACIÓN DE PINTURAS, BARNICES Y PRODUCTOS DE REVESTIMIENTO, TINTAS DE IMPRENTA Y MASILLAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "202300",
+      "name": "FABRICACIÓN DE JABONES Y DETERGENTES, PREPARADOS PARA LIMPIAR, PERFUMES Y PREPARADOS DE TOCADOR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "202901",
+      "name": "FABRICACIÓN DE EXPLOSIVOS Y PRODUCTOS PIROTÉCNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "202909",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS QUÍMICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "203000",
+      "name": "FABRICACIÓN DE FIBRAS ARTIFICIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "210000",
+      "name": "FABRICACIÓN DE PRODUCTOS FARMACÉUTICOS, SUSTANCIAS QUÍMICAS MEDICINALES Y PRODUCTOS BOTÁNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "221100",
+      "name": "FABRICACIÓN DE CUBIERTAS Y CÁMARAS DE CAUCHO; RECAUCHUTADO Y RENOVACIÓN DE CUBIERTAS DE CAUCHO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "221900",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS DE CAUCHO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "222000",
+      "name": "FABRICACIÓN DE PRODUCTOS DE PLÁSTICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "231001",
+      "name": "FABRICACIÓN DE VIDRIO PLANO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "231002",
+      "name": "FABRICACIÓN DE VIDRIO HUECO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "231003",
+      "name": "FABRICACIÓN DE FIBRAS DE VIDRIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "231009",
+      "name": "FABRICACIÓN DE PRODUCTOS DE VIDRIO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239100",
+      "name": "FABRICACIÓN DE PRODUCTOS REFRACTARIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239200",
+      "name": "FABRICACIÓN DE MATERIALES DE CONSTRUCCIÓN DE ARCILLA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239300",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS DE PORCELANA Y DE CERÁMICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239400",
+      "name": "FABRICACIÓN DE CEMENTO, CAL Y YESO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239500",
+      "name": "FABRICACIÓN DE ARTÍCULOS DE HORMIGÓN, CEMENTO Y YESO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239600",
+      "name": "CORTE, TALLA Y ACABADO DE LA PIEDRA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "239900",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS MINERALES NO METÁLICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "241000",
+      "name": "INDUSTRIAS BÁSICAS DE HIERRO Y ACERO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "242001",
+      "name": "FABRICACIÓN DE PRODUCTOS PRIMARIOS DE COBRE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "242002",
+      "name": "FABRICACIÓN DE PRODUCTOS PRIMARIOS DE ALUMINIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "242009",
+      "name": "FABRICACIÓN DE PRODUCTOS PRIMARIOS DE METALES PRECIOSOS Y DE OTROS METALES NO FERROSOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "243100",
+      "name": "FUNDICIÓN DE HIERRO Y ACERO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "243200",
+      "name": "FUNDICIÓN DE METALES NO FERROSOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "251100",
+      "name": "FABRICACIÓN DE PRODUCTOS METÁLICOS PARA USO ESTRUCTURAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "251201",
+      "name": "FABRICACIÓN DE RECIPIENTES DE METAL PARA GASES COMPRIMIDOS O LICUADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "251209",
+      "name": "FABRICACIÓN DE TANQUES, DEPÓSITOS Y RECIPIENTES DE METAL N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "251300",
+      "name": "FABRICACIÓN DE GENERADORES DE VAPOR, EXCEPTO CALDERAS DE AGUA CALIENTE PARA CALEFACCIÓN CENTRAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "252000",
+      "name": "FABRICACIÓN DE ARMAS Y MUNICIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "259100",
+      "name": "FORJA, PRENSADO, ESTAMPADO Y LAMINADO DE METALES; PULVIMETALURGIA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "259200",
+      "name": "TRATAMIENTO Y REVESTIMIENTO DE METALES; MAQUINADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "259300",
+      "name": "FABRICACIÓN DE ARTÍCULOS DE CUCHILLERÍA, HERRAMIENTAS DE MANO Y ARTÍCULOS DE FERRETERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "259900",
+      "name": "FABRICACIÓN DE OTROS PRODUCTOS ELABORADOS DE METAL N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "261000",
+      "name": "FABRICACIÓN DE COMPONENTES Y TABLEROS ELECTRÓNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "262000",
+      "name": "FABRICACIÓN DE COMPUTADORES Y EQUIPO PERIFÉRICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "263000",
+      "name": "FABRICACIÓN DE EQUIPO DE COMUNICACIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "264000",
+      "name": "FABRICACIÓN DE APARATOS ELECTRÓNICOS DE CONSUMO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "265100",
+      "name": "FABRICACIÓN DE EQUIPO DE MEDICIÓN, PRUEBA, NAVEGACIÓN Y CONTROL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "265200",
+      "name": "FABRICACIÓN DE RELOJES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "266000",
+      "name": "FABRICACIÓN DE EQUIPO DE IRRADIACIÓN Y EQUIPO ELECTRÓNICO DE USO MÉDICO Y TERAPÉUTICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "267000",
+      "name": "FABRICACIÓN DE INSTRUMENTOS ÓPTICOS Y EQUIPO FOTOGRÁFICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "268000",
+      "name": "FABRICACIÓN DE SOPORTES MAGNÉTICOS Y ÓPTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "271000",
+      "name": "FABRICACIÓN DE MOTORES, GENERADORES Y TRANSFORMADORES ELÉCTRICOS, APARATOS DE DISTRIBUCIÓN Y CONTROL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "272000",
+      "name": "FABRICACIÓN DE PILAS, BATERÍAS Y ACUMULADORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "273100",
+      "name": "FABRICACIÓN DE CABLES DE FIBRA ÓPTICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "273200",
+      "name": "FABRICACIÓN DE OTROS HILOS Y CABLES ELÉCTRICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "273300",
+      "name": "FABRICACIÓN DE DISPOSITIVOS DE CABLEADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "274000",
+      "name": "FABRICACIÓN DE EQUIPO ELÉCTRICO DE ILUMINACIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "275000",
+      "name": "FABRICACIÓN DE APARATOS DE USO DOMÉSTICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "279000",
+      "name": "FABRICACIÓN DE OTROS TIPOS DE EQUIPO ELÉCTRICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281100",
+      "name": "FABRICACIÓN DE MOTORES Y TURBINAS, EXCEPTO PARA AERONAVES, VEHÍCULOS AUTOMOTORES Y MOTOCICLETAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281200",
+      "name": "FABRICACIÓN DE EQUIPO DE PROPULSIÓN DE FLUIDOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281300",
+      "name": "FABRICACIÓN DE OTRAS BOMBAS, COMPRESORES, GRIFOS Y VÁLVULAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281400",
+      "name": "FABRICACIÓN DE COJINETES, ENGRANAJES, TRENES DE ENGRANAJES Y PIEZAS DE TRANSMISIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281500",
+      "name": "FABRICACIÓN DE HORNOS, CALDERAS Y QUEMADORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281600",
+      "name": "FABRICACIÓN DE EQUIPO DE ELEVACIÓN Y MANIPULACIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281700",
+      "name": "FABRICACIÓN DE MAQUINARIA Y EQUIPO DE OFICINA (EXCEPTO COMPUTADORES Y EQUIPO PERIFÉRICO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281800",
+      "name": "FABRICACIÓN DE HERRAMIENTAS DE MANO MOTORIZADAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "281900",
+      "name": "FABRICACIÓN DE OTROS TIPOS DE MAQUINARIA DE USO GENERAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282100",
+      "name": "FABRICACIÓN DE MAQUINARIA AGROPECUARIA Y FORESTAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282200",
+      "name": "FABRICACIÓN DE MAQUINARIA PARA LA CONFORMACIÓN DE METALES Y DE MÁQUINAS HERRAMIENTA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282300",
+      "name": "FABRICACIÓN DE MAQUINARIA METALÚRGICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282400",
+      "name": "FABRICACIÓN DE MAQUINARIA PARA LA EXPLOTACIÓN DE MINAS Y CANTERAS Y PARA OBRAS DE CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282500",
+      "name": "FABRICACIÓN DE MAQUINARIA PARA LA ELABORACIÓN DE ALIMENTOS, BEBIDAS Y TABACO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282600",
+      "name": "FABRICACIÓN DE MAQUINARIA PARA LA ELABORACIÓN DE PRODUCTOS TEXTILES, PRENDAS DE VESTIR Y CUEROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "282900",
+      "name": "FABRICACIÓN DE OTROS TIPOS DE MAQUINARIA DE USO ESPECIAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "291000",
+      "name": "FABRICACIÓN DE VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "292000",
+      "name": "FABRICACIÓN DE CARROCERÍAS PARA VEHÍCULOS AUTOMOTORES; FABRICACIÓN DE REMOLQUES Y SEMIRREMOLQUES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "293000",
+      "name": "FABRICACIÓN DE PARTES, PIEZAS Y ACCESORIOS PARA VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "301100",
+      "name": "CONSTRUCCIÓN DE BUQUES, EMBARCACIONES MENORES Y ESTRUCTURAS FLOTANTES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "301200",
+      "name": "CONSTRUCCIÓN DE EMBARCACIONES DE RECREO Y DE DEPORTE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "302000",
+      "name": "FABRICACIÓN DE LOCOMOTORAS Y MATERIAL RODANTE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "303000",
+      "name": "FABRICACIÓN DE AERONAVES, NAVES ESPACIALES Y MAQUINARIA CONEXA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "304000",
+      "name": "FABRICACIÓN DE VEHÍCULOS MILITARES DE COMBATE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "309100",
+      "name": "FABRICACIÓN DE MOTOCICLETAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "309200",
+      "name": "FABRICACIÓN DE BICICLETAS Y DE SILLAS DE RUEDAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "309900",
+      "name": "FABRICACIÓN DE OTROS TIPOS DE EQUIPO DE TRANSPORTE N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "310001",
+      "name": "FABRICACIÓN DE MUEBLES PRINCIPALMENTE DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "310009",
+      "name": "FABRICACIÓN DE COLCHONES; FABRICACIÓN DE OTROS MUEBLES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "321100",
+      "name": "FABRICACIÓN DE JOYAS Y ARTÍCULOS CONEXOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "321200",
+      "name": "FABRICACIÓN DE BISUTERÍA Y ARTÍCULOS CONEXOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "322000",
+      "name": "FABRICACIÓN DE INSTRUMENTOS MUSICALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "323000",
+      "name": "FABRICACIÓN DE ARTÍCULOS DE DEPORTE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "324000",
+      "name": "FABRICACIÓN DE JUEGOS Y JUGUETES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "325001",
+      "name": "ACTIVIDADES DE LABORATORIOS DENTALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "325009",
+      "name": "FABRICACIÓN DE INSTRUMENTOS Y MATERIALES MÉDICOS, OFTALMOLÓGICOS Y ODONTOLÓGICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "329000",
+      "name": "OTRAS INDUSTRIAS MANUFACTURERAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331100",
+      "name": "REPARACIÓN DE PRODUCTOS ELABORADOS DE METAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331201",
+      "name": "REPARACIÓN DE MAQUINARIA AGROPECUARIA Y FORESTAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331202",
+      "name": "REPARACIÓN DE MAQUINARIA METALÚRGICA, PARA LA MINERÍA, EXTRACCIÓN DE PETRÓLEO Y PARA LA CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331203",
+      "name": "REPARACIÓN DE MAQUINARIA PARA LA ELABORACIÓN DE ALIMENTOS, BEBIDAS Y TABACO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331204",
+      "name": "REPARACIÓN DE MAQUINARIA PARA PRODUCIR TEXTILES, PRENDAS DE VESTIR, ARTÍCULOS DE CUERO Y CALZADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331209",
+      "name": "REPARACIÓN DE OTRO TIPO DE MAQUINARIA Y EQUIPOS INDUSTRIALES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331301",
+      "name": "REPARACIÓN DE EQUIPO DE MEDICIÓN, PRUEBA, NAVEGACIÓN Y CONTROL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331309",
+      "name": "REPARACIÓN DE OTROS EQUIPOS ELECTRÓNICOS Y ÓPTICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331400",
+      "name": "REPARACIÓN DE EQUIPO ELÉCTRICO (EXCEPTO REPARACIÓN DE EQUIPO Y ENSERES DOMÉSTICOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331501",
+      "name": "REPARACIÓN DE BUQUES, EMBARCACIONES MENORES Y ESTRUCTURAS FLOTANTES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331502",
+      "name": "REPARACIÓN DE AERONAVES Y NAVES ESPACIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331509",
+      "name": "REPARACIÓN DE OTROS EQUIPOS DE TRANSPORTE N.C.P., EXCEPTO VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "331900",
+      "name": "REPARACIÓN DE OTROS TIPOS DE EQUIPO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "332000",
+      "name": "INSTALACIÓN DE MAQUINARIA Y EQUIPOS INDUSTRIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "351011",
+      "name": "GENERACIÓN DE ENERGÍA ELÉCTRICA EN CENTRALES HIDROELÉCTRICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "351012",
+      "name": "GENERACIÓN DE ENERGÍA ELÉCTRICA EN CENTRALES TERMOELÉCTRICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "351019",
+      "name": "GENERACIÓN DE ENERGÍA ELÉCTRICA EN OTRAS CENTRALES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "351020",
+      "name": "TRANSMISIÓN DE ENERGÍA ELÉCTRICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "351030",
+      "name": "DISTRIBUCIÓN DE ENERGÍA ELÉCTRICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "352010",
+      "name": "REGASIFICACIÓN DE GAS NATURAL LICUADO (GNL)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "352020",
+      "name": "FABRICACIÓN DE GAS; DISTRIBUCIÓN DE COMBUSTIBLES GASEOSOS POR TUBERÍA, EXCEPTO REGASIFICACIÓN DE GNL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "353001",
+      "name": "SUMINISTRO DE VAPOR Y DE AIRE ACONDICIONADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "353002",
+      "name": "ELABORACIÓN DE HIELO (EXCEPTO FABRICACIÓN DE HIELO SECO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "360000",
+      "name": "CAPTACIÓN, TRATAMIENTO Y DISTRIBUCIÓN DE AGUA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "370000",
+      "name": "EVACUACIÓN Y TRATAMIENTO DE AGUAS SERVIDAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "381100",
+      "name": "RECOGIDA DE DESECHOS NO PELIGROSOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "381200",
+      "name": "RECOGIDA DE DESECHOS PELIGROSOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "382100",
+      "name": "TRATAMIENTO Y ELIMINACIÓN DE DESECHOS NO PELIGROSOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "382200",
+      "name": "TRATAMIENTO Y ELIMINACIÓN DE DESECHOS PELIGROSOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "383001",
+      "name": "RECUPERACIÓN Y RECICLAMIENTO DE DESPERDICIOS Y DESECHOS METÁLICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "383002",
+      "name": "RECUPERACIÓN Y RECICLAMIENTO DE PAPEL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "383003",
+      "name": "RECUPERACIÓN Y RECICLAMIENTO DE VIDRIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "383009",
+      "name": "RECUPERACIÓN Y RECICLAMIENTO DE OTROS DESPERDICIOS Y DESECHOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "390000",
+      "name": "ACTIVIDADES DE DESCONTAMINACIÓN Y OTROS SERVICIOS DE GESTIÓN DE DESECHOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "410010",
+      "name": "CONSTRUCCIÓN DE EDIFICIOS PARA USO RESIDENCIAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "410020",
+      "name": "CONSTRUCCIÓN DE EDIFICIOS PARA USO NO RESIDENCIAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "421000",
+      "name": "CONSTRUCCIÓN DE CARRETERAS Y LÍNEAS DE FERROCARRIL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "422000",
+      "name": "CONSTRUCCIÓN DE PROYECTOS DE SERVICIO PÚBLICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "429000",
+      "name": "CONSTRUCCIÓN DE OTRAS OBRAS DE INGENIERÍA CIVIL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "431100",
+      "name": "DEMOLICIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "431200",
+      "name": "PREPARACIÓN DEL TERRENO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "432100",
+      "name": "INSTALACIONES ELÉCTRICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "432200",
+      "name": "INSTALACIONES DE GASFITERÍA, CALEFACCIÓN Y AIRE ACONDICIONADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "432900",
+      "name": "OTRAS INSTALACIONES PARA OBRAS DE CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "433000",
+      "name": "TERMINACIÓN Y ACABADO DE EDIFICIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "439000",
+      "name": "OTRAS ACTIVIDADES ESPECIALIZADAS DE CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "451001",
+      "name": "VENTA AL POR MAYOR DE VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "451002",
+      "name": "VENTA AL POR MENOR DE VEHÍCULOS AUTOMOTORES NUEVOS O USADOS (INCLUYE COMPRAVENTA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "452001",
+      "name": "SERVICIO DE LAVADO DE VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "452002",
+      "name": "MANTENIMIENTO Y REPARACIÓN DE VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "453000",
+      "name": "VENTA DE PARTES, PIEZAS Y ACCESORIOS PARA VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "454001",
+      "name": "VENTA DE MOTOCICLETAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "454002",
+      "name": "VENTA DE PARTES, PIEZAS Y ACCESORIOS DE MOTOCICLETAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "454003",
+      "name": "MANTENIMIENTO Y REPARACIÓN DE MOTOCICLETAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "461001",
+      "name": "CORRETAJE AL POR MAYOR DE PRODUCTOS AGRÍCOLAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "461002",
+      "name": "CORRETAJE AL POR MAYOR DE GANADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "461009",
+      "name": "OTROS TIPOS DE CORRETAJES O REMATES AL POR MAYOR N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "462010",
+      "name": "VENTA AL POR MAYOR DE MATERIAS PRIMAS AGRÍCOLAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "462020",
+      "name": "VENTA AL POR MAYOR DE ANIMALES VIVOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "462090",
+      "name": "VENTA AL POR MAYOR DE OTRAS MATERIAS PRIMAS AGROPECUARIAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463011",
+      "name": "VENTA AL POR MAYOR DE FRUTAS Y VERDURAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463012",
+      "name": "VENTA AL POR MAYOR DE CARNE Y PRODUCTOS CÁRNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463013",
+      "name": "VENTA AL POR MAYOR DE PRODUCTOS DEL MAR (PESCADOS, MARISCOS Y ALGAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463014",
+      "name": "VENTA AL POR MAYOR DE PRODUCTOS DE CONFITERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463019",
+      "name": "VENTA AL POR MAYOR DE HUEVOS, LÁCTEOS, ABARROTES Y DE OTROS ALIMENTOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463020",
+      "name": "VENTA AL POR MAYOR DE BEBIDAS ALCOHÓLICAS Y NO ALCOHÓLICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "463030",
+      "name": "VENTA AL POR MAYOR DE TABACO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464100",
+      "name": "VENTA AL POR MAYOR DE PRODUCTOS TEXTILES, PRENDAS DE VESTIR Y CALZADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464901",
+      "name": "VENTA AL POR MAYOR DE MUEBLES, EXCEPTO MUEBLES DE OFICINA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464902",
+      "name": "VENTA AL POR MAYOR DE ARTÍCULOS ELÉCTRICOS Y ELECTRÓNICOS PARA EL HOGAR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464903",
+      "name": "VENTA AL POR MAYOR DE ARTÍCULOS DE PERFUMERÍA, DE TOCADOR Y COSMÉTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464904",
+      "name": "VENTA AL POR MAYOR DE ARTÍCULOS DE PAPELERÍA Y ESCRITORIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464905",
+      "name": "VENTA AL POR MAYOR DE LIBROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464906",
+      "name": "VENTA AL POR MAYOR DE DIARIOS Y REVISTAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464907",
+      "name": "VENTA AL POR MAYOR DE PRODUCTOS FARMACÉUTICOS Y MEDICINALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464908",
+      "name": "VENTA AL POR MAYOR DE INSTRUMENTOS CIENTÍFICOS Y QUIRÚRGICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "464909",
+      "name": "VENTA AL POR MAYOR DE OTROS ENSERES DOMÉSTICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465100",
+      "name": "VENTA AL POR MAYOR DE COMPUTADORES, EQUIPO PERIFÉRICO Y PROGRAMAS INFORMÁTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465200",
+      "name": "VENTA AL POR MAYOR DE EQUIPO, PARTES Y PIEZAS ELECTRÓNICOS Y DE TELECOMUNICACIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465300",
+      "name": "VENTA AL POR MAYOR DE MAQUINARIA, EQUIPO Y MATERIALES AGROPECUARIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465901",
+      "name": "VENTA AL POR MAYOR DE MAQUINARIA METALÚRGICA, PARA LA MINERÍA, EXTRACCIÓN DE PETRÓLEO Y CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465902",
+      "name": "VENTA AL POR MAYOR DE MAQUINARIA PARA LA ELABORACIÓN DE ALIMENTOS, BEBIDAS Y TABACO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465903",
+      "name": "VENTA AL POR MAYOR DE MAQUINARIA PARA LA INDUSTRIA TEXTIL, DEL CUERO Y DEL CALZADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465904",
+      "name": "VENTA AL POR MAYOR DE MAQUINARIA Y EQUIPO DE OFICINA; VENTA AL POR MAYOR DE MUEBLES DE OFICINA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465905",
+      "name": "VENTA AL POR MAYOR DE EQUIPO DE TRANSPORTE(EXCEPTO VEHÍCULOS AUTOMOTORES, MOTOCICLETAS Y BICICLETAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "465909",
+      "name": "VENTA AL POR MAYOR DE OTROS TIPOS DE MAQUINARIA Y EQUIPO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466100",
+      "name": "VENTA AL POR MAYOR DE COMBUSTIBLES SÓLIDOS, LÍQUIDOS Y GASEOSOS Y PRODUCTOS CONEXOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466200",
+      "name": "VENTA AL POR MAYOR DE METALES Y MINERALES METALÍFEROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466301",
+      "name": "VENTA AL POR MAYOR DE MADERA EN BRUTO Y PRODUCTOS PRIMARIOS DE LA ELABORACIÓN DE MADERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466302",
+      "name": "VENTA AL POR MAYOR DE MATERIALES DE CONSTRUCCIÓN, ARTÍCULOS DE FERRETERÍA, GASFITERÍA Y CALEFACCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466901",
+      "name": "VENTA AL POR MAYOR DE PRODUCTOS QUÍMICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466902",
+      "name": "VENTA AL POR MAYOR DE DESECHOS METÁLICOS (CHATARRA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "466909",
+      "name": "VENTA AL POR MAYOR DE DESPERDICIOS, DESECHOS Y OTROS PRODUCTOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "469000",
+      "name": "VENTA AL POR MAYOR NO ESPECIALIZADA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "471100",
+      "name": "VENTA AL POR MENOR EN COMERCIOS DE ALIMENTOS, BEBIDAS O TABACO (SUPERMERCADOS E HIPERMERCADOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "471910",
+      "name": "VENTA AL POR MENOR EN COMERCIOS DE VESTUARIO Y PRODUCTOS PARA EL HOGAR (GRANDES TIENDAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "471990",
+      "name": "OTRAS ACTIVIDADES DE VENTA AL POR MENOR EN COMERCIOS NO ESPECIALIZADOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472101",
+      "name": "VENTA AL POR MENOR DE ALIMENTOS EN COMERCIOS ESPECIALIZADOS (ALMACENES PEQUEÑOS Y MINIMARKET)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472102",
+      "name": "VENTA AL POR MENOR EN COMERCIOS ESPECIALIZADOS DE CARNE Y PRODUCTOS CÁRNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472103",
+      "name": "VENTA AL POR MENOR EN COMERCIOS ESPECIALIZADOS DE FRUTAS Y VERDURAS (VERDULERÍAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472104",
+      "name": "VENTA AL POR MENOR EN COMERCIOS ESPECIALIZADOS DE PESCADO, MARISCOS Y PRODUCTOS CONEXOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472105",
+      "name": "VENTA AL POR MENOR EN COMERCIOS ESPECIALIZADOS DE PRODUCTOS DE PANADERÍA Y PASTELERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472109",
+      "name": "VENTA AL POR MENOR EN COMERCIOS ESPECIALIZADOS DE HUEVOS, CONFITES Y PRODUCTOS ALIMENTICIOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472200",
+      "name": "VENTA AL POR MENOR DE BEBIDAS ALCOHÓLICAS Y NO ALCOHÓLICAS EN COMERCIOS ESPECIALIZADOS (BOTILLERÍAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "472300",
+      "name": "VENTA AL POR MENOR DE TABACO Y PRODUCTOS DE TABACO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "473000",
+      "name": "VENTA AL POR MENOR DE COMBUSTIBLES PARA VEHÍCULOS AUTOMOTORES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "474100",
+      "name": "VENTA AL POR MENOR DE COMPUTADORES, EQUIPO PERIFÉRICO, PROGRAMAS INFORMÁTICOS Y EQUIPO DE TELECOM.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "474200",
+      "name": "VENTA AL POR MENOR DE EQUIPO DE SONIDO Y DE VIDEO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475100",
+      "name": "VENTA AL POR MENOR DE TELAS, LANAS, HILOS Y SIMILARES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475201",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS DE FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475202",
+      "name": "VENTA AL POR MENOR DE PINTURAS, BARNICES Y LACAS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475203",
+      "name": "VENTA AL POR MENOR DE PRODUCTOS DE VIDRIO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475300",
+      "name": "VENTA AL POR MENOR DE TAPICES, ALFOMBRAS Y CUBRIMIENTOS PARA PAREDES Y PISOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475901",
+      "name": "VENTA AL POR MENOR DE MUEBLES Y COLCHONES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475902",
+      "name": "VENTA AL POR MENOR DE INSTRUMENTOS MUSICALES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "475909",
+      "name": "VENTA AL POR MENOR DE APARATOS ELÉCTRICOS, TEXTILES PARA EL HOGAR Y OTROS ENSERES DOMÉSTICOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476101",
+      "name": "VENTA AL POR MENOR DE LIBROS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476102",
+      "name": "VENTA AL POR MENOR DE DIARIOS Y REVISTAS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476103",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS DE PAPELERÍA Y ESCRITORIO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476200",
+      "name": "VENTA AL POR MENOR DE GRABACIONES DE MÚSICA Y DE VIDEO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476301",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS DE CAZA Y PESCA EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476302",
+      "name": "VENTA AL POR MENOR DE BICICLETAS Y SUS REPUESTOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476309",
+      "name": "VENTA AL POR MENOR DE OTROS ARTÍCULOS Y EQUIPOS DE DEPORTE N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "476400",
+      "name": "VENTA AL POR MENOR DE JUEGOS Y JUGUETES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477101",
+      "name": "VENTA AL POR MENOR DE CALZADO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477102",
+      "name": "VENTA AL POR MENOR DE PRENDAS Y ACCESORIOS DE VESTIR EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477103",
+      "name": "VENTA AL POR MENOR DE CARTERAS, MALETAS Y OTROS ACCESORIOS DE VIAJE EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477201",
+      "name": "VENTA AL POR MENOR DE PRODUCTOS FARMACÉUTICOS Y MEDICINALES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477202",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS ORTOPÉDICOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477203",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS DE PERFUMERÍA, DE TOCADOR Y COSMÉTICOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477310",
+      "name": "VENTA AL POR MENOR DE GAS LICUADO EN BOMBONAS (CILINDROS) EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477391",
+      "name": "VENTA AL POR MENOR DE ALIMENTO Y ACCESORIOS PARA MASCOTAS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477392",
+      "name": "VENTA AL POR MENOR DE ARMAS Y MUNICIONES EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477393",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS ÓPTICOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477394",
+      "name": "VENTA AL POR MENOR DE ARTÍCULOS DE JOYERÍA, BISUTERÍA Y RELOJERÍA EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477395",
+      "name": "VENTA AL POR MENOR DE CARBÓN, LEÑA Y OTROS COMBUSTIBLES DE USO DOMÉSTICO EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477396",
+      "name": "VENTA AL POR MENOR DE RECUERDOS, ARTESANÍAS Y ARTÍCULOS RELIGIOSOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477397",
+      "name": "VENTA AL POR MENOR DE FLORES, PLANTAS, ARBOLES, SEMILLAS Y ABONOS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477398",
+      "name": "VENTA AL POR MENOR DE MASCOTAS EN COMERCIOS ESPECIALIZADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477399",
+      "name": "VENTA AL POR MENOR DE OTROS PRODUCTOS EN COMERCIOS ESPECIALIZADOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477401",
+      "name": "VENTA AL POR MENOR DE ANTIGÜEDADES EN COMERCIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477402",
+      "name": "VENTA AL POR MENOR DE ROPA USADA EN COMERCIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "477409",
+      "name": "VENTA AL POR MENOR DE OTROS ARTÍCULOS DE SEGUNDA MANO EN COMERCIOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "478100",
+      "name": "VENTA AL POR MENOR DE ALIMENTOS, BEBIDAS Y TABACO EN PUESTOS DE VENTA Y MERCADOS (INCLUYE FERIAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "478200",
+      "name": "VENTA AL POR MENOR DE PRODUCTOS TEXTILES, PRENDAS DE VESTIR Y CALZADO EN PUESTOS DE VENTA Y MERCADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "478900",
+      "name": "VENTA AL POR MENOR DE OTROS PRODUCTOS EN PUESTOS DE VENTA Y MERCADOS (INCLUYE FERIAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "479100",
+      "name": "VENTA AL POR MENOR POR CORREO, POR INTERNET Y VÍA TELEFÓNICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "479901",
+      "name": "VENTA AL POR MENOR REALIZADA POR INDEPENDIENTES EN LA LOCOMOCIÓN COLECTIVA (LEY 20.388)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "479902",
+      "name": "VENTA AL POR MENOR MEDIANTE MAQUINAS EXPENDEDORAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "479903",
+      "name": "VENTA AL POR MENOR POR COMISIONISTAS (NO DEPENDIENTES DE COMERCIOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "479909",
+      "name": "OTRAS ACTIVIDADES DE VENTA POR MENOR NO REALIZADAS EN COMERCIOS, PUESTOS DE VENTA O MERCADOS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "491100",
+      "name": "TRANSPORTE INTERURBANO DE PASAJEROS POR FERROCARRIL",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "491200",
+      "name": "TRANSPORTE DE CARGA POR FERROCARRIL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492110",
+      "name": "TRANSPORTE URBANO Y SUBURBANO DE PASAJEROS VÍA METRO Y METROTREN",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492120",
+      "name": "TRANSPORTE URBANO Y SUBURBANO DE PASAJEROS VÍA LOCOMOCIÓN COLECTIVA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492130",
+      "name": "TRANSPORTE DE PASAJEROS VÍA TAXI COLECTIVO",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492190",
+      "name": "OTRAS ACTIVIDADES DE TRANSPORTE URBANO Y SUBURBANO DE PASAJEROS POR VÍA TERRESTRE N.C.P.",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492210",
+      "name": "SERVICIOS DE TRANSPORTE DE ESCOLARES",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492220",
+      "name": "SERVICIOS DE TRANSPORTE DE TRABAJADORES",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492230",
+      "name": "SERVICIOS DE TRANSPORTE DE PASAJEROS EN TAXIS LIBRES Y RADIOTAXIS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492240",
+      "name": "SERVICIOS DE TRANSPORTE A TURISTAS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492250",
+      "name": "TRANSPORTE DE PASAJEROS EN BUSES INTERURBANOS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492290",
+      "name": "OTRAS ACTIVIDADES DE TRANSPORTE DE PASAJEROS POR VÍA TERRESTRE N.C.P.",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "492300",
+      "name": "TRANSPORTE DE CARGA POR CARRETERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "493010",
+      "name": "TRANSPORTE POR OLEODUCTOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "493020",
+      "name": "TRANSPORTE POR GASODUCTOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "493090",
+      "name": "OTRAS ACTIVIDADES DE TRANSPORTE POR TUBERÍAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "501100",
+      "name": "TRANSPORTE DE PASAJEROS MARÍTIMO Y DE CABOTAJE",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "501200",
+      "name": "TRANSPORTE DE CARGA MARÍTIMO Y DE CABOTAJE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "502100",
+      "name": "TRANSPORTE DE PASAJEROS POR VÍAS DE NAVEGACIÓN INTERIORES",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "502200",
+      "name": "TRANSPORTE DE CARGA POR VÍAS DE NAVEGACIÓN INTERIORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "511000",
+      "name": "TRANSPORTE DE PASAJEROS POR VÍA AÉREA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "512000",
+      "name": "TRANSPORTE DE CARGA POR VÍA AÉREA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "521001",
+      "name": "EXPLOTACIÓN DE FRIGORÍFICOS PARA ALMACENAMIENTO Y DEPÓSITO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "521009",
+      "name": "OTROS SERVICIOS DE ALMACENAMIENTO Y DEPÓSITO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522110",
+      "name": "EXPLOTACIÓN DE TERMINALES TERRESTRES DE PASAJEROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522120",
+      "name": "EXPLOTACIÓN DE ESTACIONAMIENTOS DE VEHÍCULOS AUTOMOTORES Y PARQUÍMETROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522130",
+      "name": "SERVICIOS PRESTADOS POR CONCESIONARIOS DE CARRETERAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522190",
+      "name": "ACTIVIDADES DE SERVICIOS VINCULADAS AL TRANSPORTE TERRESTRE N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522200",
+      "name": "ACTIVIDADES DE SERVICIOS VINCULADAS AL TRANSPORTE ACUÁTICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522300",
+      "name": "ACTIVIDADES DE SERVICIOS VINCULADAS AL TRANSPORTE AÉREO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522400",
+      "name": "MANIPULACIÓN DE LA CARGA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522910",
+      "name": "AGENCIAS DE ADUANAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522920",
+      "name": "AGENCIAS DE NAVES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "522990",
+      "name": "OTRAS ACTIVIDADES DE APOYO AL TRANSPORTE N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "531000",
+      "name": "ACTIVIDADES POSTALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "532000",
+      "name": "ACTIVIDADES DE MENSAJERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "551001",
+      "name": "ACTIVIDADES DE HOTELES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "551002",
+      "name": "ACTIVIDADES DE MOTELES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "551003",
+      "name": "ACTIVIDADES DE RESIDENCIALES PARA TURISTAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "551009",
+      "name": "OTRAS ACTIVIDADES DE ALOJAMIENTO PARA TURISTAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "552000",
+      "name": "ACTIVIDADES DE CAMPING Y DE PARQUES PARA CASAS RODANTES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "559001",
+      "name": "ACTIVIDADES DE RESIDENCIALES PARA ESTUDIANTES Y TRABAJADORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "559009",
+      "name": "OTRAS ACTIVIDADES DE ALOJAMIENTO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "561000",
+      "name": "ACTIVIDADES DE RESTAURANTES Y DE SERVICIO MÓVIL DE COMIDAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "562100",
+      "name": "SUMINISTRO DE COMIDAS POR ENCARGO (SERVICIOS DE BANQUETERÍA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "562900",
+      "name": "SUMINISTRO INDUSTRIAL DE COMIDAS POR ENCARGO; CONCESIÓN DE SERVICIOS DE ALIMENTACIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "563001",
+      "name": "ACTIVIDADES DE DISCOTECAS Y CABARET (NIGHT CLUB), CON PREDOMINIO DEL SERVICIO DE BEBIDAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "563009",
+      "name": "OTRAS ACTIVIDADES DE SERVICIO DE BEBIDAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "581100",
+      "name": "EDICIÓN DE LIBROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "581200",
+      "name": "EDICIÓN DE DIRECTORIOS Y LISTAS DE CORREO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "581300",
+      "name": "EDICIÓN DE DIARIOS, REVISTAS Y OTRAS PUBLICACIONES PERIÓDICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "581900",
+      "name": "OTRAS ACTIVIDADES DE EDICIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "582000",
+      "name": "EDICIÓN DE PROGRAMAS INFORMÁTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "591100",
+      "name": "ACTIVIDADES DE PRODUCCIÓN DE PELÍCULAS CINEMATOGRÁFICAS, VIDEOS Y PROGRAMAS DE TELEVISIÓN",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "591200",
+      "name": "ACTIVIDADES DE POSTPRODUCCIÓN DE PELÍCULAS CINEMATOGRÁFICAS, VIDEOS Y PROGRAMAS DE TELEVISIÓN",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "591300",
+      "name": "ACTIVIDADES DE DISTRIBUCIÓN DE PELÍCULAS CINEMATOGRÁFICAS, VIDEOS Y PROGRAMAS DE TELEVISIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "591400",
+      "name": "ACTIVIDADES DE EXHIBICIÓN DE PELÍCULAS CINEMATOGRÁFICAS Y CINTAS DE VIDEO",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "592000",
+      "name": "ACTIVIDADES DE GRABACIÓN DE SONIDO Y EDICIÓN DE MÚSICA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "601000",
+      "name": "TRANSMISIONES DE RADIO",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "602000",
+      "name": "PROGRAMACIÓN Y TRANSMISIONES DE TELEVISIÓN",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "611010",
+      "name": "TELEFONÍA FIJA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "611020",
+      "name": "TELEFONÍA LARGA DISTANCIA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "611030",
+      "name": "TELEVISIÓN DE PAGO POR CABLE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "611090",
+      "name": "OTROS SERVICIOS DE TELECOMUNICACIONES ALÁMBRICAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "612010",
+      "name": "TELEFONÍA MÓVIL CELULAR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "612020",
+      "name": "RADIOCOMUNICACIONES MÓVILES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "612030",
+      "name": "TELEVISIÓN DE PAGO INALÁMBRICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "612090",
+      "name": "OTROS SERVICIOS DE TELECOMUNICACIONES INALÁMBRICAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "613010",
+      "name": "TELEFONÍA MÓVIL SATELITAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "613020",
+      "name": "TELEVISIÓN DE PAGO SATELITAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "613090",
+      "name": "OTROS SERVICIOS DE TELECOMUNICACIONES POR SATÉLITE N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "619010",
+      "name": "CENTROS DE LLAMADOS Y CENTROS DE ACCESO A INTERNET",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "619090",
+      "name": "OTRAS ACTIVIDADES DE TELECOMUNICACIONES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "620100",
+      "name": "ACTIVIDADES DE PROGRAMACIÓN INFORMÁTICA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "620200",
+      "name": "ACTIVIDADES DE CONSULTORÍA DE INFORMÁTICA Y DE GESTIÓN DE INSTALACIONES INFORMÁTICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "620900",
+      "name": "OTRAS ACTIVIDADES DE TECNOLOGÍA DE LA INFORMACIÓN Y DE SERVICIOS INFORMÁTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "631100",
+      "name": "PROCESAMIENTO DE DATOS, HOSPEDAJE Y ACTIVIDADES CONEXAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "631200",
+      "name": "PORTALES WEB",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "639100",
+      "name": "ACTIVIDADES DE AGENCIAS DE NOTICIAS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "639900",
+      "name": "OTRAS ACTIVIDADES DE SERVICIOS DE INFORMACIÓN N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "641100",
+      "name": "BANCA CENTRAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "641910",
+      "name": "ACTIVIDADES BANCARIAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "641990",
+      "name": "OTROS TIPOS DE INTERMEDIACIÓN MONETARIA N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "642000",
+      "name": "ACTIVIDADES DE SOCIEDADES DE CARTERA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "643000",
+      "name": "FONDOS Y SOCIEDADES DE INVERSIÓN Y ENTIDADES FINANCIERAS SIMILARES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649100",
+      "name": "LEASING FINANCIERO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649201",
+      "name": "FINANCIERAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649202",
+      "name": "ACTIVIDADES DE CRÉDITO PRENDARIO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649203",
+      "name": "CAJAS DE COMPENSACIÓN",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649209",
+      "name": "OTRAS ACTIVIDADES DE CONCESIÓN DE CRÉDITO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "649900",
+      "name": "OTRAS ACTIVIDADES DE SERVICIOS FINANCIEROS, EXCEPTO LAS DE SEGUROS Y FONDOS DE PENSIONES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "651100",
+      "name": "SEGUROS DE VIDA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "651210",
+      "name": "SEGUROS GENERALES, EXCEPTO ACTIVIDADES DE ISAPRES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "651220",
+      "name": "ACTIVIDADES DE ISAPRES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "652000",
+      "name": "REASEGUROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "653000",
+      "name": "FONDOS DE PENSIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "661100",
+      "name": "ADMINISTRACIÓN DE MERCADOS FINANCIEROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661201",
+      "name": "ACTIVIDADES DE SECURITIZADORAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "661202",
+      "name": "CORREDORES DE BOLSA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661203",
+      "name": "AGENTES DE VALORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661204",
+      "name": "ACTIVIDADES DE CASAS DE CAMBIO Y OPERADORES DE DIVISA",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661209",
+      "name": "OTROS SERVICIOS DE CORRETAJE DE VALORES Y COMMODITIES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661901",
+      "name": "ACTIVIDADES DE CÁMARAS DE COMPENSACIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661902",
+      "name": "ADMINISTRACIÓN DE TARJETAS DE CRÉDITO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661903",
+      "name": "EMPRESAS DE ASESORÍA Y CONSULTORÍA EN INVERSIÓN FINANCIERA; SOCIEDADES DE APOYO AL GIRO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661904",
+      "name": "ACTIVIDADES DE CLASIFICADORAS DE RIESGO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "661909",
+      "name": "OTRAS ACTIVIDADES AUXILIARES DE LAS ACTIVIDADES DE SERVICIOS FINANCIEROS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "662100",
+      "name": "EVALUACIÓN DE RIESGOS Y DAÑOS (INCLUYE ACTIVIDADES DE LIQUIDADORES DE SEGUROS)",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "662200",
+      "name": "ACTIVIDADES DE AGENTES Y CORREDORES DE SEGUROS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "662900",
+      "name": "OTRAS ACTIVIDADES AUXILIARES DE LAS ACTIVIDADES DE SEGUROS Y FONDOS DE PENSIONES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "663010",
+      "name": "ADMINISTRADORAS DE FONDOS DE PENSIONES (AFP)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "663091",
+      "name": "ADMINISTRADORAS DE FONDOS DE INVERSIÓN",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "663092",
+      "name": "ADMINISTRADORAS DE FONDOS MUTUOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "663093",
+      "name": "ADMINISTRADORAS DE FICES (FONDOS DE INVERSIÓN DE CAPITAL EXTRANJERO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "663094",
+      "name": "ADMINISTRADORAS DE FONDOS PARA LA VIVIENDA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "663099",
+      "name": "ADMINISTRADORAS DE FONDOS PARA OTROS FINES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "681011",
+      "name": "ALQUILER DE BIENES INMUEBLES AMOBLADOS O CON EQUIPOS Y MAQUINARIAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "681012",
+      "name": "COMPRA, VENTA Y ALQUILER (EXCEPTO AMOBLADOS) DE INMUEBLES",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "681020",
+      "name": "SERVICIOS IMPUTADOS DE ALQUILER DE VIVIENDAS",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "682000",
+      "name": "ACTIVIDADES INMOBILIARIAS REALIZADAS A CAMBIO DE UNA RETRIBUCIÓN O POR CONTRATA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "691001",
+      "name": "SERVICIOS DE ASESORAMIENTO Y REPRESENTACIÓN JURÍDICA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "691002",
+      "name": "SERVICIO NOTARIAL",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "NO"
+    },
+    {
+      "code": "691003",
+      "name": "CONSERVADOR DE BIENES RAÍCES",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "NO"
+    },
+    {
+      "code": "691004",
+      "name": "RECEPTORES JUDICIALES",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "691009",
+      "name": "SERVICIOS DE ARBITRAJE; SÍNDICOS DE QUIEBRA Y PERITOS JUDICIALES; OTRAS ACTIVIDADES JURÍDICAS N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "692000",
+      "name": "ACTIVIDADES DE CONTABILIDAD, TENEDURÍA DE LIBROS Y AUDITORÍA; CONSULTORÍA FISCAL",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "701000",
+      "name": "ACTIVIDADES DE OFICINAS PRINCIPALES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "702000",
+      "name": "ACTIVIDADES DE CONSULTORÍA DE GESTIÓN",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "711001",
+      "name": "SERVICIOS DE ARQUITECTURA (DISEÑO DE EDIFICIOS, DIBUJO DE PLANOS DE CONSTRUCCIÓN, ENTRE OTROS)",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "711002",
+      "name": "EMPRESAS DE SERVICIOS DE INGENIERÍA Y ACTIVIDADES CONEXAS DE CONSULTORÍA TÉCNICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "711003",
+      "name": "SERVICIOS PROFESIONALES DE INGENIERÍA Y ACTIVIDADES CONEXAS DE CONSULTORÍA TÉCNICA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "712001",
+      "name": "ACTIVIDADES DE PLANTAS DE REVISIÓN TÉCNICA PARA VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "712009",
+      "name": "OTROS SERVICIOS DE ENSAYOS Y ANÁLISIS TÉCNICOS (EXCEPTO ACTIVIDADES DE PLANTAS DE REVISIÓN TÉCNICA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "721000",
+      "name": "INVESTIGACIONES Y DESARROLLO EXPERIMENTAL EN EL CAMPO DE LAS CIENCIAS NATURALES Y LA INGENIERÍA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "722000",
+      "name": "INVESTIGACIONES Y DESARROLLO EXPERIMENTAL EN EL CAMPO DE LAS CIENCIAS SOCIALES Y LAS HUMANIDADES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "731001",
+      "name": "SERVICIOS DE PUBLICIDAD PRESTADOS POR EMPRESAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "731002",
+      "name": "SERVICIOS DE PUBLICIDAD PRESTADOS POR PROFESIONALES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "732000",
+      "name": "ESTUDIOS DE MERCADO Y ENCUESTAS DE OPINIÓN PÚBLICA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "S"
+    },
+    {
+      "code": "741001",
+      "name": "ACTIVIDADES DE DISEÑO DE VESTUARIO",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "741002",
+      "name": "ACTIVIDADES DE DISEÑO Y DECORACIÓN DE INTERIORES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "741009",
+      "name": "OTRAS ACTIVIDADES ESPECIALIZADAS DE DISEÑO N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "742001",
+      "name": "SERVICIOS DE REVELADO, IMPRESIÓN Y AMPLIACIÓN DE FOTOGRAFÍAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "742002",
+      "name": "SERVICIOS Y ACTIVIDADES DE FOTOGRAFÍA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "742003",
+      "name": "SERVICIOS PERSONALES DE FOTOGRAFÍA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "749001",
+      "name": "ASESORÍA Y GESTIÓN EN LA COMPRA O VENTA DE PEQUEÑAS Y MEDIANAS EMPRESAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "749002",
+      "name": "SERVICIOS DE TRADUCCIÓN E INTERPRETACIÓN PRESTADOS POR EMPRESAS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "749003",
+      "name": "SERVICIOS PERSONALES DE TRADUCCIÓN E INTERPRETACIÓN",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "749004",
+      "name": "ACTIVIDADES DE AGENCIAS Y AGENTES DE REPRESENTACIÓN DE ACTORES, DEPORTISTAS Y OTRAS FIGURAS PÚBLICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "749009",
+      "name": "OTRAS ACTIVIDADES PROFESIONALES, CIENTÍFICAS Y TÉCNICAS N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "750001",
+      "name": "ACTIVIDADES DE CLÍNICAS VETERINARIAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "750002",
+      "name": "ACTIVIDADES DE VETERINARIOS, TÉCNICOS Y OTRO PERSONAL AUXILIAR, PRESTADOS DE FORMA INDEPENDIENTE",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "771000",
+      "name": "ALQUILER DE VEHÍCULOS AUTOMOTORES SIN CHOFER",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "S"
+    },
+    {
+      "code": "772100",
+      "name": "ALQUILER Y ARRENDAMIENTO DE EQUIPO RECREATIVO Y DEPORTIVO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "772200",
+      "name": "ALQUILER DE CINTAS DE VIDEO Y DISCOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "772900",
+      "name": "ALQUILER DE OTROS EFECTOS PERSONALES Y ENSERES DOMÉSTICOS (INCLUYE MOBILIARIO PARA EVENTOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "773001",
+      "name": "ALQUILER DE EQUIPOS DE TRANSPORTE SIN OPERARIO, EXCEPTO VEHÍCULOS AUTOMOTORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "773002",
+      "name": "ALQUILER DE MAQUINARIA Y EQUIPO AGROPECUARIO, FORESTAL, DE CONSTRUCCIÓN E ING. CIVIL, SIN OPERARIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "773003",
+      "name": "ALQUILER DE MAQUINARIA Y EQUIPO DE OFICINA, SIN OPERARIOS (SIN SERVICIO ADMINISTRATIVO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "773009",
+      "name": "ALQUILER DE OTROS TIPOS DE MAQUINARIAS Y EQUIPOS SIN OPERARIO N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "774000",
+      "name": "ARRENDAMIENTO DE PROPIEDAD INTELECTUAL Y SIMILARES, EXCEPTO OBRAS PROTEGIDAS POR DERECHOS DE AUTOR",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "781000",
+      "name": "ACTIVIDADES DE AGENCIAS DE EMPLEO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "782000",
+      "name": "ACTIVIDADES DE AGENCIAS DE EMPLEO TEMPORAL (INCLUYE EMPRESAS DE SERVICIOS TRANSITORIOS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "783000",
+      "name": "OTRAS ACTIVIDADES DE DOTACIÓN DE RECURSOS HUMANOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "791100",
+      "name": "ACTIVIDADES DE AGENCIAS DE VIAJES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "791200",
+      "name": "ACTIVIDADES DE OPERADORES TURÍSTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "799000",
+      "name": "OTROS SERVICIOS DE RESERVAS Y ACTIVIDADES CONEXAS (INCLUYE VENTA DE ENTRADAS PARA TEATRO, Y OTROS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "801001",
+      "name": "SERVICIOS DE SEGURIDAD PRIVADA PRESTADOS POR EMPRESAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "801002",
+      "name": "SERVICIO DE TRANSPORTE DE VALORES EN VEHÍCULOS BLINDADOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "801003",
+      "name": "SERVICIOS DE SEGURIDAD PRIVADA PRESTADOS POR INDEPENDIENTES",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "802000",
+      "name": "ACTIVIDADES DE SERVICIOS DE SISTEMAS DE SEGURIDAD (INCLUYE SERVICIOS DE CERRAJERÍA)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "803000",
+      "name": "ACTIVIDADES DE INVESTIGACIÓN (INCLUYE ACTIVIDADES DE INVESTIGADORES Y DETECTIVES PRIVADOS)",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "811000",
+      "name": "ACTIVIDADES COMBINADAS DE APOYO A INSTALACIONES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "812100",
+      "name": "LIMPIEZA GENERAL DE EDIFICIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "812901",
+      "name": "DESRATIZACIÓN, DESINFECCIÓN Y EXTERMINIO DE PLAGAS NO AGRÍCOLAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "812909",
+      "name": "OTRAS ACTIVIDADES DE LIMPIEZA DE EDIFICIOS E INSTALACIONES INDUSTRIALES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "813000",
+      "name": "ACTIVIDADES DE PAISAJISMO, SERVICIOS DE JARDINERÍA Y SERVICIOS CONEXOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "821100",
+      "name": "ACTIVIDADES COMBINADAS DE SERVICIOS ADMINISTRATIVOS DE OFICINA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "821900",
+      "name": "FOTOCOPIADO, PREPARACIÓN DE DOCUMENTOS Y OTRAS ACTIVIDADES ESPECIALIZADAS DE APOYO DE OFICINA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "822000",
+      "name": "ACTIVIDADES DE CALL-CENTER",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "823000",
+      "name": "ORGANIZACIÓN DE CONVENCIONES Y EXPOSICIONES COMERCIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "829110",
+      "name": "ACTIVIDADES DE AGENCIAS DE COBRO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "829120",
+      "name": "ACTIVIDADES DE AGENCIAS DE CALIFICACIÓN CREDITICIA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "829200",
+      "name": "ACTIVIDADES DE ENVASADO Y EMPAQUETADO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "829900",
+      "name": "OTRAS ACTIVIDADES DE SERVICIOS DE APOYO A LAS EMPRESAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "841100",
+      "name": "ACTIVIDADES DE LA ADMINISTRACIÓN PÚBLICA EN GENERAL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "841200",
+      "name": "REGULACIÓN DE LAS ACTIVIDADES DE ORGANISMOS QUE PRESTAN SERVICIOS SANITARIOS, EDUCATIVOS, CULTURALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "841300",
+      "name": "REGULACIÓN Y FACILITACIÓN DE LA ACTIVIDAD ECONÓMICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "842100",
+      "name": "RELACIONES EXTERIORES",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "842200",
+      "name": "ACTIVIDADES DE DEFENSA",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "842300",
+      "name": "ACTIVIDADES DE MANTENIMIENTO DEL ORDEN PÚBLICO Y DE SEGURIDAD",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "843010",
+      "name": "FONDO NACIONAL DE SALUD (FONASA)",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "843020",
+      "name": "INSTITUTO DE PREVISIÓN SOCIAL (IPS)",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "843090",
+      "name": "OTROS PLANES DE SEGURIDAD SOCIAL DE AFILIACIÓN OBLIGATORIA N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "850011",
+      "name": "ENSEÑANZA PREESCOLAR PÚBLICA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "850012",
+      "name": "ENSEÑANZA PRIMARIA, SECUNDARIA CIENTÍFICO HUMANISTA Y TÉCNICO PROFESIONAL PÚBLICA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "850021",
+      "name": "ENSEÑANZA PREESCOLAR PRIVADA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "850022",
+      "name": "ENSEÑANZA PRIMARIA, SECUNDARIA CIENTÍFICO HUMANISTA Y TÉCNICO PROFESIONAL PRIVADA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "853110",
+      "name": "ENSEÑANZA SUPERIOR EN UNIVERSIDADES PÚBLICAS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "853120",
+      "name": "ENSEÑANZA SUPERIOR EN UNIVERSIDADES PRIVADAS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "853201",
+      "name": "ENSEÑANZA SUPERIOR EN INSTITUTOS PROFESIONALES",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "853202",
+      "name": "ENSEÑANZA SUPERIOR EN CENTROS DE FORMACIÓN TÉCNICA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "854100",
+      "name": "ENSEÑANZA DEPORTIVA Y RECREATIVA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "854200",
+      "name": "ENSEÑANZA CULTURAL",
+      "vat_affected": "NO",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "854901",
+      "name": "ENSEÑANZA PREUNIVERSITARIA",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "854902",
+      "name": "SERVICIOS PERSONALES DE EDUCACIÓN",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "854909",
+      "name": "OTROS TIPOS DE ENSEÑANZA N.C.P.",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "855000",
+      "name": "ACTIVIDADES DE APOYO A LA ENSEÑANZA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "861010",
+      "name": "ACTIVIDADES DE HOSPITALES Y CLÍNICAS PÚBLICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "861020",
+      "name": "ACTIVIDADES DE HOSPITALES Y CLÍNICAS PRIVADAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "862010",
+      "name": "ACTIVIDADES DE CENTROS DE SALUD MUNICIPALIZADOS (SERVICIOS DE SALUD PÚBLICA)",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "862021",
+      "name": "CENTROS MÉDICOS PRIVADOS (ESTABLECIMIENTOS DE ATENCIÓN AMBULATORIA)",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "862022",
+      "name": "CENTROS DE ATENCIÓN ODONTOLÓGICA PRIVADOS (ESTABLECIMIENTOS DE ATENCIÓN AMBULATORIA)",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "862031",
+      "name": "SERVICIOS DE MÉDICOS PRESTADOS DE FORMA INDEPENDIENTE",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "862032",
+      "name": "SERVICIOS DE ODONTÓLOGOS PRESTADOS DE FORMA INDEPENDIENTE",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "869010",
+      "name": "ACTIVIDADES DE LABORATORIOS CLÍNICOS Y BANCOS DE SANGRE",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "869091",
+      "name": "OTROS SERVICIOS DE ATENCIÓN DE LA SALUD HUMANA PRESTADOS POR EMPRESAS",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "869092",
+      "name": "SERVICIOS PRESTADOS DE FORMA INDEPENDIENTE POR OTROS PROFESIONALES DE LA SALUD",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "871000",
+      "name": "ACTIVIDADES DE ATENCIÓN DE ENFERMERÍA EN INSTITUCIONES",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "872000",
+      "name": "ACTIVIDADES DE ATENCIÓN EN INSTITUCIONES PARA PERSONAS CON DISCAPACIDAD MENTAL Y TOXICÓMANOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "873000",
+      "name": "ACTIVIDADES DE ATENCIÓN EN INSTITUCIONES PARA PERSONAS DE EDAD Y PERSONAS CON DISCAPACIDAD FÍSICA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "879000",
+      "name": "OTRAS ACTIVIDADES DE ATENCIÓN EN INSTITUCIONES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "881000",
+      "name": "ACTIVIDADES DE ASISTENCIA SOCIAL SIN ALOJAMIENTO PARA PERSONAS DE EDAD Y PERSONAS CON DISCAPACIDAD",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "889000",
+      "name": "OTRAS ACTIVIDADES DE ASISTENCIA SOCIAL SIN ALOJAMIENTO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "900001",
+      "name": "SERVICIOS DE PRODUCCIÓN DE OBRAS DE TEATRO, CONCIERTOS, ESPECTÁCULOS DE DANZA, OTRAS PROD. ESCÉNICAS",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "900002",
+      "name": "ACTIVIDADES ARTÍSTICAS REALIZADAS POR BANDAS DE MÚSICA, COMPAÑÍAS DE TEATRO, CIRCENSES Y SIMILARES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "900003",
+      "name": "ACTIVIDADES DE ARTISTAS REALIZADAS DE FORMA INDEPENDIENTE: ACTORES, MÚSICOS, ESCRITORES, ENTRE OTROS",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "900004",
+      "name": "SERVICIOS PRESTADOS POR PERIODISTAS INDEPENDIENTES",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "900009",
+      "name": "OTRAS ACTIVIDADES CREATIVAS, ARTÍSTICAS Y DE ENTRETENIMIENTO N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "910100",
+      "name": "ACTIVIDADES DE BIBLIOTECAS Y ARCHIVOS",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "910200",
+      "name": "ACTIVIDADES DE MUSEOS, GESTIÓN DE LUGARES Y EDIFICIOS HISTÓRICOS",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "910300",
+      "name": "ACTIVIDADES DE JARDINES BOTÁNICOS, ZOOLÓGICOS Y RESERVAS NATURALES",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "920010",
+      "name": "ACTIVIDADES DE CASINOS DE JUEGOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "920090",
+      "name": "OTRAS ACTIVIDADES DE JUEGOS DE AZAR Y APUESTAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "931101",
+      "name": "HIPÓDROMOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931102",
+      "name": "GESTIÓN DE SALAS DE BILLAR; GESTIÓN DE SALAS DE BOLOS (BOWLING)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931109",
+      "name": "GESTIÓN DE OTRAS INSTALACIONES DEPORTIVAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931201",
+      "name": "ACTIVIDADES DE CLUBES DE FÚTBOL AMATEUR Y PROFESIONAL",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931209",
+      "name": "ACTIVIDADES DE OTROS CLUBES DEPORTIVOS N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931901",
+      "name": "PROMOCIÓN Y ORGANIZACIÓN DE COMPETENCIAS DEPORTIVAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "931909",
+      "name": "OTRAS ACTIVIDADES DEPORTIVAS N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "932100",
+      "name": "ACTIVIDADES DE PARQUES DE ATRACCIONES Y PARQUES TEMÁTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "932901",
+      "name": "GESTIÓN DE SALAS DE POOL; GESTIÓN (EXPLOTACIÓN) DE JUEGOS ELECTRÓNICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "932909",
+      "name": "OTRAS ACTIVIDADES DE ESPARCIMIENTO Y RECREATIVAS N.C.P.",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "941100",
+      "name": "ACTIVIDADES DE ASOCIACIONES EMPRESARIALES Y DE EMPLEADORES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "941200",
+      "name": "ACTIVIDADES DE ASOCIACIONES PROFESIONALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "942000",
+      "name": "ACTIVIDADES DE SINDICATOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "949100",
+      "name": "ACTIVIDADES DE ORGANIZACIONES RELIGIOSAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "949200",
+      "name": "ACTIVIDADES DE ORGANIZACIONES POLÍTICAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "949901",
+      "name": "ACTIVIDADES DE CENTROS DE MADRES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "949902",
+      "name": "ACTIVIDADES DE CLUBES SOCIALES",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "949903",
+      "name": "FUNDACIONES Y CORPORACIONES; ASOCIACIONES QUE PROMUEVEN ACTIVIDADES CULTURALES O RECREATIVAS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "949904",
+      "name": "CONSEJO DE ADMINISTRACIÓN DE EDIFICIOS Y CONDOMINIOS",
+      "vat_affected": "NO",
+      "tax_category": "1",
+      "internet_available": "NO"
+    },
+    {
+      "code": "949909",
+      "name": "ACTIVIDADES DE OTRAS ASOCIACIONES N.C.P.",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "951100",
+      "name": "REPARACIÓN DE COMPUTADORES Y EQUIPO PERIFÉRICO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "951200",
+      "name": "REPARACIÓN DE EQUIPO DE COMUNICACIONES (INCLUYE LA REPARACIÓN TELÉFONOS CELULARES)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "952100",
+      "name": "REPARACIÓN DE APARATOS ELECTRÓNICOS DE CONSUMO (INCLUYE APARATOS DE TELEVISIÓN Y RADIO)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "952200",
+      "name": "REPARACIÓN DE APARATOS DE USO DOMÉSTICO, EQUIPO DOMÉSTICO Y DE JARDINERÍA",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "952300",
+      "name": "REPARACIÓN DE CALZADO Y DE ARTÍCULOS DE CUERO",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "952400",
+      "name": "REPARACIÓN DE MUEBLES Y ACCESORIOS DOMÉSTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "952900",
+      "name": "REPARACIÓN DE OTROS EFECTOS PERSONALES Y ENSERES DOMÉSTICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960100",
+      "name": "LAVADO Y LIMPIEZA, INCLUIDA LA LIMPIEZA EN SECO, DE PRODUCTOS TEXTILES Y DE PIEL",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960200",
+      "name": "PELUQUERÍA Y OTROS TRATAMIENTOS DE BELLEZA",
+      "vat_affected": "G",
+      "tax_category": "G",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960310",
+      "name": "SERVICIOS FUNERARIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960320",
+      "name": "SERVICIOS DE CEMENTERIOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960901",
+      "name": "SERVICIOS DE ADIESTRAMIENTO, GUARDERÍA, PELUQUERÍA, PASEO DE MASCOTAS (EXCEPTO ACT. VETERINARIAS)",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960902",
+      "name": "ACTIVIDADES DE SALONES DE MASAJES, BAÑOS TURCOS, SAUNAS, SERVICIO DE BAÑOS PÚBLICOS",
+      "vat_affected": "SI",
+      "tax_category": "1",
+      "internet_available": "SI"
+    },
+    {
+      "code": "960909",
+      "name": "OTRAS ACTIVIDADES DE SERVICIOS PERSONALES N.C.P.",
+      "vat_affected": "NO",
+      "tax_category": "2",
+      "internet_available": "SI"
+    },
+    {
+      "code": "970000",
+      "name": "ACTIVIDADES DE LOS HOGARES COMO EMPLEADORES DE PERSONAL DOMÉSTICO",
+      "vat_affected": "NO",
+      "tax_category": "G",
+      "internet_available": "NO"
+    },
+    {
+      "code": "990000",
+      "name": "ACTIVIDADES DE ORGANIZACIONES Y ÓRGANOS EXTRATERRITORIALES",
+      "vat_affected": "G",
+      "tax_category": "1",
+      "internet_available": "NO"
+    }
+  ]
+}

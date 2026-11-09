@@ -128,7 +128,8 @@ msgstr ""
 
 #. module: l10n_cl_dte_signing
 #: model:ir.model.fields,help:l10n_cl_dte_signing.field_l10n_cl_dte_signing_profile__is_synthetic
-msgid "Identifies a certificate generated locally for the simulated Demo mode."
+msgid ""
+"Identifies a certificate generated locally for the simulated Demo mode."
 msgstr ""
 
 #. module: l10n_cl_dte_signing
@@ -411,8 +412,26 @@ msgstr ""
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
-#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:0
-msgid "A valid Chilean RUT is required."
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "A numeric Certification authentication seed is required."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "A signed electronic book needs one EnvioLibro and one Signature."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "An electronic book must contain one unsigned EnvioLibro."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "An envelope needs one SetDTE and one signature."
 msgstr ""
 
 #. module: l10n_cl_dte_signing
@@ -424,17 +443,144 @@ msgstr ""
 #. module: l10n_cl_dte_signing
 #. odoo-python
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Configure a valid private signing certificate for this environment."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
 msgid "Configure one non-synthetic Certification signing profile."
 msgstr ""
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
 #: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
-msgid "The Certification signing certificate cannot be read."
+msgid "EnvioLibro must have a unique ID."
 msgstr ""
 
 #. module: l10n_cl_dte_signing
 #. odoo-python
-#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:0
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "Select exactly one active signing profile for this environment."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "SetDTE needs a unique ID."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The XML root must be EnvioDTE or EnvioBOLETA."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The certification signing certificate is not valid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The electronic book XML signature is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The electronic book digest algorithm is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The electronic book root element must be LibroCompraVenta."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The electronic book signature contains invalid Base64."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid ""
+"The electronic book signature does not reference its unique EnvioLibro."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The electronic book signature is incomplete."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope XML signature is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope digest algorithm is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope is already signed."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope must have one SetDTE."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope signature algorithms are unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope signature does not reference its unique SetDTE."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope signature has invalid Base64."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The envelope signature is incomplete."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/signature_service.py:0
+msgid "The signing certificate has no private key."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:18
+msgid "A valid Chilean RUT is required."
+msgstr ""
+
+#. module: l10n_cl_dte_signing
+#. odoo-python
+#: code:addons/l10n_cl_dte_signing/services/certificate_identity.py:62
 msgid "The signing certificate must identify one valid Chilean sender RUT."
 msgstr ""

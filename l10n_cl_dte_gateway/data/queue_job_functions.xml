@@ -1,0 +1,16 @@
+<odoo noupdate="1">
+    <record id="queue_job_channel_sii_envelope" model="queue.job.channel">
+        <field name="name">sii_envelope</field>
+        <field name="parent_id" ref="queue_job.channel_root" />
+    </record>
+    <record id="queue_job_function_sii_envelope_send" model="queue.job.function">
+        <field name="model_id" ref="model_l10n_cl_sii_envelope_submission" />
+        <field name="method">_job_send</field>
+        <field name="channel_id" ref="queue_job_channel_sii_envelope" />
+    </record>
+    <record id="queue_job_function_sii_envelope_query" model="queue.job.function">
+        <field name="model_id" ref="model_l10n_cl_sii_envelope_submission" />
+        <field name="method">_job_query</field>
+        <field name="channel_id" ref="queue_job_channel_sii_envelope" />
+    </record>
+</odoo>

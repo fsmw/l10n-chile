@@ -377,3 +377,15 @@ msgstr "Cliente: ingrese la comuna del receptor del DTE."
 #: code:addons/l10n_cl_dte_xml/services/invoice_snapshot.py:0
 msgid "DTE types 33 and 34 require an identified recipient; use the applicable boleta type for an anonymous final consumer."
 msgstr "Los DTE tipos 33 y 34 requieren un receptor identificado; para un consumidor final anónimo, use el tipo de boleta que corresponda."
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE detail discount amount is missing or inconsistent."
+msgstr "Falta el monto de descuento del detalle del DTE o es inconsistente."
+
+#. module: l10n_cl_dte_xml
+#. odoo-python
+#: code:addons/l10n_cl_dte_xml/services/xml_composer.py:0
+msgid "The DTE exempt total differs from its detail and exempt adjustments."
+msgstr "El monto exento del DTE no coincide con sus detalles y ajustes exentos."

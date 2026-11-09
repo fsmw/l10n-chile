@@ -1,6 +1,7 @@
 # generated from manifests external_dependencies
 cryptography
 pdf417gen
+pycurl
 pypdf
 python-stdnum
 requests

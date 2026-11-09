@@ -1,0 +1,227 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="certification_process_view_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.process.list</field>
+        <field name="model">l10n_cl.dte.certification.process</field>
+        <field name="arch" type="xml">
+            <list delete="0">
+                <field name="name" />
+                <field name="process_mode" />
+                <field name="certification_scope" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="sii_application_reference" />
+                <field name="current_stage_code" />
+                <field name="state" />
+                <field name="started_at" />
+            </list>
+        </field>
+    </record>
+    <record id="certification_process_view_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.process.search</field>
+        <field name="model">l10n_cl.dte.certification.process</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="company_id" />
+                <field name="certification_scope" />
+                <field name="sii_application_reference" />
+                <filter
+                    name="active_processes"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
+                <group>
+                    <filter
+                        name="group_by_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        name="group_by_stage"
+                        string="Current Stage"
+                        context="{'group_by': 'current_stage_code'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="certification_process_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.certification.process.form</field>
+        <field name="model">l10n_cl.dte.certification.process</field>
+        <field name="arch" type="xml">
+            <form delete="0">
+                <header>
+                    <button
+                        name="action_record_postulation_acceptance"
+                        type="object"
+                        string="Register SII Postulation Evidence"
+                        invisible="state != 'draft' or process_mode != 'new_postulation'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_record_existing_authorization"
+                        type="object"
+                        string="Record Existing SII Authorization"
+                        invisible="state != 'draft' or process_mode != 'authorized_taxpayer'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_start_assigned_test_set_cycle"
+                        type="object"
+                        string="Start Basic Set Certification Cycle"
+                        class="btn-primary"
+                        invisible="state != 'draft' or not certification_set_ids or process_mode == 'authorized_taxpayer'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_start"
+                        type="object"
+                        string="Start Certification Process"
+                        invisible="state != 'draft' or process_mode == 'assigned_test_set' or (process_mode == 'new_postulation' and certification_set_ids)"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_refresh_readiness"
+                        type="object"
+                        string="Refresh Readiness"
+                        invisible="state in ('draft', 'completed')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_complete_stage"
+                        type="object"
+                        string="Open Current Stage"
+                        invisible="state not in ('in_progress', 'waiting_sii')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_reopen_stage"
+                        type="object"
+                        string="Reopen Rejected Stage"
+                        invisible="state != 'blocked'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_archive"
+                        type="object"
+                        string="Archive"
+                        invisible="not active"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,in_progress,waiting_sii,blocked,completed"
+                    />
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        Local preparation, Demo responses and TrackID do not certify the
+                        taxpayer. Each official SII stage requires its own evidence.
+                    </div>
+                    <div
+                        class="alert alert-info"
+                        role="status"
+                        invisible="process_mode != 'assigned_test_set'"
+                    >
+                        <strong>Continue the SII-assigned test set</strong>
+                        <p>
+                            Start this dossier, open the Assigned Test Set stage, run its
+                            preflight, and register the official SETMAIL result. When SII
+                            accepts the set, Odoo advances the current stage to Simulation Set.
+                            Do not create a new postulation or request another assigned set.
+                        </p>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="environment" />
+                            <field name="process_mode" readonly="started_at" />
+                            <field name="certification_scope" readonly="started_at" />
+                            <field
+                                name="sii_application_reference"
+                                readonly="started_at"
+                                invisible="process_mode != 'new_postulation'"
+                            />
+                        </group>
+                        <group>
+                            <field name="current_stage_code" />
+                            <field name="started_at" />
+                            <field name="completed_at" />
+                            <field name="active" />
+                        </group>
+                    </group>
+                    <group string="Local Readiness Diagnostics">
+                        <field name="readiness_diagnostics" />
+                    </group>
+                    <notebook>
+                        <page string="Official Stages">
+                            <field name="stage_ids" readonly="1">
+                                <list create="0" delete="0">
+                                    <field name="sequence" />
+                                    <field name="code" />
+                                    <field name="state" />
+                                    <field name="external_reference" />
+                                    <field name="submitted_at" />
+                                    <field name="decided_at" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Test Sets">
+                            <field name="certification_set_ids" readonly="1">
+                                <list create="0" delete="0">
+                                    <field name="name" />
+                                    <field name="attention_number" />
+                                    <field name="state" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Evidence">
+                            <field name="evidence_ids" readonly="1">
+                                <list create="0" delete="0">
+                                    <field name="name" />
+                                    <field name="stage_id" />
+                                    <field name="evidence_type" />
+                                    <field name="origin" />
+                                    <field name="sha256" />
+                                    <field name="verification_state" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Issuer Registration">
+                            <group>
+                                <field name="resolution_number" />
+                                <field name="resolution_date" />
+                                <field name="authorized_document_types" />
+                            </group>
+                        </page>
+                        <page string="Audit Events">
+                            <field name="event_ids" readonly="1">
+                                <list create="0" delete="0">
+                                    <field name="occurred_at" />
+                                    <field name="event_code" />
+                                    <field name="stage_id" />
+                                    <field name="user_id" />
+                                    <field name="from_state" />
+                                    <field name="to_state" />
+                                    <field name="external_reference" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="certification_process_action" model="ir.actions.act_window">
+        <field name="name">Certification Process</field>
+        <field name="res_model">l10n_cl.dte.certification.process</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="certification_process_view_search" />
+    </record>
+</odoo>
