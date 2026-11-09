@@ -5,6 +5,10 @@ from unittest.mock import Mock, patch
 
 from odoo.tests import TransactionCase
 
+from odoo.addons.l10n_cl_dte_gateway.services.production_gateway import (
+    SUPPORTED_PRODUCTION_DTE_CODES,
+    ProductionSiiGateway,
+)
 from odoo.addons.l10n_cl_dte_gateway.services.production_transport import (
     ProductionSiiTransport,
 )
@@ -18,6 +22,39 @@ class TestProductionSiiTransport(TransactionCase):
             "production"
         )
         self.assertIsInstance(gateway, ProductionSiiTransport)
+
+    def test_production_document_gateway_is_selected(self):
+        gateway = self.env["l10n_cl.sii.gateway.factory"].get_gateway("production")
+        self.assertIsInstance(gateway, ProductionSiiGateway)
+        self.assertNotIsInstance(
+            gateway, type(self.env["l10n_cl.sii.gateway.factory"].get_gateway("demo"))
+        )
+        self.assertIn("52", SUPPORTED_PRODUCTION_DTE_CODES)
+
+    def test_query_status_maps_one_document_result(self):
+        transport = Mock()
+        transport.query_envelope.return_value = {
+            "state": "processing",
+            "track_id": "12345",
+            "counts": [
+                {
+                    "INFORMADOS": 1,
+                    "ACEPTADOS": 1,
+                    "RECHAZADOS": 0,
+                    "REPAROS": 0,
+                }
+            ],
+        }
+        gateway = ProductionSiiGateway(transport_factory=lambda: transport)
+        company = Mock()
+
+        result = gateway.query_status(
+            company, "production", "12345", "scenario", 1, "submission-1"
+        )
+
+        self.assertEqual(result["state"], "accepted")
+        self.assertFalse(result["is_simulated"])
+        transport.query_envelope.assert_called_once_with(company, "production", "12345")
 
     def test_rut_components_are_normalized_for_the_upload_form(self):
         self.assertEqual(ProductionSiiTransport._rut("60.803.000-k"), ("60803000", "K"))

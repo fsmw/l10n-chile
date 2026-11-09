@@ -1,5 +1,6 @@
-from odoo.exceptions import UserError
-
+from odoo.addons.l10n_cl_dte_gateway.services.production_gateway import (
+    ProductionSiiGateway,
+)
 from odoo.addons.l10n_cl_dte_gateway.services.production_transport import (
     ProductionSiiTransport,
 )
@@ -72,8 +73,10 @@ class TestDemoSiiGateway(GatewayTestCase):
         gateway = self.env["l10n_cl.sii.gateway.factory"].get_gateway("demo")
 
         self.assertIsInstance(gateway, DemoSiiGateway)
-        with self.assertRaises(UserError):
-            self.env["l10n_cl.sii.gateway.factory"].get_gateway("production")
+        self.assertIsInstance(
+            self.env["l10n_cl.sii.gateway.factory"].get_gateway("production"),
+            ProductionSiiGateway,
+        )
 
     def test_production_envelope_still_requires_verified_transport(self):
         self.assertIsInstance(
