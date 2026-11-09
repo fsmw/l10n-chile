@@ -1,6 +1,9 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from threading import RLock
+from time import monotonic
+
 import requests
 from lxml import etree
 
@@ -12,6 +15,17 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import Signature
 from .certification_response_parser import soap_payload, text
 
 BASE_URL = "https://maullin.sii.cl"
+PRODUCTION_BASE_URL = "https://palena.sii.cl"
+_ALLOWED_PATHS = {
+    "/DTEWS/CrSeed.jws",
+    "/DTEWS/GetTokenFromSeed.jws",
+    "/DTEWS/QueryEstUp.jws",
+    "/DTEWS/QueryEstDte.jws",
+    "/cgi_dte/UPL/DTEUpload",
+}
+_TOKEN_TTL_SECONDS = 50 * 60
+_TOKEN_CACHE = {}
+_TOKEN_CACHE_LOCK = RLock()
 SOAP = "http://schemas.xmlsoap.org/soap/envelope/"
 XSI = "http://www.w3.org/2001/XMLSchema-instance"
 
@@ -30,6 +44,9 @@ class SiiTransportError(UserError):
 class CertificationAuthentication:
     """Use SII's certificate-signed seed/token contract on the fixed test host."""
 
+    environment = "certification"
+    base_url = BASE_URL
+
     def __init__(self, session=None):
         self.session = session or requests.Session()
         self.session.trust_env = False
@@ -38,9 +55,13 @@ class CertificationAuthentication:
         )
 
     def post(self, path, *, upload=False, **kwargs):
+        if path not in _ALLOWED_PATHS:
+            raise SiiTransportError(
+                _("The SII operation is not available for this transport.")
+            )
         try:
             with self.session.post(
-                BASE_URL + path,
+                self.base_url + path,
                 timeout=(10, 60),
                 allow_redirects=False,
                 verify=True,
@@ -83,7 +104,12 @@ class CertificationAuthentication:
         body = etree.SubElement(root, f"{{{SOAP}}}Body")
         # The current Certification WSDL bindings use this RPC namespace.
         # The historical PDF examples instead show the endpoint URL.
-        method = etree.SubElement(body, f"{{http://DefaultNamespace}}{operation}")
+        namespace = (
+            "http://DefaultNamespace"
+            if self.environment == "certification"
+            else f"{self.base_url}/DTEWS/{service}.jws"
+        )
+        method = etree.SubElement(body, f"{{{namespace}}}{operation}")
         method.set(
             f"{{{SOAP}}}encodingStyle", "http://schemas.xmlsoap.org/soap/encoding/"
         )
@@ -99,12 +125,48 @@ class CertificationAuthentication:
 
     def token(self, company):
         self.env = company.env
-        SignatureService().certification_signing_identity(company)
+        signature_service = SignatureService()
+        if self.environment == "certification":
+            certificate, _sender = signature_service.certification_signing_identity(
+                company
+            )
+            profile = (
+                company.env["l10n_cl.dte.signing.profile"]
+                .sudo()
+                .search(
+                    [
+                        ("company_id", "=", company.id),
+                        ("sii_environment", "=", self.environment),
+                        ("active", "=", True),
+                    ],
+                    limit=1,
+                )
+            )
+        else:
+            profile, _sender = signature_service.signing_identity(
+                company, self.environment
+            )
+            certificate = profile.sudo().certificate_id
+        key = (
+            company.env.cr.dbname,
+            company.id,
+            self.environment,
+            profile.id,
+            profile.write_date,
+            certificate.id,
+            certificate.write_date,
+            certificate.private_key_id.id,
+            certificate.private_key_id.write_date,
+        )
+        with _TOKEN_CACHE_LOCK:
+            cached = _TOKEN_CACHE.get(key)
+            if cached and cached[0] > monotonic():
+                return cached[1]
         seed_response = soap_payload(self.soap("CrSeed", "getSeed", {}), "getSeed")
         if text(seed_response, "ESTADO") != "00":
             raise SiiTransportError(_("SII did not authorize an authentication seed."))
         signed = SignatureService().sign_authentication_seed(
-            company, "certification", text(seed_response, "SEMILLA")
+            company, self.environment, text(seed_response, "SEMILLA")
         )
         token_response = soap_payload(
             self.soap(
@@ -121,8 +183,17 @@ class CertificationAuthentication:
         token = text(token_response, "TOKEN")
         if not token.isalnum() or len(token) > 64:
             raise SiiTransportError(_("SII returned an invalid authentication token."))
+        with _TOKEN_CACHE_LOCK:
+            _TOKEN_CACHE[key] = (monotonic() + _TOKEN_TTL_SECONDS, token)
         return token
 
     def close(self):
         self.session.cookies.clear()
         self.session.close()
+
+
+class ProductionSiiAuthentication(CertificationAuthentication):
+    """Use the same authenticated SII service contract on the fixed live host."""
+
+    environment = "production"
+    base_url = PRODUCTION_BASE_URL
