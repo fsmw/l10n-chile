@@ -1,0 +1,3 @@
+Pillow
+pdf417gen
+pypdf

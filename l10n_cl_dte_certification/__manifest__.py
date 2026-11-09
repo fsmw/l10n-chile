@@ -18,6 +18,7 @@
         "l10n_cl_dte_gateway",
         "l10n_cl_dte_report",
     ],
+    "external_dependencies": {"python": ["cryptography", "pycurl"]},
     "data": [
         "security/certification_security.xml",
         "security/ir.model.access.csv",

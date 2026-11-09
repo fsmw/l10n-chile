@@ -1,0 +1,4 @@
+cryptography
+pycurl
+python-stdnum
+requests
