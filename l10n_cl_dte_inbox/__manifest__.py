@@ -16,6 +16,7 @@
         "l10n_cl_dte_gateway",
         "l10n_cl_dte_signing",
     ],
+    "external_dependencies": {"python": ["cryptography"]},
     "data": [
         "security/incoming_security.xml",
         "security/ir.model.access.csv",

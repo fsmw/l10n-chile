@@ -7,7 +7,7 @@
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "depends": ["l10n_cl_dte_core", "l10n_cl_dte_caf", "certificate"],
-    "external_dependencies": {"python": ["python-stdnum"]},
+    "external_dependencies": {"python": ["cryptography", "python-stdnum"]},
     "data": [
         "security/ir.model.access.csv",
         "views/signing_profile_views.xml",

@@ -13,7 +13,9 @@
         "l10n_cl_dte_caf",
         "queue_job",
     ],
-    "external_dependencies": {"python": ["pycurl", "requests"]},
+    "external_dependencies": {
+        "python": ["cryptography", "pycurl", "python-stdnum", "requests"]
+    },
     "data": [
         "security/gateway_security.xml",
         "security/ir.model.access.csv",

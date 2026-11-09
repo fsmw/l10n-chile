@@ -16,7 +16,7 @@
         "l10n_cl_dte_boleta",
         "l10n_cl_dte_note",
     ],
-    "external_dependencies": {"python": ["pdf417gen", "pypdf"]},
+    "external_dependencies": {"python": ["Pillow", "pdf417gen", "pypdf"]},
     "data": [
         "security/report_security.xml",
         "security/ir.model.access.csv",
