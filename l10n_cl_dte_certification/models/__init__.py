@@ -6,7 +6,9 @@ from . import certification_interpretation_event
 from . import certification_set_caf
 from . import certification_caf_request
 from . import certification_case
+from . import certification_case_line
 from . import certification_run
+from . import certification_run_result
 from . import electronic_document
 from . import signature_regeneration
 from . import account_move
