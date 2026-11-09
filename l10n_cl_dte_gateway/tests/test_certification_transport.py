@@ -23,6 +23,7 @@ from ..services.certification_response_parser import (
     parse_xml,
 )
 from ..services.certification_transport import CertificationSiiTransport
+from ..services.production_transport import ProductionSiiTransport
 
 
 def soap_response(operation, payload):
@@ -352,8 +353,10 @@ class TestCertificationTransport(SigningTestCase):
         self.assertIsInstance(gateway, CertificationSiiTransport)
         with self.assertRaises(UserError):
             gateway.validate_configuration(self.company, "certification")
-        with self.assertRaises(UserError):
-            self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway("production")
+        self.assertIsInstance(
+            self.env["l10n_cl.sii.gateway.factory"].get_envelope_gateway("production"),
+            ProductionSiiTransport,
+        )
 
     def test_authentication_error_uses_operator_language_without_http_request(self):
         company = self.configure().with_context(lang="es_CL")
