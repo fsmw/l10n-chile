@@ -61,7 +61,7 @@ class ProductionSiiGateway(SiiGateway):
             raise UserError(
                 _(
                     "Production DTE transport currently supports document types "
-                    "33, 56 and 61."
+                    "33, 52, 56 and 61."
                 )
             )
         envelope = SiiEnvelopeComposer().compose(

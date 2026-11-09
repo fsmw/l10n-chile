@@ -13,6 +13,13 @@
                     <field name="result" />
                     <field name="checked_at" />
                 </group>
+                <group string="DTE types the company plans to issue">
+                    <field name="document_scope_ids" nolabel="1">
+                        <list editable="bottom">
+                            <field name="document_code" />
+                        </list>
+                    </field>
+                </group>
                 <group>
                     <button
                         name="action_open_signing_profiles"
@@ -47,4 +54,21 @@
             </form>
         </field>
     </record>
+
+    <record id="action_production_readiness_wizard" model="ir.actions.act_window">
+        <field name="name">Production SII Readiness</field>
+        <field name="res_model">l10n_cl.dte.production.readiness.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="production_readiness_wizard_view_form" />
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_production_readiness"
+        name="Production SII Readiness"
+        parent="l10n_cl_dte_core.menu_dte_configuration"
+        action="action_production_readiness_wizard"
+        sequence="90"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
 </odoo>

@@ -81,11 +81,12 @@ company's registered contact email. An EPR document rejection does not unlock
 the cover-only correction or authorize an automatic resend.
 # Production preparation
 
-A Production SII Readiness guide is being scaffolded for the DTE configuration
-area. It is not available to users until its marked implementation tasks are
-completed. Its intended scope is the company's production signing profile and
-CAF/folio coverage.
+Use **DTE → Configuration → Production SII Readiness** to review the production
+setup for the DTE types the company plans to issue (33, 52, 56 and 61). The
+checklist inspects the SII resolution and sender identity, production signing
+profile, and a valid CAF with an available folio for each selected type.
 
-This review is local only. It does not contact or certify the company with the
-SII, test SII authentication, change the company's environment, reserve folios,
-or issue a DTE. A successful local result is not an SII approval.
+This review is local only. It does not contact or authenticate with the SII,
+change the company's environment, reserve folios, or issue a DTE. A successful
+local result is not an SII approval; perform the separate SII authentication
+and operational checks before production dispatch.
