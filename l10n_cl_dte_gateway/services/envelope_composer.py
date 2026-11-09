@@ -57,23 +57,22 @@ def _schema():
 
 
 class SiiEnvelopeComposer:
-    def validate_sender_identity(self, company, sender_vat, signature_service=None):
-        """Match the configured RutEnvia to the Certification certificate holder."""
-        if company.dte_sii_environment != "certification":
+    def validate_sender_identity(
+        self, company, sender_vat, signature_service=None, environment="certification"
+    ):
+        """Match RutEnvia to the certificate holder for the selected mode."""
+        if company.dte_sii_environment != environment:
             raise ValidationError(
-                _("Envelope sender identity checks require Certification mode.")
+                _("The envelope mode differs from the company's SII mode.")
             )
         signature_service = signature_service or SignatureService()
-        _certificate, certificate_sender_vat = (
-            signature_service.certification_signing_identity(company)
+        _profile, certificate_sender_vat = signature_service.signing_identity(
+            company, environment
         )
         configured_sender_vat = normalize_rut(sender_vat)
         if configured_sender_vat != certificate_sender_vat:
             raise ValidationError(
-                _(
-                    "The configured RutEnvia must match the Certification "
-                    "certificate holder RUT."
-                )
+                _("The configured RutEnvia must match the certificate holder RUT.")
             )
         return configured_sender_vat
 
@@ -89,10 +88,20 @@ class SiiEnvelopeComposer:
             raise ValidationError(_("The SII envelope is missing RutEnvia."))
         return sender_vat
 
-    def compose(self, company, signed_documents, header, signature_service=None):
-        if company.dte_sii_environment != "certification":
+    def compose(
+        self,
+        company,
+        signed_documents,
+        header,
+        signature_service=None,
+        environment="certification",
+    ):
+        if (
+            environment not in {"certification", "production"}
+            or company.dte_sii_environment != environment
+        ):
             raise ValidationError(
-                _("Offline certification envelopes require Certification mode.")
+                _("The envelope mode differs from the company's SII mode.")
             )
         if (
             not isinstance(signed_documents, list)
@@ -105,10 +114,10 @@ class SiiEnvelopeComposer:
             "resolution_number",
             "resolution_date",
         }:
-            raise ValidationError(_("The certification envelope header is incomplete."))
+            raise ValidationError(_("The SII envelope header is incomplete."))
         signature_service = signature_service or SignatureService()
         sender_vat = self.validate_sender_identity(
-            company, header["sender_vat"], signature_service
+            company, header["sender_vat"], signature_service, environment
         )
         dtes = []
         identifiers = set()
@@ -186,14 +195,17 @@ class SiiEnvelopeComposer:
             + b"</SetDTE>",
             1,
         )
-        envelope = signature_service.sign_envelope(company, "certification", unsigned)
+        envelope = signature_service.sign_envelope(company, environment, unsigned)
         self.validate(
-            envelope, expected_count=len(dtes), signature_service=signature_service
+            envelope,
+            expected_count=len(dtes),
+            signature_service=signature_service,
+            environment=environment,
         )
         return envelope
 
     @staticmethod
-    def validate_upload_format(envelope_bytes):
+    def validate_upload_format(envelope_bytes, environment="certification"):
         root = _parse(envelope_bytes)
         lines = envelope_bytes.splitlines()
         if (
@@ -214,14 +226,27 @@ class SiiEnvelopeComposer:
         numbers = root.xpath(
             "./*[local-name()='SetDTE']/*[local-name()='Caratula']/*[local-name()='NroResol']/text()"
         )
-        if numbers != ["0"]:
+        expected_resolution = "0" if environment == "certification" else None
+        if expected_resolution and numbers != [expected_resolution]:
             raise ValidationError(
                 _("Certification envelopes must use resolution number 0.")
             )
+        if environment == "production" and (
+            len(numbers) != 1 or not numbers[0].isdigit()
+        ):
+            raise ValidationError(
+                _("Production envelopes need the configured SII resolution number.")
+            )
         return True
 
-    def validate(self, envelope_bytes, expected_count=None, signature_service=None):
-        self.validate_upload_format(envelope_bytes)
+    def validate(
+        self,
+        envelope_bytes,
+        expected_count=None,
+        signature_service=None,
+        environment="certification",
+    ):
+        self.validate_upload_format(envelope_bytes, environment)
         root = _parse(envelope_bytes)
         if root.tag != _tag("EnvioDTE"):
             raise ValidationError(_("The XML root must be EnvioDTE."))

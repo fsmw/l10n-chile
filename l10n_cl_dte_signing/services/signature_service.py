@@ -29,20 +29,42 @@ class SignatureService:
 
     def certification_signing_identity(self, company):
         """Return the active Certification certificate and its holder RUT."""
+        profile, holder = self.signing_identity(
+            company, "certification", manager_only=True
+        )
+        return profile.sudo().certificate_id, holder
+
+    def signing_identity(self, company, environment, *, manager_only=False):
+        """Return a configured signing identity for one explicit SII mode."""
+        if environment not in {"certification", "production"}:
+            raise ValidationError(_("A real SII environment is required."))
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            raise AccessError(
-                _("Only a DTE manager can inspect the signing certificate.")
+            if (
+                manager_only
+                or environment == "certification"
+                or not company.env.su
+                and not company.env.user.has_group("l10n_cl_dte_core.group_dte_user")
+            ):
+                raise AccessError(
+                    _("Only a DTE manager can use the signing certificate.")
+                )
+        profiles = (
+            company.env["l10n_cl.dte.signing.profile"]
+            .sudo()
+            .search(
+                [
+                    ("company_id", "=", company.id),
+                    ("sii_environment", "=", environment),
+                    ("active", "=", True),
+                ]
             )
-        profiles = company.env["l10n_cl.dte.signing.profile"].search(
-            [
-                ("company_id", "=", company.id),
-                ("sii_environment", "=", "certification"),
-                ("active", "=", True),
-            ]
         )
         if len(profiles) != 1 or profiles.is_synthetic:
             raise UserError(
-                _("Configure one non-synthetic Certification signing profile.")
+                _(
+                    "Configure one non-synthetic signing profile for this "
+                    "SII environment."
+                )
             )
         certificate = profiles.sudo().certificate_id
         if (
@@ -54,16 +76,19 @@ class SignatureService:
             or certificate.private_key_id.public
         ):
             raise UserError(
-                _("Configure a valid Certification certificate with its private key.")
+                _(
+                    "Configure a valid certificate with its private key for "
+                    "this SII environment."
+                )
             )
         try:
             pem = base64.b64decode(certificate.pem_certificate, validate=True)
             parsed = x509.load_pem_x509_certificate(pem)
         except (ValueError, TypeError) as error:
             raise ValidationError(
-                _("The configured Certification certificate is invalid.")
+                _("The configured SII certificate is invalid.")
             ) from error
-        return certificate, certificate_sender_rut(parsed)
+        return profiles, certificate_sender_rut(parsed)
 
     def sign_ted(self, company, caf_authorization, dd_xml):
         """Sign the serialized TED/DD with the private key embedded in its CAF."""
@@ -268,35 +293,18 @@ class SignatureService:
     def sign_authentication_seed(self, company, environment, seed):
         """Sign SII's enveloped getToken request without persisting credentials."""
         self.env = company.env
-        if environment != "certification" or not str(seed).isdigit():
-            raise ValidationError(
-                _("A numeric Certification authentication seed is required.")
-            )
-        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            raise AccessError(_("Only a DTE manager can use the signing certificate."))
-        profiles = company.env["l10n_cl.dte.signing.profile"].search(
-            [
-                ("company_id", "=", company.id),
-                ("sii_environment", "=", environment),
-                ("active", "=", True),
-            ]
-        )
-        if len(profiles) != 1 or profiles.is_synthetic:
-            raise UserError(
-                _("Configure one non-synthetic Certification signing profile.")
-            )
-        certificate = profiles.sudo().certificate_id
         if (
-            not certificate
-            or certificate.company_id != company
-            or not certificate.active
-            or not certificate.is_valid
-            or not certificate.private_key_id
-            or certificate.private_key_id.public
+            environment not in {"certification", "production"}
+            or not str(seed).isdigit()
         ):
-            raise UserError(
-                _("Configure a valid Certification certificate with its private key.")
+            raise ValidationError(
+                _(
+                    "A numeric SII authentication seed and real environment "
+                    "are required."
+                )
             )
+        profile, _holder = self.signing_identity(company, environment)
+        certificate = profile.sudo().certificate_id
         root = etree.Element("getToken")
         etree.SubElement(etree.SubElement(root, "item"), "Semilla").text = str(seed)
         digest = hashes.Hash(hashes.SHA1())

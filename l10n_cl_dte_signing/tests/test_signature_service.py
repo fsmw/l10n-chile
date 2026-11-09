@@ -13,6 +13,16 @@ from .common import SigningTestCase
 
 
 class TestSignatureService(SigningTestCase):
+    def test_production_signing_identity_uses_explicit_profile(self):
+        profile = self.create_signing_profile(environment="production")
+        company = self.company.with_user(self.dte_manager)
+        service = SignatureService()
+
+        selected, holder = service.signing_identity(company, "production")
+
+        self.assertEqual(selected, profile)
+        self.assertEqual(holder, "12345678-5")
+
     def test_dte_user_signs_only_through_privileged_issuance_context(self):
         self.create_signing_profile()
         company = self.company.with_user(self.dte_user)
