@@ -755,6 +755,7 @@ class SiiEnvelopeAttempt(models.Model):
         copy=False,
         groups="l10n_cl_dte_core.group_dte_manager",
     )
+    response_filename = fields.Char(readonly=True, copy=False)
     error_summary = fields.Char(readonly=True)
 
     @api.model_create_multi
@@ -776,12 +777,15 @@ class SiiEnvelopeAttempt(models.Model):
         submission.invalidate_recordset(["attempt_ids"])
         return attempt
 
-    def _complete(self, state, response=None, error_summary=False):
+    def _complete(
+        self, state, response=None, error_summary=False, response_filename=False
+    ):
         self.ensure_one()
         values = {
             "state": state,
             "finished_at": fields.Datetime.now(),
             "error_summary": error_summary,
+            "response_filename": response_filename,
         }
         if response:
             values.update(
