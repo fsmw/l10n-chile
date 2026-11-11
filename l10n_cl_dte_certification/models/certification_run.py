@@ -11,6 +11,7 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_gateway.services.envelope_composer import (
     SiiEnvelopeComposer,
 )
@@ -937,11 +938,8 @@ class DteCertificationRunLine(models.Model):
             raise ValidationError(
                 _("The signed DTE evidence is not valid base64 content.")
             ) from error
-        parser = etree.XMLParser(
-            resolve_entities=False, no_network=True, load_dtd=False
-        )
         try:
-            root = etree.fromstring(signed_xml, parser=parser)
+            root = safe_fromstring(signed_xml)
         except (ValueError, etree.XMLSyntaxError) as error:
             raise ValidationError(
                 _("The signed DTE XML is not well formed.")

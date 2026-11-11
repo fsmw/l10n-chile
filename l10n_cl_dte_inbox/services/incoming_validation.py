@@ -8,6 +8,7 @@ from collections import Counter
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
 from lxml import etree
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_xml_schema
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import _extract_dd_bytes
 from odoo.exceptions import ValidationError
@@ -220,12 +221,9 @@ class IncomingValidationService:
                 )
             )
             return "unsupported"
-        parser = etree.XMLParser(
-            resolve_entities=False, no_network=True, load_dtd=False
-        )
         if path not in self.schemas:
             try:
-                self.schemas[path] = etree.XMLSchema(etree.parse(path, parser))
+                self.schemas[path] = safe_xml_schema(path)
             except (OSError, etree.XMLSyntaxError, etree.XMLSchemaParseError):
                 diagnostics.append(
                     self._error(

@@ -12,6 +12,10 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import (
+    safe_fromstring,
+    safe_xml_schema,
+)
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SignatureService,
 )
@@ -262,9 +266,8 @@ def _parse_document(xml_bytes):
         xml_bytes = xml_bytes.encode("ISO-8859-1")
     if not isinstance(xml_bytes, bytes) or b"<!DOCTYPE" in xml_bytes.upper():
         raise ValidationError(_("DTE XML must be bytes without a DTD."))
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
     try:
-        return etree.fromstring(xml_bytes, parser=parser)
+        return safe_fromstring(xml_bytes)
     except (etree.XMLSyntaxError, ValueError) as error:
         raise ValidationError(_("DTE XML is not well-formed: %s") % error) from error
 
@@ -272,9 +275,8 @@ def _parse_document(xml_bytes):
 @lru_cache(maxsize=1)
 def _dte_schema():
     schema_path = Path(__file__).resolve().parent.parent / "static/xsd/DTE_v10.xsd"
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
     try:
-        return etree.XMLSchema(etree.parse(str(schema_path), parser))
+        return safe_xml_schema(str(schema_path))
     except (OSError, etree.XMLSchemaParseError, etree.XMLSyntaxError) as error:
         raise RuntimeError("The bundled SII DTE v10 XSD could not be loaded") from error
 

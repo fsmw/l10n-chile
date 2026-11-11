@@ -6,6 +6,7 @@
     "author": "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
+    "development_status": "Beta",
     "depends": ["l10n_cl_dte_core"],
     "external_dependencies": {"python": ["cryptography"]},
     "data": [

@@ -15,6 +15,8 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+
 from .certificate_identity import certificate_sender_rut
 
 DS_NAMESPACE = "http://www.w3.org/2000/09/xmldsig#"
@@ -98,9 +100,8 @@ class SignatureService:
         if caf_authorization.state not in {"validated", "exhausted"}:
             raise UserError(_("Only an active CAF can sign a TED."))
         caf_authorization._check_caf_integrity()
-        authorization = etree.fromstring(
-            caf_authorization._decode_content(caf_authorization.caf_file),
-            parser=_safe_xml_parser(),
+        authorization = safe_fromstring(
+            caf_authorization._decode_content(caf_authorization.caf_file)
         )
         private_key = _load_rsa_private_key(authorization.findtext("RSASK"))
         public_key = _load_rsa_public_key(authorization.findtext("RSAPUBK"))
@@ -705,24 +706,16 @@ class SignatureService:
             raise ValidationError(_("The XML RSA public key is invalid.")) from error
 
 
-def _safe_xml_parser(encoding=None):
-    return etree.XMLParser(
-        encoding=encoding,
-        resolve_entities=False,
-        no_network=True,
-        load_dtd=False,
-    )
-
-
 def _parse_xml(xml_bytes):
     if isinstance(xml_bytes, str):
         xml_bytes = xml_bytes.encode("ISO-8859-1")
     if not isinstance(xml_bytes, bytes) or b"<!DOCTYPE" in xml_bytes.upper():
         raise ValidationError(_("The XML input must be bytes without a DTD."))
     has_declaration = xml_bytes.lstrip().startswith(b"<?xml")
-    parser = _safe_xml_parser(encoding=None if has_declaration else "ISO-8859-1")
     try:
-        return etree.fromstring(xml_bytes, parser=parser)
+        return safe_fromstring(
+            xml_bytes, encoding=None if has_declaration else "ISO-8859-1"
+        )
     except (etree.XMLSyntaxError, ValueError) as error:
         raise ValidationError(
             _("The XML input is not well-formed: %s") % error
@@ -738,9 +731,8 @@ def _canonicalize(element, exclusive=False):
         # Direct C14N of a descendant can reset inherited default namespaces
         # in nested nodes. Materialize every in-scope namespace at the subtree
         # apex before canonicalizing, matching standalone XMLDSig processors.
-        standalone = etree.fromstring(
-            etree.tostring(element, encoding="UTF-8", with_tail=False),
-            parser=_safe_xml_parser(),
+        standalone = safe_fromstring(
+            etree.tostring(element, encoding="UTF-8", with_tail=False)
         )
         if not exclusive:
             # Inclusive C14N 1.0 also inherits xml:* attributes from omitted

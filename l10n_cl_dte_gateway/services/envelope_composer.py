@@ -15,6 +15,10 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import (
+    safe_fromstring,
+    safe_xml_schema,
+)
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SII_XML_DECLARATION,
@@ -40,9 +44,8 @@ def _add(parent, name, value):
 def _parse(data):
     if not isinstance(data, bytes) or b"<!DOCTYPE" in data.upper():
         raise ValidationError(_("Envelope XML must be bytes without a DTD."))
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
     try:
-        return etree.fromstring(data, parser=parser)
+        return safe_fromstring(data)
     except (ValueError, etree.XMLSyntaxError) as error:
         raise ValidationError(
             _("The envelope XML is not well formed: %s") % error
@@ -52,8 +55,7 @@ def _parse(data):
 @lru_cache(maxsize=1)
 def _schema():
     path = Path(__file__).resolve().parent.parent / "static/xsd/EnvioDTE_v10.xsd"
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
-    return etree.XMLSchema(etree.parse(str(path), parser))
+    return safe_xml_schema(str(path))
 
 
 class SiiEnvelopeComposer:

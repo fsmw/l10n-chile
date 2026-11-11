@@ -5,6 +5,7 @@ from datetime import date
 
 from lxml import etree
 from odoo import _
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.exceptions import ValidationError
 
 SII_NS = "http://www.sii.cl/SiiDte"
@@ -18,10 +19,7 @@ def _read_xml(content, translate):
     if len(content) > MAX_XML_BYTES:
         raise ValidationError(translate("The incoming XML exceeds 20 MiB."))
     try:
-        root = etree.fromstring(
-            content,
-            etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False),
-        )
+        root = safe_fromstring(content)
     except (etree.XMLSyntaxError, ValueError) as error:
         raise ValidationError(
             translate("The incoming DTE is not well-formed XML.")

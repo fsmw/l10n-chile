@@ -15,21 +15,45 @@ class CertificationCertificateUploadWizard(models.TransientModel):
         string="Certificate File (.pfx / .p12)", required=True, attachment=False
     )
     certificate_filename = fields.Char(string="File Name", required=True)
-    certificate_password = fields.Char()
+    # Never stored: the inverse hands the password straight to
+    # certificate.certificate while the dialog is saved, so no copy is left in
+    # the transient table, even when the upload later fails.
+    certificate_password = fields.Char(
+        compute="_compute_certificate_password",
+        inverse="_inverse_certificate_password",
+        store=False,
+    )
+    certificate_id = fields.Many2one(
+        "certificate.certificate", readonly=True, copy=False
+    )
+
+    def _compute_certificate_password(self):
+        self.certificate_password = False
+
+    def _inverse_certificate_password(self):
+        for wizard in self.filtered("certificate_password"):
+            wizard.certificate_id = wizard._create_certificate(
+                wizard.certificate_password
+            )
+
+    def _create_certificate(self, password):
+        self.ensure_one()
+        self.set_id._check_signing_upload_access()
+        return self.env["certificate.certificate"].create(
+            {
+                "name": self.certificate_filename,
+                "company_id": self.set_id.company_id.id,
+                "content": self.with_context(bin_size=False).certificate_file,
+                "pkcs12_password": password or False,
+            }
+        )
 
     def action_import(self):
         self.ensure_one()
         certification_set = self.set_id
         certification_set._check_signing_upload_access()
         with self.env.cr.savepoint():
-            certificate = self.env["certificate.certificate"].create(
-                {
-                    "name": self.certificate_filename,
-                    "company_id": certification_set.company_id.id,
-                    "content": self.with_context(bin_size=False).certificate_file,
-                    "pkcs12_password": self.certificate_password,
-                }
-            )
+            certificate = self.certificate_id or self._create_certificate(False)
             certification_set.write({"signing_certificate_id": certificate.id})
             self.unlink()
         return {"type": "ir.actions.act_window_close"}
