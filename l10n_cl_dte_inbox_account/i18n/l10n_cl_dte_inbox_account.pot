@@ -773,3 +773,152 @@ msgstr ""
 #: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
 msgid "The item codes resolve to conflicting purchase mappings."
 msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The matching commercial supplier is archived."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid ""
+"The native bill differs from the signed source economics; no rounding "
+"adjustment is allowed."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_mapping.py:0
+msgid "The purchase mapping key is server-owned."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move_line.py:0
+msgid "The signed fiscal details of a bound bill cannot be deleted."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid ""
+"The source fiscal identity does not match the company or stored evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The source must pass local schema, signature and TED validation."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid ""
+"The source, choices or configuration changed. Refresh the preview before "
+"confirming."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The stored XML no longer matches its immutable digest."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/res_partner.py:0
+msgid "The supplier serialization revision is server-owned."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/binding_service.py:0
+msgid "The target bill must belong to the source company."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_incoming_document_uniq
+msgid "This incoming DTE already has a vendor bill link."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_fiscal_identity_uniq
+msgid "This supplier DTE identity already has a vendor bill link."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_mapping_supplier_mapping_key_uniq
+msgid "This supplier mapping key already exists, including archived mappings."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_move_uniq
+msgid "This vendor bill already has an incoming DTE link."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__uom_id
+msgid "Uom"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/policy_service.py:0
+msgid "Use the source company as your active allowed company."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/wizards/incoming_bill_wizard.py:0
+msgid "Use your own preview in its source company."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_document_view_form
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte__account_binding_ids
+msgid "Vendor Bill Links"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox_account.incoming_account_binding_menu
+msgid "Vendor Bills"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_binding.py:0
+msgid "Vendor bill bindings can only be created through confirmation."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_code_type
+msgid "XML Code Type"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_value
+msgid "XML Code or Description"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_uom
+msgid "XML Unit"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__xml_sha256
+msgid "Xml Sha256"
+msgstr ""
