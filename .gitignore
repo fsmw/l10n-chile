@@ -86,3 +86,13 @@ docs/_build/
 
 # OCA rules
 !static/lib/
+
+# Fiscal secrets: digital certificates, private keys and SII CAF files
+*.p12
+*.pfx
+*.pem
+*.key
+*.crt
+*.cer
+CAF*.xml
+FoliosSII*.xml
