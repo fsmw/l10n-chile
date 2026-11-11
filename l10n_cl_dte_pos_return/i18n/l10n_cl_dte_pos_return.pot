@@ -1156,3 +1156,39 @@ msgstr ""
 #: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
 msgid "Use explicit manual refund payments."
 msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Use only negative product lines from one original POS sale."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "accounting VAT"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "accounting net amount"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "return VAT"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "return detail"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "return total"
+msgstr ""
