@@ -3,12 +3,12 @@
 <templates xml:space="preserve">
     <t t-name="l10n_cl_dte_pos_return.DteReturnStatus">
         <section class="o_l10n_cl_dte_pos_return_status" role="status">
-            <div>Electronic credit note 61: <t t-esc="props.status.folio" /></div>
-            <div>Original boleta: <t t-esc="props.status.original_type" /> / <t
-                t-esc="props.status.original_folio"
+            <div>Electronic credit note 61: <t t-out="props.status.folio" /></div>
+            <div>Original boleta: <t t-out="props.status.original_type" /> / <t
+                t-out="props.status.original_folio"
             /></div>
-            <div><t t-esc="props.status.original_date" /> - <t
-                t-esc="props.status.reason"
+            <div><t t-out="props.status.original_date" /> - <t
+                t-out="props.status.reason"
             /></div>
             <div t-if="props.status.status == 'accepted'">Accepted</div>
             <div
