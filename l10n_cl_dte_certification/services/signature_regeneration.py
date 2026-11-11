@@ -11,6 +11,7 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SignatureService,
 )
@@ -173,14 +174,7 @@ class CertificationSignatureRegenerationService:
         previous = document._get_signed_artifact()
         previous.action_verify_integrity()
         xml_bytes = base64.b64decode(previous.content, validate=True)
-        root = etree.fromstring(
-            xml_bytes,
-            etree.XMLParser(
-                resolve_entities=False,
-                no_network=True,
-                load_dtd=False,
-            ),
-        )
+        root = safe_fromstring(xml_bytes)
         fiscal_nodes = root.findall(f"{{{SII_NAMESPACE}}}Documento")
         signatures = root.findall(f"{{{DS_NAMESPACE}}}Signature")
         if len(fiscal_nodes) != 1 or len(signatures) != 1:
@@ -198,9 +192,7 @@ class CertificationSignatureRegenerationService:
             unsigned,
         )
         DteXmlComposer().validate_document(signed)
-        regenerated = etree.fromstring(
-            signed, etree.XMLParser(resolve_entities=False, no_network=True)
-        )
+        regenerated = safe_fromstring(signed)
         if (
             etree.tostring(
                 regenerated.find(f"{{{SII_NAMESPACE}}}Documento"),

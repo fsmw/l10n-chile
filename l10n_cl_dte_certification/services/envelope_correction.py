@@ -5,11 +5,11 @@ import base64
 import hashlib
 
 from cryptography import x509
-from lxml import etree
 
 from odoo import _, fields
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_gateway.services.envelope_composer import (
     SiiEnvelopeComposer,
 )
@@ -90,9 +90,8 @@ class CertificationEnvelopeCorrection:
                 != previous["digest"]
             ):
                 raise UserError(_("The exported envelope fingerprint has changed."))
-            previous_root = etree.fromstring(
-                base64.b64decode(previous["file"], validate=True),
-                parser=etree.XMLParser(resolve_entities=False, no_network=True),
+            previous_root = safe_fromstring(
+                base64.b64decode(previous["file"], validate=True)
             )
             previous_date = previous_root.xpath(
                 "string(./*[local-name()='SetDTE']/*[local-name()='Caratula']"
@@ -105,11 +104,10 @@ class CertificationEnvelopeCorrection:
             documents = [executor.validate_case_result(line) for line in selected]
             document_changes = []
             if proofs[0]["code"] == "EPR":
-                sent = etree.fromstring(
+                sent = safe_fromstring(
                     base64.b64decode(
                         run.envelope_submission_ids[:1].request_xml, validate=True
-                    ),
-                    parser=etree.XMLParser(resolve_entities=False, no_network=True),
+                    )
                 ).xpath("./*[local-name()='SetDTE']/*[local-name()='DTE']")
                 if len(sent) != len(selected):
                     raise UserError(

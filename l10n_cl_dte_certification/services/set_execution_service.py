@@ -8,14 +8,13 @@ import hashlib
 import json
 from decimal import Decimal
 
-from lxml import etree
-
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
     DteIssuanceService,
 )
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
 from .case_generation_service import CertificationCaseGenerationService
@@ -265,10 +264,7 @@ class CertificationSetExecutionService:
                 raise UserError(_("The DTE total differs from the SII expectation."))
         xml_bytes = base64.b64decode(signed.content)
         DteXmlComposer().validate_document(xml_bytes)
-        root = etree.fromstring(
-            xml_bytes,
-            parser=etree.XMLParser(resolve_entities=False, no_network=True),
-        )
+        root = safe_fromstring(xml_bytes)
         prefix = f"{{{SII}}}"
         doc = root.find(prefix + "Documento")
         discount_nodes = doc.findall(prefix + "DscRcgGlobal")

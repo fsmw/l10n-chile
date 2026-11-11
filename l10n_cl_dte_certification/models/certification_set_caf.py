@@ -6,6 +6,8 @@ from lxml import etree
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+
 
 class DteCertificationSetCaf(models.Model):
     _name = "l10n_cl.dte.certification.set.caf"
@@ -79,11 +81,8 @@ class DteCertificationSetCaf(models.Model):
                     _("The CAF document type must be supported by a case in the set.")
                 )
             content = caf._decode_content(caf.caf_file)
-            parser = etree.XMLParser(
-                resolve_entities=False, no_network=True, load_dtd=False
-            )
             try:
-                root = etree.fromstring(content, parser=parser)
+                root = safe_fromstring(content)
                 key_id = root.xpath(
                     "string(./*[local-name()='CAF']/*[local-name()='DA']/*[local-name()='IDK'])"
                 )

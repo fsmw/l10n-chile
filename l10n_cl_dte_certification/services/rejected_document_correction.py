@@ -8,6 +8,7 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
@@ -24,14 +25,8 @@ class RejectedCertificationDocumentCorrection:
         previous.action_verify_integrity()
         if base64.b64decode(previous.content, validate=True) != original:
             raise UserError(_("The current DTE differs from its retained evidence."))
-        root = etree.fromstring(
-            original,
-            etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False),
-        )
-        retained = etree.fromstring(
-            etree.tostring(sent, with_tail=False),
-            etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False),
-        )
+        root = safe_fromstring(original)
+        retained = safe_fromstring(etree.tostring(sent, with_tail=False))
         etree.cleanup_namespaces(root)
         etree.cleanup_namespaces(retained)
         if etree.tostring(root, method="c14n") != etree.tostring(
