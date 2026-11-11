@@ -16,6 +16,7 @@
         "l10n_cl_dte_account",
         "l10n_cl_dte_note",
         "l10n_cl_dte_gateway",
+        "l10n_cl_dte_inbox",
         "l10n_cl_dte_report",
     ],
     "external_dependencies": {"python": ["cryptography", "pycurl"]},
