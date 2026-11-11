@@ -1165,3 +1165,46 @@ msgstr ""
 #: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
 msgid "Use the incoming XML import action."
 msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__valid
+msgid "Valid"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Validate XML"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__validated_at
+msgid "Validated At"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Validation Diagnostics"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__xml_file
+msgid "Xml File"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__xml_sha256
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__xml_sha256
+msgid "Xml Sha256"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__xml_validation_state
+msgid "Xml Validation State"
+msgstr ""
