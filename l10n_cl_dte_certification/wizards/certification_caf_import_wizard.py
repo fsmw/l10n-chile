@@ -12,6 +12,8 @@ from lxml import etree
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+
 
 class CertificationCafImportWizard(models.TransientModel):
     _name = "l10n_cl.dte.certification.caf.import.wizard"
@@ -41,10 +43,7 @@ class CertificationCafImportWizard(models.TransientModel):
                 raise ValueError("CAF too large")
             if b"<!DOCTYPE" in content.upper() or b"<!ENTITY" in content.upper():
                 raise ValueError("DTD is forbidden")
-            parser = etree.XMLParser(
-                resolve_entities=False, no_network=True, load_dtd=False
-            )
-            root = etree.fromstring(content, parser=parser)
+            root = safe_fromstring(content)
             if etree.QName(root).localname != "AUTORIZACION":
                 raise ValueError("CAF authorization data is missing")
             data_nodes = root.xpath("./*[local-name()='CAF']/*[local-name()='DA']")

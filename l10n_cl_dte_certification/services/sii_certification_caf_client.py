@@ -17,6 +17,8 @@ from zoneinfo import ZoneInfo
 from lxml import etree
 from lxml import html as lxml_html
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+
 AUTH_URL = "https://herculesr.sii.cl"
 SESSION_URL = "https://zeusr.sii.cl"
 LOGOUT_URL = SESSION_URL + "/cgi_AUT2000/autTermino.cgi"
@@ -882,9 +884,8 @@ def _parse_caf(content):
     upper = content.upper()
     if b"<!DOCTYPE" in upper or b"<!ENTITY" in upper:
         raise CafRequestRejected("caf_dtd_forbidden")
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
     try:
-        root = etree.fromstring(content, parser=parser)
+        root = safe_fromstring(content)
     except (etree.XMLSyntaxError, ValueError) as error:
         raise CafRequestRejected("caf_xml_invalid") from error
     if etree.QName(root).localname != "AUTORIZACION":
