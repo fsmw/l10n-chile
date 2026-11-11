@@ -776,3 +776,392 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__response_digest
 msgid "Response Digest"
 msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__response_text
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__response_text
+msgid "Response Text"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Response attempts are created by the transmission service."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Response code, text, and contract reference are required."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid ""
+"Response status queries are disabled until the current SII response contract"
+" and transport are verified."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid ""
+"Response transmission is disabled until the current SII response contract "
+"and transport are verified."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Responses"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__result
+msgid "Result"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Review the incoming DTE before preparing a response."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__state__reviewed
+msgid "Reviewed"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__running
+msgid "Running"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__sii_portal
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__channel__sii_portal
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_wizard__channel__sii_portal
+msgid "SII Portal"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__sii_webservice
+msgid "SII Web Service"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__schema_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__schema_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__schema_name
+msgid "Schema Name"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__schema_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__schema_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__schema_state
+msgid "Schema State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_view_form
+msgid "Send Response"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__sending
+msgid "Sending"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signature_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__signature_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__signature_state
+msgid "Signature State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__xml_validation_state__signature_unverified
+msgid "Signature Unverified"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signer_certificate_fingerprint
+msgid "Signer Certificate Fingerprint"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signer_trust_state
+msgid "Signer Trust State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__sii_environment
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__environment
+msgid "Sii Environment"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Source Imports"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__started_at
+msgid "Started At"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__state
+msgid "State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Status"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__submitted
+msgid "Submitted"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__ted_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__ted_state
+msgid "Ted State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE contains an invalid Chilean RUT."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE has no TED."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The DTE receiver does not match the current company."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE signature structure is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED CAF does not match the issuer, type or folio."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED CAF has no authorization data."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED identity does not match the DTE header."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED is missing DD, CAF or FRMT."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED total does not match the DTE header."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The XML signature transform is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope has no Caratula."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope issuer does not match its DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope receiver does not match its DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope signature structure is unsupported."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope subtotals are invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope subtotals do not match its DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming DTE XML is empty."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming DTE source channel is invalid."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming XML exceeds 20 MiB."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The required local XML schema cannot be loaded: %s"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The required local XML schema is unavailable: %s"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The same DTE identity occurs more than once in this file."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "The stored incoming XML digest does not match its evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "The stored incoming record must contain one DTE."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_wizard.py:0
+msgid "The uploaded XML file is not valid Base64."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "This DTE identity already exists with different signed XML."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_incoming_identity_company_environment_uniq
+msgid "This incoming DTE identity is already registered."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_response_response_idempotency_uniq
+msgid "This incoming DTE response is already prepared."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_import_incoming_import_digest_uniq
+msgid "This incoming XML file is already registered."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_incoming_xml_company_environment_uniq
+msgid ""
+"This incoming XML is already registered for the company and environment."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__to_state
+msgid "To State"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_view_form
+msgid ""
+"Transmission and status polling remain disabled until the current official "
+"SII contract is implemented and verified."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__transport_code
+msgid "Transport Code"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signer_trust_state__unverified
+msgid "Trust Not Verified"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__unknown
+msgid "Unknown"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__unsupported
+msgid "Unsupported"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "Use the incoming XML import action."
+msgstr ""
