@@ -388,3 +388,391 @@ msgstr ""
 #: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
 msgid "Incoming DTE events are created by workflow actions."
 msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE evidence is immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE evidence must be retained."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response attempts are immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response attempts must be retained."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response history is immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response history must be retained."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE responses are created from a reviewed document."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.actions.act_window,name:l10n_cl_dte_inbox.incoming_document_action
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox.menu_incoming_dte
+msgid "Incoming DTEs"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTEs are registered through the XML import action."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__incoming_document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__incoming_document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__incoming_document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__incoming_document_id
+msgid "Incoming Document"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "Incoming XML"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_wizard.py:0
+msgid "Incoming XML Import Result"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.actions.act_window,name:l10n_cl_dte_inbox.incoming_import_action
+msgid "Incoming XML Imports"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "Incoming import evidence is immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "Incoming import evidence must be retained."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_line.py:0
+msgid "Incoming import results are immutable."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_line.py:0
+msgid "Incoming import results must be retained."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__xml_validation_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__result__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__invalid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__invalid
+msgid "Invalid"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Invalid Files"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__issue_date
+msgid "Issue Date"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__issuer_vat
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__issuer_vat
+msgid "Issuer Vat"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__line_ids
+msgid "Line"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_form
+msgid ""
+"Local signature verification checks XML integrity. Certificate trust, signer"
+" authorization and SII acceptance are not established by this import."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid ""
+"Local validation does not establish certificate trust, signer authorization "
+"or SII acceptance. Human review does not accept a DTE automatically."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__xml_validation_state__validated
+msgid "Locally Validated"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Mark Reviewed"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_form
+msgid ""
+"No DTE was imported from this file. Review the file and document diagnostics"
+" below."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__not_checked
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__not_checked
+msgid "Not Checked"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__occurred_at
+msgid "Occurred At"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "One local XML signature reference is required."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Only a DTE manager can append incoming DTE events."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_wizard.py:0
+msgid "Only a DTE manager can import incoming DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Only a DTE manager can prepare an incoming DTE response."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Only a DTE manager can review incoming DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Only a DTE manager can validate incoming DTEs."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Only a reviewed incoming DTE can have a response."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Only received DTEs can be marked as reviewed."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__operation
+msgid "Operation"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__operator_imported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__channel__operator_imported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_wizard__channel__operator_imported
+msgid "Operator Import"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_form
+msgid "Original File"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Original XML"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__outcome_unknown
+msgid "Outcome Unknown"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__payload_digest
+msgid "Payload Digest"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__pending
+msgid "Pending"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_wizard_view_form
+msgid "Prepare"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_response_wizard
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_wizard_view_form
+msgid "Prepare Incoming DTE Response"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Prepare Response"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__sii_environment__production
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__environment__production
+msgid "Production"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_view_form
+msgid "Query Status"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__raw_response
+msgid "Raw Response"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__raw_xml
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__raw_xml
+msgid "Raw Xml"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__state__received
+msgid "Received"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__received_at
+msgid "Received At"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__receiver_vat
+msgid "Receiver Vat"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__request_digest
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__request_digest
+msgid "Request Digest"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__response_ids
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__response_id
+msgid "Response"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__response_code
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__response_code
+msgid "Response Code"
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__response_digest
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__response_digest
+msgid "Response Digest"
+msgstr ""
