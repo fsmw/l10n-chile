@@ -9,6 +9,7 @@ from lxml import etree
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import SII_NAMESPACE
 
 from ..services.note_reference_service import NoteReferenceService
@@ -41,12 +42,7 @@ class ElectronicSubmission(models.Model):
             )
         snapshot = NoteReferenceService(self.env).read_original_snapshot(document)
         try:
-            root = etree.fromstring(
-                request_bytes,
-                parser=etree.XMLParser(
-                    resolve_entities=False, no_network=True, load_dtd=False
-                ),
-            )
+            root = safe_fromstring(request_bytes)
         except etree.XMLSyntaxError as error:
             raise ValidationError(
                 _("The DTE note request XML is malformed.")

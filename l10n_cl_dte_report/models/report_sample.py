@@ -15,6 +15,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_xml_composer import (
     BoletaXmlComposer,
 )
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_note.services.note_xml_composer import NoteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
@@ -167,10 +168,7 @@ class DteReportSample(models.Model):
         else:
             composer = DteXmlComposer()
         composer.validate_document(content)
-        root = etree.fromstring(
-            content,
-            etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False),
-        )
+        root = safe_fromstring(content)
         namespace = {"sii": "http://www.sii.cl/SiiDte"}
         header = root.find("sii:Documento/sii:Encabezado/sii:IdDoc", namespace)
         if header is None or (
@@ -235,9 +233,8 @@ class DteReportSample(models.Model):
 
 def _extract_ted_bytes(signed_xml):
     """Return the literal TED bytes so the barcode never reserializes the DTE."""
-    parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
     try:
-        root = etree.fromstring(signed_xml, parser)
+        root = safe_fromstring(signed_xml)
     except (etree.XMLSyntaxError, ValueError) as error:
         raise ValidationError(_("The signed DTE XML is malformed.")) from error
     if etree.QName(root).localname != "DTE":
