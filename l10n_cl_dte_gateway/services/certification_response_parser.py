@@ -8,6 +8,7 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 
 
@@ -18,10 +19,7 @@ def parse_xml(content):
             _("The SII XML response is empty or exceeds the allowed size.")
         )
     try:
-        root = etree.fromstring(
-            content,
-            etree.XMLParser(resolve_entities=False, load_dtd=False, no_network=True),
-        )
+        root = safe_fromstring(content)
     except etree.XMLSyntaxError as error:
         raise ValidationError(_("The SII response is not valid XML.")) from error
     if root.getroottree().docinfo.doctype:
