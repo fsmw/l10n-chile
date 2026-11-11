@@ -10,6 +10,10 @@ from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import file_path
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import (
+    safe_fromstring,
+    safe_xml_schema,
+)
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
@@ -164,7 +168,7 @@ class BoletaXmlComposer:
         """Validate boleta semantics, official boleta XSD, and signatures."""
         schema = _boleta_schema()
         try:
-            root = etree.fromstring(xml_bytes, parser=_safe_xml_parser())
+            root = safe_fromstring(xml_bytes)
             schema.assertValid(root)
         except etree.DocumentInvalid as error:
             raise ValidationError(
@@ -226,15 +230,9 @@ def _extract_caf(caf_bytes):
     if not match:
         raise ValidationError(_("The validated CAF does not contain a CAF element."))
     try:
-        return etree.fromstring(match.group(0), parser=_safe_xml_parser())
+        return safe_fromstring(match.group(0))
     except etree.XMLSyntaxError as error:
         raise ValidationError(_("The CAF XML is malformed.")) from error
-
-
-def _safe_xml_parser():
-    return etree.XMLParser(
-        resolve_entities=False, no_network=True, remove_blank_text=False
-    )
 
 
 def _boleta_schema():
@@ -245,7 +243,7 @@ def _boleta_schema():
             _("The official boleta schema is not available.")
         ) from error
     try:
-        return etree.XMLSchema(etree.parse(schema_path, parser=_safe_xml_parser()))
+        return safe_xml_schema(schema_path)
     except (OSError, etree.XMLSchemaParseError, etree.XMLSyntaxError) as error:
         raise ValidationError(
             _("The official boleta schema cannot be loaded.")

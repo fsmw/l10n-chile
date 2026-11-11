@@ -11,6 +11,8 @@ from PIL import Image
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+
 from ..models.report_sample import _extract_ted_bytes
 
 # pdf417gen 0.8.1 uses Pillow's Resampling enum, while Odoo 18's supported
@@ -51,12 +53,7 @@ class ReportDtePrintSample(models.AbstractModel):
             content = sample._get_signed_xml()
             ted = _extract_ted_bytes(content)
             try:
-                root = etree.fromstring(
-                    content,
-                    etree.XMLParser(
-                        resolve_entities=False, no_network=True, load_dtd=False
-                    ),
-                )
+                root = safe_fromstring(content)
                 image = render_image(
                     encode(ted.decode("ascii"), columns=18, security_level=4),
                     scale=3,

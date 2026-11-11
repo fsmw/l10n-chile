@@ -6,6 +6,7 @@ from lxml import etree
 from odoo import _
 from odoo.exceptions import ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
@@ -163,12 +164,7 @@ class NoteXmlComposer:
         if not isinstance(xml_bytes, bytes) or b"<!DOCTYPE" in xml_bytes.upper():
             raise ValidationError(_("DTE note XML must be bytes without a DTD."))
         try:
-            root = etree.fromstring(
-                xml_bytes,
-                parser=etree.XMLParser(
-                    resolve_entities=False, no_network=True, load_dtd=False
-                ),
-            )
+            root = safe_fromstring(xml_bytes)
             _dte_schema().assertValid(root)
         except etree.DocumentInvalid as error:
             raise ValidationError(
