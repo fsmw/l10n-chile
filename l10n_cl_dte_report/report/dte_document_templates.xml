@@ -55,7 +55,7 @@
                                 <t t-set="values" t-value="sample_data[sample.id]" />
                                 <h2
                                     t-if="values['document_code'] not in ('61', '56')"
-                                    t-esc="sample.name"
+                                    t-out="sample.name"
                                 />
                                 <p
                                     t-if="values['document_code'] == '39'"
@@ -73,30 +73,30 @@
                                     <tbody>
                                         <tr>
                                             <th>Tipo de documento</th>
-                                            <td t-esc="values['document_code']" />
+                                            <td t-out="values['document_code']" />
                                             <th>Folio</th>
-                                            <td t-esc="values['folio']" />
+                                            <td t-out="values['folio']" />
                                         </tr>
                                         <tr>
                                             <th>Fecha</th>
-                                            <td t-esc="values['issue_date']" />
+                                            <td t-out="values['issue_date']" />
                                             <th>Total</th>
-                                            <td t-esc="values['total']" />
+                                            <td t-out="values['total']" />
                                         </tr>
                                         <tr>
                                             <th>Emisor</th>
                                             <td colspan="3"><span
-                                                t-esc="values['issuer_name']"
+                                                t-out="values['issuer_name']"
                                             /> — <span
-                                                t-esc="values['issuer_vat']"
+                                                t-out="values['issuer_vat']"
                                             /></td>
                                         </tr>
                                         <tr>
                                             <th>Receptor</th>
                                             <td colspan="3"><span
-                                                t-esc="values['receiver_name']"
+                                                t-out="values['receiver_name']"
                                             /> — <span
-                                                t-esc="values['receiver_vat']"
+                                                t-out="values['receiver_vat']"
                                             /></td>
                                         </tr>
                                     </tbody>
@@ -162,11 +162,11 @@
                                             </td>
                                             <td
                                                 class="text-end"
-                                                t-esc="line['quantity']"
+                                                t-out="line['quantity']"
                                             />
                                             <td
                                                 class="text-end"
-                                                t-esc="line['amount']"
+                                                t-out="line['amount']"
                                             />
                                         </tr>
                                     </tbody>
