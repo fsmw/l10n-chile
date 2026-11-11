@@ -386,3 +386,388 @@ msgstr ""
 #: code:addons/l10n_cl_dte_pos_return/models/pos_pack_operation_lot.py:0
 msgid "Fiscal POS lot and serial identities are immutable after issuance."
 msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid ""
+"Fiscal POS mapping evidence can be assigned only once to its own document."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_payment.py:0
+msgid "Fiscal POS payments cannot change after issuance."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Fiscal POS return bindings are assigned only by the server."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order_line.py:0
+msgid "Fiscal return line mapping cannot be changed by direct RPC."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order_line.py:0
+msgid "Fiscal return line mapping is assigned only by the server."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Fiscal review required"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_return_operation__cancel
+msgid "Full cancellation"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_return_operation__return
+msgid "Goods return"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_l10n_cl_electronic_artifact
+msgid "Immutable DTE Evidence Artifact"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_return_accounting_mode__per_order_invoice
+msgid "Invoice per order"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "Legacy POS line mapping is ambiguous; no fiscal identity was guessed."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "Legacy fiscal details cannot be matched uniquely to the POS sale."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Manual refund required"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_pos_mapping_state__mapped
+msgid "Mapped"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Mixed sales and returns are not supported in one fiscal order."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/account_move_line.py:0
+msgid "Native fiscal POS invoice line bindings cannot be forged."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_pos_mapping_state__unmapped
+msgid "Not mapped"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Online return validation required"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "Only a DTE manager can prepare legacy fiscal line mapping."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Open a POS session with Chilean returns enabled first."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Operational refund receipt"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_accounting_mode
+msgid "Original Accounting Mode"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_target_document_id
+msgid "Original Boleta"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order_line__dte_return_origin_line_number
+msgid "Original Fiscal Detail"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order_line__dte_return_map_artifact_id
+msgid "Original Line Mapping"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_pos_order_form_dte_return
+msgid "Original Sale and Credit Note"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Original boleta:"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_bank_statement_line__dte_pos_return_order_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_move__dte_pos_return_order_id
+msgid "POS Credit Source"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_move_line__dte_pos_order_line_id
+msgid "POS Fiscal Source Line"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__l10n_cl_electronic_artifact__role__pos_line_mapping
+msgid "POS Line Mapping"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_document__pos_line_mapping_artifact_id
+msgid "POS Line Mapping Evidence"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_document__note_pos_return_order_id
+msgid "POS Return"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_electronic_document_form_pos_return
+msgid "POS Return Evidence"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_res_config_settings_dte_pos_return
+msgid "POS Return Policy"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_company_form_dte_pos_return
+msgid "POS Returns"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "POS fiscal line amounts differ from the original sale."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "POS fiscal receipts require POS and DTE permissions."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "POS operators may serialize only verified POS fiscal sources."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns currently require CLP and Demo evidence."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns do not support cash rounding."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns require both POS User and DTE User permissions."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "POS returns support only credit note type 61."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_order
+msgid "Point of Sale Orders"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_session
+msgid "Point of Sale Session"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_pos_order_form_dte_return
+msgid "Prepare Legacy Line Mapping"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid ""
+"Prepare an unambiguous original POS fiscal line mapping before refunding."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_artifact.py:0
+msgid ""
+"Preserve immutable POS fiscal mapping evidence before removing this addon."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Provide exactly one original serial for each returned unit."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "Provide one persisted POS order UUID."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Queued or awaiting fiscal confirmation"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Refund not confirmed"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Refund payments must equal the exact native credit total."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_reason
+msgid "Return Reason"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Return could not be prepared"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "Return details must have positive fiscal credit amounts."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return lot identities must be new records linked to the original sale."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return only lot or serial identities from the original POS line."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Return only products from one original sale in this order."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return only sales of the current POS company and currency."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Revalidate the return: the original adjustment capacity changed."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_artifact__role
+msgid "Role"
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Select a paid POS sale with one accepted original boleta 39 or 41."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Select between 1 and 1000 original POS details."
+msgstr ""
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid ""
+"Select each original fiscal product line once with a positive quantity."
+msgstr ""
