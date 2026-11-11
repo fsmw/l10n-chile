@@ -5,11 +5,10 @@
 import base64
 import hashlib
 
-from lxml import etree
-
 from odoo import _, fields
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_gateway.services.envelope_composer import (
     SiiEnvelopeComposer,
 )
@@ -218,7 +217,7 @@ class OfficialCertificationSetPreflight:
         try:
             xml_bytes = executor.validate_case_result(line)
             SignatureService().verify_signature(xml_bytes, sii_standalone=True)
-            root = etree.fromstring(xml_bytes)
+            root = safe_fromstring(xml_bytes)
             if not OfficialCertificationSetPreflight._signed_parties_match(root, line):
                 raise UserError(
                     _("The signed DTE parties differ from the certification snapshot.")
@@ -342,7 +341,7 @@ class OfficialCertificationSetPreflight:
             envelope_bytes = base64.b64decode(run.envelope_file, validate=True)
             lines = run.line_ids.sorted("sequence")
             SiiEnvelopeComposer().validate(envelope_bytes, expected_count=len(lines))
-            envelope_root = etree.fromstring(envelope_bytes)
+            envelope_root = safe_fromstring(envelope_bytes)
             cover = envelope_root.xpath(
                 "./*[local-name()='SetDTE']/*[local-name()='Caratula']"
             )
@@ -375,7 +374,7 @@ class OfficialCertificationSetPreflight:
             )
             for line, envelope_dte in zip(lines, dtes, strict=True):
                 signed = CertificationSetExecutionService().validate_case_result(line)
-                signed_root = etree.fromstring(signed)
+                signed_root = safe_fromstring(signed)
                 signed_doc = signed_root.xpath("./*[local-name()='Documento']")
                 envelope_doc = envelope_dte.xpath("./*[local-name()='Documento']")
                 if len(signed_doc) != 1 or len(envelope_doc) != 1:
