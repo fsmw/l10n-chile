@@ -4,7 +4,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
     DteIssuanceService,
 )
 
