@@ -23,11 +23,19 @@ class TestTypedSourceRegistry(TransactionCase):
             lambda self_: dict(mapping),
         )
 
-    def test_base_registry_is_empty(self):
-        self.assertEqual(self.source_registry._dte_source_relations(), {})
+    def test_installed_relations_are_all_valid(self):
+        # Addons that are installed register through super(); whatever they
+        # register must be consistent, with or without any addon installed.
+        relations = self.source_registry._dte_source_relations()
+        self.assertIsInstance(relations, dict)
         self.assertEqual(
-            self.source_registry._dte_source_relation_fields(), frozenset()
+            self.source_registry._dte_source_relation_fields(),
+            frozenset(relations.values()),
         )
+        for source_model, field_name in relations.items():
+            self.assertEqual(
+                self.source_registry._dte_source_relation(source_model), field_name
+            )
 
     def test_registered_model_resolves_to_its_field(self):
         # res.company/company_id stands in for a real source relation.
@@ -71,8 +79,12 @@ class TestTypedSourceRegistry(TransactionCase):
             with self.assertRaises(AccessError):
                 get_public_method(self.source_registry, method)
 
-    def test_registry_does_not_share_state_between_environments(self):
-        first = self.env[REGISTRY]
+    def test_patched_registry_leaves_no_state_behind(self):
+        before = self.source_registry._dte_source_relations()
         with self._relations({"res.company": "company_id"}):
-            self.assertEqual(first._dte_source_relation("res.company"), "company_id")
-        self.assertEqual(first._dte_source_relations(), {})
+            self.assertEqual(
+                self.source_registry._dte_source_relation("res.company"),
+                "company_id",
+            )
+        self.assertEqual(self.source_registry._dte_source_relations(), before)
+        self.assertNotIn("res.company", before)
