@@ -8,11 +8,11 @@ from unittest.mock import patch
 
 from odoo import Command
 
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
-    DteIssuanceService,
-)
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
     BoletaSnapshotService,
+)
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
+    DteIssuanceService,
 )
 from odoo.addons.l10n_cl_dte_note.services.note_snapshot import NoteSnapshotService
 from odoo.addons.l10n_cl_dte_pos.services.pos_boleta_snapshot import (

@@ -11,7 +11,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
     DteIssuanceAdapter,
 )
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
     DteIssuanceService,
 )
 from odoo.addons.l10n_cl_dte_pos.services.pos_boleta_issuance_adapter import (
