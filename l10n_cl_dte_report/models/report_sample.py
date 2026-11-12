@@ -98,11 +98,13 @@ class DteReportSample(models.Model):
                 raise ValidationError(_("Select one existing electronic document."))
             if document.company_id not in self.env.companies:
                 raise AccessError(_("You cannot create samples for this company."))
-            if document.document_code not in _SUPPORTED_CODES:
+            if document.document_code not in self._supported_document_codes():
                 raise UserError(
                     _("Printed samples are not yet supported for this DTE type.")
                 )
-            if document.preparation_state != "queued":
+            if document.preparation_state not in self._printable_states(
+                document.document_code
+            ):
                 raise ValidationError(
                     _("A print sample requires a prepared and signed DTE.")
                 )
@@ -189,13 +191,27 @@ class DteReportSample(models.Model):
             self
         )
 
+    @api.model
+    def _supported_document_codes(self):
+        """Return the DTE codes that can have a print sample."""
+        return _SUPPORTED_CODES
+
+    @api.model
+    def _printable_states(self, document_code):
+        """Return the preparation states in which a DTE can have a print sample."""
+        return {"queued"}
+
+    def _print_report_action(self, document_code):
+        """Return the report action that renders the sample of a DTE code."""
+        return self.env.ref("l10n_cl_dte_report.action_dte_print_sample")
+
     def action_generate_pdf(self):
         self.ensure_one()
         self._check_manager()
         if self.state != "draft":
             raise UserError(_("This print sample has already been generated."))
         self._get_signed_xml()
-        report = self.env.ref("l10n_cl_dte_report.action_dte_print_sample")
+        report = self._print_report_action(self.document_code)
         pdf, _content_type = self.env["ir.actions.report"]._render_qweb_pdf(
             report.id, res_ids=self.ids
         )
