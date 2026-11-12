@@ -37,6 +37,77 @@ class DteDispatchXmlComposer(models.AbstractModel):
     _description = "DTE 52 XML composer"
 
     @api.model
+    def build_snapshot(
+        self, dispatch, folio, issuer, receiver, timestamp, transport=None
+    ):
+        """Return the plain-data snapshot of a dispatch for composition.
+
+        The snapshot holds every value the XML and the TED need, so the
+        serializer below never reads records.
+        """
+        lines = self._sorted_lines(dispatch)
+        line_snapshots = [self._line_snapshot(line) for line in lines]
+        return {
+            "document_code": DOCUMENT_CODE,
+            "folio": int(folio),
+            "company_id": dispatch.company_id.id,
+            "issue_date": dispatch.issue_date.isoformat(),
+            "document_timestamp": timestamp,
+            "ted_timestamp": timestamp,
+            "transfer_indicator": dispatch.transfer_indicator,
+            "issuer": dict(issuer),
+            "receiver": dict(receiver),
+            "transport": dict(transport or {}),
+            "lines": line_snapshots,
+            "totals": self.compute_totals(line_snapshots),
+        }
+
+    @api.model
+    def serialize_unsigned_guide(self, snapshot):
+        """Return the unsigned DTE 52 XML bytes (ISO-8859-1) of a snapshot.
+
+        This is a pure function of the snapshot. ``snapshot["ted_xml"]``, when
+        present, is the CAF-signed TED inserted before the signature timestamp.
+        """
+        root = etree.Element(
+            f"{{{SII_NAMESPACE}}}DTE", nsmap={None: SII_NAMESPACE}, version="1.0"
+        )
+        document = etree.SubElement(
+            root,
+            f"{{{SII_NAMESPACE}}}Documento",
+            ID=f"F{snapshot['folio']:010d}T{DOCUMENT_CODE}",
+        )
+        header = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Encabezado")
+        self._append_id_doc(header, snapshot)
+        self._append_issuer(header, snapshot["issuer"])
+        self._append_receiver(header, snapshot["receiver"], snapshot["transport"])
+        self._append_totals(header, snapshot["totals"])
+        for index, line in enumerate(snapshot["lines"], start=1):
+            self._append_line(document, index, line)
+        if snapshot.get("ted_xml"):
+            etree.SubElement(document, f"{{{SII_NAMESPACE}}}{TED_PLACEHOLDER}")
+        _text(document, "TmstFirma", snapshot["document_timestamp"])
+        xml_bytes = etree.tostring(
+            root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=True
+        )
+        if snapshot.get("ted_xml"):
+            xml_bytes = xml_bytes.replace(
+                f"<{TED_PLACEHOLDER}/>".encode(), snapshot["ted_xml"]
+            )
+        return xml_bytes
+
+    @api.model
+    def compose_unsigned_guide(
+        self, dispatch, folio, issuer, receiver, timestamp, transport=None, ted_xml=None
+    ):
+        """Return the unsigned guide XML for a dispatch record (see the snapshot)."""
+        snapshot = self.build_snapshot(
+            dispatch, folio, issuer, receiver, timestamp, transport=transport
+        )
+        snapshot["ted_xml"] = ted_xml
+        return self.serialize_unsigned_guide(snapshot)
+
+    @api.model
     def compose_signed_guide(
         self,
         dispatch,
@@ -54,86 +125,59 @@ class DteDispatchXmlComposer(models.AbstractModel):
         before the signature timestamp. ``signing_environment`` is the
         signature service environment name, chosen by the caller.
         """
-        lines = self._sorted_lines(dispatch)
-        ted_xml = DteTedComposer().compose_ted(
-            self._ted_snapshot(dispatch, folio, issuer, receiver, timestamp, lines),
-            caf_authorization,
+        snapshot = self.build_snapshot(
+            dispatch, folio, issuer, receiver, timestamp, transport=transport
         )
-        unsigned_xml = self.compose_unsigned_guide(
-            dispatch,
-            folio,
-            issuer,
-            receiver,
-            timestamp,
-            transport=transport,
-            ted_xml=ted_xml,
-        )
+        snapshot["ted_xml"] = DteTedComposer().compose_ted(snapshot, caf_authorization)
+        unsigned_xml = self.serialize_unsigned_guide(snapshot)
         return SignatureService().sign_document(
             dispatch.company_id, signing_environment, unsigned_xml
         )
 
     @api.model
-    def compose_unsigned_guide(
-        self, dispatch, folio, issuer, receiver, timestamp, transport=None, ted_xml=None
-    ):
-        """Return the unsigned DTE 52 XML bytes (ISO-8859-1) for a dispatch.
+    def compute_totals(self, line_snapshots):
+        """Sum taxable lines as net and exempt lines as exempt.
 
-        ``issuer``, ``receiver`` and ``transport`` are plain mappings, so the
-        caller decides where the values come from. ``transport`` adds the
-        Transporte block only when it is not empty. ``ted_xml`` is the CAF-signed
-        TED; without it the document is not schema-valid.
+        Unvalued lines add nothing to the totals.
         """
-        root = etree.Element(
-            f"{{{SII_NAMESPACE}}}DTE", nsmap={None: SII_NAMESPACE}, version="1.0"
+        net = sum(
+            self._line_amount(line)
+            for line in line_snapshots
+            if line["tax_category"] == TAXABLE
         )
-        document = etree.SubElement(
-            root,
-            f"{{{SII_NAMESPACE}}}Documento",
-            ID=f"F{int(folio):010d}T{DOCUMENT_CODE}",
+        exempt = sum(
+            self._line_amount(line)
+            for line in line_snapshots
+            if line["tax_category"] == EXEMPT
         )
-        header = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Encabezado")
-        self._append_id_doc(header, dispatch, folio)
-        self._append_issuer(header, issuer)
-        self._append_receiver(header, receiver, transport)
-        self._append_totals(header, dispatch.line_ids)
-        for index, line in enumerate(self._sorted_lines(dispatch), start=1):
-            self._append_line(document, index, line)
-        if ted_xml:
-            etree.SubElement(document, f"{{{SII_NAMESPACE}}}{TED_PLACEHOLDER}")
-        _text(document, "TmstFirma", timestamp)
-        xml_bytes = etree.tostring(
-            root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=True
-        )
-        if ted_xml:
-            xml_bytes = xml_bytes.replace(f"<{TED_PLACEHOLDER}/>".encode(), ted_xml)
-        return xml_bytes
+        vat = round(net * VAT_RATE_PERCENT / 100)
+        return {"net": net, "exempt": exempt, "vat": vat, "total": net + exempt + vat}
 
     @api.model
     def _sorted_lines(self, dispatch):
         return dispatch.line_ids.sorted(lambda line: (line.sequence, line.id))
 
     @api.model
-    def _ted_snapshot(self, dispatch, folio, issuer, receiver, timestamp, lines):
-        totals = self._compute_totals(lines)
+    def _line_snapshot(self, line):
         return {
-            "document_code": DOCUMENT_CODE,
-            "folio": int(folio),
-            "company_id": dispatch.company_id.id,
-            "issuer": {"vat": issuer["vat"]},
-            "receiver": {"vat": receiver["vat"], "name": receiver["name"]},
-            "issue_date": dispatch.issue_date.isoformat(),
-            "totals": {"total": totals["total"]},
-            "lines": [{"name": lines[0].description}],
-            "ted_timestamp": timestamp,
+            "name": line.description,
+            "quantity": line.quantity,
+            "unit_price": line.unit_price,
+            "uom": line.uom_id.name,
+            "tax_category": line.tax_category,
         }
 
     @api.model
-    def _append_id_doc(self, header, dispatch, folio):
+    def _line_amount(self, line):
+        return round(line["quantity"] * line["unit_price"])
+
+    @api.model
+    def _append_id_doc(self, header, snapshot):
         id_doc = etree.SubElement(header, f"{{{SII_NAMESPACE}}}IdDoc")
         _text(id_doc, "TipoDTE", DOCUMENT_CODE)
-        _text(id_doc, "Folio", int(folio))
-        _text(id_doc, "FchEmis", dispatch.issue_date.isoformat())
-        _text(id_doc, "IndTraslado", dispatch.transfer_indicator)
+        _text(id_doc, "Folio", snapshot["folio"])
+        _text(id_doc, "FchEmis", snapshot["issue_date"])
+        _text(id_doc, "IndTraslado", snapshot["transfer_indicator"])
 
     @api.model
     def _append_issuer(self, header, issuer):
@@ -147,7 +191,7 @@ class DteDispatchXmlComposer(models.AbstractModel):
         _optional_text(node, "CiudadOrigen", issuer.get("city"))
 
     @api.model
-    def _append_receiver(self, header, receiver, transport=None):
+    def _append_receiver(self, header, receiver, transport):
         node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Receptor")
         _text(node, "RUTRecep", receiver["vat"])
         _text(node, "RznSocRecep", receiver["name"])
@@ -159,8 +203,7 @@ class DteDispatchXmlComposer(models.AbstractModel):
             self._append_transport(node, transport)
 
     @api.model
-    def _append_totals(self, header, lines):
-        totals = self._compute_totals(lines)
+    def _append_totals(self, header, totals):
         node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Totales")
         if totals["net"]:
             _text(node, "MntNeto", totals["net"])
@@ -170,25 +213,6 @@ class DteDispatchXmlComposer(models.AbstractModel):
             _text(node, "TasaIVA", VAT_RATE_PERCENT)
             _text(node, "IVA", totals["vat"])
         _text(node, "MntTotal", totals["total"])
-
-    @api.model
-    def _compute_totals(self, lines):
-        """Sum taxable lines as net and exempt lines as exempt.
-
-        Unvalued lines add nothing to the totals.
-        """
-        net = sum(
-            self._line_amount(line) for line in lines if line.tax_category == TAXABLE
-        )
-        exempt = sum(
-            self._line_amount(line) for line in lines if line.tax_category == EXEMPT
-        )
-        vat = round(net * VAT_RATE_PERCENT / 100)
-        return {"net": net, "exempt": exempt, "vat": vat, "total": net + exempt + vat}
-
-    @api.model
-    def _line_amount(self, line):
-        return round(line.quantity * line.unit_price)
 
     @api.model
     def _append_transport(self, receiver_node, transport):
@@ -201,16 +225,16 @@ class DteDispatchXmlComposer(models.AbstractModel):
     def _append_line(self, document, index, line):
         node = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Detalle")
         _text(node, "NroLinDet", index)
-        if line.tax_category == EXEMPT:
+        if line["tax_category"] == EXEMPT:
             _text(node, "IndExe", EXEMPT_INDICATOR)
-        elif line.tax_category == UNVALUED:
+        elif line["tax_category"] == UNVALUED:
             _text(node, "IndExe", UNVALUED_INDICATOR)
-        _text(node, "NmbItem", line.description)
-        _text(node, "QtyItem", line.quantity)
-        if line.tax_category != UNVALUED:
-            _text(node, "PrcItem", line.unit_price)
+        _text(node, "NmbItem", line["name"])
+        _text(node, "QtyItem", line["quantity"])
+        if line["tax_category"] != UNVALUED:
+            _text(node, "PrcItem", line["unit_price"])
         _text(
             node,
             "MontoItem",
-            0 if line.tax_category == UNVALUED else self._line_amount(line),
+            0 if line["tax_category"] == UNVALUED else self._line_amount(line),
         )
