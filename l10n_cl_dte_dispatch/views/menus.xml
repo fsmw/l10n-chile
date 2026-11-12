@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        id="menu_dispatch_guides"
+        name="Dispatch Guides (DTE 52)"
+        parent="l10n_cl_dte_core.menu_dte_operations"
+        action="action_dispatch"
+        sequence="30"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+</odoo>

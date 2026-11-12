@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_dispatch_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.dispatch.list</field>
+        <field name="model">l10n_cl.dte.dispatch</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="issue_date" />
+                <field name="partner_id" />
+                <field name="source_kind" />
+                <field name="sii_environment" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dispatch_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.dispatch.form</field>
+        <field name="model">l10n_cl.dte.dispatch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_review"
+                        string="Review"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+                    <button
+                        name="action_freeze_snapshot"
+                        string="Freeze Snapshot"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'reviewed'"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,reviewed,frozen"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Document">
+                            <field name="company_id" />
+                            <field name="sii_environment" />
+                            <field name="source_kind" />
+                            <field name="source_key" />
+                            <field name="issue_date" />
+                            <field name="transfer_indicator" />
+                            <field name="dispatch_type_code" />
+                            <field name="currency_id" />
+                        </group>
+                        <group string="Parties and transport">
+                            <field name="partner_id" />
+                            <field name="origin_address" />
+                            <field name="destination_address" />
+                            <field name="carrier_id" />
+                            <field name="driver_id" />
+                            <field name="vehicle_plate" />
+                            <field name="departure_at" />
+                            <field name="arrival_at" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="description" />
+                                    <field name="product_id" optional="show" />
+                                    <field name="quantity" />
+                                    <field name="uom_id" />
+                                    <field name="unit_price" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="tax_category" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="References" name="references">
+                            <field name="reference_ids">
+                                <list editable="bottom">
+                                    <field name="reference_code" />
+                                    <field name="referenced_document_type" />
+                                    <field name="referenced_folio" />
+                                    <field name="reference_date" />
+                                    <field name="reason" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Snapshot" name="snapshot">
+                            <group>
+                                <field name="snapshot_schema" readonly="1" />
+                                <field name="snapshot_digest" readonly="1" />
+                                <field name="snapshot_json" readonly="1" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dispatch_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.dispatch.search</field>
+        <field name="model">l10n_cl.dte.dispatch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="source_key" />
+                <filter
+                    name="draft"
+                    string="Draft"
+                    domain="[('state', '=', 'draft')]"
+                />
+                <filter
+                    name="frozen"
+                    string="Frozen"
+                    domain="[('state', '=', 'frozen')]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dispatch" model="ir.actions.act_window">
+        <field name="name">Dispatch Guides</field>
+        <field name="res_model">l10n_cl.dte.dispatch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_dispatch_search" />
+    </record>
+</odoo>
