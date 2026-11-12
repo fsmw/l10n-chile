@@ -3,10 +3,12 @@ import base64
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
+    DteIssuanceService,
+)
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
 from ..services.dte_issuance_adapter import InvoiceIssuanceAdapter
-from ..services.dte_issuance_service import DteIssuanceService
 
 
 class AccountMove(models.Model):
