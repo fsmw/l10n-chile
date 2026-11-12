@@ -10,7 +10,12 @@
     "license": "AGPL-3",
     "development_status": "Beta",
     "maintainers": ["fsmw"],
-    "depends": ["l10n_cl_dte_pos", "l10n_cl_dte_note", "l10n_cl_dte_report"],
+    "depends": [
+        "l10n_cl_dte_pos",
+        "l10n_cl_dte_note",
+        "l10n_cl_dte_report",
+        "l10n_cl_dte_issuance",
+    ],
     "data": [
         "views/res_company_views.xml",
         "views/res_config_settings_views.xml",

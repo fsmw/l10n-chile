@@ -141,7 +141,7 @@ class DteCertificationRun(models.Model):
         if self.state not in {"generated", "partial", "prepared"}:
             raise UserError(_("Generate the execution documents first."))
 
-        from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+        from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
             DteIssuanceService,
         )
 

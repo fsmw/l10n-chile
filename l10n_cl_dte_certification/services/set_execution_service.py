@@ -11,10 +11,10 @@ from decimal import Decimal
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
     DteIssuanceService,
 )
-from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
 from .case_generation_service import CertificationCaseGenerationService
