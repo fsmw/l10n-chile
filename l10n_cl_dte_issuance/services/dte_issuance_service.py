@@ -7,29 +7,12 @@ import json
 from odoo import _
 from odoo.exceptions import AccessError, UserError
 
-# Fields of the electronic document that an adapter can never overwrite. The
-# source relation fields are added from the typed source registry.
-PROTECTED_DOCUMENT_FIELDS = frozenset(
-    {
-        "name",
-        "company_id",
-        "document_code",
-        "sii_environment",
-        "source_key",
-        "preparation_state",
-        "fiscal_state",
-        "folio",
-        "payload_digest",
-    }
-)
-
 
 class DteIssuanceService:
     """Orchestrate durable DTE issuance independently of XML format."""
 
     def _protected_document_fields(self, env):
-        registry = env["l10n_cl.dte.source.registry"]
-        return PROTECTED_DOCUMENT_FIELDS | registry._dte_source_relation_fields()
+        return env["l10n_cl.dte.source.registry"]._dte_protected_document_fields()
 
     def issue(self, source, adapter, document_code):
         """Keep fiscal preparation, evidence, folio and queue writes atomic."""
@@ -78,18 +61,9 @@ class DteIssuanceService:
         caf = adapter.select_caf(source, environment, document_code)
         source_values = adapter.document_source_values(source)
         extra_values = adapter.prepare_document_values(source, document_code)
-        registry = source.env["l10n_cl.dte.source.registry"]
-        relation_field = registry._dte_source_relation(source._name)
-        protected_values = self._protected_document_fields(source.env)
-        if (
-            not isinstance(source_values, dict)
-            or len(source_values) != 1
-            or not isinstance(extra_values, dict)
-            or protected_values.intersection(extra_values)
-        ):
-            raise UserError(_("The DTE adapter returned invalid document metadata."))
-        if set(source_values) != {relation_field}:
-            raise UserError(_("The DTE adapter returned an invalid source relation."))
+        source.env["l10n_cl.dte.source.registry"]._check_adapter_values(
+            source._name, source_values, extra_values
+        )
         document = document_model.sudo().create(
             {
                 "name": source.name or source.display_name,

@@ -2,9 +2,25 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 DOCUMENT_MODEL = "l10n_cl.electronic.document"
+
+# Fields of the electronic document that an adapter can never overwrite. The
+# source relation fields are added from the registry.
+PROTECTED_DOCUMENT_FIELDS = frozenset(
+    {
+        "name",
+        "company_id",
+        "document_code",
+        "sii_environment",
+        "source_key",
+        "preparation_state",
+        "fiscal_state",
+        "folio",
+        "payload_digest",
+    }
+)
 
 
 class DteTypedSourceRegistry(models.AbstractModel):
@@ -66,3 +82,27 @@ class DteTypedSourceRegistry(models.AbstractModel):
                     model=source_model,
                 )
             )
+
+    @api.model
+    def _dte_protected_document_fields(self):
+        """Return the document fields that adapters may not set."""
+        return PROTECTED_DOCUMENT_FIELDS | self._dte_source_relation_fields()
+
+    @api.model
+    def _check_adapter_values(self, source_model, source_values, extra_values):
+        """Validate the metadata an adapter returned for a new document.
+
+        The source values must hold exactly the registered relation, and the
+        extra values must not touch a protected field. This runs on a model so
+        that the error messages are translated for the current user.
+        """
+        relation_field = self._dte_source_relation(source_model)
+        if (
+            not isinstance(source_values, dict)
+            or len(source_values) != 1
+            or not isinstance(extra_values, dict)
+            or self._dte_protected_document_fields().intersection(extra_values)
+        ):
+            raise UserError(_("The DTE adapter returned invalid document metadata."))
+        if set(source_values) != {relation_field}:
+            raise UserError(_("The DTE adapter returned an invalid source relation."))

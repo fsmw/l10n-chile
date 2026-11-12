@@ -3,7 +3,7 @@
 
 from unittest.mock import patch
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.service.model import get_public_method
 from odoo.tests import TransactionCase, tagged
 
@@ -88,3 +88,36 @@ class TestTypedSourceRegistry(TransactionCase):
             )
         self.assertEqual(self.source_registry._dte_source_relations(), before)
         self.assertNotIn("res.company", before)
+
+    def test_adapter_values_must_hold_only_the_registered_relation(self):
+        with self._relations({"res.company": "company_id"}):
+            check = self.source_registry._check_adapter_values
+            check("res.company", {"company_id": 1}, {"note": "x"})
+            for source_values, extra_values in (
+                ({"create_uid": 1}, {}),
+                ({"company_id": 1, "create_uid": 1}, {}),
+                ({}, {}),
+                ("company_id", {}),
+                ({"company_id": 1}, "x"),
+                ({"company_id": 1}, {"folio": 1}),
+                ({"company_id": 1}, {"company_id": 2}),
+            ):
+                with self.assertRaises(UserError):
+                    check("res.company", source_values, extra_values)
+
+    def test_adapter_check_protects_every_registered_relation(self):
+        with self._relations({"res.company": "company_id", "res.users": "create_uid"}):
+            with self.assertRaises(UserError):
+                self.source_registry._check_adapter_values(
+                    "res.company", {"company_id": 1}, {"create_uid": 1}
+                )
+
+    def test_adapter_check_rejects_unregistered_models(self):
+        with self._relations({}), self.assertRaises(UserError):
+            self.source_registry._check_adapter_values(
+                "res.partner", {"company_id": 1}, {}
+            )
+
+    def test_adapter_check_is_not_callable_through_rpc(self):
+        with self.assertRaises(AccessError):
+            get_public_method(self.source_registry, "_check_adapter_values")
