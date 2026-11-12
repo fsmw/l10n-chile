@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_dispatch_print" model="ir.actions.report">
+        <field name="name">Dispatch Guide Print Sample</field>
+        <field name="model">l10n_cl.dte.report.sample</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_dte_dispatch_report.dispatch_print</field>
+        <field name="report_file">l10n_cl_dte_dispatch_report.dispatch_print</field>
+        <field
+            name="paperformat_id"
+            ref="l10n_cl_dte_report.paperformat_dte_print_sample"
+        />
+        <field name="print_report_name">'GD-%s' % object.folio</field>
+    </record>
+    <template id="dispatch_print">
+        <html>
+            <head>
+                <meta charset="utf-8" />
+            </head>
+            <body>
+                <main>
+                    <t t-foreach="docs" t-as="sample">
+                        <t t-set="guide" t-value="guides[sample.id]" />
+                        <div
+                            class="article"
+                            data-oe-model="l10n_cl.dte.report.sample"
+                            t-att-data-oe-id="sample.id"
+                        >
+                            <div class="page">
+                                <style>
+                                    @page { size: A4 portrait; margin: 10mm; }
+                                    body { font-family: sans-serif; font-size: 10pt; color: #222; }
+                                    table { width: 100%; border-collapse: collapse; }
+                                    th, td { border-bottom: 1px solid #ccc; padding: 2px 4px; text-align: left; }
+                                    .right { text-align: right; }
+                                </style>
+                                <h2>GUÍA DE DESPACHO ELECTRÓNICA</h2>
+                                <p>
+                                    N° <strong t-out="guide['folio']" />
+                                    - <span t-out="guide['issue_date']" />
+                                </p>
+                                <p>
+                                    <strong t-out="guide['issuer']['name']" />
+                                    RUT <span t-out="guide['issuer']['vat']" /><br />
+                                    <span t-out="guide['issuer']['activity']" />
+                                </p>
+                                <p>
+                                    Receptor:
+                                    <span t-out="guide['receiver']['name']" />
+                                    RUT <span t-out="guide['receiver']['vat']" /><br />
+                                    <span t-out="guide['receiver']['address']" />
+                                </p>
+                                <p>
+                                    Transfer indicator:
+                                    <span t-out="guide['transfer_indicator']" />
+                                </p>
+                                <p t-if="guide['transport']">
+                                    Plate:
+                                    <span
+                                    t-out="guide['transport'].get('vehicle_plate')"
+                                />
+                                    - Carrier RUT:
+                                    <span
+                                    t-out="guide['transport'].get('carrier_vat')"
+                                />
+                                    - Destination:
+                                    <span
+                                    t-out="guide['transport'].get('destination_address')"
+                                />
+                                </p>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th class="right">Quantity</th>
+                                            <th class="right">Price</th>
+                                            <th class="right">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="guide['lines']" t-as="line">
+                                            <td t-out="line['number']" />
+                                            <td t-out="line['name']" />
+                                            <td
+                                                class="right"
+                                                t-out="line['quantity']"
+                                            />
+                                            <td
+                                                class="right"
+                                                t-out="line['unit_price']"
+                                            />
+                                            <td class="right" t-out="line['amount']" />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>
+                                    Net: <span t-out="guide['totals']['net']" />
+                                    - Exempt: <span t-out="guide['totals']['exempt']" />
+                                    - VAT: <span t-out="guide['totals']['vat']" />
+                                    - <strong>Total: <span
+                                    t-out="guide['totals']['total']"
+                                /></strong>
+                                </p>
+                                <img
+                                    t-att-src="'data:image/png;base64,%s' % guide['barcode']"
+                                    alt="PDF417"
+                                />
+                                <p>Timbre Electrónico SII</p>
+                            </div>
+                        </div>
+                    </t>
+                </main>
+            </body>
+        </html>
+    </template>
+</odoo>

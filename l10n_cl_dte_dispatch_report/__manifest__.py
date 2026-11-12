@@ -11,6 +11,7 @@
     "license": "AGPL-3",
     "development_status": "Alpha",
     "depends": ["l10n_cl_dte_dispatch", "l10n_cl_dte_report"],
+    "data": ["report/dispatch_print_templates.xml"],
     "installable": True,
     "application": False,
     "maintainers": ["fsmw"],
