@@ -4,18 +4,18 @@
 from odoo.tests import TransactionCase
 
 
-class DispatchTestCommon(TransactionCase):
+class DispatchRecordMixin:
+    """Build dispatch records. The test class supplies ``cls.env``."""
+
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.partner = cls.env["res.partner"].create({"name": "Cliente GD"})
-        cls.dispatch_values = {
+    def build_dispatch_values(cls, partner):
+        return {
             "company_id": cls.env.company.id,
             "sii_environment": "certification",
             "source_kind": "manual",
             "source_key": "manual-0001",
             "issue_date": "2026-11-12",
-            "partner_id": cls.partner.id,
+            "partner_id": partner.id,
             "transfer_indicator": "1",
             "dispatch_type_code": "1",
             "origin_address": "Origen 123",
@@ -38,3 +38,11 @@ class DispatchTestCommon(TransactionCase):
             "tax_category": "taxable",
         }
         return self.env["l10n_cl.dte.dispatch.line"].create(dict(values, **overrides))
+
+
+class DispatchTestCommon(DispatchRecordMixin, TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env["res.partner"].create({"name": "Cliente GD"})
+        cls.dispatch_values = cls.build_dispatch_values(cls.partner)

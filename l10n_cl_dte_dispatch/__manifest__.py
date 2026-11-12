@@ -10,7 +10,13 @@
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "development_status": "Alpha",
-    "depends": ["l10n_cl_dte_core", "l10n_cl_dte_xml", "product"],
+    "depends": [
+        "l10n_cl_dte_core",
+        "l10n_cl_dte_caf",
+        "l10n_cl_dte_signing",
+        "l10n_cl_dte_xml",
+        "product",
+    ],
     "data": [
         "data/dispatch_sequence.xml",
         "security/dispatch_security.xml",

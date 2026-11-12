@@ -5,6 +5,9 @@ from lxml import etree
 
 from odoo import api, models
 
+from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
+
 SII_NAMESPACE = "http://www.sii.cl/SiiDte"
 DOCUMENT_CODE = "52"
 VAT_RATE_PERCENT = 19
@@ -14,6 +17,7 @@ UNVALUED_INDICATOR = "2"
 TAXABLE = "taxable"
 EXEMPT = "exempt"
 UNVALUED = "unvalued"
+TED_PLACEHOLDER = "TED_PLACEHOLDER"
 
 
 def _text(parent, tag, value):
@@ -30,17 +34,54 @@ def _optional_text(parent, tag, value):
 
 class DteDispatchXmlComposer(models.AbstractModel):
     _name = "l10n_cl.dte.dispatch.xml.composer"
-    _description = "DTE 52 unsigned XML composer"
+    _description = "DTE 52 XML composer"
+
+    @api.model
+    def compose_signed_guide(
+        self,
+        dispatch,
+        folio,
+        issuer,
+        receiver,
+        timestamp,
+        caf_authorization,
+        signing_environment,
+        transport=None,
+    ):
+        """Return the signed DTE 52 XML bytes for a dispatch.
+
+        The TED is built and CAF-signed first, because DTE_v10 requires it
+        before the signature timestamp. ``signing_environment`` is the
+        signature service environment name, chosen by the caller.
+        """
+        lines = self._sorted_lines(dispatch)
+        ted_xml = DteTedComposer().compose_ted(
+            self._ted_snapshot(dispatch, folio, issuer, receiver, timestamp, lines),
+            caf_authorization,
+        )
+        unsigned_xml = self.compose_unsigned_guide(
+            dispatch,
+            folio,
+            issuer,
+            receiver,
+            timestamp,
+            transport=transport,
+            ted_xml=ted_xml,
+        )
+        return SignatureService().sign_document(
+            dispatch.company_id, signing_environment, unsigned_xml
+        )
 
     @api.model
     def compose_unsigned_guide(
-        self, dispatch, folio, issuer, receiver, timestamp, transport=None
+        self, dispatch, folio, issuer, receiver, timestamp, transport=None, ted_xml=None
     ):
         """Return the unsigned DTE 52 XML bytes (ISO-8859-1) for a dispatch.
 
         ``issuer``, ``receiver`` and ``transport`` are plain mappings, so the
         caller decides where the values come from. ``transport`` adds the
-        Transporte block only when it is not empty.
+        Transporte block only when it is not empty. ``ted_xml`` is the CAF-signed
+        TED; without it the document is not schema-valid.
         """
         root = etree.Element(
             f"{{{SII_NAMESPACE}}}DTE", nsmap={None: SII_NAMESPACE}, version="1.0"
@@ -55,14 +96,36 @@ class DteDispatchXmlComposer(models.AbstractModel):
         self._append_issuer(header, issuer)
         self._append_receiver(header, receiver, transport)
         self._append_totals(header, dispatch.line_ids)
-        for index, line in enumerate(
-            dispatch.line_ids.sorted(lambda line: (line.sequence, line.id)), start=1
-        ):
+        for index, line in enumerate(self._sorted_lines(dispatch), start=1):
             self._append_line(document, index, line)
+        if ted_xml:
+            etree.SubElement(document, f"{{{SII_NAMESPACE}}}{TED_PLACEHOLDER}")
         _text(document, "TmstFirma", timestamp)
-        return etree.tostring(
+        xml_bytes = etree.tostring(
             root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=True
         )
+        if ted_xml:
+            xml_bytes = xml_bytes.replace(f"<{TED_PLACEHOLDER}/>".encode(), ted_xml)
+        return xml_bytes
+
+    @api.model
+    def _sorted_lines(self, dispatch):
+        return dispatch.line_ids.sorted(lambda line: (line.sequence, line.id))
+
+    @api.model
+    def _ted_snapshot(self, dispatch, folio, issuer, receiver, timestamp, lines):
+        totals = self._compute_totals(lines)
+        return {
+            "document_code": DOCUMENT_CODE,
+            "folio": int(folio),
+            "company_id": dispatch.company_id.id,
+            "issuer": {"vat": issuer["vat"]},
+            "receiver": {"vat": receiver["vat"], "name": receiver["name"]},
+            "issue_date": dispatch.issue_date.isoformat(),
+            "totals": {"total": totals["total"]},
+            "lines": [{"name": lines[0].description}],
+            "ted_timestamp": timestamp,
+        }
 
     @api.model
     def _append_id_doc(self, header, dispatch, folio):
@@ -128,8 +191,8 @@ class DteDispatchXmlComposer(models.AbstractModel):
         return round(line.quantity * line.unit_price)
 
     @api.model
-    def _append_transport(self, header, transport):
-        node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Transporte")
+    def _append_transport(self, receiver_node, transport):
+        node = etree.SubElement(receiver_node, f"{{{SII_NAMESPACE}}}Transporte")
         _optional_text(node, "Patente", transport.get("vehicle_plate"))
         _optional_text(node, "RUTTrans", transport.get("carrier_vat"))
         _optional_text(node, "DirDest", transport.get("destination_address"))

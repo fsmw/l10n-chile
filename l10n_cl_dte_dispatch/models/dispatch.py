@@ -41,8 +41,8 @@ class DteDispatch(models.Model):
         required=True,
         copy=False,
         index=True,
-        default=lambda self: self.env["ir.sequence"].next_by_code(
-            DISPATCH_SEQUENCE_CODE
+        default=lambda self: (
+            self.env["ir.sequence"].sudo().next_by_code(DISPATCH_SEQUENCE_CODE)
         ),
     )
     company_id = fields.Many2one(
