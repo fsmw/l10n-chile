@@ -1,9 +1,36 @@
 # Copyright 2026 FSMW
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 DISPATCH_SEQUENCE_CODE = "l10n_cl.dte.dispatch"
+SNAPSHOT_MODEL = "l10n_cl.dte.dispatch.snapshot"
+VALIDATOR_MODEL = "l10n_cl.dte.dispatch.validator"
+# Fields that define the fiscal content. Changing any of them after the
+# snapshot is frozen would make the stored evidence stale.
+FROZEN_FIELDS = frozenset(
+    {
+        "name",
+        "company_id",
+        "sii_environment",
+        "source_kind",
+        "source_key",
+        "issue_date",
+        "partner_id",
+        "transfer_indicator",
+        "dispatch_type_code",
+        "origin_address",
+        "destination_address",
+        "currency_id",
+        "carrier_id",
+        "driver_id",
+        "vehicle_plate",
+        "departure_at",
+        "arrival_at",
+        "state",
+    }
+)
 
 
 class DteDispatch(models.Model):
@@ -67,3 +94,43 @@ class DteDispatch(models.Model):
             "A source can have only one dispatch guide per company.",
         ),
     ]
+
+    def write(self, vals):
+        if FROZEN_FIELDS.intersection(vals):
+            self._check_not_frozen()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_not_frozen()
+        return super().unlink()
+
+    def _check_not_frozen(self):
+        if self.filtered(lambda dispatch: dispatch.state == "frozen"):
+            raise UserError(_("A frozen dispatch cannot be changed."))
+
+    def action_review(self):
+        """Validate the local rules and move the dispatch to reviewed."""
+        validator = self.env[VALIDATOR_MODEL]
+        for dispatch in self:
+            errors = validator.validate(dispatch)
+            if errors:
+                raise UserError(
+                    _("The dispatch cannot be reviewed:\n%s", "\n".join(errors))
+                )
+            dispatch.write({"state": "reviewed"})
+
+    def action_freeze_snapshot(self):
+        """Store the canonical snapshot and its digest, then freeze the dispatch."""
+        snapshot = self.env[SNAPSHOT_MODEL]
+        for dispatch in self:
+            if dispatch.state != "reviewed":
+                raise UserError(_("Review the dispatch before freezing its snapshot."))
+            serialized = snapshot.serialize(snapshot.capture(dispatch))
+            dispatch.write(
+                {
+                    "snapshot_schema": "dte52-gd-snapshot-v1",
+                    "snapshot_json": serialized,
+                    "snapshot_digest": snapshot.digest(serialized),
+                    "state": "frozen",
+                }
+            )

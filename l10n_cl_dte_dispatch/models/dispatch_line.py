@@ -1,7 +1,9 @@
 # Copyright 2026 FSMW
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+DISPATCH_MODEL = "l10n_cl.dte.dispatch"
 
 
 class DteDispatchLine(models.Model):
@@ -29,3 +31,19 @@ class DteDispatchLine(models.Model):
         [("taxable", "Taxable"), ("exempt", "Exempt"), ("unvalued", "Unvalued")],
         required=True,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        dispatch_ids = [vals["dispatch_id"] for vals in vals_list]
+        self.env[DISPATCH_MODEL].browse(dispatch_ids)._check_not_frozen()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self.dispatch_id._check_not_frozen()
+        if "dispatch_id" in vals:
+            self.env[DISPATCH_MODEL].browse(vals["dispatch_id"])._check_not_frozen()
+        return super().write(vals)
+
+    def unlink(self):
+        self.dispatch_id._check_not_frozen()
+        return super().unlink()
