@@ -81,3 +81,17 @@ class TestDispatchXmlComposer(DispatchTestCommon):
         self.assertIsNone(without.find(f".//{SII}Transporte"))
         transport = with_transport.find(f".//{SII}Receptor/{SII}Transporte")
         self.assertEqual(transport.findtext(f"{SII}Patente"), "ABCD12")
+
+    def test_snapshot_serialization_matches_the_record_composer(self):
+        # Arrange
+        dispatch = self._mixed_dispatch()
+        composer = self.composer
+        # Act
+        snapshot = composer.build_snapshot(
+            dispatch, 1, ISSUER, RECEIVER, "2026-11-12T10:00:00"
+        )
+        from_snapshot = composer.serialize_unsigned_guide(snapshot)
+        from_record = self._compose(dispatch)
+        # Assert
+        self.assertEqual(from_snapshot, from_record)
+        self.assertEqual(snapshot["totals"]["total"], 2880)
