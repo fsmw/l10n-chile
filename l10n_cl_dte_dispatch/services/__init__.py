@@ -3,3 +3,4 @@
 
 from . import dispatch_snapshot
 from . import dispatch_validator
+from . import dispatch_xml_composer
