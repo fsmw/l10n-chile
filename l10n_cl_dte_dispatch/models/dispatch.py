@@ -77,6 +77,11 @@ class DteDispatch(models.Model):
     currency_id = fields.Many2one("res.currency", required=True)
     line_ids = fields.One2many("l10n_cl.dte.dispatch.line", "dispatch_id")
     reference_ids = fields.One2many("l10n_cl.dte.dispatch.reference", "dispatch_id")
+    document_ids = fields.One2many(
+        "l10n_cl.electronic.document",
+        "source_dispatch_id",
+        string="Electronic Documents",
+    )
     snapshot_schema = fields.Char(readonly=True, copy=False)
     snapshot_json = fields.Text(readonly=True, copy=False)
     snapshot_digest = fields.Char(readonly=True, copy=False, index=True)

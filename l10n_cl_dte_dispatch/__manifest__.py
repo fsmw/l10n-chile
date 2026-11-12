@@ -12,6 +12,7 @@
     "development_status": "Alpha",
     "depends": [
         "l10n_cl_dte_core",
+        "l10n_cl_dte_issuance",
         "l10n_cl_dte_caf",
         "l10n_cl_dte_signing",
         "l10n_cl_dte_xml",

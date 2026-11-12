@@ -5,3 +5,5 @@ from . import dispatch
 from . import dispatch_line
 from . import dispatch_reference
 from . import dispatch_event
+from . import electronic_document
+from . import dispatch_source_registry
