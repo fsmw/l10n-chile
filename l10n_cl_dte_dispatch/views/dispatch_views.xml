@@ -29,6 +29,13 @@
                         invisible="state != 'draft'"
                     />
                     <button
+                        name="action_prepare_document"
+                        string="Prepare DTE"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'frozen'"
+                    />
+                    <button
                         name="action_freeze_snapshot"
                         string="Freeze Snapshot"
                         type="object"

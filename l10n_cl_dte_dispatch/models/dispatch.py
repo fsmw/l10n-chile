@@ -4,7 +4,14 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
+    DteIssuanceService,
+)
+
+from ..services.dispatch_issuance_adapter import DispatchIssuanceAdapter
+
 DISPATCH_SEQUENCE_CODE = "l10n_cl.dte.dispatch"
+DOCUMENT_CODE = "52"
 SNAPSHOT_MODEL = "l10n_cl.dte.dispatch.snapshot"
 VALIDATOR_MODEL = "l10n_cl.dte.dispatch.validator"
 # Fields that define the fiscal content. Changing any of them after the
@@ -123,6 +130,15 @@ class DteDispatch(models.Model):
                     _("The dispatch cannot be reviewed:\n%s", "\n".join(errors))
                 )
             dispatch.write({"state": "reviewed"})
+
+    def action_prepare_document(self):
+        """Sign the frozen guide as DTE 52 and keep its evidence.
+
+        Nothing is sent to SII here.
+        """
+        self.ensure_one()
+        adapter = DispatchIssuanceAdapter(self.env["l10n_cl.dte.dispatch.xml.composer"])
+        return DteIssuanceService().prepare(self, adapter, DOCUMENT_CODE)
 
     def action_freeze_snapshot(self):
         """Store the canonical snapshot and its digest, then freeze the dispatch."""

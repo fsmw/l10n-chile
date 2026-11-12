@@ -9,3 +9,4 @@ from . import test_dispatch_xml_composer
 from . import test_dispatch_signed_guide
 from . import test_dispatch_views
 from . import test_dispatch_electronic_document
+from . import test_dispatch_issuance
