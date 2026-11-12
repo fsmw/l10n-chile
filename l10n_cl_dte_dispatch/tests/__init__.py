@@ -7,3 +7,4 @@ from . import test_dispatch_snapshot
 from . import test_dispatch_validator
 from . import test_dispatch_xml_composer
 from . import test_dispatch_signed_guide
+from . import test_dispatch_views

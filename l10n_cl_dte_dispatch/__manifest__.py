@@ -21,6 +21,8 @@
         "data/dispatch_sequence.xml",
         "security/dispatch_security.xml",
         "security/ir.model.access.csv",
+        "views/dispatch_views.xml",
+        "views/menus.xml",
     ],
     "installable": True,
     "application": False,
