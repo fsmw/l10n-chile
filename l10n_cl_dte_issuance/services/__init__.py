@@ -2,3 +2,4 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from . import typed_source_registry
+from . import dte_issuance_service

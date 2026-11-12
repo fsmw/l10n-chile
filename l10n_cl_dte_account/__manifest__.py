@@ -14,6 +14,7 @@
         "l10n_cl_dte_caf",
         "l10n_cl_dte_xml",
         "l10n_cl_dte_gateway",
+        "l10n_cl_dte_issuance",
         "l10n_cl_dte_signing",
     ],
     "external_dependencies": {"python": ["cryptography"]},
