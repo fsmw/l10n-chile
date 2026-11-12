@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="rule_dispatch_company" model="ir.rule">
+        <field name="name">Dispatch guide: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_dispatch" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_dispatch_line_company" model="ir.rule">
+        <field name="name">Dispatch guide line: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_dispatch_line" />
+        <field
+            name="domain_force"
+        >[('dispatch_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_dispatch_reference_company" model="ir.rule">
+        <field name="name">Dispatch guide reference: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_dispatch_reference" />
+        <field
+            name="domain_force"
+        >[('dispatch_id.company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_dispatch_event_company" model="ir.rule">
+        <field name="name">Dispatch guide event: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_dte_dispatch_event" />
+        <field
+            name="domain_force"
+        >[('dispatch_id.company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
