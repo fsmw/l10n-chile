@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user
 
-from odoo.addons.l10n_cl_dte_account.services.dte_issuance_service import (
+from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
     DteIssuanceService,
 )
 from odoo.addons.l10n_cl_dte_note.services.note_reference_service import (
