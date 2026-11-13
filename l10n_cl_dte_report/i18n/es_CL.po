@@ -1,0 +1,397 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 15:12+0000\n"
+"PO-Revision-Date: 2026-11-11 15:12+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "<strong>Total CLP</strong>"
+msgstr "<strong>Total CLP</strong>"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.constraint,message:l10n_cl_dte_report.constraint_l10n_cl_dte_report_sample_document_sample_uniq
+msgid "A DTE can only have one report sample."
+msgstr "Un DTE solo puede tener una muestra de reporte."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample.py:0
+msgid "A generated print sample cannot be deleted."
+msgstr "Una muestra impresa generada no puede eliminarse."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample.py:0
+msgid "A generated print sample is immutable."
+msgstr "Una muestra impresa generada es inmutable."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "A generated sample package cannot be deleted."
+msgstr "Un paquete de muestras generado no puede eliminarse."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "A generated sample package is immutable."
+msgstr "Un paquete de muestras generado es inmutable."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample.py:0
+msgid "A print sample requires a prepared and signed DTE."
+msgstr "Una muestra impresa requiere un DTE preparado y firmado."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "A printed sample package can contain at most 20 DTEs."
+msgstr "Un paquete de muestras impresas puede contener como máximo 20 DTE."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "A stored print sample does not match its recorded SHA-256."
+msgstr "Una muestra impresa almacenada no coincide con su SHA-256 registrado."
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_search
+msgid "Agrupar por"
+msgstr "Agrupar por"
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "All print samples must belong to the package company."
+msgstr "Todas las muestras impresas deben pertenecer a la empresa del paquete."
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "Ambiente:"
+msgstr "Ambiente:"
+
+#. module: l10n_cl_dte_report
+#: model:ir.actions.report,name:l10n_cl_dte_report.action_boleta_receipt
+msgid "Boleta Thermal PDF (80 mm)"
+msgstr "PDF térmico de boleta (80 mm)"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Boleta electrónica"
+msgstr "Boleta electrónica"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Boleta no afecta o exenta electrónica"
+msgstr "Boleta no afecta o exenta electrónica"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_search
+msgid "Borrador"
+msgstr "Borrador"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Cantidad"
+msgstr "Cantidad"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "Cantidad:"
+msgstr "Cantidad:"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model,name:l10n_cl_dte_report.model_report_l10n_cl_dte_report_boleta_receipt
+msgid "Chilean Boleta Thermal Receipt"
+msgstr "Comprobante térmico de boleta chilena"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model,name:l10n_cl_dte_report.model_l10n_cl_dte_report_sample
+#: model:ir.model,name:l10n_cl_dte_report.model_report_l10n_cl_dte_report_dte_print_sample
+msgid "Chilean DTE Print Sample"
+msgstr "Muestra impresa de DTE chileno"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model,name:l10n_cl_dte_report.model_l10n_cl_dte_report_sample_package
+msgid "Chilean DTE Print Sample Package"
+msgstr "Paquete de muestras impresas de DTE chileno"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model,name:l10n_cl_dte_report.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico chileno"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.view_electronic_document_form_report_sample
+msgid "Crear muestra impresa"
+msgstr "Crear muestra impresa"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Código"
+msgstr "Código"
+
+#. module: l10n_cl_dte_report
+#: model:ir.actions.report,name:l10n_cl_dte_report.action_dte_print_sample
+msgid "DTE Print Sample"
+msgstr "Muestra impresa de DTE"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_view_form
+msgid "Descargar PDF"
+msgstr "Descargar PDF"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_package_view_form
+msgid "Descargar paquete"
+msgstr "Descargar paquete"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Detalle"
+msgstr "Detalle"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__document_id
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__document_code
+msgid "Document Code"
+msgstr "Código de documento"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields.selection,name:l10n_cl_dte_report.selection__l10n_cl_dte_report_sample__state__draft
+#: model:ir.model.fields.selection,name:l10n_cl_dte_report.selection__l10n_cl_dte_report_sample_package__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample.py:0
+msgid "Each DTE print sample must fit on exactly one page."
+msgstr "Cada muestra impresa de DTE debe caber en exactamente una página."
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Emisor"
+msgstr "Emisor"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_search
+msgid "Estado"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_view_form
+msgid "Evidencia PDF"
+msgstr "Evidencia PDF"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "Exento"
+msgstr "Exento"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Exento:"
+msgstr "Exento:"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Fecha"
+msgstr "Fecha"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__folio
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_search
+msgid "Generado"
+msgstr "Generado"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_view_form
+msgid "Generar PDF"
+msgstr "Generar PDF"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_report_sample_package_view_form
+msgid "Generar paquete"
+msgstr "Generar paquete"
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "Generate every individual DTE sample before packaging it."
+msgstr "Genere cada muestra individual de DTE antes de empaquetarla."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample.py:0
+msgid "Generate the print sample before downloading it."
+msgstr "Genere la muestra impresa antes de descargarla."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "Generate the sample package before downloading it."
+msgstr "Genere el paquete de muestras antes de descargarlo."
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields.selection,name:l10n_cl_dte_report.selection__l10n_cl_dte_report_sample__state__generated
+#: model:ir.model.fields.selection,name:l10n_cl_dte_report.selection__l10n_cl_dte_report_sample_package__state__generated
+msgid "Generated"
+msgstr "Generado"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__generated_at
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__generated_at
+msgid "Generated At"
+msgstr "Generado el"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "IVA"
+msgstr "IVA"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "IVA:"
+msgstr "IVA:"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__manifest
+msgid "Manifest"
+msgstr "Manifiesto"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Monto"
+msgstr "Monto"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Motivo"
+msgstr "Motivo"
+
+#. module: l10n_cl_dte_report
+#: model:ir.ui.menu,name:l10n_cl_dte_report.dte_report_samples_menu
+msgid "Muestras impresas"
+msgstr "Muestras impresas"
+
+#. module: l10n_cl_dte_report
+#: model:ir.actions.act_window,name:l10n_cl_dte_report.dte_report_sample_action
+msgid "Muestras impresas DTE"
+msgstr "Muestras impresas DTE"
+
+#. module: l10n_cl_dte_report
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample__name
+#: model:ir.model.fields,field_description:l10n_cl_dte_report.field_l10n_cl_dte_report_sample_package__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "Neto"
+msgstr "Neto"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Neto:"
+msgstr "Neto:"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Nota de crédito electrónica"
+msgstr "Nota de crédito electrónica"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.dte_print_sample
+msgid "Nota de débito electrónica"
+msgstr "Nota de débito electrónica"
+
+#. module: l10n_cl_dte_report
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_report.boleta_receipt
+msgid "N°"
+msgstr "N°"
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/report/dte_document_report.py:0
+msgid "One or more print samples no longer exist."
+msgstr "Una o más muestras impresas ya no existen."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/electronic_document.py:0
+msgid "Only a DTE manager can create print samples."
+msgstr "Solo un gestor de DTE puede crear muestras impresas."
+
+#. module: l10n_cl_dte_report
+#. odoo-python
+#: code:addons/l10n_cl_dte_report/models/report_sample_package.py:0
+msgid "Only a DTE manager can manage print sample packages."
+msgstr "Solo un gestor de DTE puede administrar paquetes de muestras impresas."
