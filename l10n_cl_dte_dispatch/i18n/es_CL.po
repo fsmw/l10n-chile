@@ -347,3 +347,177 @@ msgstr "Cantidad"
 #: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__reason
 msgid "Reason"
 msgstr "Motivo"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__reference_ids
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__reference_code
+msgid "Reference Code"
+msgstr "Código de referencia"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__reference_date
+msgid "Reference Date"
+msgstr "Fecha de referencia"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__referenced_document_type
+msgid "Referenced Document Type"
+msgstr "Tipo de documento referenciado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__referenced_folio
+msgid "Referenced Folio"
+msgstr "Folio referenciado"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "References"
+msgstr "Referencias"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_event__event_type__result
+msgid "Result"
+msgstr "Resultado"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Review"
+msgstr "Revisar"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/models/dispatch.py:0
+msgid "Review the dispatch before freezing its snapshot."
+msgstr "Revise el despacho antes de congelar su instantánea."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__state__reviewed
+msgid "Reviewed"
+msgstr "Revisado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__sii_environment
+msgid "Sii Environment"
+msgstr "Ambiente SII"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Snapshot"
+msgstr "Instantánea"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__snapshot_digest
+msgid "Snapshot Digest"
+msgstr "Resumen de la instantánea"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__snapshot_json
+msgid "Snapshot Json"
+msgstr "JSON de la instantánea"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__snapshot_schema
+msgid "Snapshot Schema"
+msgstr "Esquema de la instantánea"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_electronic_document__source_dispatch_id
+msgid "Source Dispatch"
+msgstr "Despacho de origen"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__source_key
+msgid "Source Key"
+msgstr "Clave de origen"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__source_kind
+msgid "Source Kind"
+msgstr "Tipo de origen"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_event__event_type__submitted
+msgid "Submitted"
+msgstr "Enviado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__tax_category
+msgid "Tax Category"
+msgstr "Categoría tributaria"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_line__tax_category__taxable
+msgid "Taxable"
+msgstr "Afecto"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_validator.py:0
+msgid "The arrival cannot be before the departure."
+msgstr "La llegada no puede ser anterior a la salida."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_issuance_adapter.py:0
+msgid "The company needs a tax identifier and an activity code."
+msgstr "La empresa necesita un identificador tributario y un código de actividad."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/models/dispatch.py:0
+msgid ""
+"The dispatch cannot be reviewed:\n"
+"%s"
+msgstr ""
+"No se puede revisar el despacho:\n"
+"%s"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_issuance_adapter.py:0
+msgid "The receiver needs a tax identifier (RUT)."
+msgstr "El receptor necesita un identificador tributario (RUT)."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__transfer_indicator
+msgid "Transfer Indicator"
+msgstr "Indicador de traslado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_source_registry
+msgid "Typed DTE source registry"
+msgstr "Registro tipado de orígenes DTE"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__unit_price
+msgid "Unit Price"
+msgstr "Precio unitario"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_line__tax_category__unvalued
+msgid "Unvalued"
+msgstr "Sin valorizar"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__uom_id
+msgid "Uom"
+msgstr "Unidad de medida"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__vehicle_plate
+msgid "Vehicle Plate"
+msgstr "Patente del vehículo"
