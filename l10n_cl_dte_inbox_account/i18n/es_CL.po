@@ -798,3 +798,41 @@ msgstr "Factura de proveedor"
 #: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte__account_binding_ids
 msgid "Vendor Bill Links"
 msgstr "Vínculos de facturas de proveedor"
+
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox_account.incoming_account_binding_menu
+msgid "Vendor Bills"
+msgstr "Facturas de proveedor"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_binding.py:0
+msgid "Vendor bill bindings can only be created through confirmation."
+msgstr "Los vínculos de factura de proveedor solo pueden crearse mediante confirmación."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Asistente"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_code_type
+msgid "XML Code Type"
+msgstr "Tipo de código XML"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_value
+msgid "XML Code or Description"
+msgstr "Código o descripción XML"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__source_uom
+msgid "XML Unit"
+msgstr "Unidad XML"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__xml_sha256
+msgid "Xml Sha256"
+msgstr "SHA-256 del XML"
+
