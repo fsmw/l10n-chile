@@ -13,6 +13,7 @@ from . import electronic_document
 from . import signature_regeneration
 from . import account_move
 from . import res_company
+from . import certification_process_entry
 from . import certification_process
 from . import certification_stage
 from . import certification_requirement
