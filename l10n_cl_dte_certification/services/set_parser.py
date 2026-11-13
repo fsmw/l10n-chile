@@ -33,115 +33,12 @@ from .set_parser_support import (
     _bad_constant,
     _is_section_table_header,
     _parse_note_metadata,
+    _parse_section_details,
     _parse_text_correction,
     _text_correction_source_lines,
     _unique_json,
     decimal_value,
 )
-
-
-def _parse_section_details(lines, start, stop, document_code, *, version=1):  # noqa: C901
-    """Read the assigned case's explicit line table without inferring missing values."""
-    items = []
-    unsupported = []
-    columns = None
-    global_discount = None
-    covered = set()
-    column_names = {
-        "CANTIDAD": "quantity",
-        "PRECIO UNITARIO": "unit_price",
-        "VALOR UNITARIO": "unit_price",
-        "UNIDAD MEDIDA": "uom",
-        "UNIDAD DE MEDIDA": "uom",
-        "DESCUENTO ITEM": "discount_percent",
-    }
-    for index in range(start + 1, stop):
-        line = lines[index]
-        label = normalized_label(line)
-        discount_match = re.search(r"DESCUENTO GLOBAL[^%]*?(\d+(?:\.\d+)?)\s*%", label)
-        if discount_match:
-            global_discount = discount_match.group(1)
-            covered.add(index + 1)
-            continue
-        cells = [
-            part.strip()
-            for part in re.split(r"\t+| {2,}", line.strip())
-            if part.strip()
-        ]
-        if cells and normalized_label(cells[0]) == "ITEM":
-            headers = [normalized_label(value) for value in cells[1:]]
-            mapped = [column_names.get(header) for header in headers]
-            if mapped and all(mapped):
-                columns = mapped
-                covered.add(index + 1)
-                continue
-        if (
-            not line.strip()
-            or re.fullmatch(r"[-=]+", line.strip())
-            or SECTION_DOCUMENT.match(label)
-            or re.match(r"^(REFERENCIA|RAZON REFERENCIA)\b", label)
-            or version >= 2
-            and (
-                re.match(r"^\s*(?:DONDE\s+)?DICE\s*:?", line, re.I)
-                or re.match(r"^\s*DEBE\s+DECIR\s*:?", line, re.I)
-            )
-        ):
-            covered.add(index + 1)
-            continue
-        if not columns or not cells or not line.strip():
-            unsupported.append({"source_line": index + 1, "text": line})
-            continue
-        if len(cells) == len(columns) + 2 and re.fullmatch(
-            r"ITEM\s+\d+", cells[0], re.I
-        ):
-            cells = cells[1:]
-        if len(cells) != len(columns) + 1:
-            unsupported.append({"source_line": index + 1, "text": line})
-            covered.add(index + 1)
-            continue
-        item_name = cells[0]
-        row = dict(zip(columns, cells[1:], strict=True))
-        if "quantity" in row and not re.fullmatch(r"\d+(?:\.\d+)?", row["quantity"]):
-            unsupported.append({"source_line": index + 1, "text": line})
-            covered.add(index + 1)
-            continue
-        if "unit_price" in row and not re.fullmatch(
-            r"\d+(?:\.\d+)?", row["unit_price"]
-        ):
-            unsupported.append({"source_line": index + 1, "text": line})
-            covered.add(index + 1)
-            continue
-        if "discount_percent" in row:
-            row["discount_percent"] = row["discount_percent"].removesuffix("%")
-            if not re.fullmatch(r"\d+(?:\.\d+)?", row["discount_percent"]):
-                unsupported.append({"source_line": index + 1, "text": line})
-                covered.add(index + 1)
-                continue
-        items.append(
-            {
-                "sequence": len(items) + 1,
-                "source_line": index + 1,
-                "name": item_name,
-                "quantity": row.get("quantity"),
-                "unit_price": row.get("unit_price"),
-                "discount_percent": row.get("discount_percent", "0"),
-                "uom": row.get("uom"),
-                "exempt": document_code == "34"
-                or "EXENTO" in normalized_label(cells[0]),
-            }
-        )
-        covered.add(index + 1)
-    unsupported = list({item["source_line"]: item for item in unsupported}.values())
-    for index in range(start + 1, stop):
-        if index + 1 not in covered:
-            unsupported.append({"source_line": index + 1, "text": lines[index]})
-    if document_code in {"33", "34"} and not items:
-        unsupported.append(
-            {"source_line": start + 1, "text": "Detail table not recognized"}
-        )
-    if len(items) > 60:
-        unsupported.append({"source_line": start + 1, "text": "More than 60 details"})
-    return items, unsupported, global_discount
 
 
 def _validate_expected_totals(expected):
