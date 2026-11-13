@@ -1,0 +1,396 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_pos
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 15:11+0000\n"
+"PO-Revision-Date: 2026-11-11 15:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "A POS order must be paid before DTE issuance."
+msgstr "Un pedido de POS debe estar pagado antes de emitir el DTE."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "A boleta over 135 UF requires the identified payer's RUT."
+msgstr "Una boleta sobre 135 UF requiere el RUT identificado del pagador."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "A boleta supports at most 1000 detail lines."
+msgstr "Una boleta admite como máximo 1000 líneas de detalle."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "A direct-source POS boleta cannot be linked to an invoice."
+msgstr "Una boleta de POS de origen directo no puede vincularse a una factura."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "A persisted POS order is required."
+msgstr "Se requiere un pedido de POS guardado."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__accepted
+msgid "Accepted"
+msgstr "Aceptado"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_document_code__39
+msgid "Boleta electrónica"
+msgstr "Boleta electrónica"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_document_code__41
+msgid "Boleta exenta electrónica"
+msgstr "Boleta exenta electrónica"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Boleta type 41 can contain only exempt lines."
+msgstr "La boleta tipo 41 solo puede contener líneas exentas."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Boleta type 41 requires all lines to be exempt."
+msgstr "La boleta tipo 41 requiere que todas las líneas sean exentas."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_payment_method__l10n_cl_dte_boleta_payment_method__1
+msgid "Cash"
+msgstr "Efectivo"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Cash boletas over 135 UF require receiver email and phone."
+msgstr "Las boletas en efectivo sobre 135 UF requieren correo y teléfono del receptor."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_payment_method__l10n_cl_dte_boleta_payment_method__4
+msgid "Cheque"
+msgstr "Cheque"
+
+#. module: l10n_cl_dte_pos
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos.pos_payment_method_view_form_dte
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos.view_pos_order_form_dte
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos.view_pos_session_form_dte
+msgid "Chilean DTE"
+msgstr "DTE chileno"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model,name:l10n_cl_dte_pos.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico chileno"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model,name:l10n_cl_dte_pos.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Complete the following issuer data before issuing: %s"
+msgstr "Complete los siguientes datos del emisor antes de emitir: %s"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "Configure Chilean DTE type %s first."
+msgstr "Configure primero el tipo de DTE chileno %s."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_order__dte_document_count
+msgid "DTE Document Count"
+msgstr "Cantidad de documentos DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_order__dte_document_ids
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos.view_pos_order_form_dte
+msgid "DTE Documents"
+msgstr "Documentos DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_order__dte_issuance_state
+msgid "DTE Status"
+msgstr "Estado del DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_order__dte_document_code
+msgid "DTE Type"
+msgstr "Tipo de DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_session__dte_pos_accounting_mode__session_summary
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__res_company__dte_pos_accounting_mode__session_summary
+msgid "DTE per order, accounting at session close"
+msgstr "DTE por pedido, contabilización al cierre de sesión"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Direct POS DTEs require session summary mode."
+msgstr "Los DTE de POS de origen directo requieren el modo de resumen de sesión."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_session__dte_order_count
+msgid "Dte Order Count"
+msgstr "Cantidad de pedidos DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_session__dte_pending_order_count
+msgid "Dte Pending Order Count"
+msgstr "Cantidad de pedidos DTE pendientes"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_session__dte_pos_total
+msgid "Dte Pos Total"
+msgstr "Total POS DTE"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_session__dte_readiness
+msgid "Dte Readiness"
+msgstr "Preparación DTE"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Electronic boletas must be issued in CLP."
+msgstr "Las boletas electrónicas deben emitirse en CLP."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_payment_method__l10n_cl_dte_boleta_payment_method__2
+msgid "Electronic payment"
+msgstr "Pago electrónico"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_payment_method__l10n_cl_dte_boleta_payment_method__3
+msgid "Electronic transfer"
+msgstr "Transferencia electrónica"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Enter a valid Chilean receiver RUT."
+msgstr "Ingrese un RUT chileno válido del receptor."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_session__dte_pos_accounting_mode__per_order_invoice
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__res_company__dte_pos_accounting_mode__per_order_invoice
+msgid "Invoice per POS order (standard accounting)"
+msgstr "Factura por pedido de POS (contabilización estándar)"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Map every POS payment method to an SII code for boletas over 135 UF."
+msgstr "Asocie cada método de pago de POS a un código SII para boletas sobre 135 UF."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Negative POS order lines are not supported."
+msgstr "Las líneas negativas de pedidos de POS no son compatibles."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__not_issued
+msgid "Not issued"
+msgstr "No emitido"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Only Chilean boletas 39 and 41 are supported."
+msgstr "Solo se admiten boletas chilenas 39 y 41."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Only paid, persisted POS orders can issue DTEs."
+msgstr "Solo los pedidos de POS pagados y guardados pueden emitir DTE."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_payment_method__l10n_cl_dte_boleta_payment_method__5
+msgid "Other"
+msgstr "Otro"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_session__dte_pos_accounting_mode
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_res_company__dte_pos_accounting_mode
+msgid "POS DTE Accounting Mode"
+msgstr "Modo contable DTE de POS"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/tests/test_pos_boleta_accounting_modes.py:0
+msgid "POS DTE Default"
+msgstr "DTE predeterminado de POS"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "POS boleta issuance is currently available only in Demo mode."
+msgstr "La emisión de boletas de POS solo está disponible en modo Demo."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_session__dte_readiness__pending
+msgid "Pending"
+msgstr "Pendiente"
+
+#. module: l10n_cl_dte_pos
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos.view_company_form_dte_pos
+msgid "Point of Sale DTE"
+msgstr "DTE de punto de venta"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model,name:l10n_cl_dte_pos.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Pedidos de punto de venta"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model,name:l10n_cl_dte_pos.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Métodos de pago del punto de venta"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model,name:l10n_cl_dte_pos.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesión de punto de venta"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__processing
+msgid "Processing"
+msgstr "Procesando"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__queued
+msgid "Queued"
+msgstr "En cola"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_session__dte_readiness__ready
+msgid "Ready"
+msgstr "Listo"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Refunds and zero-value orders are not supported."
+msgstr "Las devoluciones y los pedidos de valor cero no son compatibles."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__rejected
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_order__dte_related_document_ids
+msgid "Related DTE Documents"
+msgstr "Documentos DTE relacionados"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__review_required
+msgid "Review required"
+msgstr "Requiere revisión"
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_pos_payment_method__l10n_cl_dte_boleta_payment_method
+msgid "SII Boleta Payment Method"
+msgstr "Método de pago de boleta del SII"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_issuance_adapter.py:0
+msgid "Select exactly one current validated CAF for DTE type %s."
+msgstr "Seleccione exactamente un CAF vigente y validado para el tipo DTE %s."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "Set a receiver RUT or use the generic final-consumer RUT."
+msgstr "Indique un RUT del receptor o use el RUT genérico de consumidor final."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos.field_l10n_cl_electronic_document__source_pos_order_id
+msgid "Source POS Order"
+msgstr "Pedido de POS de origen"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The CAF must match the POS company and DTE type."
+msgstr "El CAF debe coincidir con la empresa del POS y el tipo de DTE."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_session.py:0
+msgid "The DTE snapshot digest does not match its document."
+msgstr "El resumen de la instantánea del DTE no coincide con su documento."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_session.py:0
+msgid "The DTE snapshot for order %s is invalid."
+msgstr "La instantánea DTE del pedido %s no es válida."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_session.py:0
+msgid "The DTE snapshot for order %s is missing."
+msgstr "Falta la instantánea DTE del pedido %s."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_session.py:0
+msgid "The DTE total for order %(order)s does not match its POS total."
+msgstr "El total DTE del pedido %(order)s no coincide con su total de POS."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_issuance_adapter.py:0
+msgid "The POS DTE adapter requires a POS order."
+msgstr "El adaptador DTE de POS requiere un pedido de POS."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "The POS invoice type does not match its effective taxes."
+msgstr "El tipo de factura de POS no coincide con sus impuestos efectivos."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The POS line is not valid for a boleta."
+msgstr "La línea de POS no es válida para una boleta."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "The POS operator needs the DTE User group."
+msgstr "El operador de POS necesita el grupo Usuario DTE."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "The POS order does not have its posted invoice."
+msgstr "El pedido de POS no tiene su factura contabilizada."
