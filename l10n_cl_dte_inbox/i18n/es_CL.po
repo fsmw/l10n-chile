@@ -779,3 +779,364 @@ msgstr "Revisado"
 #: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__running
 msgid "Running"
 msgstr "En ejecución"
+
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__sii_portal
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__channel__sii_portal
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_wizard__channel__sii_portal
+msgid "SII Portal"
+msgstr "Portal del SII"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__sii_webservice
+msgid "SII Web Service"
+msgstr "Servicio web del SII"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__schema_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__schema_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__schema_name
+msgid "Schema Name"
+msgstr "Nombre del esquema"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__schema_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__schema_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__schema_state
+msgid "Schema State"
+msgstr "Estado del esquema"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_view_form
+msgid "Send Response"
+msgstr "Enviar respuesta"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__sending
+msgid "Sending"
+msgstr "Enviando"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signature_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__signature_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__signature_state
+msgid "Signature State"
+msgstr "Estado de la firma"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__xml_validation_state__signature_unverified
+msgid "Signature Unverified"
+msgstr "Firma no verificada"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signer_certificate_fingerprint
+msgid "Signer Certificate Fingerprint"
+msgstr "Huella del certificado firmante"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__signer_trust_state
+msgid "Signer Trust State"
+msgstr "Estado de confianza del firmante"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__sii_environment
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__environment
+msgid "Sii Environment"
+msgstr "Ambiente SII"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Source Imports"
+msgstr "Importaciones de origen"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__started_at
+msgid "Started At"
+msgstr "Iniciado el"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__state
+msgid "State"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Status"
+msgstr "Estado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__submitted
+msgid "Submitted"
+msgstr "Enviado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__ted_state
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__ted_state
+msgid "Ted State"
+msgstr "Estado del TED"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE contains an invalid Chilean RUT."
+msgstr "El DTE contiene un RUT chileno inválido."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE has no TED."
+msgstr "El DTE no tiene TED."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The DTE receiver does not match the current company."
+msgstr "El receptor del DTE no coincide con la empresa actual."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The DTE signature structure is unsupported."
+msgstr "La estructura de firma del DTE no es compatible."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED CAF does not match the issuer, type or folio."
+msgstr "El CAF del TED no coincide con el emisor, el tipo ni el folio."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED CAF has no authorization data."
+msgstr "El CAF del TED no tiene datos de autorización."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED identity does not match the DTE header."
+msgstr "La identidad del TED no coincide con el encabezado del DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED is missing DD, CAF or FRMT."
+msgstr "Al TED le faltan DD, CAF o FRMT."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The TED total does not match the DTE header."
+msgstr "El total del TED no coincide con el encabezado del DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The XML signature transform is unsupported."
+msgstr "La transformación de firma XML no es compatible."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope has no Caratula."
+msgstr "El sobre no tiene carátula."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope issuer does not match its DTEs."
+msgstr "El emisor del sobre no coincide con sus DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope receiver does not match its DTEs."
+msgstr "El receptor del sobre no coincide con sus DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope signature structure is unsupported."
+msgstr "La estructura de firma del sobre no es compatible."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope subtotals are invalid."
+msgstr "Los subtotales del sobre son inválidos."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The envelope subtotals do not match its DTEs."
+msgstr "Los subtotales del sobre no coinciden con sus DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming DTE XML is empty."
+msgstr "El XML del DTE recibido está vacío."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming DTE source channel is invalid."
+msgstr "El canal de origen del DTE recibido es inválido."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The incoming XML exceeds 20 MiB."
+msgstr "El XML recibido supera los 20 MiB."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The required local XML schema cannot be loaded: %s"
+msgstr "No se puede cargar el esquema XML local requerido: %s"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid "The required local XML schema is unavailable: %s"
+msgstr "El esquema XML local requerido no está disponible: %s"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "The same DTE identity occurs more than once in this file."
+msgstr "La misma identidad de DTE aparece más de una vez en este archivo."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "The stored incoming XML digest does not match its evidence."
+msgstr "El resumen del XML recibido almacenado no coincide con su evidencia."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "The stored incoming record must contain one DTE."
+msgstr "El registro recibido almacenado debe contener un DTE."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_wizard.py:0
+msgid "The uploaded XML file is not valid Base64."
+msgstr "El archivo XML cargado no es Base64 válido."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "This DTE identity already exists with different signed XML."
+msgstr "Esta identidad de DTE ya existe con un XML firmado distinto."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_incoming_identity_company_environment_uniq
+msgid "This incoming DTE identity is already registered."
+msgstr "Esta identidad de DTE recibido ya está registrada."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_response_response_idempotency_uniq
+msgid "This incoming DTE response is already prepared."
+msgstr "Esta respuesta a DTE recibido ya está preparada."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox.constraint_l10n_cl_incoming_dte_import_incoming_import_digest_uniq
+msgid "This incoming XML file is already registered."
+msgstr "Este archivo XML recibido ya está registrado."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__to_state
+msgid "To State"
+msgstr "Al estado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__transport_code
+msgid "Transport Code"
+msgstr "Código de transporte"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signer_trust_state__unverified
+msgid "Trust Not Verified"
+msgstr "Confianza no verificada"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__unknown
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__unsupported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__unsupported
+msgid "Unsupported"
+msgstr "No compatible"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
+msgid "Use the incoming XML import action."
+msgstr "Use la acción de importación XML recibida."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__ted_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__schema_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__signature_state__valid
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__ted_state__valid
+msgid "Valid"
+msgstr "Válido"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Validate XML"
+msgstr "Validar XML"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__validated_at
+msgid "Validated At"
+msgstr "Validado el"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Validation Diagnostics"
+msgstr "Diagnósticos de validación"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__xml_file
+msgid "Xml File"
+msgstr "Archivo XML"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__xml_sha256
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__xml_sha256
+msgid "Xml Sha256"
+msgstr "SHA-256 del XML"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__xml_validation_state
+msgid "Xml Validation State"
+msgstr "Estado de validación XML"
+
