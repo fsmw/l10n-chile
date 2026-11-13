@@ -1,0 +1,400 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_inbox
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 15:11+0000\n"
+"PO-Revision-Date: 2026-11-11 15:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__accepted
+msgid "Accepted"
+msgstr "Aceptado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__actor_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__actor_id
+msgid "Actor"
+msgstr "Actor"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__attempt_ids
+msgid "Attempt"
+msgstr "Intento"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_document_view_form
+msgid "Audit Events"
+msgstr "Eventos de auditoría"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__result__blocked
+msgid "Blocked by File Errors"
+msgstr "Bloqueado por errores de archivo"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_response_wizard_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__sii_environment__certification
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__environment__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__channel
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__channel
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__channel
+msgid "Channel"
+msgstr "Canal"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__company_id
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__completed
+msgid "Completed"
+msgstr "Completado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__contract_reference
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__contract_reference
+msgid "Contract Reference"
+msgstr "Referencia de contrato"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__correlation_id
+msgid "Correlation"
+msgstr "Correlación"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__sii_environment__demo
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__environment__demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__diagnostics
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__diagnostics
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__diagnostics
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__diagnostics
+msgid "Diagnostics"
+msgstr "Diagnósticos"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__document_code
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__document_code
+msgid "Document Code"
+msgstr "Código de documento"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__document_count
+msgid "Document Count"
+msgstr "Cantidad de documentos"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_form
+msgid "Documents"
+msgstr "Documentos"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__result__duplicate
+msgid "Duplicate"
+msgstr "Duplicado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__duplicate_count
+msgid "Duplicate Count"
+msgstr "Cantidad de duplicados"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__channel__email
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__channel__email
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_wizard__channel__email
+msgid "Email"
+msgstr "Correo electrónico"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__environment
+msgid "Environment"
+msgstr "Ambiente"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response__state__error
+msgid "Error"
+msgstr "Error"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__event_ids
+msgid "Event"
+msgstr "Evento"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__event_code
+msgid "Event Code"
+msgstr "Código de evento"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__external_reference
+msgid "External Reference"
+msgstr "Referencia externa"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_response_attempt__state__failed
+msgid "Failed"
+msgstr "Fallido"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_form
+msgid "File Diagnostics"
+msgstr "Diagnósticos de archivo"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__filename
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__filename
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__filename
+msgid "Filename"
+msgstr "Nombre de archivo"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__finished_at
+msgid "Finished At"
+msgstr "Terminado el"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__folio
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__from_state
+msgid "From State"
+msgstr "Desde estado"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_event__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_wizard__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_attempt__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_response__idempotency_key
+msgid "Idempotency Key"
+msgstr "Clave de idempotencia"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte__xml_validation_state__parsed
+msgid "Identity Parsed"
+msgstr "Identidad analizada"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import_line__import_id
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_wizard_view_form
+msgid "Import"
+msgstr "Importar"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox.menu_incoming_import_history
+msgid "Import History"
+msgstr "Historial de importación"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.actions.act_window,name:l10n_cl_dte_inbox.incoming_import_wizard_action
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_import_wizard
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox.menu_import_incoming_dte
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_wizard_view_form
+msgid "Import Incoming DTE"
+msgstr "Importar DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte__import_line_ids
+msgid "Import Line"
+msgstr "Línea de importación"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_line.py:0
+msgid "Import results are created through the XML import action."
+msgstr "Los resultados de importación se crean mediante la acción de importación XML."
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import__state__imported
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox.selection__l10n_cl_incoming_dte_import_line__result__imported
+msgid "Imported"
+msgstr "Importado"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__imported_at
+msgid "Imported At"
+msgstr "Importado el"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox.field_l10n_cl_incoming_dte_import__imported_count
+msgid "Imported Count"
+msgstr "Cantidad importada"
+
+#. module: l10n_cl_dte_inbox
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox.incoming_import_view_search
+msgid "Imported Files"
+msgstr "Archivos importados"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte
+msgid "Incoming Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico recibido chileno"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE"
+msgstr "DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE %(code)s / %(folio)s"
+msgstr "DTE recibido %(code)s / %(folio)s"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_event
+msgid "Incoming DTE Audit Event"
+msgstr "Evento de auditoría de DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_import
+msgid "Incoming DTE Import Evidence"
+msgstr "Evidencia de importación de DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_import_line
+msgid "Incoming DTE Import Result"
+msgstr "Resultado de importación de DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_import_wizard.py:0
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_response
+msgid "Incoming DTE Response"
+msgstr "Respuesta de DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#: model:ir.model,name:l10n_cl_dte_inbox.model_l10n_cl_incoming_dte_response_attempt
+msgid "Incoming DTE Response Transmission Attempt"
+msgstr "Intento de envío de respuesta de DTE recibido"
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE audit events are immutable."
+msgstr "Los eventos de auditoría de DTE recibidos son inmutables."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE audit events must be retained."
+msgstr "Los eventos de auditoría de DTE recibidos deben conservarse."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE events are created by workflow actions."
+msgstr "Los eventos de DTE recibidos se crean mediante acciones del flujo de trabajo."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE evidence is immutable."
+msgstr "La evidencia de DTE recibido es inmutable."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
+msgid "Incoming DTE evidence must be retained."
+msgstr "La evidencia de DTE recibido debe conservarse."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response attempts are immutable."
+msgstr "Los intentos de respuesta de DTE recibido son inmutables."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response attempts must be retained."
+msgstr "Los intentos de respuesta de DTE recibido deben conservarse."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/models/incoming_response.py:0
+msgid "Incoming DTE response history is immutable."
+msgstr "El historial de respuestas de DTE recibido es inmutable."
