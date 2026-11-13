@@ -398,3 +398,403 @@ msgstr "Unidad de factura"
 #: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__issue_date
 msgid "Issue Date"
 msgstr "Fecha de emisión"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__issuer_vat
+msgid "Issuer Vat"
+msgstr "RUT emisor"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_mapping__match_kind__code
+msgid "Item Code"
+msgstr "Código de ítem"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__journal_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_bill_wizard__mode__link
+msgid "Link Existing Draft"
+msgstr "Vincular borrador existente"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__linked_at
+msgid "Linked At"
+msgstr "Vinculado el"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__linked_by_id
+msgid "Linked By"
+msgstr "Vinculado por"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__operation__link
+msgid "Linked Draft"
+msgstr "Borrador vinculado"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__mapping_id
+msgid "Mapping"
+msgstr "Mapeo"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__mapping_snapshot
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_form
+msgid "Mapping Snapshot"
+msgstr "Instantánea del mapeo"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__match_key
+msgid "Match Key"
+msgstr "Clave de coincidencia"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__match_kind
+msgid "Match Kind"
+msgstr "Tipo de coincidencia"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__mode
+msgid "Mode"
+msgstr "Modo"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "More than one commercial supplier matches the issuer RUT."
+msgstr "Más de un proveedor comercial coincide con el RUT emisor."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__move_id
+msgid "Move"
+msgstr "Asiento"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/binding_service.py:0
+msgid "Only the preview owner can confirm this operation."
+msgstr "Solo el dueño de la vista previa puede confirmar esta operación."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__operation
+msgid "Operation"
+msgstr "Operación"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__parser_version
+msgid "Parser Version"
+msgstr "Versión del analizador"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__partner_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__partner_id
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_document.py:0
+#: code:addons/l10n_cl_dte_inbox_account/tests/test_functional.py:0
+#: code:addons/l10n_cl_dte_inbox_account/wizards/incoming_bill_wizard.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_bill_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_document_view_form
+msgid "Prepare Vendor Bill"
+msgstr "Preparar factura de proveedor"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.res_config_settings_view_form
+msgid "Prepare vendor bills from incoming DTEs"
+msgstr "Preparar facturas de proveedor desde DTE recibidos"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__preview_digest
+msgid "Preview Digest"
+msgstr "Resumen de la vista previa"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__product_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__sii_environment__production
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.ui.menu,name:l10n_cl_dte_inbox_account.incoming_account_mapping_menu
+msgid "Purchase Mappings"
+msgstr "Mapeos de compras"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_bill_wizard_view_form
+msgid "Refresh Preview"
+msgstr "Actualizar vista previa"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "Resolve the source unit explicitly with a compatible invoice unit."
+msgstr "Resuelva explícitamente la unidad de origen con una unidad de factura compatible."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__sii_environment
+msgid "Sii Environment"
+msgstr "Ambiente SII"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_amount
+msgid "Source Amount"
+msgstr "Monto de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_codes
+msgid "Source Codes"
+msgstr "Códigos de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_discount_percent
+msgid "Source Discount Percent"
+msgstr "Porcentaje de descuento de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__source_exempt
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_exempt
+msgid "Source Exempt"
+msgstr "Exento de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__source_net
+msgid "Source Net"
+msgstr "Neto de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_quantity
+msgid "Source Quantity"
+msgstr "Cantidad de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__source_snapshot
+msgid "Source Snapshot"
+msgstr "Instantánea de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__source_total
+msgid "Source Total"
+msgstr "Total de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_unit
+msgid "Source Unit"
+msgstr "Unidad de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__source_unit_price
+msgid "Source Unit Price"
+msgstr "Precio unitario de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__source_vat
+msgid "Source Vat"
+msgstr "IVA de origen"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_mapping__match_kind__default
+msgid "Supplier Default"
+msgstr "Proveedor predeterminado"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__tax_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__tax_id
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_folio_positive
+msgid "The DTE folio must be canonical and positive."
+msgstr "El folio del DTE debe ser canónico y positivo."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The XML contains economics outside the supported 33/34 scope."
+msgstr "El XML contiene montos fuera del alcance soportado 33/34."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move.py:0
+msgid "The bound bill fiscal identity cannot change."
+msgstr "La identidad fiscal de la factura vinculada no puede cambiar."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/res_company.py:0
+msgid "The incoming DTE configuration role is required."
+msgstr "Se requiere el rol de configuración de DTE recibidos."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The incoming DTE must be reviewed first."
+msgstr "El DTE recibido debe revisarse primero."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_binding.py:0
+msgid "The incoming DTE vendor bill provenance cannot be deleted."
+msgstr "La procedencia de la factura de proveedor de DTE recibido no puede eliminarse."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_binding.py:0
+msgid "The incoming DTE vendor bill provenance is immutable."
+msgstr "La procedencia de la factura de proveedor de DTE recibido es inmutable."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move.py:0
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_binding.py:0
+#: code:addons/l10n_cl_dte_inbox_account/services/policy_service.py:0
+msgid "The incoming DTE vendor bill role is required."
+msgstr "Se requiere el rol de factura de proveedor de DTE recibido."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The incoming environment differs from the active company environment."
+msgstr "El ambiente recibido difiere del ambiente de la empresa activa."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The item codes resolve to conflicting purchase mappings."
+msgstr "Los códigos de ítem resuelven a mapeos de compras en conflicto."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The matching commercial supplier is archived."
+msgstr "El proveedor comercial coincidente está archivado."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/incoming_account_mapping.py:0
+msgid "The purchase mapping key is server-owned."
+msgstr "La clave del mapeo de compras la gestiona el servidor."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move_line.py:0
+msgid "The signed fiscal details of a bound bill cannot be deleted."
+msgstr "Los datos fiscales firmados de una factura vinculada no pueden eliminarse."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The source must pass local schema, signature and TED validation."
+msgstr "El origen debe pasar la validación local de esquema, firma y TED."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "The stored XML no longer matches its immutable digest."
+msgstr "El XML almacenado ya no coincide con su resumen inmutable."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/res_partner.py:0
+msgid "The supplier serialization revision is server-owned."
+msgstr "La revisión de serialización del proveedor la gestiona el servidor."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/binding_service.py:0
+msgid "The target bill must belong to the source company."
+msgstr "La factura destino debe pertenecer a la empresa de origen."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_incoming_document_uniq
+msgid "This incoming DTE already has a vendor bill link."
+msgstr "Este DTE recibido ya tiene un vínculo con factura de proveedor."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_fiscal_identity_uniq
+msgid "This supplier DTE identity already has a vendor bill link."
+msgstr "Esta identidad de DTE del proveedor ya tiene un vínculo con factura de proveedor."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_mapping_supplier_mapping_key_uniq
+msgid "This supplier mapping key already exists, including archived mappings."
+msgstr "Esta clave de mapeo del proveedor ya existe, incluidos los mapeos archivados."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.constraint,message:l10n_cl_dte_inbox_account.constraint_l10n_cl_incoming_dte_account_binding_move_uniq
+msgid "This vendor bill already has an incoming DTE link."
+msgstr "Esta factura de proveedor ya tiene un vínculo con DTE recibido."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__uom_id
+msgid "Uom"
+msgstr "Unidad de medida"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/policy_service.py:0
+msgid "Use the source company as your active allowed company."
+msgstr "Use la empresa de origen como su empresa permitida activa."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/wizards/incoming_bill_wizard.py:0
+msgid "Use your own preview in its source company."
+msgstr "Use su propia vista previa en su empresa de origen."
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_document_view_form
+msgid "Vendor Bill"
+msgstr "Factura de proveedor"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte__account_binding_ids
+msgid "Vendor Bill Links"
+msgstr "Vínculos de facturas de proveedor"
