@@ -277,3 +277,102 @@ def _parse_section_details(lines, start, stop, document_code, *, version=1):  # 
     if len(items) > 60:
         unsupported.append({"source_line": start + 1, "text": "More than 60 details"})
     return items, unsupported, global_discount
+
+
+def _validate_expected_totals(expected):
+    if set(expected) - EXPECTED_TOTAL_KEYS:
+        raise ValidationError(_("Invalid mapped fiscal case."))
+    for value in expected.values():
+        if value is not None:
+            decimal_value(value)
+
+
+def _validate_case_note_metadata(item):
+    code = item["document_code"]
+    reference = item["reference_case_identifier"]
+    operation = item["note_operation"]
+    reason = item["reference_reason"]
+    if code in {"56", "61"}:
+        if (
+            not isinstance(reference, str)
+            or not re.fullmatch(r"\d+-\d+", reference)
+            or operation not in {"cancel", "return", "text", "amount"}
+            or not isinstance(reason, str)
+            or not reason
+        ):
+            raise ValidationError(_("A DTE note requires a reviewed reference."))
+    elif any(value is not None for value in (reference, operation, reason)):
+        raise ValidationError(_("An invoice cannot include note reference data."))
+    discount = item["global_discount_percent"]
+    if discount is not None:
+        value = decimal_value(discount)
+        if code != "33" or value <= 0 or value > 100:
+            raise ValidationError(_("Invalid global discount mapping."))
+
+
+def _validate_v2_note_content(item, block, source_start_line):
+    code = item["document_code"]
+    operation = item["note_operation"]
+    source_lines = item["sii_reference_reason_source_lines"]
+    if not isinstance(source_lines, list) or any(
+        type(line) is not int for line in source_lines
+    ):
+        raise ValidationError(_("Invalid correction text source range."))
+    if code in {"56", "61"}:
+        allowed = {"61": {"text", "return", "cancel"}, "56": {"cancel"}}
+        if operation not in allowed[code]:
+            raise ValidationError(_("The note operation does not match its DTE type."))
+        if operation == "text":
+            source_text = _parse_text_correction(block)
+            source_lines = _text_correction_source_lines(block, source_start_line)
+            if (
+                not source_text
+                or item["sii_reference_reason"] != source_text
+                or source_lines
+                != _text_correction_source_lines(block, source_start_line)
+            ):
+                raise ValidationError(_("Text correction must match the original TXT."))
+        elif item["sii_reference_reason"] not in (None, False, "") or source_lines:
+            raise ValidationError(
+                _("Only text corrections may contain correction text.")
+            )
+    elif item["sii_reference_reason"] not in (None, False, "") or source_lines:
+        raise ValidationError(_("An invoice cannot contain correction text."))
+
+
+def _add_v2_reference_diagnostics(cases):
+    by_identifier = {case["identifier"]: case for case in cases}
+    for case in cases:
+        if case["document_code"] not in {"56", "61"}:
+            continue
+        target = by_identifier.get(case["reference_case_identifier"])
+        expected_type = "61" if case["document_code"] == "56" else "33"
+        if (
+            not target
+            or target["sequence"] >= case["sequence"]
+            or target["document_code"] != expected_type
+            or (case["document_code"] == "56" and target["note_operation"] != "text")
+        ):
+            case["unsupported_instructions"].append(
+                {
+                    "source_line": case["source_start_line"],
+                    "text": (
+                        "Referenced case is missing, later, or has an incompatible "
+                        "DTE type"
+                    ),
+                }
+            )
+
+
+def _number_occurs(value, original):
+    variants = (value, value.replace(".", ","))
+    return any(
+        re.search(rf"(?<![\w.,]){re.escape(item)}(?![\w.,])", original)
+        for item in variants
+    )
+
+
+def _check_unique_case_identifiers(identifiers):
+    identifiers = list(identifiers)
+    if len(set(identifiers)) != len(identifiers):
+        raise ValidationError(_("The TXT repeats a case identifier."))
