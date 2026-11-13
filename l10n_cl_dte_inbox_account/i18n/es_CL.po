@@ -1,0 +1,400 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_inbox_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-11 15:11+0000\n"
+"PO-Revision-Date: 2026-11-11 15:11+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.account_move_view_form
+msgid "<span>Incoming DTE</span>"
+msgstr "<span>DTE recibido</span>"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move_line.py:0
+msgid "A bound bill must keep its signed fiscal details."
+msgstr "Una factura de proveedor vinculada debe conservar sus datos fiscales firmados."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move_line.py:0
+msgid "A bound fiscal line cannot move or become a section."
+msgstr "Una línea fiscal vinculada no puede moverse ni convertirse en sección."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__account_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__account_id
+msgid "Account"
+msgstr "Cuenta"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__accounting_date
+msgid "Accounting Date"
+msgstr "Fecha contable"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_mapping_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_mapping_view_search
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__move_state
+msgid "Bill Status"
+msgstr "Estado de la factura"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_bill_wizard_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move.py:0
+msgid "Cancel a bound vendor bill instead of deleting its provenance."
+msgstr "Cancele la factura de proveedor vinculada en lugar de eliminar su procedencia."
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_search
+msgid "Cancelled Bills"
+msgstr "Facturas canceladas"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__sii_environment__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "Choose a compatible excluded purchase VAT 19 or configured exempt tax."
+msgstr "Elija un IVA de compra excluido 19 compatible o un impuesto exento configurado."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "Choose an account for every fiscal detail."
+msgstr "Elija una cuenta para cada detalle fiscal."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/services/common.py:0
+msgid "Choose an active invoice account belonging to this company."
+msgstr "Elija una cuenta de facturación activa de esta empresa."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__partner_id
+msgid "Commercial Supplier"
+msgstr "Proveedor comercial"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__company_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__company_id
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_search
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuración"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/res_config_settings.py:0
+msgid "Configure incoming DTE bills in the active company."
+msgstr "Configure las facturas de DTE recibidos en la empresa activa."
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_bill_wizard_view_form
+msgid "Confirm Draft"
+msgstr "Confirmar borrador"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_bill_wizard__mode__create
+msgid "Create Draft"
+msgstr "Crear borrador"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__operation__create
+msgid "Created Draft"
+msgstr "Borrador creado"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__currency_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__sii_environment__demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__diagnostic_text
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__diagnostic_text
+msgid "Diagnostic Text"
+msgstr "Texto de diagnóstico"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__document_code
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__document_code
+msgid "Document Code"
+msgstr "Código de documento"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_search
+msgid "Draft Bills"
+msgstr "Facturas en borrador"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__due_date
+msgid "Due Date"
+msgstr "Fecha de vencimiento"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__document_code__33
+msgid "Electronic Invoice"
+msgstr "Factura electrónica"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_mapping__match_kind__description
+msgid "Exact Description"
+msgstr "Descripción exacta"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields.selection,name:l10n_cl_dte_inbox_account.selection__l10n_cl_incoming_dte_account_binding__document_code__34
+msgid "Exempt Electronic Invoice"
+msgstr "Factura electrónica exenta"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__candidate_move_ids
+msgid "Existing Candidates"
+msgstr "Candidatos existentes"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__existing_move_id
+msgid "Existing Draft"
+msgstr "Borrador existente"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__existing_line_id
+msgid "Existing Line"
+msgstr "Línea existente"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__line_ids
+msgid "Fiscal Details"
+msgstr "Datos fiscales"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_form
+msgid "Fiscal Snapshot"
+msgstr "Instantánea fiscal"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__folio
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__folio
+msgid "Folio"
+msgstr "Folio"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_search
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__has_blockers
+msgid "Has Blockers"
+msgstr "Tiene bloqueos"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.res_config_settings_view_form
+msgid "Incoming Chilean DTE"
+msgstr "DTE recibido chileno"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_l10n_cl_incoming_dte
+msgid "Incoming Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico recibido chileno"
+
+#. module: l10n_cl_dte_inbox_account
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.account_move_view_form
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_inbox_account.incoming_account_binding_view_form
+msgid "Incoming DTE"
+msgstr "DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_company__dte_inbox_account_exempt_tax_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_config_settings__dte_inbox_account_exempt_tax_id
+msgid "Incoming DTE Exempt Purchase Tax"
+msgstr "Impuesto de compra exento de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_account_move_line__dte_inbox_line_number
+msgid "Incoming DTE Line"
+msgstr "Línea de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_account_bank_statement_line__dte_inbox_binding_ids
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_account_move__dte_inbox_binding_ids
+msgid "Incoming DTE Links"
+msgstr "Vínculos de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_partner__dte_inbox_account_lock_revision
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_users__dte_inbox_account_lock_revision
+msgid "Incoming DTE Lock Revision"
+msgstr "Revisión de bloqueo de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_company__dte_inbox_account_journal_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_config_settings__dte_inbox_account_journal_id
+msgid "Incoming DTE Purchase Journal"
+msgstr "Diario de compras de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_l10n_cl_incoming_dte_account_mapping
+msgid "Incoming DTE Purchase Mapping"
+msgstr "Mapeo de compras de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.actions.act_window,name:l10n_cl_dte_inbox_account.incoming_account_mapping_action
+msgid "Incoming DTE Purchase Mappings"
+msgstr "Mapeos de compras de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_company__dte_inbox_account_vat_tax_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_config_settings__dte_inbox_account_vat_tax_id
+msgid "Incoming DTE Purchase VAT"
+msgstr "IVA de compra de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_l10n_cl_incoming_dte_account_binding
+msgid "Incoming DTE Vendor Bill Binding"
+msgstr "Vinculación de factura de proveedor de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:res.groups,name:l10n_cl_dte_inbox_account.group_inbox_account_manager
+msgid "Incoming DTE Vendor Bill Configuration"
+msgstr "Configuración de factura de proveedor de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_l10n_cl_incoming_dte_bill_wizard
+msgid "Incoming DTE Vendor Bill Preview"
+msgstr "Vista previa de factura de proveedor de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model,name:l10n_cl_dte_inbox_account.model_l10n_cl_incoming_dte_bill_wizard_line
+msgid "Incoming DTE Vendor Bill Preview Line"
+msgstr "Línea de vista previa de factura de proveedor de DTE recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.actions.act_window,name:l10n_cl_dte_inbox_account.incoming_account_binding_action
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_company__dte_inbox_account_enabled
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_res_config_settings__dte_inbox_account_enabled
+#: model:res.groups,name:l10n_cl_dte_inbox_account.group_inbox_account_user
+msgid "Incoming DTE Vendor Bills"
+msgstr "Facturas de proveedor de DTE recibidos"
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move.py:0
+msgid "Incoming DTE bills require explicit native posting."
+msgstr "Las facturas de DTE recibidos requieren una contabilización nativa explícita."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move_line.py:0
+msgid "Incoming DTE line ordinals are server-owned."
+msgstr "Los ordinales de línea de DTE recibidos los gestiona el servidor."
+
+#. module: l10n_cl_dte_inbox_account
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox_account/models/account_move.py:0
+msgid "Incoming DTE provenance is server-owned."
+msgstr "La procedencia de DTE recibidos la gestiona el servidor."
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__incoming_document_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__incoming_document_id
+msgid "Incoming Document"
+msgstr "Documento recibido"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_mapping__uom_id
+msgid "Invoice Unit"
+msgstr "Unidad de factura"
+
+#. module: l10n_cl_dte_inbox_account
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_account_binding__issue_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_inbox_account.field_l10n_cl_incoming_dte_bill_wizard__issue_date
+msgid "Issue Date"
+msgstr "Fecha de emisión"
