@@ -1,0 +1,349 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_dispatch
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-13 01:33+0000\n"
+"PO-Revision-Date: 2026-11-13 01:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_issuance_adapter.py:0
+msgid "A dispatch guide is issued only as DTE 52."
+msgstr "Una guía de despacho solo se emite como DTE 52."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/models/dispatch.py:0
+msgid "A frozen dispatch cannot be changed."
+msgstr "Un despacho congelado no se puede modificar."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.constraint,message:l10n_cl_dte_dispatch.constraint_l10n_cl_dte_dispatch_source_key_company_uniq
+msgid "A source can have only one dispatch guide per company."
+msgstr "Un origen solo puede tener una guía de despacho por empresa."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_validator.py:0
+msgid "Add at least one line."
+msgstr "Agregue al menos una línea."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__arrival_at
+msgid "Arrival At"
+msgstr "Llegada"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__carrier_id
+msgid "Carrier"
+msgstr "Transportista"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__sii_environment__certification
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__source_kind__certification
+msgid "Certification"
+msgstr "Certificación"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_electronic_document
+msgid "Chilean Electronic Tax Document"
+msgstr "Documento Tributario Electrónico chileno"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__create_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__create_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__currency_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_xml_composer
+msgid "DTE 52 XML composer"
+msgstr "Compositor XML del DTE 52"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_validator
+msgid "DTE 52 local validator"
+msgstr "Validador local del DTE 52"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__departure_at
+msgid "Departure At"
+msgstr "Salida"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__description
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__destination_address
+msgid "Destination Address"
+msgstr "Dirección de destino"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__details
+msgid "Details"
+msgstr "Detalle"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__dispatch_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__dispatch_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__dispatch_id
+msgid "Dispatch"
+msgstr "Despacho"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.actions.act_window,name:l10n_cl_dte_dispatch.action_dispatch
+msgid "Dispatch Guides"
+msgstr "Guías de despacho"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.ui.menu,name:l10n_cl_dte_dispatch.menu_dispatch_guides
+msgid "Dispatch Guides (DTE 52)"
+msgstr "Guías de despacho (DTE 52)"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__dispatch_type_code
+msgid "Dispatch Type Code"
+msgstr "Código de tipo de despacho"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_snapshot
+msgid "Dispatch fiscal snapshot builder"
+msgstr "Generador de la instantánea fiscal del despacho"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__display_name
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Document"
+msgstr "Documento"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__state__draft
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_search
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__driver_id
+msgid "Driver"
+msgstr "Conductor"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__document_ids
+msgid "Electronic Documents"
+msgstr "Documentos electrónicos"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch
+msgid "Electronic dispatch guide (DTE 52)"
+msgstr "Guía de despacho electrónica (DTE 52)"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_line
+msgid "Electronic dispatch guide line"
+msgstr "Línea de guía de despacho electrónica"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_reference
+msgid "Electronic dispatch guide reference"
+msgstr "Referencia de guía de despacho electrónica"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__event_date
+msgid "Event Date"
+msgstr "Fecha del evento"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__event_type
+msgid "Event Type"
+msgstr "Tipo de evento"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_line__tax_category__exempt
+msgid "Exempt"
+msgstr "Exento"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Freeze Snapshot"
+msgstr "Congelar instantánea"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_issuance_adapter.py:0
+msgid "Freeze the dispatch snapshot before issuing its DTE."
+msgstr "Congele la instantánea del despacho antes de emitir su DTE."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__state__frozen
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_search
+msgid "Frozen"
+msgstr "Congelado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__id
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model,name:l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch_event
+msgid "Immutable electronic dispatch guide event"
+msgstr "Evento inmutable de guía de despacho electrónica"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__issue_date
+msgid "Issue Date"
+msgstr "Fecha de emisión"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__write_uid
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__write_date
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__line_ids
+msgid "Line"
+msgstr "Línea"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_validator.py:0
+msgid "Line %s: a taxable line needs a unit price."
+msgstr "Línea %s: una línea afecta necesita un precio unitario."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_validator.py:0
+msgid "Line %s: the quantity must be positive."
+msgstr "Línea %s: la cantidad debe ser positiva."
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_validator.py:0
+msgid "Line %s: the unit price cannot be negative."
+msgstr "Línea %s: el precio unitario no puede ser negativo."
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__source_kind__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_cl_dte_dispatch
+#. odoo-python
+#: code:addons/l10n_cl_dte_dispatch/services/dispatch_issuance_adapter.py:0
+msgid "No validated CAF is available for DTE 52 in this environment."
+msgstr "No hay un CAF validado disponible para el DTE 52 en este ambiente."
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__origin_address
+msgid "Origin Address"
+msgstr "Dirección de origen"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Parties and transport"
+msgstr "Partes y transporte"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch__partner_id
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_event__payload_digest
+msgid "Payload Digest"
+msgstr "Resumen del contenido"
+
+#. module: l10n_cl_dte_dispatch
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_dispatch.view_dispatch_form
+msgid "Prepare DTE"
+msgstr "Preparar DTE"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch_event__event_type__prepared
+msgid "Prepared"
+msgstr "Preparado"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields.selection,name:l10n_cl_dte_dispatch.selection__l10n_cl_dte_dispatch__sii_environment__production
+msgid "Production"
+msgstr "Producción"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_line__quantity
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: l10n_cl_dte_dispatch
+#: model:ir.model.fields,field_description:l10n_cl_dte_dispatch.field_l10n_cl_dte_dispatch_reference__reason
+msgid "Reason"
+msgstr "Motivo"
