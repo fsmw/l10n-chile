@@ -397,3 +397,399 @@ msgstr "Factura por pedido"
 #: model:ir.model,name:l10n_cl_dte_pos_return.model_account_move
 msgid "Journal Entry"
 msgstr "Asiento contable"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "Legacy POS line mapping is ambiguous; no fiscal identity was guessed."
+msgstr "El mapeo heredado de líneas de POS es ambiguo; no se dedujo ninguna identidad fiscal."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "Legacy fiscal details cannot be matched uniquely to the POS sale."
+msgstr "Los datos fiscales heredados no pueden asociarse de forma única a la venta de POS."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Manual refund required"
+msgstr "Devolución manual requerida"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_pos_mapping_state__mapped
+msgid "Mapped"
+msgstr "Mapeado"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Mixed sales and returns are not supported in one fiscal order."
+msgstr "Las ventas y devoluciones mezcladas no son compatibles en un mismo pedido fiscal."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/account_move_line.py:0
+msgid "Native fiscal POS invoice line bindings cannot be forged."
+msgstr "Los vínculos nativos de líneas de factura fiscal de POS no pueden falsificarse."
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_pos_mapping_state__unmapped
+msgid "Not mapped"
+msgstr "No mapeado"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Online return validation required"
+msgstr "Requiere validación de devolución en línea"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "Only a DTE manager can prepare legacy fiscal line mapping."
+msgstr "Solo un gestor de DTE puede preparar el mapeo fiscal heredado de líneas."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Open a POS session with Chilean returns enabled first."
+msgstr "Abra primero una sesión de POS con devoluciones chilenas habilitadas."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Operational refund receipt"
+msgstr "Comprobante operativo de devolución"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_accounting_mode
+msgid "Original Accounting Mode"
+msgstr "Modo contable original"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_target_document_id
+msgid "Original Boleta"
+msgstr "Boleta original"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order_line__dte_return_origin_line_number
+msgid "Original Fiscal Detail"
+msgstr "Detalle fiscal original"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order_line__dte_return_map_artifact_id
+msgid "Original Line Mapping"
+msgstr "Mapeo de línea original"
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_pos_order_form_dte_return
+msgid "Original Sale and Credit Note"
+msgstr "Venta original y nota de crédito"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Original boleta:"
+msgstr "Boleta original:"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_bank_statement_line__dte_pos_return_order_id
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_move__dte_pos_return_order_id
+msgid "POS Credit Source"
+msgstr "Origen de crédito de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_account_move_line__dte_pos_order_line_id
+msgid "POS Fiscal Source Line"
+msgstr "Línea de origen fiscal de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__l10n_cl_electronic_artifact__role__pos_line_mapping
+msgid "POS Line Mapping"
+msgstr "Mapeo de líneas de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_document__pos_line_mapping_artifact_id
+msgid "POS Line Mapping Evidence"
+msgstr "Evidencia de mapeo de líneas de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_document__note_pos_return_order_id
+msgid "POS Return"
+msgstr "Devolución de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_electronic_document_form_pos_return
+msgid "POS Return Evidence"
+msgstr "Evidencia de devolución de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_res_config_settings_dte_pos_return
+msgid "POS Return Policy"
+msgstr "Política de devoluciones de POS"
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_company_form_dte_pos_return
+msgid "POS Returns"
+msgstr "Devoluciones de POS"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "POS fiscal line amounts differ from the original sale."
+msgstr "Los montos de las líneas fiscales de POS difieren de la venta original."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "POS fiscal receipts require POS and DTE permissions."
+msgstr "Los comprobantes fiscales de POS requieren permisos de POS y de DTE."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "POS operators may serialize only verified POS fiscal sources."
+msgstr "Los operadores de POS solo pueden serializar orígenes fiscales de POS verificados."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns currently require CLP and Demo evidence."
+msgstr "Las devoluciones de POS requieren actualmente evidencia en CLP y en Demo."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns do not support cash rounding."
+msgstr "Las devoluciones de POS no admiten redondeo de efectivo."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "POS returns require both POS User and DTE User permissions."
+msgstr "Las devoluciones de POS requieren los permisos de Usuario de POS y de Usuario DTE."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "POS returns support only credit note type 61."
+msgstr "Las devoluciones de POS solo admiten la nota de crédito tipo 61."
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Líneas de pedido del punto de venta"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Pedidos de punto de venta"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Pagos del punto de venta"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesión de punto de venta"
+
+#. module: l10n_cl_dte_pos_return
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_pos_return.view_pos_order_form_dte_return
+msgid "Prepare Legacy Line Mapping"
+msgstr "Preparar mapeo heredado de líneas"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Provide exactly one original serial for each returned unit."
+msgstr "Indique exactamente un número de serie original por cada unidad devuelta."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "Provide one persisted POS order UUID."
+msgstr "Indique un UUID de pedido de POS guardado."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/xml/return_status.xml:0
+msgid "Queued or awaiting fiscal confirmation"
+msgstr "En cola o pendiente de confirmación fiscal"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Refund not confirmed"
+msgstr "Devolución no confirmada"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Refund payments must equal the exact native credit total."
+msgstr "Los pagos de devolución deben igualar exactamente el total de crédito nativo."
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_pos_order__dte_return_reason
+msgid "Return Reason"
+msgstr "Motivo de devolución"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Return could not be prepared"
+msgstr "No se pudo preparar la devolución"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_snapshot.py:0
+msgid "Return details must have positive fiscal credit amounts."
+msgstr "Los detalles de devolución deben tener montos de crédito fiscal positivos."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return lot identities must be new records linked to the original sale."
+msgstr "Las identidades de lote de la devolución deben ser registros nuevos vinculados a la venta original."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return only lot or serial identities from the original POS line."
+msgstr "Devuelva solo identidades de lote o serie de la línea original de POS."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-javascript
+#: code:addons/l10n_cl_dte_pos_return/static/src/js/pos_return.esm.js:0
+msgid "Return only products from one original sale in this order."
+msgstr "Devuelva solo productos de una venta original en este pedido."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Return only sales of the current POS company and currency."
+msgstr "Devuelva solo ventas de la empresa y moneda de POS actuales."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Revalidate the return: the original adjustment capacity changed."
+msgstr "Vuelva a validar la devolución: cambió la capacidad de ajuste original."
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields,field_description:l10n_cl_dte_pos_return.field_l10n_cl_electronic_artifact__role
+msgid "Role"
+msgstr "Rol"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Select a paid POS sale with one accepted original boleta 39 or 41."
+msgstr "Seleccione una venta de POS pagada con una boleta original 39 o 41 aceptada."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "Select between 1 and 1000 original POS details."
+msgstr "Seleccione entre 1 y 1000 detalles originales de POS."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_order.py:0
+msgid "Select one original POS boleta before preparing fiscal line mapping."
+msgstr "Seleccione una boleta original de POS antes de preparar el mapeo fiscal de líneas."
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos_return.selection__pos_order__dte_return_accounting_mode__session_summary
+msgid "Session summary"
+msgstr "Resumen de sesión"
+
+#. module: l10n_cl_dte_pos_return
+#: model:ir.model,name:l10n_cl_dte_pos_return.model_pos_pack_operation_lot
+msgid "Specify product lot/serial number in pos order line"
+msgstr "Especifique el número de lote o serie del producto en la línea del pedido de POS"
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "The POS credit must have exactly one authoritative fiscal source."
+msgstr "El crédito de POS debe tener exactamente un origen fiscal autoritativo."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "The POS credit must reference its verified original boleta."
+msgstr "El crédito de POS debe referenciar su boleta original verificada."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "The POS credit source does not exist."
+msgstr "El origen de crédito de POS no existe."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/account_move.py:0
+msgid "The POS credit source is immutable."
+msgstr "El origen de crédito de POS es inmutable."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "The POS fiscal mapping does not match its immutable source."
+msgstr "El mapeo fiscal de POS no coincide con su origen inmutable."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_line_mapping.py:0
+msgid "The POS fiscal mapping evidence is invalid."
+msgstr "La evidencia del mapeo fiscal de POS no es válida."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "The POS fiscal source does not match the adjustment root."
+msgstr "El origen fiscal de POS no coincide con la raíz del ajuste."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_fiscal_evidence.py:0
+msgid "The POS operator cannot read this fiscal source."
+msgstr "El operador de POS no puede leer este origen fiscal."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/electronic_document.py:0
+msgid "The POS return and fiscal credit identity differ."
+msgstr "La devolución de POS y la identidad del crédito fiscal difieren."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "The POS return fiscal provenance differs from its original sale."
+msgstr "La procedencia fiscal de la devolución de POS difiere de su venta original."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "The POS return must preserve the original sale customer."
+msgstr "La devolución de POS debe conservar el cliente de la venta original."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/models/pos_session.py:0
+msgid "The POS session return policy is frozen from its company."
+msgstr "La política de devoluciones de la sesión de POS está congelada desde su empresa."
+
+#. module: l10n_cl_dte_pos_return
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos_return/services/pos_return_policy.py:0
+msgid "The accounting credit has no verified native POS return source."
+msgstr "El crédito contable no tiene un origen nativo verificado de devolución de POS."
