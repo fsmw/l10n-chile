@@ -394,3 +394,100 @@ msgstr "El operador de POS necesita el grupo Usuario DTE."
 #: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
 msgid "The POS order does not have its posted invoice."
 msgstr "El pedido de POS no tiene su factura contabilizada."
+
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The POS order needs at least one product line."
+msgstr "El pedido de POS necesita al menos una línea de producto."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The POS order totals do not reconcile with its lines."
+msgstr "Los totales del pedido de POS no cuadran con sus líneas."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The POS receiver must have a name."
+msgstr "El receptor de POS debe tener un nombre."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/models/pos_order.py:0
+msgid "The POS session has an unsupported DTE mode."
+msgstr "La sesión de POS tiene un modo DTE no compatible."
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "The company must be registered in Chile."
+msgstr "La empresa debe estar registrada en Chile."
+
+#. module: l10n_cl_dte_pos
+#: model:ir.model.fields.selection,name:l10n_cl_dte_pos.selection__pos_order__dte_issuance_state__unknown
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "VAT"
+msgstr "IVA"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "company RUT"
+msgstr "RUT de la empresa"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "company address and commune"
+msgstr "dirección y comuna de la empresa"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "company economic activity"
+msgstr "actividad económica de la empresa"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "company legal name"
+msgstr "razón social de la empresa"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "line subtotal"
+msgstr "subtotal de línea"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "net amount"
+msgstr "monto neto"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "total"
+msgstr "total"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "valid SII activity code"
+msgstr "código de actividad SII válido"
+
+#. module: l10n_cl_dte_pos
+#. odoo-python
+#: code:addons/l10n_cl_dte_pos/services/pos_boleta_snapshot.py:0
+msgid "valid company RUT"
+msgstr "RUT de empresa válido"
+
