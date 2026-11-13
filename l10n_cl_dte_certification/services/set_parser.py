@@ -6,7 +6,6 @@
 import hashlib
 import json
 import re
-from decimal import Decimal, InvalidOperation
 
 from odoo import _
 from odoo.exceptions import ValidationError
@@ -31,97 +30,14 @@ from .set_parser_support import (
     TABLE,
     TYPES,
     TYPES_V2,
+    _bad_constant,
+    _is_section_table_header,
+    _parse_note_metadata,
+    _parse_text_correction,
+    _text_correction_source_lines,
+    _unique_json,
+    decimal_value,
 )
-
-
-def _unique_json(pairs):
-    result = {}
-    for key, value in pairs:
-        if key in result:
-            raise ValidationError(_("Repeated JSON key: %s") % key)
-        result[key] = value
-    return result
-
-
-def _bad_constant(value):
-    raise ValidationError(_("Non-finite JSON number: %s") % value)
-
-
-def decimal_value(value):
-    if not isinstance(value, str) or not re.fullmatch(r"\d+(?:\.\d+)?", value):
-        raise ValidationError(_("Fiscal numbers must be unambiguous decimal strings."))
-    try:
-        number = Decimal(value)
-    except InvalidOperation as error:
-        raise ValidationError(_("Invalid fiscal number.")) from error
-    if not number.is_finite():
-        raise ValidationError(_("Fiscal numbers must be finite."))
-    return number
-
-
-def _parse_note_metadata(block, document_code):
-    if document_code not in {"56", "61"}:
-        return None, None, None
-    normalized = [normalized_label(line) for line in block]
-    references = [line for line in normalized if re.match(r"^REFERENCIA\b", line)]
-    reasons = [
-        re.sub(r"^RAZON REFERENCIA\s*:?\s*", "", line).strip()
-        for line in normalized
-        if re.match(r"^RAZON REFERENCIA\b", line)
-    ]
-    if len(references) != 1 or len(reasons) != 1:
-        return None, None, None
-    match = re.search(r"CASO\s+(\d+-\d+)\b", references[0])
-    if not match:
-        return None, None, reasons[0]
-    reason = reasons[0]
-    operation = (
-        "cancel"
-        if "ANULA" in reason
-        else "return"
-        if "DEVOLUCION" in reason
-        else "text"
-        if "CORRIGE GIRO" in reason or "CORRIGE TEXTO" in reason
-        else "amount"
-        if "MODIFICA MONTO" in reason
-        else None
-    )
-    return match.group(1), operation, reasons[0]
-
-
-def _parse_text_correction(block):
-    """Return exact correction lines and their relative positions in the case."""
-    lines = []
-    for index, line in enumerate(block):
-        if re.match(r"^\s*(?:DONDE\s+)?DICE\s*:?", line, re.I) or re.match(
-            r"^\s*DEBE\s+DECIR\s*:?", line, re.I
-        ):
-            lines.append((index, line))
-    if not any(
-        re.match(r"^\s*(?:DONDE\s+)?DICE\s*:?", line, re.I) for _, line in lines
-    ):
-        return None
-    if not any(re.match(r"^\s*DEBE\s+DECIR\s*:?", line, re.I) for _, line in lines):
-        return None
-    return "\n".join(line for _, line in lines)
-
-
-def _text_correction_source_lines(block, source_start_line):
-    return [
-        source_start_line + index
-        for index, line in enumerate(block)
-        if re.match(r"^\s*(?:DONDE\s+)?DICE", line, re.I)
-        or re.match(r"^\s*DEBE\s+DECIR", line, re.I)
-    ]
-
-
-def _is_section_table_header(label):
-    if not label.startswith("ITEM "):
-        return False
-    headers = label.removeprefix("ITEM ").split(" ")
-    return any(
-        marker in headers for marker in ("CANTIDAD", "UNITARIO", "MEDIDA", "ITEM")
-    ) and any(marker in label for marker in ("CANTIDAD", "UNITARIO"))
 
 
 def _parse_section_details(lines, start, stop, document_code, *, version=1):  # noqa: C901
