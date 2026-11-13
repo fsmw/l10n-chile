@@ -12,11 +12,11 @@ class TestReportSampleHooks(TransactionCase):
         super().setUp()
         self.sample_model = self.env["l10n_cl.dte.report.sample"]
 
-    def test_supported_codes_are_the_existing_ones(self):
+    def test_supported_codes_include_the_existing_ones(self):
         # Arrange / Act
         codes = self.sample_model._supported_document_codes()
-        # Assert
-        self.assertEqual(codes, EXISTING_CODES)
+        # Assert: other addons may add codes, but none of these may be lost
+        self.assertTrue(EXISTING_CODES <= codes)
 
     def test_only_queued_documents_can_be_printed_by_default(self):
         # Arrange / Act / Assert

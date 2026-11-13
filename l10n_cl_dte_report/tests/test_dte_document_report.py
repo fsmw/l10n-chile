@@ -68,7 +68,7 @@ class TestDteDocumentReport(DteReportTestCase):
                     "name": "Unsupported synthetic DTE",
                     "company_id": self.company.id,
                     "sii_environment": "demo",
-                    "document_code": "52",
+                    "document_code": "46",
                     "source_key": "unsupported-report-sample",
                 }
             )
