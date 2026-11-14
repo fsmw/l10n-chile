@@ -1164,3 +1164,45 @@ class DteCertificationSet(models.Model):
                     "signing_certificate_valid",
                 ]
             )
+
+    @api.depends(
+        "company_id",
+        "company_id.dte_sii_environment",
+        "company_id.dte_certification_enabled",
+    )
+    @api.depends_context("company", "uid")
+    def _compute_can_operate(self):
+        for record in self:
+            record.can_operate = bool(
+                self.env.user.has_group("l10n_cl_dte_core.group_dte_manager")
+                and record.company_id == self.env.company
+                and record.company_id in self.env.companies
+                and record.company_id.dte_sii_environment == "certification"
+                and record.company_id.dte_certification_enabled
+            )
+
+    @api.depends(
+        "can_operate",
+        "state",
+        "run_ids.state",
+        "run_ids.envelope_digest",
+        "case_ids.readiness",
+        "run_ids.envelope_submission_ids",
+        "run_ids.envelope_submission_ids.state",
+        "run_ids.envelope_submission_ids.track_id",
+        "run_ids.envelope_submission_ids.request_digest",
+        "run_ids.envelope_submission_ids.attempt_ids",
+        "run_ids.envelope_submission_ids.attempt_ids.state",
+        "run_ids.envelope_submission_ids.attempt_ids.finished_at",
+        "run_ids.envelope_submission_ids.attempt_ids.operation",
+        "run_ids.envelope_submission_ids.attempt_ids.request_digest",
+        "run_ids.envelope_submission_ids.attempt_ids.response_digest",
+    )
+    def _compute_can_new_run(self):
+        for record in self:
+            record.can_new_run = bool(
+                record.can_operate
+                and record.state == "ready"
+                and any(case.readiness == "ready" for case in record.case_ids)
+                and not record.run_ids.filtered(lambda run: run._blocks_new_execution())
+            )

@@ -27,6 +27,7 @@ class TestCertificationSetMissingMethods(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env.company
+        cls.company.sudo().write({"dte_sii_environment": "certification"})
         cls.set = cls.env["l10n_cl.dte.certification.set"]._create_from_import(
             cls.company,
             "missing-methods.txt",
