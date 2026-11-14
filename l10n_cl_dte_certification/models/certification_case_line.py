@@ -79,3 +79,17 @@ class DteCertificationCaseLine(models.Model):
             for row in rows
         ]
         return super(DteCertificationCaseLine, self.sudo()).create(values)
+
+    name = fields.Char()
+
+    quantity_text = fields.Char()
+
+    unit_price_text = fields.Char()
+
+    uom_text = fields.Char()
+
+    discount_percent_text = fields.Char(default="0", required=True)
+
+    exempt = fields.Boolean()
+
+    product_id = fields.Many2one("product.product", check_company=True)

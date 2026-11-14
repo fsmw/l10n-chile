@@ -240,3 +240,56 @@ class DteCertificationCase(models.Model):
                 "interpretation": values,
             }
         )
+
+    sii_reference_reason = fields.Char(
+        string="Correction Text",
+        readonly=True,
+        help=(
+            "Correction wording from the original SET TXT or a traced receiver "
+            "activity review; "
+            "it is not the DTE reference reason."
+        ),
+    )
+
+    expected_totals = fields.Json(readonly=True)
+
+    partner_id = fields.Many2one("res.partner", check_company=True)
+
+    receiver_classification = fields.Selection(
+        [
+            ("unverified", "Unverified"),
+            ("existing_customer", "Existing External Customer"),
+            ("synthetic_uat", "Synthetic Local Test Data"),
+        ],
+        required=True,
+        default="unverified",
+        readonly=True,
+        copy=False,
+    )
+
+    receiver_verification_reference = fields.Char(readonly=True, copy=False)
+
+    receiver_verified_at = fields.Datetime(readonly=True, copy=False)
+
+    receiver_verified_by = fields.Many2one("res.users", readonly=True, copy=False)
+
+    readiness = fields.Selection(
+        [
+            ("mapping", "Generation Setup Required"),
+            ("validated", "Source Validated"),
+            ("ready", "Ready to Generate"),
+            ("unsupported", "Unsupported Source"),
+        ],
+        required=True,
+        default="mapping",
+        readonly=True,
+    )
+
+    completion_provenance = fields.Json(readonly=True, copy=False)
+
+    can_map = fields.Boolean(compute="_compute_can_map")
+
+    @api.depends("set_id.can_edit_envelope", "set_id.can_operate")
+    def _compute_can_map(self):
+        for case in self:
+            case.can_map = case.set_id.can_edit_envelope and case.set_id.can_operate

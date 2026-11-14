@@ -27,3 +27,44 @@ class DteCertificationImportWizard(models.TransientModel):
             "view_mode": "form",
             "target": "current",
         }
+
+    source_encoding = fields.Selection(
+        [("utf-8", "UTF-8"), ("iso-8859-1", "ISO-8859-1")],
+        required=True,
+        default="utf-8",
+    )
+
+    parser_profile = fields.Selection(
+        [
+            ("sii_txt_v1", "SII text v1"),
+            ("reviewed_mapping_v1", "Reviewed mapping v1"),
+            ("sii_section_v1", "SII section v1"),
+            ("reviewed_section_v1", "Reviewed section v1"),
+            ("sii_txt_v2", "SII text v2"),
+            ("reviewed_mapping_v2", "Reviewed mapping v2"),
+            ("sii_section_v2", "SII section v2"),
+            ("reviewed_section_v2", "Reviewed section v2"),
+        ],
+        required=True,
+        default="sii_txt_v2",
+    )
+
+    selected_section_id = fields.Many2one(
+        "l10n_cl.dte.certification.import.wizard.section",
+        string="SET attention number",
+        domain="[('wizard_id', '=', id), ('case_count', '>', 0)]",
+    )
+
+    section_option_ids = fields.One2many(
+        "l10n_cl.dte.certification.import.wizard.section",
+        "wizard_id",
+        string="Detected SET sections",
+    )
+
+    mapping_file = fields.Binary(attachment=False)
+
+    mapping_filename = fields.Char()
+
+    accounting_warning_acknowledged = fields.Boolean(
+        string="I am using an isolated test database"
+    )
