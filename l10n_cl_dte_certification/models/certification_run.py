@@ -55,6 +55,7 @@ class DteCertificationRun(models.Model):
     )
     set_digest = fields.Char(required=True, readonly=True, index=True)
     snapshot_digest = fields.Char(required=True, readonly=True, index=True)
+    input_digest = fields.Char(readonly=True, copy=False)
     state = fields.Selection(
         [
             ("draft", "Draft"),

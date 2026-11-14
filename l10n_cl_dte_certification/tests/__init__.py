@@ -5,3 +5,4 @@ from . import test_set_structure_parser
 from . import test_certification_run
 from . import test_certification_result_reconciliation
 from . import test_case_generation
+from . import test_set_missing_methods
