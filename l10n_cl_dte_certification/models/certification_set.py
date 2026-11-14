@@ -6,10 +6,16 @@ import binascii
 import hashlib
 from collections import Counter
 
+from cryptography import x509
 from psycopg2 import IntegrityError
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import (
+    certificate_sender_rut,
+    normalize_rut,
+)
 
 from ..services.access import check_certification_access
 from ..services.case_instruction_interpreter import INTERPRETER_VERSION
@@ -938,3 +944,223 @@ class DteCertificationSet(models.Model):
         required=True,
         default="sii_txt_v1",
     )
+
+    sii_environment = fields.Selection(
+        [("certification", "Certification")],
+        required=True,
+        default="certification",
+        readonly=True,
+    )
+
+    contains_synthetic_completion = fields.Boolean(
+        readonly=True, copy=False, index=True
+    )
+
+    completion_digest = fields.Char(readonly=True, copy=False, index=True)
+
+    completion_reviewed_at = fields.Datetime(readonly=True, copy=False)
+
+    completion_reviewed_by = fields.Many2one("res.users", readonly=True, copy=False)
+
+    diagnostics = fields.Json(readonly=True)
+
+    journal_id = fields.Many2one(
+        related="company_id.dte_certification_journal_id", readonly=True
+    )
+
+    vat_tax_id = fields.Many2one(
+        related="company_id.dte_certification_vat_tax_id", readonly=True
+    )
+
+    exempt_tax_id = fields.Many2one(
+        related="company_id.dte_certification_exempt_tax_id",
+        string="Exempt Sales Tax",
+        readonly=True,
+    )
+
+    resolution_number = fields.Char(
+        string="SII Resolution Number",
+        compute="_compute_resolution_number",
+        help=(
+            "Certification uses resolution number 0. "
+            "The Production resolution is retained on the company."
+        ),
+    )
+
+    resolution_date = fields.Date(
+        related="company_id.dte_certification_resolution_date", readonly=False
+    )
+
+    sender_vat = fields.Char(related="company_id.dte_sii_sender_vat", readonly=True)
+
+    issuer_street = fields.Char(
+        related="company_id.partner_id.street", readonly=False, string="Issuer Address"
+    )
+
+    issuer_street2 = fields.Char(
+        related="company_id.partner_id.street2",
+        readonly=False,
+        string="Apartment, Office or Unit",
+        help="Optional: apartment, office or unit, if not included in the address.",
+    )
+
+    issuer_commune = fields.Char(
+        related="company_id.partner_id.city", readonly=False, string="Issuer Commune"
+    )
+
+    signing_profile_id = fields.Many2one(
+        "l10n_cl.dte.signing.profile",
+        compute="_compute_signing_configuration",
+        string="Certification Signing Profile",
+    )
+
+    signing_certificate_id = fields.Many2one(
+        "certificate.certificate",
+        compute="_compute_signing_configuration",
+        inverse="_inverse_signing_certificate",
+        check_company=True,
+        string="Certification Certificate",
+        groups="base.group_system",
+    )
+
+    signing_excluded_certificate_ids = fields.Many2many(
+        "certificate.certificate",
+        compute="_compute_signing_configuration",
+        groups="base.group_system",
+    )
+
+    signing_certificate_valid = fields.Boolean(
+        related="signing_certificate_id.is_valid",
+        depends=["signing_certificate_id"],
+        string="Certificate Valid",
+        groups="base.group_system",
+    )
+
+    signing_profile_active = fields.Boolean(
+        related="signing_profile_id.active",
+        depends=["signing_profile_id"],
+        string="Signing Profile Active",
+    )
+
+    folio_shortage_message = fields.Text(compute="_compute_folio_shortage_message")
+
+    @api.depends(
+        "case_ids.document_code",
+        "caf_line_ids.caf_id",
+        "caf_line_ids.caf_id.state",
+        "caf_line_ids.caf_id.date_to",
+        "caf_line_ids.caf_id.folio_start",
+        "caf_line_ids.caf_id.folio_end",
+        "caf_line_ids.caf_id.folio_ids.number",
+        "run_ids.line_ids.document_id.folio",
+    )
+    def _compute_folio_shortage_message(self):
+        for record in self:
+            record.folio_shortage_message = (
+                "\n".join(
+                    item["message"]
+                    for item in record._get_folio_requirements()
+                    if item["missing"]
+                )
+                or False
+            )
+
+    @api.depends("company_id")
+    def _compute_signing_configuration(self):
+        profile_model = self.env["l10n_cl.dte.signing.profile"].with_context(
+            active_test=False
+        )
+        for record in self:
+            profiles = profile_model.search([("company_id", "=", record.company_id.id)])
+            profile = profiles.filtered(
+                lambda item: item.sii_environment == "certification"
+            )[:1]
+            record.signing_profile_id = profile
+            record.signing_certificate_id = profile.certificate_id
+            record.signing_excluded_certificate_ids = (profiles - profile).mapped(
+                "certificate_id"
+            )
+
+    @api.depends("sii_environment", "company_id.dte_sii_resolution_number")
+    def _compute_resolution_number(self):
+        for record in self:
+            record.resolution_number = (
+                "0"
+                if record.sii_environment == "certification"
+                else record.company_id.dte_sii_resolution_number
+            )
+
+    def _inverse_signing_certificate(self):
+        self._check_certification_access()
+        for record in self:
+            certificate = record.signing_certificate_id
+            certificate.check_access("read")
+            if (
+                not certificate
+                or certificate.company_id != record.company_id
+                or not certificate.active
+                or not certificate.is_valid
+                or not certificate.private_key_id
+                or not certificate.private_key_id.active
+                or certificate.private_key_id.public
+            ):
+                raise UserError(
+                    _("Select a valid company certificate with an active private key.")
+                )
+            profiles = self.env["l10n_cl.dte.signing.profile"].with_context(
+                active_test=False
+            )
+            profile = profiles.search(
+                [
+                    ("company_id", "=", record.company_id.id),
+                    ("sii_environment", "=", "certification"),
+                ],
+                limit=1,
+            )
+            if profiles.search_count(
+                [("certificate_id", "=", certificate.id), ("id", "!=", profile.id or 0)]
+            ):
+                raise UserError(
+                    _(
+                        "This certificate is already assigned to another "
+                        "signing profile."
+                    )
+                )
+            with self.env.cr.savepoint():
+                if profile:
+                    if profile.certificate_id != certificate:
+                        if profile.active:
+                            profile.write({"active": False})
+                        profile.write({"certificate_id": certificate.id})
+                    if not profile.active:
+                        profile.write({"active": True})
+                else:
+                    profiles.create(
+                        {
+                            "name": _(
+                                "Certification - %(company)s",
+                                company=record.company_id.name,
+                            ),
+                            "company_id": record.company_id.id,
+                            "sii_environment": "certification",
+                            "certificate_id": certificate.id,
+                            "active": True,
+                        }
+                    )
+                if not record.company_id.dte_sii_sender_vat or normalize_rut(
+                    record.company_id.dte_sii_sender_vat
+                ) == normalize_rut(record.company_id.vat):
+                    record.company_id.dte_sii_sender_vat = certificate_sender_rut(
+                        x509.load_pem_x509_certificate(
+                            base64.b64decode(certificate.sudo().pem_certificate)
+                        )
+                    )
+            record.invalidate_recordset(
+                [
+                    "signing_profile_id",
+                    "signing_certificate_id",
+                    "signing_excluded_certificate_ids",
+                    "signing_profile_active",
+                    "signing_certificate_valid",
+                ]
+            )

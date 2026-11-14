@@ -487,6 +487,87 @@ class DteCertificationRun(models.Model):
             "target": "current",
         }
 
+    issue_date = fields.Date(required=True, default=fields.Date.context_today)
+
+    is_partial = fields.Boolean(readonly=True)
+
+    input_snapshot = fields.Json(readonly=True, copy=False)
+
+    envelope_file = fields.Binary(
+        string="XML Envelope",
+        attachment=True,
+        readonly=True,
+        copy=False,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+
+    diagnostics = fields.Json(string="Preparation Diagnostics", readonly=True)
+
+    can_generate = fields.Boolean(compute="_compute_can_generate")
+
+    signature_regeneration_ids = fields.One2many(
+        "l10n_cl.dte.certification.signature.regeneration",
+        "run_id",
+        string="Signature History",
+        readonly=True,
+        groups="l10n_cl_dte_core.group_dte_manager",
+    )
+
+    process_stage_id = fields.Many2one(
+        "l10n_cl.dte.certification.process.stage",
+        check_company=True,
+        ondelete="restrict",
+        copy=False,
+        index=True,
+    )
+
+    reportability_state = fields.Selection(
+        [
+            ("not_checked", "Not Checked"),
+            ("blocked", "Blocked"),
+            ("ready", "Ready to Report"),
+            ("queued", "Queued for SII"),
+            ("sending", "Sending to SII"),
+            ("outcome_unknown", "SII Outcome Unknown"),
+            ("transport_error", "SII Transport Error"),
+            ("submitted", "Submitted to SII"),
+            ("reconciled", "Reconciled with SII"),
+        ],
+        string="SII Submission Status",
+        required=True,
+        default="not_checked",
+        readonly=True,
+        copy=False,
+        index=True,
+    )
+
+    reportability_diagnostics = fields.Json(
+        string="SII Validation Results", readonly=True, copy=False
+    )
+
+    reportability_warnings = fields.Json(
+        string="Verification Warnings", readonly=True, copy=False
+    )
+
+    official_coverage_digest = fields.Char(
+        string="Case Coverage Fingerprint", readonly=True, copy=False, index=True
+    )
+
+    @api.depends(
+        "state", "set_id.state", "line_ids.state", "line_ids.document_id", "can_operate"
+    )
+    def _compute_can_generate(self):
+        for run in self:
+            run.can_generate = (
+                run.can_operate
+                and run.set_id.state == "ready"
+                and run.state in {"draft", "generated", "partial"}
+                and not any(
+                    line.document_id or line.state == "prepared"
+                    for line in run.line_ids
+                )
+            )
+
 
 class DteCertificationRunLine(models.Model):
     _name = "l10n_cl.dte.certification.run.line"
@@ -774,3 +855,44 @@ class DteCertificationRunLine(models.Model):
                 _("The signed DTE fiscal identity differs from its frozen case.")
             )
         return True
+
+    state = fields.Selection(
+        [
+            ("pending", "Pending"),
+            ("generated", "Document Generated"),
+            ("prepared", "DTE Prepared"),
+            ("unsupported", "Unsupported"),
+            ("failed", "Failed"),
+        ],
+        required=True,
+        default="pending",
+        readonly=True,
+    )
+
+    receiver_partner_id = fields.Many2one(
+        "res.partner",
+        string="Receiver",
+        readonly=True,
+        copy=False,
+        check_company=True,
+    )
+
+    receiver_rut_snapshot = fields.Char(
+        string="Receiver RUT", readonly=True, copy=False, index=True
+    )
+
+    receiver_classification_snapshot = fields.Selection(
+        [
+            ("unverified", "Unverified"),
+            ("existing_customer", "Existing External Customer"),
+            ("synthetic_uat", "Synthetic Local Test Data"),
+        ],
+        readonly=True,
+        copy=False,
+    )
+
+    receiver_verification_reference_snapshot = fields.Char(readonly=True, copy=False)
+
+    diagnostic_code = fields.Char(readonly=True)
+
+    diagnostic_message = fields.Text(readonly=True)
