@@ -16,18 +16,20 @@ msgstr ""
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_set_caf_set_caf_uniq
 msgid "A CAF can only be added once to a certification set."
-msgstr ""
+msgstr "Un CAF solo puede agregarse una vez a un set de certificación."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_caf_request_idempotency_key_uniq
 msgid "A CAF request idempotency key must be unique."
-msgstr ""
+msgstr "La clave de idempotencia de la solicitud CAF debe ser única."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "A CAF request must belong to a Certification set and company."
 msgstr ""
+"Una solicitud CAF debe pertenecer a un set y a una compañía de "
+"Certificación."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_run_line_document_uniq
@@ -44,13 +46,13 @@ msgstr "Se requiere el rol de responsable de DTE para operar la certificación."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_event.py:0
 msgid "A DTE manager is required to append process events."
-msgstr ""
+msgstr "Se requiere un gestor DTE para agregar eventos al proceso."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/set_parser.py:0
 msgid "A DTE note requires a reviewed reference."
-msgstr ""
+msgstr "Una nota DTE requiere una referencia revisada."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -89,41 +91,44 @@ msgstr "Un caso de certificación solo puede crear un documento contable."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "A certification process must use Certification."
-msgstr ""
+msgstr "Un proceso de certificación debe usar el ambiente de Certificación."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_case.py:0
 msgid "A certification reference text applies only to DTE notes."
-msgstr ""
+msgstr "El texto de referencia de certificación solo aplica a notas DTE."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_completion_wizard.py:0
 msgid "A confirmed proposal has no value."
-msgstr ""
+msgstr "Una propuesta confirmada no tiene valor."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "A document type can only be requested once per batch."
-msgstr ""
+msgstr "Un tipo de documento solo puede solicitarse una vez por lote."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_caf_request_wizard_line_wizard_document_type_uniq
 msgid "A document type can only be selected once."
-msgstr ""
+msgstr "Un tipo de documento solo puede seleccionarse una vez."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_invoice_adapter.py:0
 msgid "A global discount case requires integer CLP detail values."
 msgstr ""
+"Un caso con descuento global requiere valores de detalle enteros en CLP."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_manual_result_wizard_view_form
 msgid "A manual outcome requires an official portal or SII email attachment."
 msgstr ""
+"Un resultado manual requiere un adjunto oficial del portal o del correo del "
+"SII."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -135,7 +140,7 @@ msgstr "Se repite una línea del TXT mapeado."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_note_adapter.py:0
 msgid "A monetary DTE note must have a positive amount."
-msgstr ""
+msgstr "Una nota DTE monetaria debe tener un monto positivo."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_set_view_form
@@ -150,7 +155,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "A not-applicable requirement cannot be marked ready."
-msgstr ""
+msgstr "Un requisito no aplicable no puede marcarse como listo."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -162,7 +167,7 @@ msgstr "Un caso guardado difiere de su bloque original."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_evidence.py:0
 msgid "A portal reference or authoritative source URL is required."
-msgstr ""
+msgstr "Se requiere una referencia del portal o la URL de una fuente oficial."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -206,41 +211,41 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "A process can only include Certification sets for its company."
-msgstr ""
+msgstr "Un proceso solo puede incluir sets de Certificación de su compañía."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_completion_wizard.py:0
 msgid "A product can only be assigned to a product finding."
-msgstr ""
+msgstr "Un producto solo puede asignarse a un hallazgo de producto."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_completion_wizard.py:0
 msgid "A receiver can only be assigned to a receiver finding."
-msgstr ""
+msgstr "Un receptor solo puede asignarse a un hallazgo de receptor."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_caf_request_line_request_document_type_uniq
 msgid "A request can contain a document type only once."
-msgstr ""
+msgstr "Una solicitud puede contener un tipo de documento solo una vez."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "A requirement code is copied from its template."
-msgstr ""
+msgstr "El código del requisito se copia desde su plantilla."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "A requirement template must match its owning process stage."
-msgstr ""
+msgstr "Una plantilla de requisito debe corresponder a la etapa de su proceso."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_requirement_template_stage_requirement_revision_uniq
 msgid "A requirement template revision must be unique."
-msgstr ""
+msgstr "La revisión de una plantilla de requisito debe ser única."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -252,25 +257,26 @@ msgstr "Se requiere un mapeo JSON revisado de menos de 2 MiB."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_set_caf.py:0
 msgid "A set can have only one primary CAF per document type."
-msgstr ""
+msgstr "Un set puede tener solo un CAF principal por tipo de documento."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_completion_wizard.py:0
 msgid "A set with synthetic data cannot return to official certification."
 msgstr ""
+"Un set con datos sintéticos no puede volver a la certificación oficial."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "A stage and requirement template are required."
-msgstr ""
+msgstr "Se requieren una etapa y una plantilla de requisito."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_evidence.py:0
 msgid "A stage and source attachment are required."
-msgstr ""
+msgstr "Se requieren una etapa y un adjunto de origen."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -278,42 +284,45 @@ msgstr ""
 msgid ""
 "A stage can only link Certification envelope submissions for its company."
 msgstr ""
+"Una etapa solo puede vincular envíos de sobres de Certificación de su "
+"compañía."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "A stage can only link Certification executions for its company."
 msgstr ""
+"Una etapa solo puede vincular ejecuciones de Certificación de su compañía."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "A stage can only link Certification submissions for its company."
-msgstr ""
+msgstr "Una etapa solo puede vincular envíos de Certificación de su compañía."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "A stage can only link a Certification set for its company."
-msgstr ""
+msgstr "Una etapa solo puede vincular un set de Certificación de su compañía."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_process_requirement_stage_requirement_code_uniq
 msgid "A stage requirement code must be unique within its stage."
-msgstr ""
+msgstr "El código del requisito de una etapa debe ser único dentro de ella."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_note_adapter.py:0
 msgid "A text correction requires one zero-value detail line."
-msgstr ""
+msgstr "Una corrección de texto requiere una línea de detalle con valor cero."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_event.py:0
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "A valid certification process is required."
-msgstr ""
+msgstr "Se requiere un proceso de certificación válido."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -341,12 +350,12 @@ msgstr "Comprobante de aceptación"
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_manual_result_wizard__result__accepted
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_requirement__state__accepted
 msgid "Accepted"
-msgstr ""
+msgstr "Aceptado"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_stage__state__accepted
 msgid "Accepted by SII"
-msgstr ""
+msgstr "Aceptado por el SII"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_set_view_form
@@ -370,7 +379,7 @@ msgstr "Sets activos"
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_request_wizard.py:0
 msgid "Add at least one document type and quantity."
-msgstr ""
+msgstr "Agregue al menos un tipo de documento y una cantidad."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_set_caf__role__additional
@@ -381,6 +390,8 @@ msgstr "Adicional"
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_exchange_sii_instructions
 msgid "All exchange directions and acknowledgements requested by SII"
 msgstr ""
+"Todas las direcciones de intercambio y acuses de recibo solicitados por el "
+"SII"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -393,6 +404,7 @@ msgstr "Todos los casos seleccionados deben tener un DTE firmado."
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "All stages must be accepted with verified registration evidence."
 msgstr ""
+"Todas las etapas deben estar aceptadas con evidencia de registro verificada."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process__process_mode__authorized_taxpayer
@@ -403,7 +415,7 @@ msgstr "Contribuyente ya autorizado"
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_manual_result_wizard.py:0
 msgid "An SII portal reference is required."
-msgstr ""
+msgstr "Se requiere una referencia del portal del SII."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_run_line_move_uniq
@@ -417,6 +429,8 @@ msgid ""
 "An already-authorized taxpayer process cannot have a new-postulation "
 "reference."
 msgstr ""
+"Un proceso de contribuyente ya autorizado no puede tener una referencia de "
+"nueva postulación."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_run_line_run_case_uniq
@@ -437,19 +451,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/envelope_submission.py:0
 msgid "An exported signed envelope is required."
-msgstr ""
+msgstr "Se requiere un sobre firmado exportado."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/incoming_document.py:0
 msgid "An incoming DTE cannot be moved between certification stages."
-msgstr ""
+msgstr "Un DTE recibido no puede moverse entre etapas de certificación."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/set_parser.py:0
 msgid "An invoice cannot include note reference data."
-msgstr ""
+msgstr "Una factura no puede incluir datos de referencia de nota."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -467,17 +481,17 @@ msgstr "Un impuesto de la factura difiere del caso SII congelado."
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_requirement__applicability
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_requirement_template__applicability
 msgid "Applicability"
-msgstr ""
+msgstr "Aplicabilidad"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_requirement__applicability_reason
 msgid "Applicability Reason"
-msgstr ""
+msgstr "Motivo de aplicabilidad"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_completion_line__applicable
 msgid "Applicable"
-msgstr ""
+msgstr "Aplicable"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_completion_wizard_view_form
@@ -512,12 +526,12 @@ msgstr "Archivado"
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_stage__code__assigned_set
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_requirement_template__stage_code__assigned_set
 msgid "Assigned Test Set"
-msgstr ""
+msgstr "Set de pruebas asignado"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_assigned_set_source
 msgid "Assigned set source and full case coverage"
-msgstr ""
+msgstr "Origen del set asignado y cobertura completa de casos"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -526,13 +540,15 @@ msgid ""
 "At least one dispatch outcome is unknown. Reconcile it with the SII portal "
 "before continuing."
 msgstr ""
+"Al menos un resultado de despacho es desconocido. Concílielo con el portal "
+"del SII antes de continuar."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 #: model:ir.actions.act_window,name:l10n_cl_dte_certification.certification_evidence_wizard_action
 msgid "Attach Certification Evidence"
-msgstr ""
+msgstr "Adjuntar evidencia de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_evidence_wizard_view_form
@@ -543,7 +559,7 @@ msgstr "Adjuntar evidencia"
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_evidence_wizard
 msgid "Attach SII DTE Certification Evidence"
-msgstr ""
+msgstr "Adjuntar evidencia de certificación DTE del SII"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -555,7 +571,7 @@ msgstr "Adjunte un comprobante de postulación no vacío de hasta 20 MiB."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "Attach evidence before marking a requirement ready."
-msgstr ""
+msgstr "Adjunte evidencia antes de marcar un requisito como listo."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_authorization_wizard_view_form
@@ -566,12 +582,15 @@ msgid ""
 "                    the operator; Odoo does not verify authorization with "
 "the SII."
 msgstr ""
+"Adjunte evidencia de que el contribuyente ya está autorizado y tiene acceso "
+"al ambiente de Certificación del SII. La revisa el operador; Odoo no "
+"verifica la autorización con el SII."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_authorization_wizard.py:0
 msgid "Attach non-empty authorization evidence up to 20 MiB."
-msgstr ""
+msgstr "Adjunte evidencia de autorización no vacía de hasta 20 MiB."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -591,17 +610,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_manual_result_wizard.py:0
 msgid "Attach the official SII result."
-msgstr ""
+msgstr "Adjunte el resultado oficial del SII."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_evidence__attachment_id
 msgid "Attachment"
-msgstr ""
+msgstr "Adjunto"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_line__attempt_count
 msgid "Attempt Count"
-msgstr ""
+msgstr "Cantidad de intentos"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_import_wizard_section__attention_number
@@ -612,7 +631,7 @@ msgstr "Número de atención"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_receiver_confirmation_wizard__attestation_notes
 msgid "Attestation Notes"
-msgstr ""
+msgstr "Notas de la declaración"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_process_view_form
@@ -622,29 +641,29 @@ msgstr "Eventos de auditoría"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_authorization_wizard__evidence_file
 msgid "Authorization Evidence"
-msgstr ""
+msgstr "Evidencia de autorización"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_manual_result_wizard.py:0
 msgid "Authorized DTE types must be numeric codes."
-msgstr ""
+msgstr "Los tipos DTE autorizados deben ser códigos numéricos."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_manual_result_wizard__authorized_document_types
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process__authorized_document_types
 msgid "Authorized Document Types"
-msgstr ""
+msgstr "Tipos de documento autorizados"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_assigned_set_folio
 msgid "Authorized certification CAF and folios per document type"
-msgstr ""
+msgstr "CAF y folios de certificación autorizados por tipo de documento"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_wizard__available_document_type_ids
 msgid "Available Document Type"
-msgstr ""
+msgstr "Tipo de documento disponible"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_stage_view_form
@@ -663,12 +682,12 @@ msgstr "Bloqueado"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_completion_line__severity__blocking
 msgid "Blocking"
-msgstr ""
+msgstr "Bloqueante"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_completion_wizard__blocking_count
 msgid "Blocking Count"
-msgstr ""
+msgstr "Cantidad de bloqueos"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -681,7 +700,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Both certification entry requirements must be configured."
-msgstr ""
+msgstr "Deben configurarse ambos requisitos de entrada a la certificación."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_set_view_form
@@ -698,6 +717,8 @@ msgstr "CAF y folios"
 #: code:addons/l10n_cl_dte_certification/models/certification_set_caf.py:0
 msgid "CAF configuration is frozen after document generation begins."
 msgstr ""
+"La configuración de CAF queda congelada al iniciar la generación de "
+"documentos."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -706,7 +727,7 @@ msgstr ""
 #. module: l10n_cl_dte_certification
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_request_wizard.py:0
 msgid "CAF configuration is frozen for this set."
-msgstr ""
+msgstr "La configuración de CAF está congelada para este set."
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_compliance_caf
@@ -721,61 +742,66 @@ msgstr ""
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_import_wizard.py:0
 msgid "CAF import is available only for enabled Certification sets."
 msgstr ""
+"La importación de CAF solo está disponible para sets de Certificación "
+"habilitados."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_set_caf.py:0
 msgid "CAF links can only be reordered or assigned a role."
-msgstr ""
+msgstr "Los vínculos CAF solo pueden reordenarse o asignarse a un rol."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "CAF request audit lines cannot be deleted."
-msgstr ""
+msgstr "No se pueden eliminar las líneas de auditoría de solicitudes CAF."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "CAF request audit records cannot be deleted."
-msgstr ""
+msgstr "No se pueden eliminar los registros de auditoría de solicitudes CAF."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "CAF request line outcomes are managed by the service."
 msgstr ""
+"Los resultados de las líneas de solicitud CAF los gestiona el servicio."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "CAF request outcomes are managed by the service."
-msgstr ""
+msgstr "Los resultados de las solicitudes CAF los gestiona el servicio."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_set.py:0
 msgid "CAF requests are available only for enabled Certification sets."
 msgstr ""
+"Las solicitudes CAF solo están disponibles para sets de Certificación "
+"habilitados."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_caf_service.py:0
 msgid "CAF requests are available only in Certification."
-msgstr ""
+msgstr "Las solicitudes CAF solo están disponibles en Certificación."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 #: code:addons/l10n_cl_dte_certification/wizards/certification_caf_request_wizard.py:0
 msgid "CAF requests are restricted to Certification."
-msgstr ""
+msgstr "Las solicitudes CAF están restringidas a Certificación."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "CAF requests require an editable Certification set."
-msgstr ""
+msgstr "Las solicitudes CAF requieren un set de Certificación editable."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_reconcile_wizard__caf_id
@@ -803,12 +829,12 @@ msgstr "Nombre del archivo CAF"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__caf_line_ids
 msgid "Caf Line"
-msgstr ""
+msgstr "Línea CAF"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__caf_request_ids
 msgid "Caf Request"
-msgstr ""
+msgstr "Solicitud CAF"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__can_edit_envelope
@@ -856,23 +882,23 @@ msgstr "Cancelar"
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_caf_request_view_form
 msgid "Cancel Queued Lines"
-msgstr ""
+msgstr "Cancelar líneas en cola"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_caf_request__state__cancelled
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_caf_request_line__state__cancelled
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_evidence__captured_at
 msgid "Captured At"
-msgstr ""
+msgstr "Capturado el"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_evidence__captured_by
 msgid "Captured By"
-msgstr ""
+msgstr "Capturado por"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_case_line__case_id
@@ -886,7 +912,7 @@ msgstr "Caso"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_import_wizard_section__case_count
 msgid "Case Count"
-msgstr ""
+msgstr "Cantidad de casos"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_case__case_identifier
@@ -896,7 +922,7 @@ msgstr "Identificador del caso"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_completion_line__case_line_id
 msgid "Case Line"
-msgstr ""
+msgstr "Línea de caso"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_case_set_case_uniq
@@ -948,17 +974,17 @@ msgstr "Certificación"
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_caf_request
 msgid "Certification CAF Request"
-msgstr ""
+msgstr "Solicitud CAF de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_caf_request_line
 msgid "Certification CAF Request Line"
-msgstr ""
+msgstr "Línea de solicitud CAF de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_caf_request_wizard_line
 msgid "Certification CAF Request Wizard Line"
-msgstr ""
+msgstr "Línea del asistente de solicitud CAF de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.actions.act_window,name:l10n_cl_dte_certification.certification_case_action
@@ -968,12 +994,12 @@ msgstr "Casos de certificación"
 #. module: l10n_cl_dte_certification
 #: model:ir.actions.act_window,name:l10n_cl_dte_certification.certification_evidence_action
 msgid "Certification Evidence"
-msgstr ""
+msgstr "Evidencia de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_res_company__dte_certification_exempt_tax_id
 msgid "Certification Exempt Sales Tax"
-msgstr ""
+msgstr "Impuesto exento de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.actions.act_window,name:l10n_cl_dte_certification.certification_process_action
@@ -987,7 +1013,7 @@ msgstr "Proceso de certificación"
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_stage__certification_run_ids
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_sii_envelope_submission__certification_run_id
 msgid "Certification Run"
-msgstr ""
+msgstr "Ejecución de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__journal_id
@@ -1004,17 +1030,17 @@ msgstr "Alcance de certificación"
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process__certification_set_ids
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_stage__certification_set_id
 msgid "Certification Set"
-msgstr ""
+msgstr "Set de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_set_caf
 msgid "Certification Set CAF"
-msgstr ""
+msgstr "CAF del set de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_incoming_dte__certification_stage_id
 msgid "Certification Stage"
-msgstr ""
+msgstr "Etapa de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__vat_tax_id
@@ -1032,31 +1058,34 @@ msgstr "La generación de casos de certificación solo admite CLP."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_event.py:0
 msgid "Certification events are immutable."
-msgstr ""
+msgstr "Los eventos de certificación son inmutables."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_event.py:0
 msgid "Certification events are retained as audit evidence."
-msgstr ""
+msgstr "Los eventos de certificación se conservan como evidencia de auditoría."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_event.py:0
 msgid "Certification events can only be appended by workflow actions."
 msgstr ""
+"Los eventos de certificación solo pueden agregarse mediante acciones del "
+"flujo de trabajo."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_evidence.py:0
 msgid "Certification evidence is retained as audit material."
-msgstr ""
+msgstr "La evidencia de certificación se conserva como material de auditoría."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_evidence.py:0
 msgid "Certification evidence must be created through its controlled wizard."
 msgstr ""
+"La evidencia de certificación debe crearse mediante su asistente controlado."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1076,24 +1105,26 @@ msgstr "No se pueden eliminar las ejecuciones de certificación."
 #. module: l10n_cl_dte_certification
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_process_certification_process_name_uniq
 msgid "Certification process names must be unique."
-msgstr ""
+msgstr "Los nombres de los procesos de certificación deben ser únicos."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Certification processes are retained as audit evidence."
 msgstr ""
+"Los procesos de certificación se conservan como evidencia de auditoría."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_case__sii_reference_reason
 msgid "Certification reference text"
-msgstr ""
+msgstr "Texto de referencia de certificación"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "Certification requirements are retained as audit evidence."
 msgstr ""
+"Los requisitos de certificación se conservan como evidencia de auditoría."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1106,13 +1137,13 @@ msgstr "La certificación requiere una compañía chilena con RUT."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "Certification stages are created with their process."
-msgstr ""
+msgstr "Las etapas de certificación se crean junto con su proceso."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 msgid "Certification stages are retained as audit evidence."
-msgstr ""
+msgstr "Las etapas de certificación se conservan como evidencia de auditoría."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_stage_view_form
@@ -1149,12 +1180,12 @@ msgstr "Seleccione una fecha de emisión para toda la ejecución."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Choose the already-authorized taxpayer mode for this action."
-msgstr ""
+msgstr "Elija el modo de contribuyente ya autorizado para esta acción."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_receiver_confirmation_wizard__classification
 msgid "Classification"
-msgstr ""
+msgstr "Clasificación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_line__document_code
@@ -1167,13 +1198,15 @@ msgstr "Código"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,help:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_line__document_code
 msgid "Code used by different localizations"
-msgstr ""
+msgstr "Código usado por distintas localizaciones"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,help:l10n_cl_dte_certification.field_l10n_cl_dte_certification_manual_result_wizard__authorized_document_types
 msgid ""
 "Comma-separated DTE codes shown in the SII issuer registration resolution."
 msgstr ""
+"Códigos DTE separados por comas que aparecen en la resolución de inscripción "
+"del emisor en el SII."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_res_company
@@ -1203,12 +1236,12 @@ msgstr "Compañía"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_completion_line__source__company_configuration
 msgid "Company Configuration"
-msgstr ""
+msgstr "Configuración de la compañía"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_assigned_set_xml
 msgid "Complete XML, TED and digital signatures for every case"
-msgstr ""
+msgstr "XML, TED y firmas digitales completos para cada caso"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_completion_wizard_view_form
@@ -1222,6 +1255,8 @@ msgid ""
 "Complete the control owner, procedure version, review date and passing "
 "result before marking this control ready."
 msgstr ""
+"Complete el responsable del control, la versión del procedimiento, la fecha "
+"de revisión y el resultado aprobado antes de marcar este control como listo."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process__state__completed
@@ -1238,27 +1273,27 @@ msgstr "Completado el"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__completion_digest
 msgid "Completion Digest"
-msgstr ""
+msgstr "Huella de finalización"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__completion_mode
 msgid "Completion Mode"
-msgstr ""
+msgstr "Modo de finalización"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_case__completion_provenance
 msgid "Completion Provenance"
-msgstr ""
+msgstr "Procedencia de la finalización"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__completion_reviewed_at
 msgid "Completion Reviewed At"
-msgstr ""
+msgstr "Finalización revisada el"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__completion_reviewed_by
 msgid "Completion Reviewed By"
-msgstr ""
+msgstr "Finalización revisada por"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1272,6 +1307,8 @@ msgstr ""
 #: code:addons/l10n_cl_dte_certification/models/certification_case.py:0
 msgid "Completion values are frozen after document generation begins."
 msgstr ""
+"Los valores de finalización quedan congelados al iniciar la generación de "
+"documentos."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_evidence__evidence_type__compliance_declaration
@@ -1280,18 +1317,18 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_stage__code__compliance_declaration
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_requirement_template__stage_code__compliance_declaration
 msgid "Compliance Declaration"
-msgstr ""
+msgstr "Declaración de cumplimiento"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_compliance_declaration
 msgid "Compliance declaration submitted and result retained"
-msgstr ""
+msgstr "Declaración de cumplimiento enviada y resultado conservado"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_requirement__applicability__conditional
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_requirement_template__applicability__conditional
 msgid "Conditional"
-msgstr ""
+msgstr "Condicional"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1304,7 +1341,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_caf_service.py:0
 msgid "Configure a valid, non-synthetic Certification signing profile."
-msgstr ""
+msgstr "Configure un perfil de firma de Certificación válido y no sintético."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1318,7 +1355,7 @@ msgstr ""
 #: code:addons/l10n_cl_dte_certification/models/certification_case.py:0
 #: model:ir.actions.act_window,name:l10n_cl_dte_certification.receiver_confirmation_wizard_action
 msgid "Confirm Certification Receiver"
-msgstr ""
+msgstr "Confirmar receptor de certificación"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.receiver_confirmation_wizard_view_form
@@ -1333,7 +1370,7 @@ msgstr "Confirmar clasificación del receptor"
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_receiver_confirmation_wizard
 msgid "Confirm SII Certification Case Receiver"
-msgstr ""
+msgstr "Confirmar receptor del caso de certificación SII"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_caf_request_wizard_view_form
@@ -1344,13 +1381,13 @@ msgstr "Confirmar solicitud de folios"
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_completion_wizard.py:0
 msgid "Confirm at least one proposed local completion."
-msgstr ""
+msgstr "Confirme al menos una finalización local propuesta."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_submission_wizard.py:0
 msgid "Confirm that the exact signed envelope was uploaded to SII."
-msgstr ""
+msgstr "Confirme que el sobre firmado exacto se cargó en el SII."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1368,50 +1405,50 @@ msgstr "Confirme que completó la operación en el portal del SII."
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_set__contains_synthetic_completion
 msgid "Contains Synthetic Completion"
-msgstr ""
+msgstr "Contiene finalización sintética"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_requirement__control_owner_id
 msgid "Control Owner"
-msgstr ""
+msgstr "Responsable del control"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_requirement__control_result
 msgid "Control Result"
-msgstr ""
+msgstr "Resultado del control"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_case__note_operation__amount
 msgid "Correct Amount"
-msgstr ""
+msgstr "Monto corregido"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_case__note_operation__text
 msgid "Correct Text"
-msgstr ""
+msgstr "Texto corregido"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_event__correlation_id
 msgid "Correlation"
-msgstr ""
+msgstr "Correlación"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_evidence__evidence_type__counterparty_acknowledgement
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_evidence_wizard__evidence_type__counterparty_acknowledgement
 msgid "Counterparty Acknowledgement"
-msgstr ""
+msgstr "Acuse de recibo de la contraparte"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "Create CAF request lines through a request wizard."
-msgstr ""
+msgstr "Cree las líneas de solicitud CAF mediante un asistente de solicitud."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "Create CAF requests using the request wizard."
-msgstr ""
+msgstr "Cree solicitudes CAF mediante el asistente de solicitud."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1497,7 +1534,7 @@ msgstr "Creado el"
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_process.py:0
 msgid "Current Certification Stage"
-msgstr ""
+msgstr "Etapa de certificación actual"
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_process_view_search
@@ -1521,7 +1558,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/res_company.py:0
 msgid "DTE Certification"
-msgstr ""
+msgstr "Certificación DTE"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_run__state__prepared
@@ -1547,7 +1584,7 @@ msgstr "Resuelto el"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_manual_result_wizard__decision_date
 msgid "Decision Date"
-msgstr ""
+msgstr "Fecha de decisión"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1563,7 +1600,7 @@ msgstr "Las posiciones de detalle deben ser únicas dentro del caso."
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_event__details
 msgid "Details"
-msgstr ""
+msgstr "Detalles"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_import_wizard__section_option_ids
@@ -1573,12 +1610,12 @@ msgstr "Secciones SET detectadas"
 #. module: l10n_cl_dte_certification
 #: model:ir.model,name:l10n_cl_dte_certification.model_l10n_cl_dte_certification_import_wizard_section
 msgid "Detected SII Certification Set Section"
-msgstr ""
+msgstr "Sección detectada del set de certificación SII"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_requirement__diagnostic
 msgid "Diagnostic"
-msgstr ""
+msgstr "Diagnóstico"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request__diagnostic_code
@@ -1614,7 +1651,7 @@ msgstr "Porcentaje de descuento (texto)"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_caf_request_line__state__dispatching
 msgid "Dispatching"
-msgstr ""
+msgstr "Despachando"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_authorization_wizard__display_name
@@ -1656,6 +1693,8 @@ msgid ""
 "Do not attach passwords, private keys, PFX files, cookies or\n"
 "                        authentication tokens as certification evidence."
 msgstr ""
+"No adjunte contraseñas, claves privadas, archivos PFX, cookies ni tokens de "
+"autenticación como evidencia de certificación."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_case__document_code
@@ -1683,13 +1722,13 @@ msgstr "Tipo de documento"
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "Document type %(code)s is not present in this set."
-msgstr ""
+msgstr "El tipo de documento %(code)s no está presente en este set."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_caf_request.py:0
 msgid "Document type %(code)s must belong to the set country."
-msgstr ""
+msgstr "El tipo de documento %(code)s debe pertenecer al país del set."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_run__state__generated
@@ -1712,13 +1751,14 @@ msgstr "Línea de ejecución de certificación DTE"
 #: model:ir.model.constraint,message:l10n_cl_dte_certification.constraint_l10n_cl_dte_certification_process_stage_process_stage_code_uniq
 msgid "Each certification process contains each official stage once."
 msgstr ""
+"Cada proceso de certificación contiene cada etapa oficial una sola vez."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process__current_stage_code__issuer_registration
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process_stage__code__issuer_registration
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_requirement_template__stage_code__issuer_registration
 msgid "Electronic Issuer Registration"
-msgstr ""
+msgstr "Inscripción electrónica del emisor"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_process__certification_scope__boleta
@@ -1728,12 +1768,12 @@ msgstr "Boletas electrónicas de ventas y servicios"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_stage__electronic_submission_ids
 msgid "Electronic Submission"
-msgstr ""
+msgstr "Envío electrónico"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_issuer_registration
 msgid "Electronic issuer registration resolution recorded"
-msgstr ""
+msgstr "Resolución de inscripción electrónica del emisor registrada"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_res_company__dte_certification_enabled
@@ -1770,13 +1810,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_requirement.py:0
 msgid "Enter an actionable rejection reason."
-msgstr ""
+msgstr "Ingrese un motivo de rechazo accionable."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/certification_caf_service.py:0
 msgid "Enter an operational reconciliation note."
-msgstr ""
+msgstr "Ingrese una nota operativa de conciliación."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1795,13 +1835,14 @@ msgstr "Ingrese la referencia del portal del SII."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_submission_wizard.py:0
 msgid "Enter the TrackID or SII portal reference."
-msgstr ""
+msgstr "Ingrese el TrackID o la referencia del portal del SII."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_manual_result_wizard.py:0
 msgid "Enter the resolution number and authorized DTE types from the SII."
 msgstr ""
+"Ingrese el número de resolución y los tipos DTE autorizados por el SII."
 
 #. module: l10n_cl_dte_certification
 #: model_terms:ir.ui.view,arch_db:l10n_cl_dte_certification.certification_set_view_form
@@ -1831,7 +1872,7 @@ msgstr "Nombre del archivo del sobre"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_run__envelope_submission_ids
 msgid "Envelope Submission"
-msgstr ""
+msgstr "Envío de sobre"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request__environment
@@ -1842,22 +1883,22 @@ msgstr "Ambiente"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_line__error_code
 msgid "Error Code"
-msgstr ""
+msgstr "Código de error"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_caf_request_line__error_message
 msgid "Error Message"
-msgstr ""
+msgstr "Mensaje de error"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process__event_ids
 msgid "Event"
-msgstr ""
+msgstr "Evento"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process_event__event_code
 msgid "Event Code"
-msgstr ""
+msgstr "Código del evento"
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1869,7 +1910,7 @@ msgstr "Cada caso requiere una línea DOCUMENTO."
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/services/set_execution_service.py:0
 msgid "Every selected invoice case needs an accounting draft."
-msgstr ""
+msgstr "Cada caso de factura seleccionado necesita un borrador contable."
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_process__evidence_ids
@@ -1884,13 +1925,13 @@ msgstr "Evidencia"
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_authorization_wizard__evidence_date
 msgid "Evidence Date"
-msgstr ""
+msgstr "Fecha de la evidencia"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_manual_result_wizard__evidence_file
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_stage_submission_wizard__evidence_file
 msgid "Evidence File"
-msgstr ""
+msgstr "Archivo de evidencia"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields,field_description:l10n_cl_dte_certification.field_l10n_cl_dte_certification_evidence__evidence_type
@@ -1902,13 +1943,14 @@ msgstr "Aceptación de postulación SII"
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/wizards/certification_evidence_wizard.py:0
 msgid "Evidence files must be between 1 byte and 20 MiB."
-msgstr ""
+msgstr "Los archivos de evidencia deben tener entre 1 byte y 20 MiB."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_evidence.py:0
 msgid "Evidence identity, source and verification are immutable."
 msgstr ""
+"La identidad, el origen y la verificación de la evidencia son inmutables."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1916,13 +1958,15 @@ msgstr ""
 msgid ""
 "Exactly one active certification process must be at Information Exchange."
 msgstr ""
+"Exactamente un proceso de certificación activo debe estar en Intercambio de "
+"información."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
 #: code:addons/l10n_cl_dte_certification/models/certification_stage.py:0
 #: code:addons/l10n_cl_dte_certification/wizards/certification_submission_wizard.py:0
 msgid "Exactly one execution must be linked."
-msgstr ""
+msgstr "Debe vincularse exactamente una ejecución."
 
 #. module: l10n_cl_dte_certification
 #. odoo-python
@@ -1967,23 +2011,23 @@ msgstr "Impuesto de venta exento"
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_receiver_confirmation_wizard__classification__existing_customer
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_run_line__receiver_classification_snapshot__existing_customer
 msgid "Existing External Customer"
-msgstr ""
+msgstr "Cliente externo existente"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_completion_line__source__existing_odoo_record
 msgid "Existing Odoo Record"
-msgstr ""
+msgstr "Registro de Odoo existente"
 
 #. module: l10n_cl_dte_certification
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_evidence__evidence_type__existing_issuer_authorization
 #: model:ir.model.fields.selection,name:l10n_cl_dte_certification.selection__l10n_cl_dte_certification_evidence_wizard__evidence_type__existing_issuer_authorization
 msgid "Existing SII Issuer Authorization"
-msgstr ""
+msgstr "Autorización existente del emisor en el SII"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_existing_authorization
 msgid "Existing SII authorization and Certification access verified"
-msgstr ""
+msgstr "Autorización existente del SII y acceso a Certificación verificados"
 
 #. module: l10n_cl_dte_certification
 #: model:l10n_cl.dte.certification.requirement.template,name:l10n_cl_dte_certification.cert_req_assigned_set_receiver
