@@ -6,3 +6,4 @@ from . import test_pos_boleta_dte
 from . import test_pos_boleta_session_closing
 from . import test_pos_boleta_ui
 from . import test_pos_boleta_browser
+from . import test_mixed_boleta_totals
