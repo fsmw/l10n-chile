@@ -186,7 +186,7 @@ class PosBoletaSnapshotService:
             "issuer": issuer,
             "receiver": receiver_snapshot,
             "totals": {
-                "net": str(int(net)) if taxable_net else None,
+                "net": str(int(taxable_net)) if taxable_net else None,
                 "exempt": str(int(exempt_net)) if exempt_net else None,
                 "vat_rate": "19" if taxable_net else None,
                 "vat": str(int(tax)) if taxable_net else None,

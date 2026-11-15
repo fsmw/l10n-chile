@@ -7,3 +7,4 @@ from . import test_return_browser
 from . import test_scaffold
 from . import test_return_concurrency
 from . import test_return_tracking
+from . import test_mixed_boleta_credit_note
