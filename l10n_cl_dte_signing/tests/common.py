@@ -75,6 +75,8 @@ class SigningTestCase(CafTestCase):
     def unsigned_xml(self):
         return (
             b'<?xml version="1.0" encoding="ISO-8859-1"?>'
-            b'<DTE><Documento ID="DTE-test-1"><Monto>123</Monto>'
+            b'<DTE xmlns="http://www.sii.cl/SiiDte"><Documento ID="DTE-test-1">'
+            b"<Encabezado><IdDoc><TipoDTE>33</TipoDTE></IdDoc></Encabezado>"
+            b"<Monto>123</Monto>"
             b"</Documento></DTE>"
         )

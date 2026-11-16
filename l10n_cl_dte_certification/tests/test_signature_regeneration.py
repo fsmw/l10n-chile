@@ -84,7 +84,9 @@ class TestSignatureRegeneration(DteCertificationTestCase, SigningTestCase):
             document.action_record_source_snapshot(snapshot.id)
             unsigned = (
                 '<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">'
-                f'<Documento ID="DTE-{line.sequence}"><Monto>123</Monto>'
+                f'<Documento ID="DTE-{line.sequence}">'
+                "<Encabezado><IdDoc><TipoDTE>33</TipoDTE></IdDoc></Encabezado>"
+                "<Monto>123</Monto>"
                 "</Documento></DTE>"
             ).encode()
             prepared = self.create_artifact(document, "unsigned_xml", unsigned)
