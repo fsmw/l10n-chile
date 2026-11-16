@@ -424,6 +424,28 @@ class TestPosReturnAcceptance(PosReturnCase):
         order = self.env["pos.order"].browse(response["pos.order"][0]["id"])
         self.assertEqual(order.dte_document_ids.document_code, "61")
 
+    def test_cashier_authorizes_native_accounting_credit(self):
+        contact = self.env["res.partner"].create(
+            {
+                "name": "Invoice contact",
+                "parent_id": self.customer.id,
+                "type": "invoice",
+            }
+        )
+        original = self.sale("per_order_invoice")
+        order = self.refund(original)
+        self.assertNotEqual(order.partner_id, contact)
+        self.assertEqual(order.account_move.partner_id, contact)
+        user = new_test_user(
+            self.env,
+            login="source_credit_cashier",
+            groups="base.group_user,point_of_sale.group_pos_user,l10n_cl_dte_core.group_dte_user",
+            company_id=self.company.id,
+        )
+        source = order.account_move.with_user(user)
+        self.assertFalse(source.has_access("write"))
+        source._check_dte_source_access("61")
+
     def test_ordinary_note_lock_stays_manager_only(self):
         original = self.sale()
         user = new_test_user(

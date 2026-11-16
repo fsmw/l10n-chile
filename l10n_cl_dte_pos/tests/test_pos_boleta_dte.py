@@ -5,8 +5,9 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
+from odoo.tests.common import new_test_user
 
 from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
     DteIssuanceAdapter,
@@ -119,6 +120,138 @@ class TestPosBoletaOrderFlow(TestPoSCommon):
             [(self.boleta_product, 1)],
             customer=self.customer,
         )
+
+    def _cashier_invoice(self):
+        user = new_test_user(
+            self.env,
+            login="source_cashier",
+            groups="base.group_user,point_of_sale.group_pos_user,l10n_cl_dte_core.group_dte_user",
+            company_id=self.company.id,
+        )
+        with patch.object(
+            DteIssuanceService,
+            "_issue",
+            return_value=self.env["l10n_cl.electronic.document"],
+        ):
+            result = (
+                self.env["pos.order"]
+                .with_user(user)
+                .sync_from_ui([self._paid_order_data()])
+            )
+        order = (
+            self.env["pos.order"].with_user(user).browse(result["pos.order"][0]["id"])
+        )
+        self.assertFalse(order.account_move.has_access("write"))
+        return order
+
+    def _check_source_gate(self, move, allowed, code="39"):
+        if allowed:
+            move._check_dte_source_access(code)
+        else:
+            with self.assertRaises(AccessError):
+                move._check_dte_source_access(code)
+
+    def test_cashier_native_source_and_rule_restrictions(self):
+        order = self._cashier_invoice()
+        move = order.account_move
+        self._check_source_gate(move, True)
+        for record, operation in (
+            (move, "read"),
+            (move, "write"),
+            (order, "write"),
+            (order.session_id, "write"),
+        ):
+            rule = self.env["ir.rule"].create(
+                {
+                    "name": "Synthetic source restriction",
+                    "model_id": self.env["ir.model"]._get_id(record._name),
+                    "domain_force": repr([("id", "!=", record.id)]),
+                    "perm_read": operation == "read",
+                    "perm_write": operation == "write",
+                    "perm_create": False,
+                    "perm_unlink": False,
+                }
+            )
+            self._check_source_gate(move, False)
+            rule.unlink()
+        order.session_id.sudo().write({"state": "closed"})
+        self._check_source_gate(move, False)
+
+    def test_cashier_cannot_forge_or_remove_accounting_binding(self):
+        order = self._cashier_invoice()
+        move = order.account_move
+        ordinary = (
+            move.sudo()
+            .copy({"pos_order_ids": [Command.clear()]})
+            .with_user(order.env.user)
+        )
+        ordinary.sudo().action_post()
+        self._check_source_gate(ordinary.with_context(_dte_native_invoice=True), False)
+        forged = (True, order.env.uid, order.ids)
+        for values in ({"account_move": ordinary.id}, {"account_move": False}):
+            with self.assertRaises(AccessError):
+                order.with_context(_dte_native_invoice=forged).write(values)
+        with self.assertRaises(AccessError):
+            order.unlink()
+        with self.assertRaises(AccessError):
+            order.with_context(default_account_move=move.id).create(
+                {"session_id": order.session_id.id}
+            )
+        with self.assertRaises(AccessError):
+            move.sudo().write({"pos_order_ids": [Command.clear()]})
+
+    def test_hidden_line_cannot_bypass_negative_write_rule(self):
+        move = self._cashier_invoice().account_move
+        self._check_source_gate(move, True)
+        line = move.sudo().line_ids[:1]
+        for model, domain, read in (
+            ("account.move.line", [("id", "!=", line.id)], True),
+            ("account.move", [("line_ids", "not in", line.ids)], False),
+        ):
+            self.env["ir.rule"].create(
+                {
+                    "name": "Synthetic hidden-line restriction",
+                    "model_id": self.env["ir.model"]._get_id(model),
+                    "domain_force": repr(domain),
+                    "perm_read": read,
+                    "perm_write": not read,
+                    "perm_create": False,
+                    "perm_unlink": False,
+                }
+            )
+        self.env.invalidate_all()
+        self.assertTrue(move.has_access("read"))
+        self.assertNotIn(line.id, move.line_ids.ids)
+        self._check_source_gate(move, False)
+
+    def test_cashier_source_requires_matching_code_company_and_roles(self):
+        move = self._cashier_invoice().account_move
+        self._check_source_gate(move, True)
+        self._check_source_gate(move, False, "41")
+        other = self.env["res.company"].create({"name": "Other source company"})
+        move.env.user.sudo().write({"company_ids": [Command.link(other.id)]})
+        self._check_source_gate(move.with_context(allowed_company_ids=other.ids), False)
+        for group in (
+            "point_of_sale.group_pos_user",
+            "l10n_cl_dte_core.group_dte_user",
+        ):
+            role = self.env.ref(group)
+            move.env.user.sudo().write({"groups_id": [Command.unlink(role.id)]})
+            self._check_source_gate(move, False)
+            move.env.user.sudo().write({"groups_id": [Command.link(role.id)]})
+
+    def test_cashier_source_accepts_native_invoice_contact(self):
+        contact = self.env["res.partner"].create(
+            {
+                "name": "Invoice contact",
+                "parent_id": self.customer.id,
+                "type": "invoice",
+            }
+        )
+        order = self._cashier_invoice()
+        self.assertNotEqual(order.partner_id, contact)
+        self.assertEqual(order.account_move.partner_id, contact)
+        self._check_source_gate(order.account_move, True)
 
     def test_standard_mode_forces_invoice_and_uses_account_move_source(self):
         order_data = self._paid_order_data()

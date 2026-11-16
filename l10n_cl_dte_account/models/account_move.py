@@ -53,6 +53,12 @@ class AccountMove(models.Model):
             % {"code": document_code}
         )
 
+    def _check_dte_source_access(self, document_code):
+        """Require accounting authority; source bridges may supply a narrower policy."""
+        self.ensure_one()
+        self.check_access("read")
+        self.check_access("write")
+
     def _get_dte_allowed_move_types(self, document_code):
         """Return the accounting types supported by the selected DTE adapter."""
         self.ensure_one()
