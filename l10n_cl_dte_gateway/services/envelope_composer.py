@@ -25,7 +25,8 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SignatureService,
     _without_xml_declaration,
 )
-from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
+
+from .document_validation import get_document_validator, validate_document_payload
 
 SII = "http://www.sii.cl/SiiDte"
 XSI = "http://www.w3.org/2001/XMLSchema-instance"
@@ -59,6 +60,11 @@ def _schema():
 
 
 class SiiEnvelopeComposer:
+    def __init__(self, document_validator_getter=None):
+        self._document_validator_getter = (
+            document_validator_getter or get_document_validator
+        )
+
     def validate_sender_identity(
         self, company, sender_vat, signature_service=None, environment="certification"
     ):
@@ -126,12 +132,11 @@ class SiiEnvelopeComposer:
         type_counts = Counter()
         issuer_vat = None
         for content in signed_documents:
-            DteXmlComposer().validate_document(content, strict_sii=True)
-            dte = _parse(content)
-            if dte.tag != _tag("DTE"):
-                raise ValidationError(_("The envelope contains a non-DTE element."))
-            document = dte.find(_tag("Documento"))
-            identifier = document.get("ID") if document is not None else None
+            document = validate_document_payload(
+                content, self._document_validator_getter, strict_sii=True
+            )
+            dte = document.getparent()
+            identifier = document.get("ID")
             if (
                 not identifier
                 or identifier in identifiers
@@ -270,16 +275,20 @@ class SiiEnvelopeComposer:
         ids = [element.get("ID") for element in root.xpath(".//*[@ID]")]
         if not all(ids) or len(ids) != len(set(ids)):
             raise ValidationError(_("The envelope has duplicate XML identifiers."))
+        documents = []
         for dte in dtes:
-            DteXmlComposer().validate_document(
-                etree.tostring(dte, encoding="ISO-8859-1", xml_declaration=True),
-                strict_sii=True,
+            documents.append(
+                validate_document_payload(
+                    etree.tostring(dte, encoding="ISO-8859-1", xml_declaration=True),
+                    self._document_validator_getter,
+                    strict_sii=True,
+                )
             )
         cover = set_dte.find(_tag("Caratula"))
         expected_counts = Counter()
         expected_issuer = None
-        for dte in dtes:
-            header = dte.find("{}/{}".format(_tag("Documento"), _tag("Encabezado")))
+        for document in documents:
+            header = document.find(_tag("Encabezado"))
             if header is None:
                 raise ValidationError(_("An envelope DTE is missing its header."))
             code = header.findtext("{}/{}".format(_tag("IdDoc"), _tag("TipoDTE")))

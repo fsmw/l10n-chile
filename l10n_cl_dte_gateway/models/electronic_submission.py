@@ -7,7 +7,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
-from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
+from ..services.document_validation import (
+    get_document_validator,
+    validate_document_payload,
+)
 
 
 class ElectronicSubmission(models.Model):
@@ -273,7 +276,17 @@ class ElectronicSubmission(models.Model):
     def _validate_document_payload(self, request_bytes):
         """Validate a signed DTE before the transport adapter receives it."""
         self.ensure_one()
-        return DteXmlComposer().validate_document(request_bytes)
+        validate_document_payload(
+            request_bytes,
+            self._get_document_validator,
+            allowed_codes={self.document_id.document_code},
+        )
+        return True
+
+    @api.model
+    def _get_document_validator(self, document_code):
+        """Extension point for family-specific fiscal validation."""
+        return get_document_validator(document_code)
 
     def _job_query_sii_status(self):
         """Query SII state for a known TrackID and retain the raw response."""
