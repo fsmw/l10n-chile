@@ -1,0 +1,77 @@
+<odoo>
+    <record id="view_export_catalog_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.export.catalog.list</field>
+        <field name="model">l10n_cl.dte.export.catalog</field>
+        <field name="arch" type="xml">
+            <list delete="0" decoration-muted="not active">
+                <field name="kind" />
+                <field name="code" />
+                <field name="name" />
+                <field name="source_date" />
+                <field name="active" optional="hide" />
+            </list>
+        </field>
+    </record>
+    <record id="view_export_catalog_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.export.catalog.form</field>
+        <field name="model">l10n_cl.dte.export.catalog</field>
+        <field name="arch" type="xml">
+            <form delete="0" duplicate="0">
+                <sheet>
+                    <group>
+                        <group string="Customs Code">
+                            <field name="kind" />
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="active" />
+                        </group>
+                        <group string="Official Source">
+                            <field name="source_url" widget="url" />
+                            <field name="source_date" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_export_catalog_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.export.catalog.search</field>
+        <field name="model">l10n_cl.dte.export.catalog</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code" />
+                <field name="name" />
+                <field name="kind" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="kind"
+                        string="Category"
+                        context="{'group_by': 'kind'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_export_catalog" model="ir.actions.act_window">
+        <field name="name">Export Customs Codes</field>
+        <field name="res_model">l10n_cl.dte.export.catalog</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_export_catalog_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Configure a customs code</p>
+            <p>Use current official customs tables and record their source and date.</p>
+        </field>
+    </record>
+    <menuitem
+        id="menu_export_catalog"
+        parent="l10n_cl_dte_core.menu_dte_configuration"
+        action="action_export_catalog"
+        sequence="60"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+</odoo>
