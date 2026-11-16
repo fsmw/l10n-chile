@@ -408,7 +408,9 @@ never reuse Certification material as Production evidence.</p>
 <p>Individual submissions reserve an optional, immutable transport-envelope
 link. Existing records keep that link empty on upgrade; their evidence
 is not rebuilt. Only a trusted internal workflow can bind same-document
-request evidence before the first send. Envelope preparation and sender
+request evidence before the first send. Private preparation checks
+source access and verifies the exact signed DTE, envelope and reserved
+Production CAF atomically, without network I/O. Enqueue and sender
 integration are not active yet. The link alone does not establish fiscal
 validity or prove which bytes were sent.</p>
 <p>From a certification execution, use <strong>Test SII Authentication</strong> to check
