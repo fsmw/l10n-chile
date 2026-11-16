@@ -86,6 +86,16 @@ class AccountMoveReversal(models.TransientModel):
 
     def reverse_moves(self, is_modify=False):
         """Create a native draft credit note bound to snapshot ordinals."""
+        self.ensure_one()
+        self.check_access("read")
+        self.invalidate_recordset(["move_ids"])
+        try:
+            sources = self.sudo().move_ids.with_env(self.env)
+        finally:
+            self.invalidate_recordset(["move_ids"])
+        action = sources._dispatch_dte_adjustment("credit", is_modify=is_modify)
+        if action:
+            return action
         if any(move.dte_document_ids for move in self.move_ids):
             if len(self.move_ids) != 1:
                 raise UserError(
