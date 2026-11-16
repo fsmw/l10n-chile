@@ -109,6 +109,59 @@ class AccountMove(models.Model):
             "dte_note_reason": reason,
         }
 
+    def _get_dte_adjustment_action(self, kind):
+        """Extension point for an authorized export adjustment modal."""
+        self.ensure_one()
+        return False
+
+    def _dispatch_dte_adjustment(self, kind, is_modify=False):
+        """Route export sources before any domestic or native note creation."""
+        self.check_access("read")
+        if not self:
+            raise UserError(_("Select at least one accessible accounting source."))
+        # Discover complete links, then authorize their original-actor records.
+        documents = self.env["l10n_cl.electronic.document"].browse(
+            self.env["l10n_cl.electronic.document"]
+            .sudo()
+            .with_context(active_test=False)
+            .search([("source_move_id", "in", self.ids)])
+            .ids
+        )
+        documents.check_access("read")
+        export_codes = {"110", "111", "112"}
+        exports = (
+            self.filtered(lambda move: move.dte_document_type_code in export_codes)
+            | documents.filtered(
+                lambda doc: doc.document_code in export_codes
+            ).source_move_id
+        )
+        if not exports:
+            return False
+        if len(self) != 1 or len(documents) > 1:
+            raise UserError(
+                _("Select one export invoice without mixed or multiple roots.")
+            )
+        if (
+            self.dte_document_type_code != "110"
+            or any(doc.document_code != "110" for doc in documents)
+            or self.move_type != "out_invoice"
+            or self.state != "posted"
+        ):
+            raise UserError(
+                _("An export adjustment requires a posted type 110 invoice.")
+            )
+        if is_modify:
+            raise UserError(
+                _("The replacement-invoice workflow is not supported for export DTEs.")
+            )
+        self.check_access("write")
+        action = self._get_dte_adjustment_action(kind)
+        if not action:
+            raise UserError(
+                _("Export adjustments are not available in this installation.")
+            )
+        return action
+
     def _dte_document_type_for_code(self, code):
         """Find the localized Chilean document type used by a note wizard."""
         self.ensure_one()
