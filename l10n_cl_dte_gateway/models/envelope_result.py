@@ -199,9 +199,12 @@ class SiiEnvelopeResultImportWizard(models.TransientModel):
         )
         if existing:
             return existing.action_open()
+        submission._verify_request()
         parsed = reconcile_result(
             response,
-            submission._verify_request(),
+            base64.b64decode(
+                submission.with_context(bin_size=False).request_xml, validate=True
+            ),
             submission.company_id.vat,
             submission.track_id,
         )

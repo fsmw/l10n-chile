@@ -11,10 +11,14 @@ from lxml import etree
 
 from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.l10n_cl_dte_core.tools.dte_payload import select_dte_payload
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 
 from .certification_response_parser import parse_xml
+
+_lt = LazyTranslate(__name__, default_lang="en_US")
 
 
 def reconcile_result(response_bytes, envelope_bytes, company_vat, track_id):
@@ -205,7 +209,12 @@ def _expected_documents(envelope):
     documents = []
     seen = set()
     for dte in set_dte.xpath("./*[local-name()='DTE']"):
-        document = _one(dte, "Documento")
+        try:
+            document = select_dte_payload(dte)
+        except ValueError as error:
+            raise ValidationError(
+                _lt("The submitted DTE payload is invalid or ambiguous.")
+            ) from error
         header = _one(document, "Encabezado")
         id_doc = _one(header, "IdDoc")
         issuer = _rut(_one_text(_one(header, "Emisor"), "RUTEmisor"))

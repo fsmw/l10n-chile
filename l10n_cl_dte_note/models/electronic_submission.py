@@ -6,7 +6,7 @@ import hashlib
 
 from lxml import etree
 
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
@@ -19,13 +19,19 @@ from ..services.note_xml_composer import NoteXmlComposer
 class ElectronicSubmission(models.Model):
     _inherit = "l10n_cl.electronic.submission"
 
+    @api.model
+    def _get_document_validator(self, document_code):
+        if document_code in {"56", "61"}:
+            return NoteXmlComposer()
+        return super()._get_document_validator(document_code)
+
     def _validate_document_payload(self, request_bytes):
         """Verify note signatures and match request identity to its frozen snapshot."""
         self.ensure_one()
         document = self.document_id
+        result = super()._validate_document_payload(request_bytes)
         if document.document_code not in {"61", "56"}:
-            return super()._validate_document_payload(request_bytes)
-        NoteXmlComposer().validate_document(request_bytes)
+            return result
         signed_artifacts = document._get_signed_artifact()
         if len(signed_artifacts) != 1:
             raise ValidationError(
