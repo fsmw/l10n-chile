@@ -6,5 +6,6 @@ from . import test_certification_transport
 from . import test_production_auth
 from . import test_production_transport
 from . import test_production_document_outcome
+from . import test_production_binding
 from . import test_export_payload_envelope
 from . import test_envelope_result_import

@@ -13,6 +13,12 @@ authorized sender RUTs. Tokens remain in memory and are never stored in attempts
 Production transport uses a separate signing profile and production CAF records;
 never reuse Certification material as Production evidence.
 
+Individual submissions reserve an optional, immutable transport-envelope link.
+Existing records keep that link empty on upgrade; their evidence is not rebuilt.
+Only a trusted internal workflow can bind same-document request evidence before
+the first send. Envelope preparation and sender integration are not active yet.
+The link alone does not establish fiscal validity or prove which bytes were sent.
+
 From a certification execution, use **Test SII Authentication** to check the
 certificate without sending a DTE. Successful authentication records a 30-minute
 proof bound to the certificate, private-key identity, issuer and sender; no token
