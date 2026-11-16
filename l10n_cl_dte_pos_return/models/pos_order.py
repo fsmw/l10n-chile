@@ -325,6 +325,12 @@ class PosOrder(models.Model):
         )
         return DteIssuanceService().issue(source, adapter, "61")
 
+    def _check_dte_invoice_source(self, move, document_code):
+        if document_code == "61":
+            PosReturnPolicyService(self.env).authorize_accounting_source(move)
+            return
+        return super()._check_dte_invoice_source(move, document_code)
+
     def _issue_pos_boleta_if_required(self):
         if self.dte_return_target_document_id:
             return self._issue_pos_return_if_required()
