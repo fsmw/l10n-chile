@@ -10,6 +10,8 @@ from odoo.addons.l10n_cl_dte_issuance.services.dte_issuance_service import (
 
 from ..services.pos_boleta_issuance_adapter import PosBoletaIssuanceAdapter
 
+_NATIVE_INVOICE = object()
+
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
@@ -170,6 +172,72 @@ class PosOrder(models.Model):
             action["views"] = [(False, "form")]
             action["res_id"] = documents.id
         return action
+
+    def _check_dte_invoice_binding(self, moves):
+        actor_moves = moves.with_user(self.env.user)
+        if not actor_moves:
+            return
+        actor_moves.check_access("read")
+        chilean = actor_moves.filtered(
+            lambda move: move.company_id.country_id.code == "CL"
+        )
+        if chilean:
+            chilean.check_access("write")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        default = self.default_get(["account_move"]).get("account_move")
+        ids = {vals.get("account_move", default) for vals in vals_list} - {False, None}
+        if ids:
+            self._check_dte_invoice_binding(self.env["account.move"].browse(ids))
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if "account_move" in vals:
+            native = self.env.context.get("_dte_native_invoice") == (
+                _NATIVE_INVOICE,
+                self.env.uid,
+                tuple(self.ids),
+            )
+            if not (
+                native
+                and len(self) == 1
+                and not self.account_move
+                and vals["account_move"]
+            ):
+                self._check_dte_invoice_binding(
+                    self.account_move
+                    | self.env["account.move"].browse(vals["account_move"])
+                )
+        return super().write(vals)
+
+    def unlink(self):
+        if self.account_move:
+            self._check_dte_invoice_binding(self.account_move)
+        return super().unlink()
+
+    def _create_invoice(self, move_vals):
+        self.ensure_one()
+        self.check_access("read")
+        self.check_access("write")
+        if self.account_move or move_vals.get("pos_order_ids") != self.ids:
+            raise AccessError(_("Create the invoice only for its original POS order."))
+        scoped = self.with_context(
+            _dte_native_invoice=(_NATIVE_INVOICE, self.env.uid, tuple(self.ids))
+        )
+        return (
+            super(PosOrder, scoped)
+            ._create_invoice(move_vals)
+            .with_context(_dte_native_invoice=None)
+        )
+
+    def _check_dte_invoice_source(self, move, document_code):
+        if (
+            document_code not in {"39", "41"}
+            or move.move_type != "out_invoice"
+            or self.amount_total < 0
+        ):
+            raise AccessError(_("Use a native POS boleta invoice."))
 
     def _prepare_invoice_vals(self):
         return self._prepare_pos_dte_invoice_vals(super()._prepare_invoice_vals())
