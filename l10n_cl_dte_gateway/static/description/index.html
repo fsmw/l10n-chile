@@ -375,11 +375,16 @@ state reconciliation and retained raw evidence.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-3">Credits</a><ul>
-<li><a class="reference internal" href="#contributors" id="toc-entry-4">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-5">Maintainers</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a><ul>
+<li><a class="reference internal" href="#sii-reception-format-and-correction" id="toc-entry-2">SII reception format and correction</a></li>
+<li><a class="reference internal" href="#refreshing-asynchronous-envelope-responses" id="toc-entry-3">Refreshing asynchronous envelope responses</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#production-preparation" id="toc-entry-4">Production preparation</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-5">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-6">Credits</a><ul>
+<li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-8">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -393,13 +398,100 @@ synthetic receipts, <tt class="docutils literal"><span class="pre">DEMO-*</span>
 reconciliation results without an HTTP/SOAP client. All response
 artifacts are hashed and marked <tt class="docutils literal">DEMO / SIMULADO</tt>. A simulated
 acceptance is not an SII receipt.</p>
-<p>Certification and Production currently have no transport adapters. The
-factory rejects those modes before queueing work or creating an attempt;
-it never falls back to Demo. Add and configure the real adapter before
-enabling either mode for outbound SII traffic.</p>
+<p>Certification envelopes use the SII seed/token SOAP services,
+certificate-signed authentication, multipart DTEUpload, and QueryEstUp
+on <tt class="docutils literal">maullin.sii.cl</tt>. Configure one valid Certification signing
+profile, its private key, and the issuer and authorized sender RUTs.
+Tokens remain in memory and are never stored in attempts. Production
+transport uses a separate signing profile and production CAF records;
+never reuse Certification material as Production evidence.</p>
+<p>Individual submissions reserve an optional, immutable transport-envelope
+link. Existing records keep that link empty on upgrade; their evidence
+is not rebuilt. Only a trusted internal workflow can bind same-document
+request evidence before the first send. Envelope preparation and sender
+integration are not active yet. The link alone does not establish fiscal
+validity or prove which bytes were sent.</p>
+<p>From a certification execution, use <strong>Test SII Authentication</strong> to check
+the certificate without sending a DTE. Successful authentication records
+a 30-minute proof bound to the certificate, private-key identity, issuer
+and sender; no token is persisted. <strong>Validate Full SII Set</strong> checks the
+document evidence, transport configuration and this authentication
+proof. <strong>Submit Complete Set to SII</strong> queues the immutable envelope; the
+execution changes to submitted only after an actual SII receipt returns
+a TrackID. Open <strong>SII Submission</strong> to query the result and inspect the
+protected response evidence. Receipt, processing, acceptance,
+observations, partial rejection and rejection are distinct outcomes. EPR
+alone does not prove acceptance: every document-type counter must cover
+the envelope.</p>
+<p>The jobrunner must be loaded with
+<tt class="docutils literal">server_wide_modules = web,queue_job</tt> and a nonzero channel capacity,
+for example <tt class="docutils literal">[queue_job] channels = root:1</tt>. Envelope functions use
+the <tt class="docutils literal">root.sii_envelope</tt> channel. The deployment database must be
+explicitly selected. Tests mock HTTP and never contact SII.</p>
+<p>Dispatch claims are committed in a separate cursor transaction before
+external I/O. This small independent transaction is required to prevent
+a rolled-back job from sending the same envelope again. A connection
+loss after upload stays unknown and cannot be resent. An explicit retry
+is available only when the failure is confirmed to precede upload. Query
+retries never upload a document. If a worker is lost without obtaining a
+TrackID, retain the sending/unknown record and reconcile the SII
+receipt; do not reset it to pending.</p>
+<p>Protocol references: <a class="reference external" href="https://www.sii.cl/factura_electronica/factura_mercado/instructivo.htm">SII automation
+documentation</a>,
+and the Certification WSDLs <tt class="docutils literal"><span class="pre">CrSeed.jws?WSDL</span></tt>,
+<tt class="docutils literal"><span class="pre">GetTokenFromSeed.jws?WSDL</span></tt> and <tt class="docutils literal"><span class="pre">QueryEstUp.jws?WSDL</span></tt>. The current
+WSDL bindings use <tt class="docutils literal"><span class="pre">http://DefaultNamespace</span></tt>; the historical PDF
+examples show endpoint namespaces instead.</p>
+<p>Installation alone does not prove live interoperability with SII.
+Certificate authentication must pass before a set becomes ready. A
+successful web/CAF portal login does not establish a usable DTE
+web-service token and is never accepted as authentication proof by this
+adapter.</p>
+<div class="section" id="sii-reception-format-and-correction">
+<h2><a class="toc-backref" href="#toc-entry-2">SII reception format and correction</a></h2>
+<p>Certification uploads require the ISO-8859-1 declaration on line 1 and
+the complete EnvioDTE opening element with schemaLocation on line 2. The
+sender RUT must identify the certificate holder, not the company owning
+its record. Invalid wire headers and sender identities are rejected
+before authentication.</p>
+</div>
+<div class="section" id="refreshing-asynchronous-envelope-responses">
+<h2><a class="toc-backref" href="#toc-entry-3">Refreshing asynchronous envelope responses</a></h2>
+<p><strong>Refresh Response</strong> reloads the retained transmission evidence in the
+same dialog. It never contacts SII or repeats a transmission. <strong>Query
+SII Status</strong> queues a status query only when a TrackID is available in a
+queryable state; it keeps the response dialog open. Refresh again after
+background processing.</p>
+<p>Certification uploads are also blocked before authentication if the
+cover uses a resolution number other than 0. An RCT status response
+permits an audited cover correction only after verification of its
+fingerprint, TrackID and the original upload receipt. No transmission
+history is rewritten.</p>
+<p>An EPR response means that SII processed the envelope; its document
+counters determine acceptance or rejection. The submission and
+Certification execution show the rejected-document summary, and the
+submission displays the counters by document type. These values are
+checked against the retained response, its TrackID and the original
+envelope. QueryEstUp does not provide individual rejection reasons;
+obtain those from the validation result sent by SII to the company’s
+registered contact email. An EPR document rejection does not unlock the
+cover-only correction or authorize an automatic resend.</p>
+</div>
+</div>
+<div class="section" id="production-preparation">
+<h1><a class="toc-backref" href="#toc-entry-4">Production preparation</a></h1>
+<p>Use <strong>DTE → Configuration → Production SII Readiness</strong> to review the
+production setup for the DTE types the company plans to issue (33, 52,
+56 and 61). The checklist inspects the SII resolution and sender
+identity, production signing profile, and a valid CAF with an available
+folio for each selected type.</p>
+<p>This review is local only. It does not contact or authenticate with the
+SII, change the company’s environment, reserve folios, or issue a DTE. A
+successful local result is not an SII approval; perform the separate SII
+authentication and operational checks before production dispatch.</p>
 </div>
 <div class="section" id="bug-tracker">
-<h1><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-5">Bug Tracker</a></h1>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/l10n-chile/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -407,16 +499,16 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h1><a class="toc-backref" href="#toc-entry-3">Credits</a></h1>
+<h1><a class="toc-backref" href="#toc-entry-6">Credits</a></h1>
 <div class="section" id="contributors">
-<h2><a class="toc-backref" href="#toc-entry-4">Contributors</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-7">Contributors</a></h2>
 <ul class="simple">
 <li>Odoo Community Association (OCA)</li>
 <li><a class="reference external" href="mailto:fsanmartin&#64;iternova.cl">fsanmartin&#64;iternova.cl</a></li>
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h2><a class="toc-backref" href="#toc-entry-5">Maintainers</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-8">Maintainers</a></h2>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
