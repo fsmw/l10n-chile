@@ -16,7 +16,7 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
 
 from ..services.document_validation import validate_document_payload
 from ..services.production_gateway import ProductionSiiGateway
-from ..services.production_response_parser import parse_xml
+from ..services.production_response_parser import parse_upload, parse_xml
 from ..services.production_transport import ProductionSiiTransport
 
 SII = "{http://www.sii.cl/SiiDte}"
@@ -184,6 +184,16 @@ class ElectronicSubmissionProduction(models.Model):
             submission._write_internal({BINDING: artifact.id})
             submission._verify_production_request()
             return artifact
+
+    def _parse_production_receipt(self, artifact, request):
+        header = parse_xml(request).find(f"{SII}SetDTE/{SII}Caratula")
+        return parse_upload(
+            base64.b64decode(
+                artifact.with_context(bin_size=False).content, validate=True
+            ),
+            header.findtext(SII + "RutEmisor"),
+            header.findtext(SII + "RutEnvia"),
+        )
 
     def _verify_production_request(self):
         """Verify retained evidence; never reconstruct or regenerate the request."""

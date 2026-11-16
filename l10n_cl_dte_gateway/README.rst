@@ -70,6 +70,15 @@ Production CAF atomically, without network I/O. Enqueue and sender
 integration are not active yet. The link alone does not establish fiscal
 validity or prove which bytes were sent.
 
+A trusted elevated workflow can record a Production upload rejection
+directly from fiscal ``unknown``, retaining the original
+``sii_response``. This requires the verified bound envelope, one
+completed send with matching request/response digests, a matching
+correlation key and a rejection receipt for its issuer and sender. A
+manager cannot authorize this exception by creating matching records.
+Durable result application and national routing activation remain
+pending.
+
 From a certification execution, use **Test SII Authentication** to check
 the certificate without sending a DTE. Successful authentication records
 a 30-minute proof bound to the certificate, private-key identity, issuer
