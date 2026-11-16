@@ -145,11 +145,19 @@ class TestPosBoletaOrderFlow(TestPoSCommon):
         return order
 
     def _check_source_gate(self, move, allowed, code="39"):
-        if allowed:
-            move._check_dte_source_access(code)
-        else:
-            with self.assertRaises(AccessError):
-                move._check_dte_source_access(code)
+        for action in ("issue", "prepare"):
+            with (
+                self.subTest(action=action),
+                patch.object(DteIssuanceService, f"_{action}") as work,
+            ):
+                if allowed:
+                    getattr(DteIssuanceService(), action)(move, object(), code)
+                    work.assert_called_once()
+                    self.assertTrue(work.call_args.args[0].env.su)
+                else:
+                    with self.assertRaises(AccessError):
+                        getattr(DteIssuanceService(), action)(move, object(), code)
+                    work.assert_not_called()
 
     def test_cashier_native_source_and_rule_restrictions(self):
         order = self._cashier_invoice()

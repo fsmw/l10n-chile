@@ -444,7 +444,12 @@ class TestPosReturnAcceptance(PosReturnCase):
         )
         source = order.account_move.with_user(user)
         self.assertFalse(source.has_access("write"))
-        source._check_dte_source_access("61")
+        self.issue_patch.stop()
+        for action in ("issue", "prepare"):
+            with patch.object(DteIssuanceService, f"_{action}") as work:
+                getattr(DteIssuanceService(), action)(source, object(), "61")
+                work.assert_called_once()
+                self.assertTrue(work.call_args.args[0].env.su)
 
     def test_ordinary_note_lock_stays_manager_only(self):
         original = self.sale()
