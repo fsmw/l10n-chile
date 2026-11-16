@@ -26,6 +26,19 @@ class AccountMove(models.Model):
     )
     dte_issuance_available = fields.Boolean(compute="_compute_dte_issuance_available")
 
+    def _get_dte_source_documents(self):
+        """Discover complete evidence links, then authorize as the caller."""
+        self.check_access("read")
+        documents = self.env["l10n_cl.electronic.document"].browse(
+            self.env["l10n_cl.electronic.document"]
+            .sudo()
+            .with_context(active_test=False)
+            .search([("source_move_id", "in", self.ids)])
+            .ids
+        )
+        documents.check_access("read")
+        return documents
+
     def issue_dte(self):
         """Issue the selected Chilean DTE through the complete lifecycle."""
         self.ensure_one()

@@ -29,8 +29,8 @@ Chile - DTE Export Documents
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
 Alpha foundation for Chilean export DTEs (110/111/112). This release
-provides the shared customs code catalog only; export issuance and
-adjustments are not enabled yet.
+provides the shared customs code catalog and initial source inputs;
+export issuance and adjustments are not enabled yet.
 
 Seven categories cover sale modes, sale clauses, transport modes, ports,
 packages, weight units and export payment methods. Numeric limits follow
@@ -62,6 +62,16 @@ a syntactically valid code is not proof of current official validity.
 
 The existing Accounting navigation requires billing access; the catalog
 ACLs also allow DTE-only roles through direct actions or integrations.
+
+Integrations can store service, recipient identification, nationality,
+destination and an explicit CLP exchange rate with date/source on
+accounting drafts. Editing requires accounting access and a DTE user
+(DTE Manager for types 111/112), an allowed company, and no linked DTE
+evidence, including archived evidence. Copies preserve recipient/service
+data but clear the exchange rate and its provenance. These initial
+fields do not enable issuance or validate fiscal completeness; customs
+inputs, source/line freezing and the export invoice UI follow
+separately.
 
 Bug Tracker
 ===========
