@@ -2,8 +2,8 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Chile - DTE Export Documents",
-    "summary": "Customs catalog foundation for export invoices and notes 110/111/112",
-    "version": "18.0.1.0.0",
+    "summary": "Customs catalog and source inputs for export invoices and notes",
+    "version": "18.0.1.1.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",

@@ -119,15 +119,7 @@ class AccountMove(models.Model):
         self.check_access("read")
         if not self:
             raise UserError(_("Select at least one accessible accounting source."))
-        # Discover complete links, then authorize their original-actor records.
-        documents = self.env["l10n_cl.electronic.document"].browse(
-            self.env["l10n_cl.electronic.document"]
-            .sudo()
-            .with_context(active_test=False)
-            .search([("source_move_id", "in", self.ids)])
-            .ids
-        )
-        documents.check_access("read")
+        documents = self._get_dte_source_documents()
         export_codes = {"110", "111", "112"}
         exports = (
             self.filtered(lambda move: move.dte_document_type_code in export_codes)
