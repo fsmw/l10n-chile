@@ -1,6 +1,10 @@
 Requires OCA queue_job with the server jobrunner configured. Do not
 automatically resend an attempt with an uncertain outcome.
 
+Individual transport attempts serialize completion under a row lock. Their
+request identity and completed outcome cannot be overwritten, including by
+competing callbacks. Existing write permissions and company rules still apply.
+
 Demo routes to the local `DemoSiiGateway`, which creates deterministic
 synthetic receipts, `DEMO-*` TrackIDs, status responses, and reconciliation
 results without an HTTP/SOAP client. All response artifacts are hashed and

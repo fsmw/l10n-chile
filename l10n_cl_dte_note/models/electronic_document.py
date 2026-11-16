@@ -135,6 +135,14 @@ class ElectronicDocument(models.Model):
                     _("The DTE note company and environment must match its root.")
                 )
 
+    def _lock_national_fiscal_chain(self):
+        """Dormant prefix for root-first transport locking; never lock sources."""
+        self.ensure_one()
+        target = self.note_target_document_id
+        if target:
+            root = self._lock_note_chain(target)
+            (root | target | self).invalidate_recordset()
+
     def _lock_note_chain(self, target_document, source=None):
         """Lock root and target in deterministic order and bump the root revision."""
         target_document.ensure_one()

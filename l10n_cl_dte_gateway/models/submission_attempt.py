@@ -43,6 +43,18 @@ class SubmissionAttempt(models.Model):
     error_code = fields.Char()
     error_summary = fields.Text()
 
+    def _lock_for_completion(self):
+        """Serialize completion last, after any parent fiscal/submission locks."""
+        self.check_access("write")
+        self.flush_recordset()
+        self.env.cr.execute(
+            "SELECT id FROM l10n_cl_submission_attempt "
+            "WHERE id = ANY(%s) ORDER BY id FOR UPDATE",
+            [self.ids],
+        )
+        self.invalidate_recordset()
+        self.check_access("write")
+
     def write(self, vals):
         """Allow one monotonic completion while keeping request identity fixed."""
         allowed = {
@@ -58,6 +70,7 @@ class SubmissionAttempt(models.Model):
             )
         if vals.get("state") not in {"completed", "failed", "unknown"}:
             raise ValidationError(_("A transport attempt can only be completed once."))
+        self._lock_for_completion()
         for attempt in self:
             if attempt.state != "started":
                 raise UserError(_("A completed transport attempt cannot be changed."))

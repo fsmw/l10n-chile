@@ -393,6 +393,10 @@ state reconciliation and retained raw evidence.</p>
 <h1><a class="toc-backref" href="#toc-entry-1">Usage</a></h1>
 <p>Requires OCA queue_job with the server jobrunner configured. Do not
 automatically resend an attempt with an uncertain outcome.</p>
+<p>Individual transport attempts serialize completion under a row lock.
+Their request identity and completed outcome cannot be overwritten,
+including by competing callbacks. Existing write permissions and company
+rules still apply.</p>
 <p>Demo routes to the local <tt class="docutils literal">DemoSiiGateway</tt>, which creates deterministic
 synthetic receipts, <tt class="docutils literal"><span class="pre">DEMO-*</span></tt> TrackIDs, status responses, and
 reconciliation results without an HTTP/SOAP client. All response

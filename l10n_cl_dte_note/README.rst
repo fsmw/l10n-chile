@@ -66,6 +66,14 @@ replace the accounting entries or create separate fiscal folio
 sequences. Production SII transport and certification-mode note issuance
 are outside this release.
 
+A private root-first chain-lock prefix is available for the national
+transport workflow. It remains dormant until coordinated transport and
+issuance activation.
+
+Discounted detail lines include both the percentage and its CLP amount.
+The discount amount uses decimal half-up rounding; the snapshot line
+subtotal is preserved.
+
 Bug Tracker
 ===========
 
