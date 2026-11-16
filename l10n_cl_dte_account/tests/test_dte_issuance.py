@@ -148,3 +148,39 @@ class TestDteIssuance(DteInvoiceTestCase):
         invoice._check_dte_source_access("33")
         with self.assertRaises(AccessError):
             invoice.with_user(self.dte_user)._check_dte_source_access("33")
+
+    def test_resume_rechecks_source_access_before_lookup(self):
+        invoice = self.make_invoice()
+        self.validate_authorization(document_code="33", folio_start=720, folio_end=725)
+        self.create_signing_profile()
+        adapter = invoice._get_dte_issuance_adapter("33")
+        service = DteIssuanceService()
+        document = service.prepare(invoice, adapter, "33")
+        artifact_ids = set(document.artifact_ids.ids)
+        self.env["ir.rule"].sudo().create(
+            {
+                "name": "Synthetic accounting source write restriction",
+                "model_id": self.env["ir.model"]._get_id("account.move"),
+                "domain_force": repr([("id", "!=", invoice.id)]),
+                "perm_read": False,
+                "perm_write": True,
+                "perm_create": False,
+                "perm_unlink": False,
+            }
+        )
+        self.assertTrue(invoice.has_access("read"))
+        for action in ("prepare", "issue"):
+            with (
+                self.subTest(action=action),
+                patch.object(adapter, "source_key", wraps=adapter.source_key) as lookup,
+            ):
+                with self.assertRaises(AccessError):
+                    getattr(service, action)(invoice, adapter, "33")
+                lookup.assert_not_called()
+        self.assertEqual(document.preparation_state, "signed")
+        self.assertEqual(set(document.artifact_ids.ids), artifact_ids)
+        self.assertFalse(
+            self.env["l10n_cl.electronic.submission"].search(
+                [("document_id", "=", document.id)]
+            )
+        )

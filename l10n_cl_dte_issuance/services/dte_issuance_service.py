@@ -18,6 +18,7 @@ class DteIssuanceService:
         """Keep fiscal preparation, evidence, folio and queue writes atomic."""
         source.ensure_one()
         self._check_issuance_access(source)
+        self._check_source_access(source, document_code)
         source = source.sudo()
         with source.env.cr.savepoint():
             return self._issue(source, adapter, document_code)
@@ -26,13 +27,25 @@ class DteIssuanceService:
         """Sign a DTE and retain its evidence without dispatching it."""
         source.ensure_one()
         self._check_issuance_access(source)
+        self._check_source_access(source, document_code)
         source = source.sudo()
         with source.env.cr.savepoint():
             return self._prepare(source, adapter, document_code)
 
     def _check_issuance_access(self, source):
         if not source.env.user.has_group("l10n_cl_dte_core.group_dte_user"):
-            raise AccessError(_("Only a DTE user can issue electronic documents."))
+            raise AccessError(
+                source.env._("Only a DTE user can issue electronic documents.")
+            )
+
+    def _check_source_access(self, source, document_code):
+        """Authorize every call, including resume, before service-owned elevation."""
+        source.check_access("read")
+        check = getattr(source, "_check_dte_source_access", None)
+        if check is not None:
+            check(document_code)
+        else:
+            source.check_access("write")
 
     def _issue(self, source, adapter, document_code):
         document = self._prepare(source, adapter, document_code)

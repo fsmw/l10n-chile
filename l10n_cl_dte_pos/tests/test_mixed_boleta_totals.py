@@ -89,7 +89,8 @@ class TestMixedPosBoletaTotals(TestPoSCommon, SigningTestCase):
         cls.dte_manager.sudo().write(
             {
                 "groups_id": [
-                    Command.link(cls.env.ref("l10n_cl_dte_core.group_dte_manager").id)
+                    Command.link(cls.env.ref("l10n_cl_dte_core.group_dte_manager").id),
+                    Command.link(cls.env.ref("point_of_sale.group_pos_user").id),
                 ]
             }
         )
@@ -121,6 +122,8 @@ class TestMixedPosBoletaTotals(TestPoSCommon, SigningTestCase):
             .with_company(self.company)
         )
         self.assertFalse(order.account_move)
+        self.assertFalse(order.env.su)
+        self.assertTrue(order.has_access("read") and order.has_access("write"))
         self.assertEqual(order.amount_total, 619)
         original_totals = (order.amount_total, order.amount_tax)
 
