@@ -12,7 +12,9 @@ from lxml import etree
 
 from odoo import _
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.l10n_cl_dte_core.tools.dte_payload import select_dte_payload
 from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 
 from .certificate_identity import certificate_sender_rut
@@ -34,6 +36,7 @@ C14N_URI = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
 RSA_SHA1_URI = DS_NAMESPACE + "rsa-sha1"
 SHA1_URI = DS_NAMESPACE + "sha1"
 SII_XML_DECLARATION = b'<?xml version="1.0" encoding="ISO-8859-1"?>'
+_lt = LazyTranslate(__name__, default_lang="en_US")
 
 
 class SignatureService:
@@ -160,7 +163,7 @@ class SignatureService:
         return True
 
     def sign_document(self, company, environment, unsigned_xml):
-        """Append an enveloped XMLDSig over the DTE's Documento element."""
+        """Append an XMLDSig bound to the DTE's unique typed fiscal payload."""
         # The issuance service checks the operator before entering sudo mode.
         # Cashiers may request issuance without reading private certificate data.
         if not company.env.su and not company.env.user.has_group(
@@ -186,17 +189,8 @@ class SignatureService:
             raise UserError(_("The configured certificate has no private key."))
 
         root = _parse_xml(unsigned_xml)
-        if _local_name(root) != "DTE":
-            raise ValidationError(_("The XML root element must be DTE."))
-        documents = root.xpath("./*[local-name()='Documento']")
-        if len(documents) != 1:
-            raise ValidationError(_("A DTE must contain exactly one Documento."))
-        document = documents[0]
+        document = self._select_payload(root)
         document_id = document.get("ID")
-        if not document_id or root.xpath(".//*[@ID=$target]", target=document_id) != [
-            document
-        ]:
-            raise ValidationError(_("Documento must have a unique ID attribute."))
         if root.xpath("./*[local-name()='Signature']"):
             raise ValidationError(_("The DTE already contains an XML signature."))
         # SII verifies each DTE independently of the envelope's xsi namespace.
@@ -243,33 +237,31 @@ class SignatureService:
         if sii_standalone:
             etree.cleanup_namespaces(root)
         signatures = root.xpath("./*[local-name()='Signature']")
-        documents = root.xpath("./*[local-name()='Documento']")
-        if len(signatures) != 1 or len(documents) != 1:
-            raise ValidationError(_("A signed DTE needs one Documento and Signature."))
+        document = self._select_payload(root)
+        if len(signatures) != 1 or signatures[0].tag != _qname("Signature"):
+            raise ValidationError(_lt("A signed DTE needs one XMLDSig Signature."))
         signature = signatures[0]
-        document = documents[0]
-        signed_info = signature.find(_qname("SignedInfo"))
-        signature_value = signature.findtext(_qname("SignatureValue"))
+        signed_info = self._signature_child(signature, "SignedInfo")
+        signature_value = self._signature_child(signature, "SignatureValue").text
         if signed_info is None or not signature_value:
             raise ValidationError(_("The XML signature is incomplete."))
-        canonicalization = signed_info.find(_qname("CanonicalizationMethod"))
-        signature_method = signed_info.find(_qname("SignatureMethod"))
-        reference = signed_info.find(_qname("Reference"))
+        canonicalization = self._signature_child(signed_info, "CanonicalizationMethod")
+        signature_method = self._signature_child(signed_info, "SignatureMethod")
+        reference = self._signature_child(signed_info, "Reference")
         if (
             canonicalization is None
             or canonicalization.get("Algorithm") != C14N_URI
             or signature_method is None
             or signature_method.get("Algorithm") != RSA_SHA1_URI
-            or reference is None
         ):
             raise ValidationError(_("The XML signature algorithms are unsupported."))
         document_id = document.get("ID")
         if not document_id or reference.get("URI") != f"#{document_id}":
-            raise ValidationError(_("The XML signature does not reference Documento."))
-        if root.xpath(".//*[@ID=$target]", target=document_id) != [document]:
-            raise ValidationError(_("Documento ID must be unique in the DTE."))
-        digest_method = reference.find(_qname("DigestMethod"))
-        digest_value = reference.findtext(_qname("DigestValue"))
+            raise ValidationError(
+                _lt("The XML signature must reference the fiscal payload.")
+            )
+        digest_method = self._signature_child(reference, "DigestMethod")
+        digest_value = self._signature_child(reference, "DigestValue").text
         if digest_method is None or digest_method.get("Algorithm") != SHA1_URI:
             raise ValidationError(_("The XML digest algorithm is unsupported."))
         try:
@@ -300,6 +292,24 @@ class SignatureService:
             "document_digest_canonicalization": digest_variant,
             "signed_info_canonicalization": signed_info_variant,
         }
+
+    @staticmethod
+    def _signature_child(parent, name):
+        nodes = parent.xpath("./*[local-name()=$name]", name=name)
+        if len(nodes) != 1 or nodes[0].tag != _qname(name):
+            raise ValidationError(
+                _lt("The XML signature structure is invalid or ambiguous.")
+            )
+        return nodes[0]
+
+    @staticmethod
+    def _select_payload(root):
+        try:
+            return select_dte_payload(root)
+        except ValueError as error:
+            raise ValidationError(
+                _lt("The DTE fiscal payload is invalid or ambiguous.")
+            ) from error
 
     def sign_authentication_seed(self, company, environment, seed):
         """Sign SII's enveloped getToken request without persisting credentials."""

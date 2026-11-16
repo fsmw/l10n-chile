@@ -58,11 +58,12 @@ class TestSignatureService(SigningTestCase):
         self.create_signing_profile()
         service = SignatureService()
         unsigned = self.unsigned_xml().replace(
-            b"<DTE>",
+            b'<DTE xmlns="http://www.sii.cl/SiiDte">',
             b'<DTE xmlns="http://www.sii.cl/SiiDte" '
             b'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
             1,
         )
+        self.assertIn(b"xmlns:xsi", unsigned)
         signed = service.sign_document(
             self.company.with_user(self.dte_manager), "demo", unsigned
         )
