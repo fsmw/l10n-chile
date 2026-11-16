@@ -8,6 +8,16 @@ from odoo.exceptions import UserError
 class ElectronicDocument(models.Model):
     _inherit = "l10n_cl.electronic.document"
 
+    def _lock_fiscal_chain(self):
+        """Note extensions must lock their root chain before this default lock."""
+        self.flush_recordset()
+        self.env.cr.execute(
+            "SELECT id FROM l10n_cl_electronic_document "
+            "WHERE id = ANY(%s) ORDER BY id FOR UPDATE",
+            [self.ids],
+        )
+        self.invalidate_recordset()
+
     def _check_signature_regeneration(self):
         result = super()._check_signature_regeneration()
         if (

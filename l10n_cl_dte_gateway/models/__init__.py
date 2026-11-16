@@ -1,6 +1,5 @@
 from . import electronic_submission
 from . import production_submission
-from . import production_document_lock
 from . import electronic_document
 from . import envelope_result
 from . import envelope_outcome_verification
