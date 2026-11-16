@@ -303,7 +303,7 @@ class ElectronicDocument(models.Model):
             return "fiscal", self.fiscal_state, _FISCAL_TRANSITIONS, "fiscal_state"
         raise ValidationError(_("Unsupported DTE state: %s") % target_state)
 
-    def _validate_transition_evidence(
+    def _get_transition_artifact_role(
         self, target_state, state_domain, artifact, correlation_key
     ):
         artifact_roles = (
@@ -311,7 +311,14 @@ class ElectronicDocument(models.Model):
             if state_domain == "preparation"
             else _FISCAL_ARTIFACT_ROLES
         )
-        required_role = artifact_roles.get(target_state)
+        return artifact_roles.get(target_state)
+
+    def _validate_transition_evidence(
+        self, target_state, state_domain, artifact, correlation_key
+    ):
+        required_role = self._get_transition_artifact_role(
+            target_state, state_domain, artifact, correlation_key
+        )
         if required_role and (len(artifact) != 1 or artifact.role != required_role):
             raise ValidationError(
                 _("Transition to %(state)s requires %(role)s evidence.")

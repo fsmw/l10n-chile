@@ -417,6 +417,14 @@ source access and verifies the exact signed DTE, envelope and reserved
 Production CAF atomically, without network I/O. Enqueue and sender
 integration are not active yet. The link alone does not establish fiscal
 validity or prove which bytes were sent.</p>
+<p>A trusted elevated workflow can record a Production upload rejection
+directly from fiscal <tt class="docutils literal">unknown</tt>, retaining the original
+<tt class="docutils literal">sii_response</tt>. This requires the verified bound envelope, one
+completed send with matching request/response digests, a matching
+correlation key and a rejection receipt for its issuer and sender. A
+manager cannot authorize this exception by creating matching records.
+Durable result application and national routing activation remain
+pending.</p>
 <p>From a certification execution, use <strong>Test SII Authentication</strong> to check
 the certificate without sending a DTE. Successful authentication records
 a 30-minute proof bound to the certificate, private-key identity, issuer

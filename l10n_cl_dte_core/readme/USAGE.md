@@ -4,6 +4,8 @@ document state. Lifecycle changes pass through the validated transition
 action and create an immutable audit event in the same database
 transaction. Authorization, XML preparation, signing, queuing and fiscal
 responses require evidence with the matching artifact role.
+Specialized workflows may validate an alternative evidence role through the
+private transition hook; the public action and its audit guarantees stay intact.
 
 Configure the company's single `DTE SII Environment` selector to Demo,
 Certification, or Production. Each new electronic document captures that
