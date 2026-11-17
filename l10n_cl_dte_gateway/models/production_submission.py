@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+from collections.abc import Mapping
 from copy import deepcopy
 
 from lxml import etree
@@ -14,7 +15,9 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     _without_xml_declaration,
 )
 
+from ..services.certification_auth import SiiTransportError
 from ..services.document_validation import validate_document_payload
+from ..services.production_document_outcome import ProductionDocumentOutcome
 from ..services.production_gateway import ProductionSiiGateway
 from ..services.production_response_parser import parse_upload, parse_xml
 from ..services.production_transport import ProductionSiiTransport
@@ -194,6 +197,112 @@ class ElectronicSubmissionProduction(models.Model):
             header.findtext(SII + "RutEmisor"),
             header.findtext(SII + "RutEnvia"),
         )
+
+    def _check_production_outcome_attempt(self, attempt, operation):
+        document = self.document_id
+        if (
+            operation != "send"
+            or self.environment != "production"
+            or document.sii_environment != "production"
+            or self.company_id.dte_sii_environment != "production"
+            or self.state != "sending"
+            or self.track_id
+            or document.fiscal_state != "unknown"
+            or document.preparation_state != "queued"
+            or len(attempt) != 1
+            or attempt.submission_id != self
+            or attempt.operation != "send"
+            or attempt.state != "started"
+            or attempt.completed_at
+            or self.attempt_ids.filtered(lambda item: item.operation == "send")
+            != attempt
+            or attempt.request_digest != self.transport_request_artifact_id.sha256
+        ):
+            raise UserError(_("A unique pending Production send outcome is required."))
+
+    def _normalize_production_receipt(self, result, response, request):
+        if isinstance(result, SiiTransportError):
+            return {
+                "state": "outcome_unknown",
+                "error_code": result.code or type(result).__name__,
+                "error_summary": f"dispatched={bool(result.dispatched)}; {result}",
+            }
+        try:
+            normalized = ProductionDocumentOutcome().normalize_upload(
+                result, document_code=self.document_id.document_code
+            )
+            parsed = self._parse_production_receipt(response, request)
+            if any(
+                normalized.get(key) != parsed[key]
+                for key in ("state", "track_id", "transport_code")
+            ):
+                raise ValidationError(
+                    _("The SII result differs from its retained receipt.")
+                )
+            return normalized
+        except ValidationError as error:
+            return {
+                "state": "outcome_unknown",
+                "error_code": type(error).__name__,
+                "error_summary": str(error),
+            }
+
+    def _apply_production_outcome(self, attempt, result, operation):
+        """Dormant send-only application; the caller owns the durable transaction."""
+        self._check_production_operation_access()
+        if not isinstance(result, Mapping | SiiTransportError):
+            raise ValidationError(
+                _("A transport result or transport error is required.")
+            )
+        with self.env.cr.savepoint():
+            prefix = getattr(self.document_id, "_lock_national_fiscal_chain", None)
+            if prefix is not None:
+                prefix()
+            self._lock_production_chain()
+            self._check_production_operation_access()
+            submission = self.sudo().with_context(bin_size=False)
+            attempt = attempt.with_env(submission.env).exists()
+            attempt._lock_for_completion()
+            submission._check_production_outcome_attempt(attempt, operation)
+            request = submission._verify_production_request()
+            raw = (
+                result.response
+                if isinstance(result, SiiTransportError)
+                else result.get("raw_response")
+            )
+            response = submission.env["l10n_cl.electronic.artifact"]
+            if isinstance(raw, bytes) and raw:
+                response = submission._create_response_artifact("sii_response", raw)
+            outcome = submission._normalize_production_receipt(
+                result, response, request
+            )
+            submission._record_production_outcome(attempt, outcome, response)
+        return True
+
+    def _record_production_outcome(self, attempt, outcome, response):
+        state = outcome["state"]
+        diagnostic = str(outcome.get("error_summary") or "")[:4000]
+        attempt._complete(
+            "unknown" if state == "outcome_unknown" else "completed",
+            response_digest=response.sha256,
+            error_code=str(
+                outcome.get("error_code") or outcome.get("transport_code") or ""
+            )[:128],
+            error_summary=diagnostic,
+        )
+        self.document_id.action_record_transition(
+            state,
+            f"sii_upload_{state}",
+            message=diagnostic,
+            correlation_key=self.idempotency_key,
+            artifact_id=response.id,
+        )
+        values = {"state": state}
+        if state == "submitted":
+            values.update(
+                track_id=outcome["track_id"], submitted_at=fields.Datetime.now()
+            )
+        self._write_internal(values)
 
     def _verify_production_request(self):
         """Verify retained evidence; never reconstruct or regenerate the request."""

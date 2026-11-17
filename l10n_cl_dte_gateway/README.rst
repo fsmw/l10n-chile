@@ -76,8 +76,15 @@ directly from fiscal ``unknown``, retaining the original
 completed send with matching request/response digests, a matching
 correlation key and a rejection receipt for its issuer and sender. A
 manager cannot authorize this exception by creating matching records.
-Durable result application and national routing activation remain
-pending.
+The private send-outcome applicator authorizes the original source actor
+and locks the note root chain before the document, submission and
+attempt. It retains raw response bytes before normalization and verifies
+the receipt against the bound envelope. Attempt completion, fiscal event
+and submission update are atomic; unexpected lifecycle or database
+errors roll back the whole application. Invalid receipts and all
+transport errors remain unknown, including errors marked as not
+dispatched. This never authorizes a resend. National routing activation
+and safe query/reconciliation integration remain pending.
 
 From a certification execution, use **Test SII Authentication** to check
 the certificate without sending a DTE. Successful authentication records
