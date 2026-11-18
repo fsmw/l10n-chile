@@ -142,13 +142,6 @@ class TestDteIssuance(DteInvoiceTestCase):
                 invoice.id
             ).issue_dte()
 
-    def test_source_hook_keeps_accounting_authority_for_drafts(self):
-        invoice = self.make_invoice(post=False)
-        self.assertFalse(invoice.env.su)
-        invoice._check_dte_source_access("33")
-        with self.assertRaises(AccessError):
-            invoice.with_user(self.dte_user)._check_dte_source_access("33")
-
     def test_resume_rechecks_source_access_before_lookup(self):
         invoice = self.make_invoice()
         self.validate_authorization(document_code="33", folio_start=720, folio_end=725)

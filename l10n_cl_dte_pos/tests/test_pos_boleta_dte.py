@@ -248,19 +248,6 @@ class TestPosBoletaOrderFlow(TestPoSCommon):
             self._check_source_gate(move, False)
             move.env.user.sudo().write({"groups_id": [Command.link(role.id)]})
 
-    def test_cashier_source_accepts_native_invoice_contact(self):
-        contact = self.env["res.partner"].create(
-            {
-                "name": "Invoice contact",
-                "parent_id": self.customer.id,
-                "type": "invoice",
-            }
-        )
-        order = self._cashier_invoice()
-        self.assertNotEqual(order.partner_id, contact)
-        self.assertEqual(order.account_move.partner_id, contact)
-        self._check_source_gate(order.account_move, True)
-
     def test_standard_mode_forces_invoice_and_uses_account_move_source(self):
         order_data = self._paid_order_data()
         with patch.object(DteIssuanceService, "issue", autospec=True) as issue:

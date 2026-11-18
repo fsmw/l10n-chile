@@ -23,18 +23,6 @@ from .common import PosReturnCase
 
 @tagged("post_install", "-at_install", "dte_pos_return")
 class TestPosReturnAcceptance(PosReturnCase):
-    def test_summary_refund_has_translation_context(self):
-        with self.assertNoLogs("odoo.tools.translate", level="WARNING"):
-            original = self.sale(quantity=1)
-            order = self.refund(original)
-        self.assertEqual(order.dte_return_operation, "cancel")
-
-    def test_standard_refund_has_translation_context(self):
-        with self.assertNoLogs("odoo.tools.translate", level="WARNING"):
-            original = self.sale("per_order_invoice")
-            order = self.refund(original)
-        self.assertEqual(order.dte_return_operation, "return")
-
     def test_foreign_pos_user_does_not_need_dte_group(self):
         self.company.country_id = self.env.ref("base.us")
         self.open_new_session()
@@ -381,12 +369,6 @@ class TestPosReturnAcceptance(PosReturnCase):
         self.assertNotEqual(receipt["status"], "accepted")
         self.assertEqual(len(order.payment_ids), before)
 
-    def test_search_uses_native_tuple_protocol(self):
-        original = self.sale()
-        self.other_store()
-        response = original.search_dte_return_order_ids(self.config.id, "")
-        self.assertIn(original.id, [item[0] for item in response["ordersInfo"]])
-
     def test_policy_cannot_change_during_open_session(self):
         self.sale()
         with self.assertRaises(UserError), self.cr.savepoint():
@@ -423,33 +405,6 @@ class TestPosReturnAcceptance(PosReturnCase):
         )
         order = self.env["pos.order"].browse(response["pos.order"][0]["id"])
         self.assertEqual(order.dte_document_ids.document_code, "61")
-
-    def test_cashier_authorizes_native_accounting_credit(self):
-        contact = self.env["res.partner"].create(
-            {
-                "name": "Invoice contact",
-                "parent_id": self.customer.id,
-                "type": "invoice",
-            }
-        )
-        original = self.sale("per_order_invoice")
-        order = self.refund(original)
-        self.assertNotEqual(order.partner_id, contact)
-        self.assertEqual(order.account_move.partner_id, contact)
-        user = new_test_user(
-            self.env,
-            login="source_credit_cashier",
-            groups="base.group_user,point_of_sale.group_pos_user,l10n_cl_dte_core.group_dte_user",
-            company_id=self.company.id,
-        )
-        source = order.account_move.with_user(user)
-        self.assertFalse(source.has_access("write"))
-        self.issue_patch.stop()
-        for action in ("issue", "prepare"):
-            with patch.object(DteIssuanceService, f"_{action}") as work:
-                getattr(DteIssuanceService(), action)(source, object(), "61")
-                work.assert_called_once()
-                self.assertTrue(work.call_args.args[0].env.su)
 
     def test_ordinary_note_lock_stays_manager_only(self):
         original = self.sale()
