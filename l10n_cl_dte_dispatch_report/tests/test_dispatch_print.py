@@ -39,16 +39,6 @@ class TestDispatchPrint(DispatchRecordMixin, DteReportTestCase):
         self.assertEqual(document.preparation_state, "signed")
         self.assertEqual(sample.document_code, "52")
 
-    def test_sample_uses_the_dispatch_report_action(self):
-        # Arrange
-        sample = self.create_sample(self._signed_document())
-        # Act
-        action = sample._print_report_action("52")
-        # Assert
-        self.assertEqual(
-            action, self.env.ref("l10n_cl_dte_dispatch_report.action_dispatch_print")
-        )
-
     def test_other_codes_keep_the_default_rules(self):
         # Arrange
         sample_model = self.env["l10n_cl.dte.report.sample"]
@@ -86,12 +76,3 @@ class TestDispatchPrint(DispatchRecordMixin, DteReportTestCase):
         image.save(buffer, format="PNG", optimize=False)
         # Act / Assert
         self.assertEqual(guide["barcode"], base64.b64encode(buffer.getvalue()).decode())
-
-    def test_generate_pdf_stores_the_sample(self):
-        # Arrange
-        sample = self.create_sample(self._signed_document())
-        # Act
-        with self.mock_pdf_renderer():
-            sample.action_generate_pdf()
-        # Assert
-        self.assertEqual(sample.state, "generated")

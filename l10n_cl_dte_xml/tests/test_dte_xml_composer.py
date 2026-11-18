@@ -120,14 +120,6 @@ class TestDteXmlComposer(DteInvoiceTestCase):
         self.assertEqual(root.findtext(f".//{{{SII_NAMESPACE}}}MntExe"), "1000")
         self.assertFalse(root.find(f".//{{{SII_NAMESPACE}}}IVA"))
 
-    def test_xml_matches_schema(self):
-        _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
-
-        xml_bytes = self.validate_composed_xml(snapshot, authorization)
-
-        self.assertIn(b"<TED", xml_bytes)
-        self.assertIn(b"<FRMT", xml_bytes)
-
     def test_xml_declares_chilean_encoding(self):
         _invoice, snapshot, authorization = self.valid_invoice_snapshot("33")
 

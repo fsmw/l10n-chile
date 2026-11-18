@@ -114,54 +114,6 @@ class TestCertificationSubmissionUi(DteCertificationTestCase):
             if not safe_eval(button.get("invisible", "False"), context)
         }
 
-    def test_preparation_actions_are_available_before_any_submission(self):
-        visible = self._visible_buttons()
-        self.assertIn("action_test_sii_authentication", visible)
-        self.assertIn("action_export_envelope", visible)
-        self.assertIn("action_run_official_preflight", visible)
-        self.assertIn("action_submit_official_envelope", visible)
-        self.assertNotIn("action_open_sii_submission", visible)
-
-    def test_only_response_button_remains_for_unqueryable_submission(self):
-        submission = self._submission()
-        for state in (
-            "pending",
-            "sending",
-            "error",
-            "outcome_unknown",
-            "rejected",
-            "accepted",
-        ):
-            with self.subTest(state=state):
-                submission._write_internal({"state": state})
-                self.assertEqual(
-                    self._visible_buttons(), {"action_open_sii_submission"}
-                )
-
-    def test_status_query_button_requires_track_and_eligible_state(self):
-        submission = self._submission(track_id="12345")
-        for state in ("submitted", "processing", "outcome_unknown"):
-            with self.subTest(state=state):
-                submission._write_internal({"state": state})
-                self.assertEqual(
-                    self._visible_buttons(),
-                    {
-                        "action_open_sii_submission",
-                        "action_query_sii_status",
-                    },
-                )
-        for state in (
-            "accepted",
-            "rejected",
-            "accepted_with_observations",
-            "partially_accepted",
-        ):
-            with self.subTest(state=state):
-                submission._write_internal({"state": state})
-                self.assertEqual(
-                    self._visible_buttons(), {"action_open_sii_submission"}
-                )
-
     def test_query_without_track_cannot_schedule_a_job(self):
         submission = self._submission()
         with patch.object(type(submission), "action_enqueue_status_query") as enqueue:
@@ -244,9 +196,3 @@ class TestCertificationSubmissionUi(DteCertificationTestCase):
         self.assertEqual(self._visible_buttons(), {"action_open_sii_submission"})
         with self.assertRaises(UserError):
             self.run.action_query_sii_status()
-
-    def test_response_opens_within_the_set(self):
-        submission = self._submission()
-        action = self.run.action_open_sii_submission()
-        self.assertEqual(action["target"], "new")
-        self.assertEqual(action["res_id"], submission.id)

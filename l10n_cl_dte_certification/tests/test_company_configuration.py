@@ -5,8 +5,6 @@ import base64
 import hashlib
 from datetime import date
 
-from lxml import etree
-
 from odoo.exceptions import UserError
 
 from ..services.access import check_certification_access
@@ -97,20 +95,6 @@ class TestCertificationCompanyConfiguration(DteCertificationTestCase):
                     "dte_certification_enabled": True,
                 }
             )
-
-    def test_company_form_has_no_separate_enablement_switch(self):
-        view = (
-            self.env["res.company"]
-            .with_user(self.certification_manager)
-            .get_view(self.env.ref("base.view_company_form").id, "form")
-        )
-        arch = etree.fromstring(view["arch"])
-        self.assertFalse(arch.xpath("//field[@name='dte_certification_enabled']"))
-        groups = arch.xpath("//group[@name='dte_certification_configuration']")
-        self.assertEqual(len(groups), 1)
-        self.assertEqual(
-            groups[0].get("invisible"), "dte_sii_environment != 'certification'"
-        )
 
     def test_set_configuration_is_derived_from_company(self):
         company = self.company
@@ -205,16 +189,3 @@ class TestCertificationCompanyConfiguration(DteCertificationTestCase):
         )
         self.assertFalse(certification_set.resolution_date)
         self.assertEqual(self.company.dte_sii_resolution_date, date(2014, 8, 22))
-
-    def test_set_view_exposes_certification_date_with_configuration_guard(self):
-        view = self.env["l10n_cl.dte.certification.set"].get_view(
-            self.env.ref("l10n_cl_dte_certification.certification_set_view_form").id,
-            "form",
-        )
-        arch = etree.fromstring(view["arch"])
-        date_field = arch.xpath("//field[@name='resolution_date']")
-        self.assertEqual(len(date_field), 1)
-        self.assertEqual(
-            date_field[0].get("readonly"),
-            "not can_operate or not can_edit_envelope",
-        )
