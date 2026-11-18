@@ -9,7 +9,10 @@ from unittest.mock import patch
 
 from lxml import etree
 from odoo import Command
-from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
+    SignatureService,
+    _canonicalize,
+)
 from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
@@ -45,7 +48,7 @@ class TestIncomingValidation(DteInvoiceTestCase):
 
     def setUp(self):
         super().setUp()
-        self.create_signing_profile()
+        self.signing_profile = self.create_signing_profile()
         self.imports = (
             self.env["l10n_cl.incoming.dte.import"]
             .with_company(self.recipient)
@@ -407,3 +410,68 @@ class TestIncomingValidation(DteInvoiceTestCase):
         self.assertEqual(result["documents"][0]["signature_state"], "invalid")
         self.assertEqual(result["signature_state"], "invalid")
         self.assertEqual(self.imports._import_xml(tampered).state, "invalid")
+
+    def _resigned_with_transforms(self, content, algorithms, tamper=False):
+        """Re-sign SignedInfo with an explicit Transforms chain on its Reference."""
+        ns = "http://www.w3.org/2000/09/xmldsig#"
+        root = etree.fromstring(content)
+        signature = root.find(f"{{{ns}}}Signature")
+        reference = signature.find(f"{{{ns}}}SignedInfo/{{{ns}}}Reference")
+        for existing in reference.findall(f"{{{ns}}}Transforms"):
+            reference.remove(existing)
+        if algorithms:
+            transforms = etree.Element(f"{{{ns}}}Transforms")
+            for algorithm in algorithms:
+                etree.SubElement(transforms, f"{{{ns}}}Transform", Algorithm=algorithm)
+            reference.insert(0, transforms)
+        value = self.signing_profile.certificate_id._sign(
+            _canonicalize(signature.find(f"{{{ns}}}SignedInfo")),
+            hashing_algorithm="sha1",
+            formatting="base64",
+        )
+        signature.find(f"{{{ns}}}SignatureValue").text = value.decode("ascii")
+        signed = xml_bytes(root)
+        return signed.replace(b">710<", b">711<", 1) if tamper else signed
+
+    def test_enveloped_signature_transform_chains_are_accepted(self):
+        enveloped = "http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+        c14n = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+        signed = self._signed()
+        for algorithms in ((enveloped,), (enveloped, c14n), (c14n,), ()):
+            with self.subTest(algorithms=algorithms):
+                content = self._resigned_with_transforms(signed, algorithms)
+                result = IncomingValidationService(self.imports.env).inspect(content)
+                document = result["documents"][0]
+                self.assertEqual(
+                    document["signature_state"], "valid", document["diagnostics"]
+                )
+
+    def test_unsupported_transform_chains_are_rejected(self):
+        enveloped = "http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+        c14n = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+        signed = self._signed()
+        for algorithms in (
+            ("http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments",),
+            ("http://www.w3.org/TR/1999/REC-xpath-19991116",),
+            (c14n, enveloped),
+            (enveloped, enveloped),
+            ("",),
+        ):
+            with self.subTest(algorithms=algorithms):
+                content = self._resigned_with_transforms(signed, algorithms)
+                result = IncomingValidationService(self.imports.env).inspect(content)
+                document = result["documents"][0]
+                self.assertEqual(document["signature_state"], "invalid")
+                self.assertIn(
+                    "The XML signature transform is unsupported.",
+                    [item["message"] for item in document["diagnostics"]],
+                )
+
+    def test_tampered_document_with_enveloped_transform_is_rejected(self):
+        enveloped = "http://www.w3.org/2000/09/xmldsig#enveloped-signature"
+        signed = self._signed()
+        self.assertIn(b">710<", signed)
+        content = self._resigned_with_transforms(signed, (enveloped,), tamper=True)
+        self.assertNotIn(b"<Folio>710<", content)
+        result = IncomingValidationService(self.imports.env).inspect(content)
+        self.assertEqual(result["documents"][0]["signature_state"], "invalid")

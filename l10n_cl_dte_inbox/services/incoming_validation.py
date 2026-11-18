@@ -17,6 +17,19 @@ from odoo.tools.misc import file_path
 from .incoming_parser import SII_NS, extract_incoming_dtes, parse_incoming_dte
 
 DS_NS = "http://www.w3.org/2000/09/xmldsig#"
+C14N_URI = "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+ENVELOPED_SIGNATURE_URI = DS_NS + "enveloped-signature"
+# The verified Signature is a direct child of DTE/EnvioDTE and references its
+# sibling Documento/SetDTE, so enveloped-signature never removes digested bytes.
+# Comment-preserving, XPath and reordered chains stay unsupported.
+SUPPORTED_TRANSFORM_CHAINS = frozenset(
+    {
+        (),
+        (C14N_URI,),
+        (ENVELOPED_SIGNATURE_URI,),
+        (ENVELOPED_SIGNATURE_URI, C14N_URI),
+    }
+)
 
 
 def xml_bytes(element):
@@ -271,11 +284,8 @@ class IncomingValidationService:
             transforms = reference.findall(
                 f"{{{DS_NS}}}Transforms/{{{DS_NS}}}Transform"
             )
-            if len(transforms) > 1 or any(
-                item.get("Algorithm")
-                != "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
-                for item in transforms
-            ):
+            chain = tuple(item.get("Algorithm") for item in transforms)
+            if chain not in SUPPORTED_TRANSFORM_CHAINS:
                 diagnostics.append(
                     self._error(
                         "signature",
