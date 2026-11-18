@@ -65,6 +65,16 @@ class IncomingValidationService:
         result["kind"] = etree.QName(root).localname
         # A re-wrapped export: validate the original envelope, not the wrapper.
         result["wrapped_envelope"] = root.getparent() is not None
+        if result["wrapped_envelope"]:
+            result["diagnostics"].append(
+                self._warning(
+                    "structure",
+                    self.env._(
+                        "The file re-wraps the original envelope; only the "
+                        "original envelope and its DTEs were verified."
+                    ),
+                )
+            )
         for position, node in enumerate(nodes, 1):
             document = self._inspect_document(node)
             document["position"] = position
@@ -91,6 +101,7 @@ class IncomingValidationService:
             result["schema_state"] = self._schema(
                 root, module, schema, result["diagnostics"]
             )
+            signature_start = len(result["diagnostics"])
             try:
                 if not self._check_signature_shape(root, result["diagnostics"]):
                     raise ValidationError(
@@ -103,6 +114,14 @@ class IncomingValidationService:
             except ValidationError as error:
                 result["signature_state"] = "invalid"
                 result["diagnostics"].append(self._error("signature", str(error)))
+            # Each DTE carries its own signature and TED. An envelope signature
+            # failure stays recorded but does not block fully verified DTEs.
+            if result["signature_state"] == "invalid" and self._documents_verified(
+                result["documents"]
+            ):
+                for item in result["diagnostics"][signature_start:]:
+                    if item["stage"] == "signature":
+                        item["severity"] = "warning"
             self._check_envelope(root, result)
         return result
 
@@ -343,8 +362,22 @@ class IncomingValidationService:
             )
 
     @staticmethod
+    def _documents_verified(documents):
+        return bool(documents) and all(
+            not item["diagnostics"]
+            and item["schema_state"] == "valid"
+            and item["signature_state"] == "valid"
+            and item["ted_state"] == "valid"
+            for item in documents
+        )
+
+    @staticmethod
     def _error(stage, message):
         return {"stage": stage, "message": message}
+
+    @staticmethod
+    def _warning(stage, message):
+        return {"stage": stage, "message": message, "severity": "warning"}
 
 
 def normalize_vat(value):

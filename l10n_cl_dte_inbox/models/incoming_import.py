@@ -117,9 +117,9 @@ class IncomingDteImport(models.Model):
             return existing
         result = IncomingValidationService(self.env).inspect(content)
         planned = self._plan_documents(result)
-        invalid = bool(result["diagnostics"]) or any(
-            item["diagnostics"] for item in result["documents"]
-        )
+        invalid = any(
+            item.get("severity") != "warning" for item in result["diagnostics"]
+        ) or any(item["diagnostics"] for item in result["documents"])
         # A race on file/identity uniqueness must retry the whole RPC with a fresh
         # PostgreSQL snapshot. Never leave a partially registered envelope.
         try:
