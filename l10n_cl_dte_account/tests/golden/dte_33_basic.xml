@@ -1,10 +1,12 @@
 <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
-    <Documento ID="F0000000700T33">
+    <Documento ID="F700T33">
         <Encabezado>
             <IdDoc>
                 <TipoDTE>33</TipoDTE>
                 <Folio>700</Folio>
                 <FchEmis>2026-01-15</FchEmis>
+                <FmaPago>2</FmaPago>
+                <FchVenc>2026-02-14</FchVenc>
             </IdDoc>
             <Emisor>
                 <RUTEmisor>76864280-K</RUTEmisor>
@@ -13,6 +15,7 @@
                 <Acteco>620200</Acteco>
                 <DirOrigen>Avenida Prueba 100</DirOrigen>
                 <CmnaOrigen>Santiago</CmnaOrigen>
+                <CdgVendedor>Synthetic DTE Seller</CdgVendedor>
             </Emisor>
             <Receptor>
                 <RUTRecep>76864280-K</RUTRecep>
@@ -23,7 +26,7 @@
             </Receptor>
             <Totales>
                 <MntNeto>73500</MntNeto>
-                <TasaIVA>19</TasaIVA>
+                <TasaIVA>19.00</TasaIVA>
                 <IVA>13965</IVA>
                 <MntTotal>87465</MntTotal>
             </Totales>
@@ -32,19 +35,19 @@
             <NroLinDet>1</NroLinDet>
             <NmbItem>Arriendo de equipo</NmbItem>
             <DscItem>Arriendo de equipo</DscItem>
-            <QtyItem>3</QtyItem>
-            <UnmdItem>Unit</UnmdItem>
-            <PrcItem>12500</PrcItem>
+            <QtyItem>3.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>12500.000000</PrcItem>
             <MontoItem>37500</MontoItem>
         </Detalle>
         <Detalle>
             <NroLinDet>2</NroLinDet>
             <NmbItem>Servicio de soporte</NmbItem>
             <DscItem>Servicio de soporte</DscItem>
-            <QtyItem>1</QtyItem>
-            <UnmdItem>Unit</UnmdItem>
-            <PrcItem>40000</PrcItem>
-            <DescuentoPct>10</DescuentoPct>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>40000.000000</PrcItem>
+            <DescuentoPct>10.00</DescuentoPct>
             <DescuentoMonto>4000</DescuentoMonto>
             <MontoItem>36000</MontoItem>
         </Detalle>
@@ -66,12 +69,17 @@
         <TmstFirma>2026-01-15T12:00:00</TmstFirma>
     </Documento>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <SignedInfo>
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
             <CanonicalizationMethod
                 Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
             />
             <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-            <Reference URI="#F0000000700T33">
+            <Reference URI="#F700T33">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
                 <DigestValue>___ignore___</DigestValue>
             </Reference>

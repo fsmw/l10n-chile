@@ -21,7 +21,7 @@ class DteDispatchSnapshot(models.AbstractModel):
         the content alone. Lines are ordered by sequence, then by id.
         """
         lines = dispatch.line_ids.sorted(lambda line: (line.sequence, line.id))
-        return {
+        snapshot = {
             "schema": SNAPSHOT_SCHEMA,
             "name": dispatch.name,
             "sii_environment": dispatch.sii_environment,
@@ -48,6 +48,9 @@ class DteDispatchSnapshot(models.AbstractModel):
                 for line in lines
             ],
         }
+        if dispatch.destination_commune:
+            snapshot["destination_commune"] = dispatch.destination_commune
+        return snapshot
 
     @api.model
     def serialize(self, payload):

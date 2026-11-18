@@ -1,5 +1,5 @@
 <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
-    <Documento ID="F0000000040T52">
+    <Documento ID="F40T52">
         <Encabezado>
             <IdDoc>
                 <TipoDTE>52</TipoDTE>
@@ -14,18 +14,21 @@
                 <Acteco>620200</Acteco>
                 <DirOrigen>Avenida Prueba 100</DirOrigen>
                 <CmnaOrigen>Santiago</CmnaOrigen>
-                <CiudadOrigen>Santiago</CiudadOrigen>
             </Emisor>
             <Receptor>
                 <RUTRecep>76864280-K</RUTRecep>
                 <RznSocRecep>Receptor Sintetico</RznSocRecep>
                 <DirRecep>Calle Prueba 200</DirRecep>
                 <CmnaRecep>Santiago</CmnaRecep>
-                <CiudadRecep>Santiago</CiudadRecep>
             </Receptor>
+            <Transporte>
+                <DirDest />
+                <CmnaDest />
+                <CiudadDest />
+            </Transporte>
             <Totales>
                 <MntNeto>9500</MntNeto>
-                <TasaIVA>19</TasaIVA>
+                <TasaIVA>19.00</TasaIVA>
                 <IVA>1805</IVA>
                 <MntTotal>11305</MntTotal>
             </Totales>
@@ -33,15 +36,19 @@
         <Detalle>
             <NroLinDet>1</NroLinDet>
             <NmbItem>Caja de repuestos</NmbItem>
-            <QtyItem>4.0</QtyItem>
-            <PrcItem>1000.0</PrcItem>
+            <DscItem>Caja de repuestos</DscItem>
+            <QtyItem>4.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>1000.000000</PrcItem>
             <MontoItem>4000</MontoItem>
         </Detalle>
         <Detalle>
             <NroLinDet>2</NroLinDet>
             <NmbItem>Pallet de madera</NmbItem>
-            <QtyItem>1.0</QtyItem>
-            <PrcItem>5500.0</PrcItem>
+            <DscItem>Pallet de madera</DscItem>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>5500.000000</PrcItem>
             <MontoItem>5500</MontoItem>
         </Detalle>
         <TED version="1.0">
@@ -62,12 +69,17 @@
         <TmstFirma>2026-11-12T10:00:00</TmstFirma>
     </Documento>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <SignedInfo>
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
             <CanonicalizationMethod
                 Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
             />
             <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-            <Reference URI="#F0000000040T52">
+            <Reference URI="#F40T52">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
                 <DigestValue>___ignore___</DigestValue>
             </Reference>

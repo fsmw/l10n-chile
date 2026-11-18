@@ -33,8 +33,7 @@ class TestDispatchGoldenXml(DispatchRecordMixin, DteInvoiceTestCase):
         super().setUpClass()
         cls.dispatch_values = cls.build_dispatch_values(cls.receiver)
 
-    def test_guide_52_sale_transfer(self):
-        dispatch = self._create_dispatch()
+    def issue_sale_guide(self, dispatch):
         self._create_line(dispatch, description="Caja de repuestos", quantity=4)
         self._create_line(
             dispatch, description="Pallet de madera", quantity=1, unit_price=5500
@@ -45,5 +44,21 @@ class TestDispatchGoldenXml(DispatchRecordMixin, DteInvoiceTestCase):
         self.create_signing_profile()
         with frozen_chile_now(ADAPTER_MODULE, TIMESTAMP):
             document = dispatch.action_prepare_document()
-        signed_xml = base64.b64decode(document._get_signed_artifact().content)
+        return base64.b64decode(document._get_signed_artifact().content)
+
+    def test_guide_52_sale_transfer(self):
+        signed_xml = self.issue_sale_guide(self._create_dispatch())
         assert_golden_xml(self, signed_xml, GOLDEN_DIR / "dte_52_sale.xml")
+
+    def test_guide_52_sale_transfer_with_transport(self):
+        self.receiver.l10n_cl_activity_description = "Comercio al por menor"
+        carrier = self.env["res.partner"].create(
+            {"name": "Synthetic Carrier", "vat": "12345678-5"}
+        )
+        dispatch = self._create_dispatch(
+            vehicle_plate="ABCD12",
+            carrier_id=carrier.id,
+            destination_commune="Santiago",
+        )
+        signed_xml = self.issue_sale_guide(dispatch)
+        assert_golden_xml(self, signed_xml, GOLDEN_DIR / "dte_52_sale_transport.xml")

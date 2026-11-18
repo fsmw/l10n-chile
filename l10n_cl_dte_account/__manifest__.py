@@ -21,6 +21,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/account_move_views.xml",
+        "views/account_payment_term_views.xml",
         "views/demo_setup_wizard_views.xml",
         "views/res_company_views.xml",
     ],

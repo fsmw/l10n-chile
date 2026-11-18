@@ -79,7 +79,7 @@ class TestDispatchXmlComposer(DispatchTestCommon):
         )
         # Assert
         self.assertIsNone(without.find(f".//{SII}Transporte"))
-        transport = with_transport.find(f".//{SII}Receptor/{SII}Transporte")
+        transport = with_transport.find(f".//{SII}Encabezado/{SII}Transporte")
         self.assertEqual(transport.findtext(f"{SII}Patente"), "ABCD12")
 
     def test_snapshot_serialization_matches_the_record_composer(self):

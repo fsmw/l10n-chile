@@ -29,6 +29,7 @@ FROZEN_FIELDS = frozenset(
         "dispatch_type_code",
         "origin_address",
         "destination_address",
+        "destination_commune",
         "currency_id",
         "carrier_id",
         "driver_id",
@@ -76,6 +77,7 @@ class DteDispatch(models.Model):
     dispatch_type_code = fields.Char(required=True)
     origin_address = fields.Char(required=True)
     destination_address = fields.Char(required=True)
+    destination_commune = fields.Char()
     carrier_id = fields.Many2one("res.partner")
     driver_id = fields.Many2one("res.partner")
     vehicle_plate = fields.Char()

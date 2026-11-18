@@ -35,11 +35,13 @@ class TestDteDocumentReport(DteReportTestCase):
         self.assertTrue(original.action_verify_integrity())
 
     def test_generate_sample_keeps_signed_source_and_pdf_digest(self):
+        self.product_a.sudo().name = 'Mantención de equipo "A" & B'
         document = self.create_signed_document()
         signed_artifact = document.artifact_ids.filtered(
             lambda artifact: artifact.role == "signed_xml"
         )
         sample = self.create_sample(document)
+        self.assertIn(b"Mantenci\xf3n", base64.b64decode(signed_artifact.content))
 
         self.assertEqual(sample.signed_artifact_id, signed_artifact)
         report_values = self.env[

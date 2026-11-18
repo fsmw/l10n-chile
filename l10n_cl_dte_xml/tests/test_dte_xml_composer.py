@@ -71,7 +71,7 @@ class TestDteXmlComposer(DteInvoiceTestCase):
         )
         root = etree.fromstring(self.validate_composed_xml(snapshot, authorization))
         detail = root.find(f"{{{SII_NAMESPACE}}}Documento/{{{SII_NAMESPACE}}}Detalle")
-        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoPct"), "10")
+        self.assertEqual(detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoPct"), "10.00")
         self.assertEqual(
             detail.findtext(f"{{{SII_NAMESPACE}}}DescuentoMonto"), "514325"
         )

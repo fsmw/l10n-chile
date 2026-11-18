@@ -3,6 +3,7 @@
 
 import base64
 import io
+import re
 
 from odoo.tests import tagged
 
@@ -61,13 +62,17 @@ class TestDispatchPrint(DispatchRecordMixin, DteReportTestCase):
         self.assertIn("Timbre Electrónico SII", text)
         self.assertIn("2380", text)
 
-    def test_barcode_is_encoded_from_the_literal_ted(self):
+    def test_barcode_is_encoded_from_the_compact_ted(self):
         # Arrange
         sample = self.create_sample(self._signed_document())
         report = self.env["report.l10n_cl_dte_dispatch_report.dispatch_print"]
         guide = report._get_report_values(sample.ids)["guides"][sample.id]
         image = render_image(
-            encode(guide["ted"].decode("ascii"), columns=18, security_level=4),
+            encode(
+                re.sub(rb">\n[ \t]*<", b"><", guide["ted"]),
+                columns=18,
+                security_level=4,
+            ),
             scale=3,
             ratio=3,
             padding=8,

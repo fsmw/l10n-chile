@@ -35,6 +35,7 @@ class TestGoldenXml(DteInvoiceTestCase):
         # SII requires GiroRecep on 33, 34 and 56; the generator emits it
         # from the receiver's activity description.
         cls.receiver.sudo().l10n_cl_activity_description = "Comercio al por menor"
+        cls.dte_manager.sudo().name = "Synthetic DTE Seller"
 
     def issue(self, invoice, code, folio):
         self.validate_authorization(
@@ -52,12 +53,29 @@ class TestGoldenXml(DteInvoiceTestCase):
             )
         return base64.b64decode(document._get_signed_artifact().content)
 
-    def make_posted_invoice(self, code, lines, taxes):
+    def make_posted_invoice(self, code, lines, taxes, payment_form, days):
+        payment_term = (
+            self.env["account.payment.term"]
+            .sudo()
+            .create(
+                {
+                    "name": "Test DTE payment term",
+                    "l10n_cl_sii_code": payment_form,
+                    "line_ids": [
+                        Command.create(
+                            {"value": "percent", "value_amount": 100, "nb_days": days}
+                        )
+                    ],
+                }
+            )
+        )
         invoice = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",
                 "partner_id": self.receiver.id,
                 "invoice_date": fields.Date.from_string("2026-01-15"),
+                "invoice_payment_term_id": payment_term.id,
+                "invoice_user_id": self.dte_manager.id,
                 "l10n_latam_document_type_id": self.document_types[code].id,
                 "invoice_line_ids": [
                     Command.create(
@@ -87,6 +105,8 @@ class TestGoldenXml(DteInvoiceTestCase):
                 ("Servicio de soporte", 1, 40000, 10),
             ],
             self.tax_19,
+            payment_form="2",
+            days=30,
         )
         assert_golden_xml(
             self, self.issue(invoice, "33", 700), GOLDEN_DIR / "dte_33_basic.xml"
@@ -100,6 +120,8 @@ class TestGoldenXml(DteInvoiceTestCase):
                 ("Curso de capacitacion", 1, 50000, 20),
             ],
             self.env["account.tax"],
+            payment_form="1",
+            days=0,
         )
         assert_golden_xml(
             self, self.issue(invoice, "34", 710), GOLDEN_DIR / "dte_34_exempt.xml"
