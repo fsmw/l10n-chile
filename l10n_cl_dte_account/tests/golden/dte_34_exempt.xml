@@ -1,0 +1,82 @@
+<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+    <Documento ID="F0000000710T34">
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE>34</TipoDTE>
+                <Folio>710</Folio>
+                <FchEmis>2026-01-15</FchEmis>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor>76864280-K</RUTEmisor>
+                <RznSoc>Emisor Sintetico de Pruebas</RznSoc>
+                <GiroEmis>Servicios informaticos</GiroEmis>
+                <Acteco>620200</Acteco>
+                <DirOrigen>Avenida Prueba 100</DirOrigen>
+                <CmnaOrigen>Santiago</CmnaOrigen>
+            </Emisor>
+            <Receptor>
+                <RUTRecep>76864280-K</RUTRecep>
+                <RznSocRecep>Receptor Sintetico</RznSocRecep>
+                <GiroRecep>Comercio al por menor</GiroRecep>
+                <DirRecep>Calle Prueba 200</DirRecep>
+                <CmnaRecep>Santiago</CmnaRecep>
+            </Receptor>
+            <Totales>
+                <MntExe>100000</MntExe>
+                <MntTotal>100000</MntTotal>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <NroLinDet>1</NroLinDet>
+            <IndExe>1</IndExe>
+            <NmbItem>Asesoria educacional</NmbItem>
+            <DscItem>Asesoria educacional</DscItem>
+            <QtyItem>2</QtyItem>
+            <UnmdItem>Unit</UnmdItem>
+            <PrcItem>30000</PrcItem>
+            <MontoItem>60000</MontoItem>
+        </Detalle>
+        <Detalle>
+            <NroLinDet>2</NroLinDet>
+            <IndExe>1</IndExe>
+            <NmbItem>Curso de capacitacion</NmbItem>
+            <DscItem>Curso de capacitacion</DscItem>
+            <QtyItem>1</QtyItem>
+            <UnmdItem>Unit</UnmdItem>
+            <PrcItem>50000</PrcItem>
+            <DescuentoPct>20</DescuentoPct>
+            <DescuentoMonto>10000</DescuentoMonto>
+            <MontoItem>40000</MontoItem>
+        </Detalle>
+        <TED version="1.0">
+            <DD>
+                <RE>76864280-K</RE>
+                <TD>34</TD>
+                <F>710</F>
+                <FE>2026-01-15</FE>
+                <RR>76864280-K</RR>
+                <RSR>Receptor Sintetico</RSR>
+                <MNT>100000</MNT>
+                <IT1>Asesoria educacional</IT1>
+                <CAF>___ignore___</CAF>
+                <TSTED>2026-01-15T12:00:00</TSTED>
+            </DD>
+            <FRMT>___ignore___</FRMT>
+        </TED>
+        <TmstFirma>2026-01-15T12:00:00</TmstFirma>
+    </Documento>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod
+                Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+            />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#F0000000710T34">
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>___ignore___</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>___ignore___</SignatureValue>
+        <KeyInfo>___ignore___</KeyInfo>
+    </Signature>
+</DTE>
