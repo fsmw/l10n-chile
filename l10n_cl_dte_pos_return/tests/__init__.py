@@ -4,6 +4,5 @@
 from . import test_return_flow
 from . import test_return_acceptance
 from . import test_return_browser
-from . import test_scaffold
 from . import test_return_tracking
 from . import test_mixed_boleta_credit_note

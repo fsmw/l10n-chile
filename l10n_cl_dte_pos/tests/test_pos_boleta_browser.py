@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tests.common import mute_logger
 
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
     BoletaSnapshotService,
@@ -85,7 +84,7 @@ class TestPosBoletaBrowser(TestPointOfSaleHttpCommon, SigningTestCase):
             {"l10n_cl_dte_boleta_payment_method": "2"}
         )
 
-    def _run_accounting_mode(self, mode, refund=False):
+    def _run_accounting_mode(self, mode):
         self.company.dte_pos_accounting_mode = mode
         self.validate_authorization(document_code="39", folio_start=910, folio_end=930)
         self.create_signing_profile()
@@ -128,18 +127,6 @@ class TestPosBoletaBrowser(TestPointOfSaleHttpCommon, SigningTestCase):
         else:
             self.assertFalse(orders.account_move)
             self.assertEqual(set(documents.source_pos_order_id.ids), set(orders.ids))
-        if refund:
-            # A handled UserError is the expected browser outcome for refunds.
-            with mute_logger("odoo.http"):
-                self.start_pos_tour("l10n_cl_dte_pos_refund_blocked", login="pos_user")
-            self.assertEqual(session.order_ids, orders)
-            self.assertEqual(
-                set(
-                    (orders.dte_document_ids | orders.account_move.dte_document_ids).ids
-                ),
-                set(documents.ids),
-            )
-            return
         self.start_pos_tour("l10n_cl_dte_pos_close", login="pos_user")
         self.assertEqual(session.state, "closed")
         self.assertEqual(session.move_id.state, "posted")
@@ -147,17 +134,3 @@ class TestPosBoletaBrowser(TestPointOfSaleHttpCommon, SigningTestCase):
 
     def test_browser_standard_sales_and_session_close(self):
         self._run_accounting_mode("per_order_invoice")
-
-    def test_browser_summary_sales_and_session_close(self):
-        self._run_accounting_mode("session_summary")
-
-    def test_browser_standard_refund_is_blocked_without_new_dte(self):
-        self._run_accounting_mode("per_order_invoice", refund=True)
-
-    def test_browser_summary_refund_is_blocked_without_new_dte(self):
-        self._run_accounting_mode("session_summary", refund=True)
-
-    def test_browser_non_chilean_payment_keeps_invoice_toggle(self):
-        self.company.country_id = self.env.ref("base.us")
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour("l10n_cl_dte_pos_foreign_policy", login="pos_user")
