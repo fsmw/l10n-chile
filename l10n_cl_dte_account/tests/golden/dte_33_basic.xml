@@ -1,0 +1,82 @@
+<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+    <Documento ID="F0000000700T33">
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE>33</TipoDTE>
+                <Folio>700</Folio>
+                <FchEmis>2026-01-15</FchEmis>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor>76864280-K</RUTEmisor>
+                <RznSoc>Emisor Sintetico de Pruebas</RznSoc>
+                <GiroEmis>Servicios informaticos</GiroEmis>
+                <Acteco>620200</Acteco>
+                <DirOrigen>Avenida Prueba 100</DirOrigen>
+                <CmnaOrigen>Santiago</CmnaOrigen>
+            </Emisor>
+            <Receptor>
+                <RUTRecep>76864280-K</RUTRecep>
+                <RznSocRecep>Receptor Sintetico</RznSocRecep>
+                <GiroRecep>Comercio al por menor</GiroRecep>
+                <DirRecep>Calle Prueba 200</DirRecep>
+                <CmnaRecep>Santiago</CmnaRecep>
+            </Receptor>
+            <Totales>
+                <MntNeto>73500</MntNeto>
+                <TasaIVA>19</TasaIVA>
+                <IVA>13965</IVA>
+                <MntTotal>87465</MntTotal>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <NroLinDet>1</NroLinDet>
+            <NmbItem>Arriendo de equipo</NmbItem>
+            <DscItem>Arriendo de equipo</DscItem>
+            <QtyItem>3</QtyItem>
+            <UnmdItem>Unit</UnmdItem>
+            <PrcItem>12500</PrcItem>
+            <MontoItem>37500</MontoItem>
+        </Detalle>
+        <Detalle>
+            <NroLinDet>2</NroLinDet>
+            <NmbItem>Servicio de soporte</NmbItem>
+            <DscItem>Servicio de soporte</DscItem>
+            <QtyItem>1</QtyItem>
+            <UnmdItem>Unit</UnmdItem>
+            <PrcItem>40000</PrcItem>
+            <DescuentoPct>10</DescuentoPct>
+            <DescuentoMonto>4000</DescuentoMonto>
+            <MontoItem>36000</MontoItem>
+        </Detalle>
+        <TED version="1.0">
+            <DD>
+                <RE>76864280-K</RE>
+                <TD>33</TD>
+                <F>700</F>
+                <FE>2026-01-15</FE>
+                <RR>76864280-K</RR>
+                <RSR>Receptor Sintetico</RSR>
+                <MNT>87465</MNT>
+                <IT1>Arriendo de equipo</IT1>
+                <CAF>___ignore___</CAF>
+                <TSTED>2026-01-15T12:00:00</TSTED>
+            </DD>
+            <FRMT>___ignore___</FRMT>
+        </TED>
+        <TmstFirma>2026-01-15T12:00:00</TmstFirma>
+    </Documento>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod
+                Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+            />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#F0000000700T33">
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>___ignore___</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>___ignore___</SignatureValue>
+        <KeyInfo>___ignore___</KeyInfo>
+    </Signature>
+</DTE>

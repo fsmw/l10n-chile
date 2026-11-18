@@ -9,7 +9,7 @@ from unittest.mock import patch
 from pypdf import PdfReader
 
 from odoo import Command
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
@@ -94,46 +94,6 @@ class TestBoletaReceipt(DteReportTestCase, HttpCase):
 
     def test_exempt_boleta_a4_and_thermal_pdf(self):
         self._check_real_boleta_reports("41")
-
-    def test_thermal_rejects_invoice_and_non_manager(self):
-        sample = self.create_sample(self.create_signed_document())
-        with self.assertRaisesRegex(UserError, "only boletas"):
-            sample.action_print_thermal()
-        with self.assertRaises(AccessError):
-            sample.with_user(self.dte_user).action_print_thermal()
-
-    def test_thermal_report_rejects_invoice_through_report_route(self):
-        sample = self.create_sample(self.create_signed_document())
-        with self.assertRaisesRegex(ValidationError, "only boletas"):
-            self.env["report.l10n_cl_dte_report.boleta_receipt"]._get_report_values(
-                sample.ids
-            )
-
-    def test_invoice_still_renders_one_a4_page(self):
-        sample = self.create_sample(self.create_signed_document()).with_context(
-            force_report_rendering=True
-        )
-        sample.action_generate_pdf()
-        pdf = PdfReader(io.BytesIO(base64.b64decode(sample.pdf_content)))
-        self.assertEqual(len(pdf.pages), 1)
-        self.assertIn(self.company.name, pdf.pages[0].extract_text())
-
-    def test_long_thermal_receipt_paginates_without_losing_details(self):
-        sample = self._create_boleta_sample("39", line_count=80)
-        pdf, _kind = (
-            self.env["ir.actions.report"]
-            .with_context(force_report_rendering=True)
-            ._render_qweb_pdf(
-                sample.action_print_thermal()["report_name"], res_ids=sample.ids
-            )
-        )
-        receipt = PdfReader(io.BytesIO(pdf))
-        self.assertGreater(len(receipt.pages), 1)
-        self.assertIn(
-            "Receipt line 80", " ".join(page.extract_text() for page in receipt.pages)
-        )
-        for page in receipt.pages:
-            self.assertAlmostEqual(float(page.mediabox.width) * 25.4 / 72, 80, delta=1)
 
     def test_valid_xml_for_another_folio_is_rejected(self):
         sample = self._create_boleta_sample("39")

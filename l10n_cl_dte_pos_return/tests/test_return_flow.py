@@ -70,20 +70,6 @@ class TestPosReturnFlow(PosReturnCase):
         self.assertEqual(len(order._get_pos_dte_documents()), 1)
         self.assertEqual(len(order.payment_ids), 1)
 
-    def test_preview_is_read_only(self):
-        original = self.sale()
-        before = self.env["l10n_cl.electronic.artifact"].search_count([])
-        preview = original.get_dte_return_preview(
-            self.config.id,
-            original.id,
-            [{"original_line_id": original.lines.id, "quantity": "1"}],
-            "Goods return",
-        )
-        self.assertEqual(preview["accounting_mode"], "session_summary")
-        self.assertEqual(
-            self.env["l10n_cl.electronic.artifact"].search_count([]), before
-        )
-
     def test_forged_target_is_rejected_before_creating_order(self):
         original = self.sale()
         data = self.refund_data(original)

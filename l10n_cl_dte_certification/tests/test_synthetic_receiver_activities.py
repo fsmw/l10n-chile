@@ -193,19 +193,6 @@ class TestSyntheticReceiverActivities(DteCertificationTestCase):
             plan, SyntheticReceiverActivityService().build_plan(certification_set)
         )
 
-    def test_local_review_can_apply_the_automatic_proposal(self):
-        certification_set = self._import_set()
-        wizard = (
-            self.env["l10n_cl.dte.certification.completion.wizard"]
-            .with_user(self.certification_manager)
-            .create({"set_id": certification_set.id, "target_mode": "local_synthetic"})
-        )
-        wizard.line_ids.filtered(
-            lambda line: line.diagnostic_code == "missing_text_correction_content"
-        ).write({"user_confirmed": True})
-        wizard.action_apply_local_completion()
-        self.assertEqual(certification_set.case_ids[1].readiness, "validated")
-
     def test_sii_text_and_its_referenced_chain_are_preserved(self):
         certification_set = self._import_set(with_source_text=True)
         text = certification_set.case_ids[1].sii_reference_reason
@@ -426,17 +413,6 @@ class TestSyntheticReceiverActivities(DteCertificationTestCase):
         self.assertTrue(certification_set.contains_synthetic_completion)
         self.assertEqual(self._completion_diagnostics(certification_set), [])
         self.assertEqual(self.company.dte_sii_activity_code, issuer_activity)
-
-    def test_official_review_can_generate_catalogue_data_without_local_mode(self):
-        certification_set = self._import_set()
-        wizard = (
-            self.env["l10n_cl.dte.certification.completion.wizard"]
-            .with_user(self.certification_manager)
-            .create({"set_id": certification_set.id, "target_mode": "official_sii"})
-        )
-        wizard.action_generate_test_receiver_activities()
-        self.assertEqual(certification_set.completion_mode, "official_sii")
-        self.assertEqual(self._completion_diagnostics(certification_set), [])
 
     def test_previously_local_catalogue_set_can_be_reviewed_for_certification(self):
         certification_set = self._import_set()

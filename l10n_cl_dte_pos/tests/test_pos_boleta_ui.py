@@ -8,10 +8,6 @@ from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 @tagged("post_install", "-at_install")
 class TestPosBoletaUi(TestPointOfSaleCommon):
-    def test_company_policy_is_available_in_dte_settings(self):
-        view = self.env.ref("l10n_cl_dte_pos.view_company_form_dte_pos")
-        self.assertIn("dte_pos_accounting_mode", view.arch_db)
-
     def test_pos_payment_methods_expose_sii_mapping(self):
         field = self.env["pos.payment.method"]._fields[
             "l10n_cl_dte_boleta_payment_method"

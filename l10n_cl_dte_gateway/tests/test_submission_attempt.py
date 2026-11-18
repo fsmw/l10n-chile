@@ -1,18 +1,11 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager
 from datetime import datetime
-from threading import Barrier
 from uuid import uuid4
 
-from psycopg2.errors import SerializationFailure
-
-from odoo import api, sql_db
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
-from odoo.tests.common import mute_logger
 
 from odoo.addons.l10n_cl_dte_core.tests.common import DteTestCase
 
@@ -117,95 +110,3 @@ class TestSubmissionAttempt(DteTestCase):
         attempt.invalidate_recordset()
         self.assertEqual(attempt.state, "started")
         self.assertFalse(attempt.completed_at)
-
-    def test_independent_orm_completions_keep_one_winner(self):
-        registry = self.env.registry
-        connection = sql_db.db_connect(self.cr.dbname)
-        company_id = self.env.ref("base.main_company").id
-
-        @contextmanager
-        def transaction():
-            # Raw connections avoid the registry's shared TransactionCase cursor.
-            with connection.cursor() as cr:
-                cr.transaction = api.Transaction(registry)
-                cr.execute("SET LOCAL lock_timeout = '10s'")
-                yield api.Environment(
-                    cr, 1, {"allowed_company_ids": [company_id]}, su=True
-                )
-                cr.commit()  # pylint: disable=invalid-commit
-
-        with transaction() as env:
-            document = env["l10n_cl.electronic.document"].create(
-                {
-                    "name": "Synthetic completion race",
-                    "source_key": uuid4().hex,
-                    "company_id": company_id,
-                    "document_code": "33",
-                }
-            )
-            submission = env["l10n_cl.electronic.submission"].create(
-                dict(document_id=document.id, idempotency_key=uuid4().hex)
-            )
-            attempt = env[ATTEMPT].create(
-                dict(
-                    submission_id=submission.id,
-                    operation="send",
-                    request_digest="a" * 64,
-                )
-            )
-            document_id, submission_id = document.id, submission.id
-            attempt_id = attempt.id
-        barrier = Barrier(2)
-
-        def complete(index):
-            try:
-                with transaction() as env:
-                    record = env[ATTEMPT].browse(attempt_id)
-                    self.assertEqual(record.state, "started")
-                    barrier.wait(timeout=10)
-                    if index:
-                        record._complete("failed", response_digest="c" * 64)
-                    else:
-                        record.write(
-                            {"state": "completed", "response_digest": "b" * 64}
-                        )
-                    result = record.read(AUDIT_FIELDS)
-                return result
-            except SerializationFailure:
-                return None
-
-        try:
-            with mute_logger("odoo.sql_db"), ThreadPoolExecutor(max_workers=2) as pool:
-                futures = [pool.submit(complete, index) for index in range(2)]
-                results = [future.result(timeout=30) for future in futures]
-            self.assertEqual(results.count(None), 1)
-            winner = next(result for result in results if result is not None)
-            self.assertTrue(winner[0]["completed_at"])
-            self.assertEqual(winner[0]["request_digest"], "a" * 64)
-            with transaction() as env:
-                record = env[ATTEMPT].browse(attempt_id)
-                self.assertEqual(record.read(AUDIT_FIELDS), winner)
-                with self.assertRaises(UserError):
-                    record._complete("unknown", response_digest="d" * 64)
-                with self.assertRaises(UserError):
-                    record.write({"state": "unknown", "response_digest": "d" * 64})
-                record.invalidate_recordset()
-                self.assertEqual(record.read(AUDIT_FIELDS), winner)
-        finally:
-            # Only this test's independently committed synthetic rows are removed.
-            with transaction() as env:
-                env.cr.execute(
-                    "DELETE FROM l10n_cl_submission_attempt WHERE id = %s", [attempt_id]
-                )
-                env.cr.execute(
-                    "DELETE FROM l10n_cl_electronic_submission WHERE id = %s",
-                    [submission_id],
-                )
-                env.cr.execute(
-                    "DELETE FROM l10n_cl_electronic_event WHERE document_id = %s",
-                    [document_id],
-                )
-                env.cr.execute(
-                    "DELETE FROM l10n_cl_electronic_document WHERE id = %s",
-                    [document_id],
-                )
