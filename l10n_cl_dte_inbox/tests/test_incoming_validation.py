@@ -512,3 +512,62 @@ class TestIncomingValidation(DteInvoiceTestCase):
         self.assertNotIn(b"<Folio>710<", content)
         result = IncomingValidationService(self.imports.env).inspect(content)
         self.assertEqual(result["documents"][0]["signature_state"], "invalid")
+
+    def _signed_with_iddoc_fields(self, fields):
+        """Sign a DTE whose IdDoc ends with ``fields`` (name, value) pairs."""
+        if not getattr(self, "_unsigned_base", None):
+            snapshot, caf = self.capture(self.make_invoice(), folio=720)
+            composer = DteXmlComposer()
+            snapshot["ted_xml"] = composer.compose_ted(snapshot, caf)
+            self._unsigned_base = composer.compose_unsigned_document(snapshot)
+        root = etree.fromstring(self._unsigned_base)
+        id_doc = root.find(f".//{{{SII_NS}}}IdDoc")
+        for name, value in fields:
+            etree.SubElement(id_doc, f"{{{SII_NS}}}{name}").text = value
+        return SignatureService().sign_document(
+            self.company.with_user(self.dte_manager), "demo", xml_bytes(root)
+        )
+
+    def test_sii_transaction_types_are_accepted(self):
+        for fields in (
+            (("TpoTranCompra", "1"), ("TpoTranVenta", "1")),
+            (("TpoTranCompra", "7"), ("TpoTranVenta", "3")),
+            (("TpoTranVenta", "2"),),
+            (("TpoTranCompra", "4"), ("FmaPago", "1")),
+        ):
+            with self.subTest(fields=fields):
+                content = self._signed_with_iddoc_fields(fields)
+                result = IncomingValidationService(self.imports.env).inspect(content)
+                document = result["documents"][0]
+                self.assertEqual(
+                    document["schema_state"], "valid", document["diagnostics"]
+                )
+                self.assertEqual(document["signature_state"], "valid")
+        content = self._envelope(
+            self._signed_with_iddoc_fields(
+                (("TpoTranCompra", "1"), ("TpoTranVenta", "1"))
+            )
+        )
+        batch = self.imports._import_xml(content)
+        self.assertEqual(
+            batch.state, "imported", batch.diagnostics + batch.line_ids.diagnostics
+        )
+
+    def test_invalid_transaction_types_are_rejected(self):
+        for fields, message in (
+            ((("TpoTranCompra", "8"),), "outside the SII table"),
+            ((("TpoTranVenta", "4"),), "outside the SII table"),
+            ((("TpoTranVenta", "x"),), "outside the SII table"),
+            ((("TpoTranVenta", "1"), ("TpoTranCompra", "1")), "in that order"),
+            ((("TpoTranVenta", "1"), ("TpoTranVenta", "1")), "in that order"),
+            ((("FmaPago", "1"), ("TpoTranVenta", "1")), "precede FmaPago"),
+        ):
+            with self.subTest(fields=fields):
+                content = self._signed_with_iddoc_fields(fields)
+                result = IncomingValidationService(self.imports.env).inspect(content)
+                document = result["documents"][0]
+                self.assertEqual(document["schema_state"], "invalid")
+                self.assertTrue(
+                    any(message in item["message"] for item in document["diagnostics"]),
+                    document["diagnostics"],
+                )
