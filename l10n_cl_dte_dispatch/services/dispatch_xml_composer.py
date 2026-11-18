@@ -6,6 +6,11 @@ from lxml import etree
 from odoo import api, models
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import (
+    fixed_decimal,
+    format_uom,
+    serialize_unsigned_dte,
+)
 from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
 
 SII_NAMESPACE = "http://www.sii.cl/SiiDte"
@@ -46,7 +51,10 @@ class DteDispatchXmlComposer(models.AbstractModel):
         serializer below never reads records.
         """
         lines = self._sorted_lines(dispatch)
-        line_snapshots = [self._line_snapshot(line) for line in lines]
+        uom_xml_ids = lines.uom_id.get_external_id()
+        line_snapshots = [
+            self._line_snapshot(line, uom_xml_ids.get(line.uom_id.id)) for line in lines
+        ]
         return {
             "document_code": DOCUMENT_CODE,
             "folio": int(folio),
@@ -63,7 +71,7 @@ class DteDispatchXmlComposer(models.AbstractModel):
         }
 
     @api.model
-    def serialize_unsigned_guide(self, snapshot):
+    def serialize_unsigned_guide(self, snapshot, *, wire_layout=False):
         """Return the unsigned DTE 52 XML bytes (ISO-8859-1) of a snapshot.
 
         This is a pure function of the snapshot. ``snapshot["ted_xml"]``, when
@@ -72,21 +80,28 @@ class DteDispatchXmlComposer(models.AbstractModel):
         root = etree.Element(
             f"{{{SII_NAMESPACE}}}DTE", nsmap={None: SII_NAMESPACE}, version="1.0"
         )
+        folio = str(snapshot["folio"]) if wire_layout else f"{snapshot['folio']:010d}"
         document = etree.SubElement(
             root,
             f"{{{SII_NAMESPACE}}}Documento",
-            ID=f"F{snapshot['folio']:010d}T{DOCUMENT_CODE}",
+            ID=f"F{folio}T{DOCUMENT_CODE}",
         )
         header = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Encabezado")
         self._append_id_doc(header, snapshot)
         self._append_issuer(header, snapshot["issuer"])
-        self._append_receiver(header, snapshot["receiver"], snapshot["transport"])
+        self._append_receiver(header, snapshot["receiver"])
+        if snapshot["transport"]:
+            self._append_transport(header, snapshot["transport"])
         self._append_totals(header, snapshot["totals"])
         for index, line in enumerate(snapshot["lines"], start=1):
             self._append_line(document, index, line)
         if snapshot.get("ted_xml"):
             etree.SubElement(document, f"{{{SII_NAMESPACE}}}{TED_PLACEHOLDER}")
         _text(document, "TmstFirma", snapshot["document_timestamp"])
+        if wire_layout:
+            return serialize_unsigned_dte(
+                root, document, snapshot.get("ted_xml"), root_indent=3
+            )
         xml_bytes = etree.tostring(
             root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=True
         )
@@ -158,12 +173,12 @@ class DteDispatchXmlComposer(models.AbstractModel):
         return dispatch.line_ids.sorted(lambda line: (line.sequence, line.id))
 
     @api.model
-    def _line_snapshot(self, line):
+    def _line_snapshot(self, line, uom_xml_id):
         return {
             "name": line.description,
             "quantity": line.quantity,
             "unit_price": line.unit_price,
-            "uom": line.uom_id.name,
+            "uom": format_uom(uom_xml_id, line.uom_id.name),
             "tax_category": line.tax_category,
         }
 
@@ -185,22 +200,23 @@ class DteDispatchXmlComposer(models.AbstractModel):
         _text(node, "RUTEmisor", issuer["vat"])
         _text(node, "RznSoc", issuer["name"])
         _text(node, "GiroEmis", issuer["activity"])
+        _optional_text(node, "CorreoEmisor", issuer.get("email"))
         _text(node, "Acteco", issuer["activity_code"])
         _optional_text(node, "DirOrigen", issuer.get("address"))
         _optional_text(node, "CmnaOrigen", issuer.get("commune"))
         _optional_text(node, "CiudadOrigen", issuer.get("city"))
 
     @api.model
-    def _append_receiver(self, header, receiver, transport):
+    def _append_receiver(self, header, receiver):
         node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Receptor")
         _text(node, "RUTRecep", receiver["vat"])
         _text(node, "RznSocRecep", receiver["name"])
         _optional_text(node, "GiroRecep", receiver.get("activity"))
+        _optional_text(node, "Contacto", receiver.get("contact"))
+        _optional_text(node, "CorreoRecep", receiver.get("email"))
         _optional_text(node, "DirRecep", receiver.get("address"))
         _optional_text(node, "CmnaRecep", receiver.get("commune"))
         _optional_text(node, "CiudadRecep", receiver.get("city"))
-        if transport:
-            self._append_transport(node, transport)
 
     @api.model
     def _append_totals(self, header, totals):
@@ -210,16 +226,22 @@ class DteDispatchXmlComposer(models.AbstractModel):
         if totals["exempt"]:
             _text(node, "MntExe", totals["exempt"])
         if totals["net"]:
-            _text(node, "TasaIVA", VAT_RATE_PERCENT)
+            _text(node, "TasaIVA", fixed_decimal(VAT_RATE_PERCENT, 2))
             _text(node, "IVA", totals["vat"])
         _text(node, "MntTotal", totals["total"])
 
     @api.model
-    def _append_transport(self, receiver_node, transport):
-        node = etree.SubElement(receiver_node, f"{{{SII_NAMESPACE}}}Transporte")
+    def _append_transport(self, header, transport):
+        node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Transporte")
         _optional_text(node, "Patente", transport.get("vehicle_plate"))
         _optional_text(node, "RUTTrans", transport.get("carrier_vat"))
-        _optional_text(node, "DirDest", transport.get("destination_address"))
+        for key, tag in (
+            ("destination_address", "DirDest"),
+            ("destination_commune", "CmnaDest"),
+            ("destination_city", "CiudadDest"),
+        ):
+            if key in transport:
+                _text(node, tag, transport[key])
 
     @api.model
     def _append_line(self, document, index, line):
@@ -230,9 +252,11 @@ class DteDispatchXmlComposer(models.AbstractModel):
         elif line["tax_category"] == UNVALUED:
             _text(node, "IndExe", UNVALUED_INDICATOR)
         _text(node, "NmbItem", line["name"])
-        _text(node, "QtyItem", line["quantity"])
+        _text(node, "DscItem", line["name"])
+        _text(node, "QtyItem", fixed_decimal(line["quantity"], 6))
+        _optional_text(node, "UnmdItem", line.get("uom"))
         if line["tax_category"] != UNVALUED:
-            _text(node, "PrcItem", line["unit_price"])
+            _text(node, "PrcItem", fixed_decimal(line["unit_price"], 6))
         _text(
             node,
             "MontoItem",

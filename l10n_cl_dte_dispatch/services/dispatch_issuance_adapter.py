@@ -15,6 +15,7 @@ from odoo.addons.l10n_cl_dte_core.tools.xml_safety import (
     safe_xml_schema,
 )
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import format_email
 from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
 
 DOCUMENT_CODE = "52"
@@ -111,13 +112,15 @@ class DispatchIssuanceAdapter:
         )
 
     def compose_ted(self, snapshot, caf):
-        return DteTedComposer().compose_ted(snapshot, caf)
+        return DteTedComposer().compose_ted(snapshot, caf, indented_layout=True)
 
     def compose_unsigned_document(self, snapshot):
-        return self.composer.serialize_unsigned_guide(snapshot)
+        return self.composer.serialize_unsigned_guide(snapshot, wire_layout=True)
 
     def sign_document(self, company, environment, unsigned_xml):
-        return SignatureService().sign_document(company, environment, unsigned_xml)
+        return SignatureService().sign_document(
+            company, environment, unsigned_xml, preserve_serialization=True
+        )
 
     def validate_document(self, xml_bytes):
         xsd = Path(get_module_path("l10n_cl_dte_xml")) / "static/xsd/DTE_v10.xsd"
@@ -130,31 +133,39 @@ class DispatchIssuanceAdapter:
             "name": partner.name,
             "activity": getattr(company, "l10n_cl_activity_description", "") or "",
             "activity_code": company.dte_sii_activity_code,
-            "address": partner.street or "",
+            "email": format_email(partner.email),
+            "address": f"{partner.street or ''} {partner.street2 or ''}"[:70],
             "commune": partner.city or "",
-            "city": partner.city or "",
         }
 
     def _receiver(self, partner):
         return {
             "vat": partner.vat,
             "name": partner.name,
-            "activity": "",
+            "activity": partner.l10n_cl_activity_description
+            or partner.commercial_partner_id.l10n_cl_activity_description
+            or "",
+            "contact": (partner.phone or partner.email or "")[:80],
+            "email": format_email(partner.email or partner.commercial_partner_id.email),
             "address": partner.street or "",
             "commune": partner.city or "",
-            "city": partner.city or "",
         }
 
     def _transport(self, source):
-        """Return the transport block only when the guide names a vehicle or carrier."""
+        """Serialize transport details when the guide identifies the transport."""
         if not (source.vehicle_plate or source.carrier_id.vat):
-            return {}
+            return {
+                "destination_address": "",
+                "destination_commune": "",
+                "destination_city": "",
+            }
         return {
             key: value
             for key, value in {
                 "vehicle_plate": source.vehicle_plate,
                 "carrier_vat": source.carrier_id.vat,
                 "destination_address": source.destination_address,
+                "destination_commune": source.destination_commune,
             }.items()
             if value
         }

@@ -10,6 +10,8 @@ from zoneinfo import ZoneInfo
 from odoo import _, fields
 from odoo.exceptions import ValidationError
 
+from .dte_wire_format import format_uom
+
 
 class InvoiceSnapshotService:
     """Build immutable fiscal input from a posted Chilean invoice."""
@@ -215,6 +217,7 @@ class InvoiceSnapshotService:
             raise ValidationError(_("A DTE supports at most 60 detail lines."))
 
         line_snapshots = []
+        uom_xml_ids = invoice_lines.product_uom_id.get_external_id()
         taxable_net = Decimal("0")
         exempt_net = Decimal("0")
         for line in invoice_lines:
@@ -244,7 +247,10 @@ class InvoiceSnapshotService:
                     "name": item_name,
                     "description": detail_description,
                     "quantity": self._decimal_text(line.quantity),
-                    "uom": (line.product_uom_id.name or "")[:4],
+                    "uom": format_uom(
+                        uom_xml_ids.get(line.product_uom_id.id),
+                        line.product_uom_id.name,
+                    ),
                     "unit_price": self._decimal_text(line.price_unit),
                     "discount_percent": self._decimal_text(line.discount)
                     if line.discount

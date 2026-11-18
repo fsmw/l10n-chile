@@ -259,11 +259,4 @@ def _extract_ted_bytes(signed_xml):
     ends = list(re.finditer(rb"</(?:[\w.-]+:)?TED\s*>", signed_xml))
     if len(starts) != 1 or len(ends) != 1 or ends[0].start() <= starts[0].start():
         raise ValidationError(_("The signed DTE must contain exactly one TED."))
-    ted_bytes = signed_xml[starts[0].start() : ends[0].end()]
-    try:
-        ted_bytes.decode("ascii")
-    except UnicodeDecodeError as error:
-        raise ValidationError(
-            _("The TED must contain only ASCII characters for PDF417 rendering.")
-        ) from error
-    return ted_bytes
+    return signed_xml[starts[0].start() : ends[0].end()]

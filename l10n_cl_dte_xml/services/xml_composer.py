@@ -20,6 +20,7 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
     SignatureService,
 )
 
+from .dte_wire_format import fixed_decimal, serialize_unsigned_dte
 from .ted_composer import DteTedComposer
 
 SII_NAMESPACE = "http://www.sii.cl/SiiDte"
@@ -34,7 +35,7 @@ class DteXmlComposer:
             Decimal(quantity) * Decimal(unit_price) * Decimal(discount_percent) / 100
         ).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
-    def compose_unsigned_document(self, snapshot):
+    def compose_unsigned_document(self, snapshot, *, invoice_layout=False):
         """Serialize a previously prepared DTE snapshot.
 
         `snapshot` is a plain mapping produced by InvoiceSnapshotService. Fiscal
@@ -47,7 +48,7 @@ class DteXmlComposer:
             version="1.0",
         )
         document_code = str(snapshot["document_code"])
-        document_id = f"F{int(snapshot['folio']):010d}T{document_code}"
+        document_id = f"F{int(snapshot['folio'])}T{document_code}"
         document = etree.SubElement(
             root, f"{{{SII_NAMESPACE}}}Documento", ID=document_id
         )
@@ -56,12 +57,15 @@ class DteXmlComposer:
         _add_text(identification, "TipoDTE", document_code)
         _add_text(identification, "Folio", snapshot["folio"])
         _add_text(identification, "FchEmis", snapshot["issue_date"])
+        _add_optional_text(identification, "FmaPago", snapshot.get("payment_form"))
+        _add_optional_text(identification, "FchVenc", snapshot.get("due_date"))
 
         issuer_data = snapshot["issuer"]
         issuer = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Emisor")
         _add_text(issuer, "RUTEmisor", issuer_data["vat"])
         _add_text(issuer, "RznSoc", issuer_data["name"])
         _add_text(issuer, "GiroEmis", issuer_data["activity"])
+        _add_optional_text(issuer, "CorreoEmisor", issuer_data.get("email"))
         _add_text(issuer, "Acteco", issuer_data["activity_code"])
         for field_name, xml_name in (
             ("address", "DirOrigen"),
@@ -69,6 +73,7 @@ class DteXmlComposer:
             ("city", "CiudadOrigen"),
         ):
             _add_optional_text(issuer, xml_name, issuer_data.get(field_name))
+        _add_optional_text(issuer, "CdgVendedor", issuer_data.get("seller"))
 
         receiver_data = snapshot["receiver"]
         receiver = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Receptor")
@@ -76,6 +81,8 @@ class DteXmlComposer:
         _add_text(receiver, "RznSocRecep", receiver_data["name"])
         for field_name, xml_name in (
             ("activity", "GiroRecep"),
+            ("contact", "Contacto"),
+            ("email", "CorreoRecep"),
             ("address", "DirRecep"),
             ("commune", "CmnaRecep"),
             ("city", "CiudadRecep"),
@@ -86,7 +93,8 @@ class DteXmlComposer:
         totals = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Totales")
         _add_optional_text(totals, "MntNeto", totals_data.get("net"))
         _add_optional_text(totals, "MntExe", totals_data.get("exempt"))
-        _add_optional_text(totals, "TasaIVA", totals_data.get("vat_rate"))
+        if totals_data.get("vat_rate"):
+            _add_text(totals, "TasaIVA", fixed_decimal(totals_data["vat_rate"], 2))
         _add_optional_text(totals, "IVA", totals_data.get("vat"))
         _add_text(totals, "MntTotal", totals_data["total"])
 
@@ -97,11 +105,15 @@ class DteXmlComposer:
                 _add_text(detail, "IndExe", "1")
             _add_text(detail, "NmbItem", line_data["name"])
             _add_optional_text(detail, "DscItem", line_data.get("description"))
-            _add_text(detail, "QtyItem", line_data["quantity"])
+            _add_text(detail, "QtyItem", fixed_decimal(line_data["quantity"], 6))
             _add_optional_text(detail, "UnmdItem", line_data.get("uom"))
-            _add_text(detail, "PrcItem", line_data["unit_price"])
+            _add_text(detail, "PrcItem", fixed_decimal(line_data["unit_price"], 6))
             if line_data.get("discount_percent"):
-                _add_text(detail, "DescuentoPct", line_data["discount_percent"])
+                _add_text(
+                    detail,
+                    "DescuentoPct",
+                    fixed_decimal(line_data["discount_percent"], 2),
+                )
                 discount = self.line_discount_amount(
                     line_data["quantity"],
                     line_data["unit_price"],
@@ -149,6 +161,8 @@ class DteXmlComposer:
         if ted_xml:
             etree.SubElement(document, f"{{{SII_NAMESPACE}}}TED_PLACEHOLDER")
         _add_text(document, "TmstFirma", snapshot["document_timestamp"])
+        if invoice_layout:
+            return serialize_unsigned_dte(root, document, ted_xml, root_indent=2)
         try:
             xml_bytes = etree.tostring(
                 root,
@@ -169,11 +183,21 @@ class DteXmlComposer:
             xml_bytes = xml_bytes.replace(placeholder, ted_xml)
         return xml_bytes
 
-    def compose_ted(self, snapshot, caf_authorization, signature_service=None):
+    def compose_ted(
+        self,
+        snapshot,
+        caf_authorization,
+        signature_service=None,
+        *,
+        invoice_layout=False,
+    ):
         """Build TED from the snapshot and return it with its FRMT signature."""
         _require_supported_snapshot(snapshot)
         return DteTedComposer().compose_ted(
-            snapshot, caf_authorization, signature_service
+            snapshot,
+            caf_authorization,
+            signature_service,
+            indented_layout=invoice_layout,
         )
 
     def validate_document(self, xml_bytes, signature_service=None, *, strict_sii=False):

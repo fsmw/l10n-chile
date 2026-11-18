@@ -1,10 +1,12 @@
 <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
-    <Documento ID="F0000000710T34">
+    <Documento ID="F710T34">
         <Encabezado>
             <IdDoc>
                 <TipoDTE>34</TipoDTE>
                 <Folio>710</Folio>
                 <FchEmis>2026-01-15</FchEmis>
+                <FmaPago>1</FmaPago>
+                <FchVenc>2026-01-15</FchVenc>
             </IdDoc>
             <Emisor>
                 <RUTEmisor>76864280-K</RUTEmisor>
@@ -13,6 +15,7 @@
                 <Acteco>620200</Acteco>
                 <DirOrigen>Avenida Prueba 100</DirOrigen>
                 <CmnaOrigen>Santiago</CmnaOrigen>
+                <CdgVendedor>Synthetic DTE Seller</CdgVendedor>
             </Emisor>
             <Receptor>
                 <RUTRecep>76864280-K</RUTRecep>
@@ -31,9 +34,9 @@
             <IndExe>1</IndExe>
             <NmbItem>Asesoria educacional</NmbItem>
             <DscItem>Asesoria educacional</DscItem>
-            <QtyItem>2</QtyItem>
-            <UnmdItem>Unit</UnmdItem>
-            <PrcItem>30000</PrcItem>
+            <QtyItem>2.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>30000.000000</PrcItem>
             <MontoItem>60000</MontoItem>
         </Detalle>
         <Detalle>
@@ -41,10 +44,10 @@
             <IndExe>1</IndExe>
             <NmbItem>Curso de capacitacion</NmbItem>
             <DscItem>Curso de capacitacion</DscItem>
-            <QtyItem>1</QtyItem>
-            <UnmdItem>Unit</UnmdItem>
-            <PrcItem>50000</PrcItem>
-            <DescuentoPct>20</DescuentoPct>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>50000.000000</PrcItem>
+            <DescuentoPct>20.00</DescuentoPct>
             <DescuentoMonto>10000</DescuentoMonto>
             <MontoItem>40000</MontoItem>
         </Detalle>
@@ -66,12 +69,17 @@
         <TmstFirma>2026-01-15T12:00:00</TmstFirma>
     </Documento>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <SignedInfo>
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
             <CanonicalizationMethod
                 Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
             />
             <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-            <Reference URI="#F0000000710T34">
+            <Reference URI="#F710T34">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
                 <DigestValue>___ignore___</DigestValue>
             </Reference>

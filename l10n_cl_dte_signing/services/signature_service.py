@@ -3,6 +3,7 @@
 
 import base64
 import binascii
+from textwrap import fill
 
 from cryptography import x509
 from cryptography.exceptions import InvalidSignature
@@ -162,7 +163,9 @@ class SignatureService:
             raise ValidationError(_("The TED FRMT signature is invalid.")) from error
         return True
 
-    def sign_document(self, company, environment, unsigned_xml):
+    def sign_document(
+        self, company, environment, unsigned_xml, *, preserve_serialization=False
+    ):
         """Append an XMLDSig bound to the DTE's unique typed fiscal payload."""
         # The issuance service checks the operator before entering sudo mode.
         # Cashiers may request issuance without reading private certificate data.
@@ -208,6 +211,9 @@ class SignatureService:
         reference = etree.SubElement(
             signed_info, _qname("Reference"), URI=f"#{document_id}"
         )
+        if preserve_serialization:
+            transforms = etree.SubElement(reference, _qname("Transforms"))
+            etree.SubElement(transforms, _qname("Transform"), Algorithm=C14N_URI)
         etree.SubElement(reference, _qname("DigestMethod"), Algorithm=SHA1_URI)
         digest = hashes.Hash(hashes.SHA1())
         digest.update(_canonicalize(document))
@@ -215,21 +221,52 @@ class SignatureService:
             digest.finalize()
         ).decode("ascii")
 
+        canonical_info = _canonicalize(signed_info)
         signature_bytes = certificate._sign(
-            _canonicalize(signed_info), hashing_algorithm="sha1", formatting="base64"
+            canonical_info, hashing_algorithm="sha1", formatting="base64"
         )
         etree.SubElement(
             signature, _qname("SignatureValue")
         ).text = signature_bytes.decode("ascii")
         self._add_key_info(signature, certificate)
-        signed_xml = etree.tostring(
-            root,
-            encoding="ISO-8859-1",
-            xml_declaration=True,
-            pretty_print=False,
-        )
+        if preserve_serialization:
+            signed_xml = self._insert_serialized_signature(
+                unsigned_xml, signature, canonical_info
+            )
+        else:
+            signed_xml = etree.tostring(
+                root,
+                encoding="ISO-8859-1",
+                xml_declaration=True,
+                pretty_print=False,
+            )
         self.verify_signature(signed_xml, sii_standalone=True)
         return signed_xml
+
+    @staticmethod
+    def _insert_serialized_signature(unsigned_xml, signature, canonical_info):
+        """Insert the signature in the original wire layout of an invoice."""
+        certificate_node = signature.find(
+            f"{_qname('KeyInfo')}/{_qname('X509Data')}/{_qname('X509Certificate')}"
+        )
+        certificate_node.text = "\n" + fill(
+            "".join(certificate_node.text.split()), width=64
+        )
+        signature.remove(signature[0])
+        header, delimiter, rest = etree.tostring(
+            signature, encoding="ISO-8859-1", xml_declaration=False, with_tail=False
+        ).partition(b">")
+        closing = b"</DTE>"
+        if not isinstance(unsigned_xml, bytes) or not unsigned_xml.endswith(closing):
+            raise ValidationError(_("The invoice XML must end with the DTE element."))
+        return (
+            unsigned_xml[: -len(closing)]
+            + header
+            + delimiter
+            + canonical_info
+            + rest
+            + closing
+        )
 
     def verify_signature(self, signed_xml, public_key=None, *, sii_standalone=False):
         """Verify one SII DTE XMLDSig and its digest; raise on any mismatch."""

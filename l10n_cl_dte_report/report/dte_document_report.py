@@ -4,6 +4,7 @@
 import base64
 import importlib
 import io
+import re
 
 from lxml import etree
 from PIL import Image
@@ -31,6 +32,26 @@ encode = _pdf417gen.encode
 render_image = _pdf417gen.render_image
 
 
+def render_ted_barcode(ted):
+    """Encode the compact TED without reserializing its signed text."""
+    # Remove layout between elements and preserve text and signature wrapping.
+    payload = re.sub(rb">\n[ \t]*<", b"><", ted)
+    try:
+        image = render_image(
+            encode(payload, columns=18, security_level=4),
+            scale=3,
+            ratio=3,
+            padding=8,
+        )
+        buffer = io.BytesIO()
+        image.save(buffer, format="PNG", optimize=False)
+    except (ValueError, OSError) as error:
+        raise ValidationError(
+            _("The TED could not be rendered as a PDF417 barcode.")
+        ) from error
+    return base64.b64encode(buffer.getvalue()).decode("ascii")
+
+
 def _find_local_text(element, local_name):
     matches = [
         child
@@ -52,20 +73,8 @@ class ReportDtePrintSample(models.AbstractModel):
         for sample in samples:
             content = sample._get_signed_xml()
             ted = _extract_ted_bytes(content)
-            try:
-                root = safe_fromstring(content)
-                image = render_image(
-                    encode(ted.decode("ascii"), columns=18, security_level=4),
-                    scale=3,
-                    ratio=3,
-                    padding=8,
-                )
-                buffer = io.BytesIO()
-                image.save(buffer, format="PNG", optimize=False)
-            except (ValueError, OSError) as error:
-                raise ValidationError(
-                    _("The TED could not be rendered as a PDF417 barcode.")
-                ) from error
+            root = safe_fromstring(content)
+            barcode = render_ted_barcode(ted)
             document = next(
                 (
                     element
@@ -85,7 +94,7 @@ class ReportDtePrintSample(models.AbstractModel):
             if document is None or header is None:
                 raise ValidationError(_("The signed DTE has no printable header."))
             output[sample.id] = {
-                "barcode": base64.b64encode(buffer.getvalue()).decode("ascii"),
+                "barcode": barcode,
                 "document_code": sample.document_code,
                 "folio": sample.folio,
                 "issue_date": _find_local_text(header, "FchEmis"),

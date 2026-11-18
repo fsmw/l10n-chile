@@ -7,6 +7,7 @@ from odoo import _
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import format_email
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 
@@ -91,18 +92,41 @@ class InvoiceIssuanceAdapter(DteIssuanceAdapter):
         return self.snapshot_service.validate_invoice_source(move, document_code)
 
     def capture_snapshot(self, move, caf, folio_number, document_code):
-        return self.snapshot_service.capture_invoice(
+        snapshot = self.snapshot_service.capture_invoice(
             move, caf, folio_number, document_code
         )
+        snapshot["payment_form"] = move.invoice_payment_term_id.l10n_cl_sii_code or "2"
+        snapshot["due_date"] = (
+            move.invoice_date_due.isoformat()
+            if move.invoice_date_due
+            else snapshot["document_timestamp"][:10]
+        )
+        partner = move.partner_id
+        commercial_partner = partner.commercial_partner_id
+        snapshot["issuer"].update(
+            email=format_email(move.company_id.partner_id.email),
+            seller=(move.invoice_user_id.name or "")[:60],
+        )
+        snapshot["receiver"].update(
+            contact=(partner.phone or commercial_partner.phone or partner.email or "")[
+                :80
+            ],
+            email=format_email(partner.email or commercial_partner.email),
+        )
+        return snapshot
 
     def compose_ted(self, snapshot, caf):
-        return self.xml_composer.compose_ted(snapshot, caf)
+        return self.xml_composer.compose_ted(snapshot, caf, invoice_layout=True)
 
     def compose_unsigned_document(self, snapshot):
-        return self.xml_composer.compose_unsigned_document(snapshot)
+        return self.xml_composer.compose_unsigned_document(
+            snapshot, invoice_layout=True
+        )
 
     def validate_document(self, xml_bytes):
         return self.xml_composer.validate_document(xml_bytes)
 
     def sign_document(self, company, environment, unsigned_xml):
-        return SignatureService().sign_document(company, environment, unsigned_xml)
+        return SignatureService().sign_document(
+            company, environment, unsigned_xml, preserve_serialization=True
+        )

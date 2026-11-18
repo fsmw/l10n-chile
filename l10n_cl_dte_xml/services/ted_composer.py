@@ -8,11 +8,20 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
+from .dte_wire_format import serialize_dd
+
 
 class DteTedComposer:
     """Serialize and CAF-sign the shared TED primitive for DTE_v10 documents."""
 
-    def compose_ted(self, snapshot, caf_authorization, signature_service=None):
+    def compose_ted(
+        self,
+        snapshot,
+        caf_authorization,
+        signature_service=None,
+        *,
+        indented_layout=False,
+    ):
         """Build the SII TED using the same byte layout used by invoice DTEs."""
         from .xml_composer import _extract_caf_bytes, _tag
 
@@ -51,8 +60,18 @@ class DteTedComposer:
                 b"</DD>",
             )
         )
+        if indented_layout:
+            dd_xml = serialize_dd(dd_xml)
         signer = signature_service or SignatureService()
         frmt = signer.sign_ted(caf_authorization.company_id, caf_authorization, dd_xml)
+        if indented_layout:
+            return (
+                b'<TED version="1.0">\n            '
+                + dd_xml
+                + b'\n                <FRMT algoritmo="SHA1withRSA">'
+                + frmt.encode("ascii")
+                + b"</FRMT>\n            </TED>"
+            )
         wrapped_frmt = (
             base64.encodebytes(base64.b64decode(frmt)).decode("ascii").strip()
         )

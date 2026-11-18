@@ -1,0 +1,92 @@
+<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+    <Documento ID="F40T52">
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE>52</TipoDTE>
+                <Folio>40</Folio>
+                <FchEmis>2026-11-12</FchEmis>
+                <IndTraslado>1</IndTraslado>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor>76864280-K</RUTEmisor>
+                <RznSoc>Emisor Sintetico de Pruebas</RznSoc>
+                <GiroEmis>Servicios informaticos</GiroEmis>
+                <Acteco>620200</Acteco>
+                <DirOrigen>Avenida Prueba 100</DirOrigen>
+                <CmnaOrigen>Santiago</CmnaOrigen>
+            </Emisor>
+            <Receptor>
+                <RUTRecep>76864280-K</RUTRecep>
+                <RznSocRecep>Receptor Sintetico</RznSocRecep>
+                <GiroRecep>Comercio al por menor</GiroRecep>
+                <DirRecep>Calle Prueba 200</DirRecep>
+                <CmnaRecep>Santiago</CmnaRecep>
+            </Receptor>
+            <Transporte>
+                <Patente>ABCD12</Patente>
+                <RUTTrans>12345678-5</RUTTrans>
+                <DirDest>Destino 456</DirDest>
+                <CmnaDest>Santiago</CmnaDest>
+            </Transporte>
+            <Totales>
+                <MntNeto>9500</MntNeto>
+                <TasaIVA>19.00</TasaIVA>
+                <IVA>1805</IVA>
+                <MntTotal>11305</MntTotal>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <NroLinDet>1</NroLinDet>
+            <NmbItem>Caja de repuestos</NmbItem>
+            <DscItem>Caja de repuestos</DscItem>
+            <QtyItem>4.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>1000.000000</PrcItem>
+            <MontoItem>4000</MontoItem>
+        </Detalle>
+        <Detalle>
+            <NroLinDet>2</NroLinDet>
+            <NmbItem>Pallet de madera</NmbItem>
+            <DscItem>Pallet de madera</DscItem>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>5500.000000</PrcItem>
+            <MontoItem>5500</MontoItem>
+        </Detalle>
+        <TED version="1.0">
+            <DD>
+                <RE>76864280-K</RE>
+                <TD>52</TD>
+                <F>40</F>
+                <FE>2026-11-12</FE>
+                <RR>76864280-K</RR>
+                <RSR>Receptor Sintetico</RSR>
+                <MNT>11305</MNT>
+                <IT1>Caja de repuestos</IT1>
+                <CAF>___ignore___</CAF>
+                <TSTED>2026-11-12T10:00:00</TSTED>
+            </DD>
+            <FRMT>___ignore___</FRMT>
+        </TED>
+        <TmstFirma>2026-11-12T10:00:00</TmstFirma>
+    </Documento>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <CanonicalizationMethod
+                Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+            />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#F40T52">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>___ignore___</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>___ignore___</SignatureValue>
+        <KeyInfo>___ignore___</KeyInfo>
+    </Signature>
+</DTE>

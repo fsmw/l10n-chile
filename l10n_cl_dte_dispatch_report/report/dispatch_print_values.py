@@ -50,15 +50,17 @@ def _line_values(detail):
 def extract_guide_print_values(xml_bytes):
     """Return the values a guide printout needs, read from its signed XML.
 
-    The TED is returned as its literal bytes, so the PDF417 can be encoded from
-    the same bytes the SII signed. Missing optional values are empty.
+    Return the original TED bytes and leave barcode compaction to the renderer.
+    Missing optional values are empty.
     """
     root = safe_fromstring(xml_bytes)
     document = root.find(".//s:Documento", NAMESPACES)
     header = document.find("s:Encabezado", NAMESPACES)
     issuer = header.find("s:Emisor", NAMESPACES)
     receiver = header.find("s:Receptor", NAMESPACES)
-    transport = receiver.find("s:Transporte", NAMESPACES)
+    transport = header.find("s:Transporte", NAMESPACES)
+    if transport is None:
+        transport = receiver.find("s:Transporte", NAMESPACES)
     return {
         "document_id": document.get("ID", ""),
         "folio": _text(header, "s:IdDoc/s:Folio"),

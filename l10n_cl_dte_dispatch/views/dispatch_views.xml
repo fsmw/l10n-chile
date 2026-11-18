@@ -69,6 +69,10 @@
                             <field name="partner_id" />
                             <field name="origin_address" />
                             <field name="destination_address" />
+                            <field
+                                name="destination_commune"
+                                readonly="state == 'frozen'"
+                            />
                             <field name="carrier_id" />
                             <field name="driver_id" />
                             <field name="vehicle_plate" />
