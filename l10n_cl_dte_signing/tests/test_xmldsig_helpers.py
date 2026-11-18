@@ -29,6 +29,12 @@ def _documento(xml_bytes):
 
 
 class TestXmldsigHelpers(TransactionCase):
+    def _service(self):
+        # Translated validation errors resolve their language from self.env.
+        service = SignatureService()
+        service.env = self.env
+        return service
+
     def test_namespace_free_c14n_drops_sii_default_namespace(self):
         canonical = _canonicalize_without_sii_namespace(_documento(SII_DTE))
 
@@ -63,9 +69,7 @@ class TestXmldsigHelpers(TransactionCase):
     def test_document_digest_accepts_namespace_free_variant(self):
         digest = hashlib.sha1(NAMESPACE_FREE_C14N).digest()
 
-        variant = SignatureService()._verify_document_digest(
-            _documento(SII_DTE), digest
-        )
+        variant = self._service()._verify_document_digest(_documento(SII_DTE), digest)
 
         self.assertEqual(variant, "exclusive_without_sii_namespace")
 
@@ -74,12 +78,12 @@ class TestXmldsigHelpers(TransactionCase):
         tampered = SII_DTE.replace(b"<Folio>7</Folio>", b"<Folio>8</Folio>", 1)
 
         with self.assertRaises(ValidationError):
-            SignatureService()._verify_document_digest(_documento(tampered), digest)
+            self._service()._verify_document_digest(_documento(tampered), digest)
 
     def test_strict_document_digest_rejects_namespace_free_variant(self):
         digest = hashlib.sha1(NAMESPACE_FREE_C14N).digest()
 
         with self.assertRaises(ValidationError):
-            SignatureService()._verify_document_digest(
+            self._service()._verify_document_digest(
                 _documento(SII_DTE), digest, allow_legacy=False
             )
