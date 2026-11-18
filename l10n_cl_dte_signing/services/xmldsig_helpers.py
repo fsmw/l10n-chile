@@ -63,11 +63,18 @@ def _canonicalize(element, exclusive=False):
 
 
 def _canonicalize_without_sii_namespace(element):
+    """Canonicalize the payload as issuers that digest it without the SII namespace.
+
+    Comments and processing instructions are skipped (C14N drops them anyway),
+    and the now-unused SII namespace declaration is removed so it does not leak
+    into the canonical bytes.
+    """
     unqualified = copy.deepcopy(element)
-    for node in unqualified.iter():
+    for node in unqualified.iter(tag=etree.Element):
         qualified_name = etree.QName(node)
         if qualified_name.namespace == "http://www.sii.cl/SiiDte":
             node.tag = qualified_name.localname
+    etree.cleanup_namespaces(unqualified)
     return _canonicalize(unqualified, exclusive=True)
 
 
