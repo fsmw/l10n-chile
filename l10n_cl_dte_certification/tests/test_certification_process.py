@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
-from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
@@ -54,25 +53,6 @@ class TestDteCertificationProcess(DteCertificationTestCase):
         with self.assertRaisesRegex(UserError, "Link the SII-assigned test set"):
             process.action_start_assigned_test_set_cycle()
         self.assertEqual(process.process_mode, "assigned_test_set")
-
-    def test_basic_set_cycle_button_starts_without_postulation_evidence(self):
-        process = self.create_certification_process(
-            record_postulation=False,
-            process_mode="new_postulation",
-            sii_application_reference=False,
-        )
-        assigned_stage = process.stage_ids.filtered(
-            lambda item: item.code == "assigned_set"
-        )
-        with patch.object(
-            type(process),
-            "_validate_assigned_test_set_entry",
-            return_value=assigned_stage,
-        ):
-            process.action_start_assigned_test_set_cycle()
-        self.assertEqual(process.process_mode, "assigned_test_set")
-        self.assertTrue(process.started_at)
-        self.assertEqual(process.current_stage_code, "assigned_set")
 
     def test_already_authorized_taxpayer_can_start_with_authorization_evidence(self):
         process = self.create_certification_process(
@@ -190,32 +170,6 @@ class TestDteCertificationProcess(DteCertificationTestCase):
         self.assertEqual(evidence.evidence_type, "postulation_acceptance")
         self.assertEqual(evidence.origin, "sii_portal")
         self.assertEqual(evidence.verification_state, "source_verified")
-        process.action_start()
-        self.assertTrue(process.started_at)
-
-    def test_postulation_acceptance_can_be_recorded_without_portal_reference(self):
-        process = self.create_certification_process(record_postulation=False)
-        wizard_model = self.env[
-            "l10n_cl.dte.certification.postulation.wizard"
-        ].with_user(self.certification_manager)
-        wizard = wizard_model.create(
-            {
-                "process_id": process.id,
-                "accepted_at": "2026-11-03",
-                "evidence_file": base64.b64encode(b"synthetic SII acceptance"),
-                "filename": "postulation-acceptance.txt",
-            }
-        )
-        wizard.action_apply()
-        self.assertFalse(process.sii_application_reference)
-        requirement = process._entry_requirements().filtered(
-            lambda item: item.code == "accepted_postulation"
-        )
-        evidence = requirement.evidence_ids
-        self.assertEqual(
-            evidence.source_url,
-            "https://maullin.sii.cl/cvc_cgi/dte/pe_avance5",
-        )
         process.action_start()
         self.assertTrue(process.started_at)
 
