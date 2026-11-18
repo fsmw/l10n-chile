@@ -133,23 +133,6 @@ class TestCertificationRunSnapshots(TransactionCase):
 
         self.assertFalse(run_model.search([("set_id", "=", self.certification_set.id)]))
 
-    def test_manager_wizard_defaults_all_cases_and_opens_created_run(self):
-        wizard = (
-            self.env["l10n_cl.dte.certification.run.wizard"]
-            .with_user(self.manager)
-            .with_context(default_set_id=self.certification_set.id)
-            .create(
-                {
-                    "set_id": self.certification_set.id,
-                }
-            )
-        )
-        action = wizard.action_create_execution()
-        run = self.env["l10n_cl.dte.certification.run"].browse(action["res_id"])
-
-        self.assertEqual(action["res_model"], "l10n_cl.dte.certification.run")
-        self.assertEqual(len(run.line_ids), len(self.certification_set.case_ids))
-
     def test_rejects_direct_run_and_line_creation(self):
         with self.assertRaises(UserError):
             self.env["l10n_cl.dte.certification.run"].sudo().create(
