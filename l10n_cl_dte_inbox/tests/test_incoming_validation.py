@@ -371,3 +371,39 @@ class TestIncomingValidation(DteInvoiceTestCase):
                     "imported",
                     batch.diagnostics + batch.line_ids.diagnostics,
                 )
+
+    def _nested(self, envelope):
+        """Re-wrap a signed EnvioDTE the way some third-party exports do."""
+        outer = etree.Element(
+            f"{{{SII_NS}}}EnvioDTE", nsmap={None: SII_NS}, version="1.0"
+        )
+        target = etree.SubElement(outer, f"{{{SII_NS}}}SetDTE", ID="export-wrapper")
+        etree.SubElement(target, f"{{{SII_NS}}}Caratula", version="1.0")
+        target.append(etree.fromstring(envelope))
+        return xml_bytes(outer)
+
+    def test_nested_export_wrapper_validates_original_envelope_and_documents(self):
+        content = self._nested(self._envelope(self._signed()))
+
+        result = IncomingValidationService(self.imports.env).inspect(content)
+
+        self.assertTrue(result["wrapped_envelope"])
+        self.assertEqual(result["schema_state"], "valid", result["diagnostics"])
+        self.assertEqual(result["signature_state"], "valid", result["diagnostics"])
+        self.assertEqual(result["documents"][0]["signature_state"], "valid")
+        batch = self.imports._import_xml(content)
+        self.assertEqual(
+            batch.state, "imported", batch.diagnostics + batch.line_ids.diagnostics
+        )
+        self.assertEqual(batch.imported_count, 1)
+
+    def test_tampered_dte_inside_nested_wrapper_is_rejected(self):
+        content = self._nested(self._envelope(self._signed()))
+        self.assertIn(b"<Folio>710<", content)
+        tampered = content.replace(b"<Folio>710<", b"<Folio>711<", 1)
+
+        result = IncomingValidationService(self.imports.env).inspect(tampered)
+
+        self.assertEqual(result["documents"][0]["signature_state"], "invalid")
+        self.assertEqual(result["signature_state"], "invalid")
+        self.assertEqual(self.imports._import_xml(tampered).state, "invalid")

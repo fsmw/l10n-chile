@@ -50,6 +50,8 @@ class IncomingValidationService:
             result["diagnostics"].append(self._error("structure", str(error)))
             return result
         result["kind"] = etree.QName(root).localname
+        # A re-wrapped export: validate the original envelope, not the wrapper.
+        result["wrapped_envelope"] = root.getparent() is not None
         for position, node in enumerate(nodes, 1):
             document = self._inspect_document(node)
             document["position"] = position
@@ -81,7 +83,9 @@ class IncomingValidationService:
                     raise ValidationError(
                         self.env._("The envelope signature structure is unsupported.")
                     )
-                self.signer.verify_envelope_signature(content)
+                self.signer.verify_envelope_signature(
+                    xml_bytes(root) if result["wrapped_envelope"] else content
+                )
                 result["signature_state"] = "valid"
             except ValidationError as error:
                 result["signature_state"] = "invalid"
