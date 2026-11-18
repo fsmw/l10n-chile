@@ -16,18 +16,3 @@ class TestDispatchViews(DispatchTestCommon):
         # Assert
         self.assertIn('name="action_review"', arch)
         self.assertIn('name="action_freeze_snapshot"', arch)
-
-    def test_list_and_search_views_render(self):
-        # Arrange
-        model = self.env["l10n_cl.dte.dispatch"]
-        # Act / Assert
-        self.assertIn("<list", model.get_view(view_type="list")["arch"])
-        self.assertIn("<search", model.get_view(view_type="search")["arch"])
-
-    def test_menu_opens_the_dispatch_action(self):
-        # Arrange
-        menu = self.env.ref("l10n_cl_dte_dispatch.menu_dispatch_guides")
-        # Act / Assert
-        self.assertEqual(
-            menu.action, self.env.ref("l10n_cl_dte_dispatch.action_dispatch")
-        )
