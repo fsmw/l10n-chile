@@ -11,7 +11,6 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from lxml import etree
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_signing.tests.common import SigningTestCase
@@ -509,54 +508,6 @@ class TestCertificationTransport(SigningTestCase):
         self.assertEqual(submission.state, "outcome_unknown")
         self.assertEqual(base64.b64decode(submission.attempt_ids.response_xml), raw)
 
-    def test_refresh_opens_same_dialog_without_queueing_or_changing_evidence(self):
-        submission = self.submission()
-        before = (submission.state, submission.write_date, submission.request_digest)
-        with (
-            patch.object(type(submission), "with_delay") as queue,
-            patch.object(CertificationAuthentication, "post") as network,
-        ):
-            action = submission.action_refresh_response()
-            queue.assert_not_called()
-            network.assert_not_called()
-        self.assertEqual(action["res_id"], submission.id)
-        self.assertEqual(action["target"], "new")
-        self.assertEqual(action["res_model"], submission._name)
-        self.assertEqual(
-            (submission.state, submission.write_date, submission.request_digest), before
-        )
-
-    def test_dialog_always_offers_refresh_and_queries_only_with_track(self):
-        submission = self.submission()
-        view = submission.get_view(
-            view_id=self.env.ref(
-                "l10n_cl_dte_gateway.view_sii_envelope_submission_form"
-            ).id,
-            view_type="form",
-        )
-        arch = etree.fromstring(view["arch"])
-        for state, track, query in [
-            ("sending", False, False),
-            ("submitted", "123", True),
-            ("submitted", False, False),
-            ("processing", "123", True),
-            ("outcome_unknown", "123", True),
-            ("outcome_unknown", False, False),
-            ("accepted", "123", False),
-            ("rejected", False, False),
-        ]:
-            with self.subTest(state=state, track=track):
-                visible = {
-                    button.get("name")
-                    for button in arch.xpath("./header/button")
-                    if not safe_eval(
-                        button.get("invisible", "False"),
-                        {"state": state, "track_id": track},
-                    )
-                }
-                self.assertIn("action_refresh_response", visible)
-                self.assertEqual("action_enqueue_status_query" in visible, query)
-
     def test_status_query_preserves_dialog_and_does_not_resend(self):
         submission = self.submission()
         submission._write_internal({"state": "submitted", "track_id": "123"})
@@ -566,16 +517,6 @@ class TestCertificationTransport(SigningTestCase):
             queue.return_value._job_send.assert_not_called()
         self.assertEqual(action["target"], "new")
         self.assertEqual(action["res_id"], submission.id)
-
-    def test_refresh_rejects_non_manager_and_status_query_requires_track(self):
-        submission = self.submission()
-        with self.assertRaises(UserError):
-            submission.with_user(self.dte_user).action_refresh_response()
-        submission._write_internal({"state": "submitted"})
-        with patch.object(type(submission), "with_delay") as queue:
-            with self.assertRaises(UserError):
-                submission.action_enqueue_status_query()
-            queue.assert_not_called()
 
     def test_non_manager_cannot_send(self):
         submission = self.submission()

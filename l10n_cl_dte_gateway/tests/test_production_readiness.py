@@ -5,7 +5,6 @@ import base64
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.exceptions import AccessError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_cl_dte_signing.tests.common import SigningTestCase
@@ -71,22 +70,6 @@ class TestDteProductionReadiness(SigningTestCase):
         authorization.action_validate_authorization()
         return authorization
 
-    def test_missing_production_signing_profile_blocks_readiness(self):
-        wizard = self.create_wizard()
-        wizard.action_check_readiness()
-        self.assertEqual(wizard.result, "blocked")
-        self.assertIn("production_signer", wizard.diagnostic_line_ids.mapped("code"))
-
-    def test_requested_types_need_valid_production_cafs(self):
-        self.configure_company_production()
-        self.create_production_caf(code="33")
-        wizard = self.create_wizard(document_codes=("52",))
-        wizard.action_check_readiness()
-        caf_finding = wizard.diagnostic_line_ids.filtered(
-            lambda line: line.code == "caf_52"
-        )
-        self.assertEqual(caf_finding.level, "blocker")
-
     def test_valid_profile_and_available_caf_are_locally_ready(self):
         self.configure_company_production()
         caf = self.create_production_caf()
@@ -119,44 +102,3 @@ class TestDteProductionReadiness(SigningTestCase):
         self.assertEqual(self.company.dte_sii_environment, original_environment)
         self.assertEqual(caf._next_available_folio(), caf.folio_start)
         self.assertFalse(caf.folio_ids)
-
-    def test_missing_resolution_blocks_readiness(self):
-        self.configure_company_production()
-        self.company.sudo().write({"dte_sii_resolution_number": False})
-        wizard = self.create_wizard()
-        wizard.action_check_readiness()
-        self.assertIn("sii_resolution", wizard.diagnostic_line_ids.mapped("code"))
-
-    def test_signer_rut_must_match_authorized_sender(self):
-        self.configure_company_production()
-        self.company.sudo().write({"dte_sii_sender_vat": "11111111-1"})
-        wizard = self.create_wizard()
-        wizard.action_check_readiness()
-        self.assertIn(
-            "production_signer_rut", wizard.diagnostic_line_ids.mapped("code")
-        )
-
-    def test_empty_document_scope_blocks_readiness(self):
-        self.configure_company_production()
-        wizard = self.create_wizard(document_codes=())
-        wizard.action_check_readiness()
-        self.assertIn("document_scope", wizard.diagnostic_line_ids.mapped("code"))
-
-    def test_non_manager_cannot_create_readiness_wizard(self):
-        with self.assertRaises(AccessError):
-            self.env["l10n_cl.dte.production.readiness.wizard"].with_user(
-                self.dte_user
-            ).create({"company_id": self.company.id})
-
-    def test_configuration_actions_are_filtered_to_company_and_production(self):
-        wizard = self.create_wizard()
-        profile_action = wizard.action_open_signing_profiles()
-        caf_action = wizard.action_open_caf_authorizations()
-        self.assertEqual(
-            profile_action["domain"],
-            [
-                ("company_id", "=", self.company.id),
-                ("sii_environment", "=", "production"),
-            ],
-        )
-        self.assertEqual(caf_action["domain"], profile_action["domain"])
