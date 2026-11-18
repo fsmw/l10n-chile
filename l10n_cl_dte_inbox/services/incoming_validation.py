@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+import copy
 import hashlib
 from collections import Counter
 
@@ -30,6 +31,29 @@ SUPPORTED_TRANSFORM_CHAINS = frozenset(
         (ENVELOPED_SIGNATURE_URI, C14N_URI),
     }
 )
+
+# SII added two optional IdDoc fields on 2017-05-31 (Formato DTE v2.5, fields
+# 11 and 12) that the vendored DTE_v10.xsd predates. They sit right after
+# MntBruto and before FmaPago. Received DTEs are checked against these rules in
+# Python and then schema-validated without them; emission is unaffected.
+TRANSACTION_TYPE_CODES = {
+    "TpoTranCompra": frozenset("1234567"),
+    "TpoTranVenta": frozenset("123"),
+}
+IDDOC_FIELDS_BEFORE_TRANSACTION_TYPES = frozenset(
+    {
+        "TipoDTE",
+        "Folio",
+        "FchEmis",
+        "IndNoRebaja",
+        "TipoDespacho",
+        "IndTraslado",
+        "TpoImpresion",
+        "IndServicio",
+        "MntBruto",
+    }
+)
+TRANSACTION_TYPE_SCHEMAS = frozenset({"DTE_v10.xsd", "EnvioDTE_v10.xsd"})
 
 
 def xml_bytes(element):
@@ -272,6 +296,10 @@ class IncomingValidationService:
                 )
                 return "unsupported"
         schema = self.schemas[path]
+        if filename in TRANSACTION_TYPE_SCHEMAS:
+            node = self._without_transaction_types(node, diagnostics)
+            if node is None:
+                return "invalid"
         try:
             schema.assertValid(node)
         except etree.DocumentInvalid as error:
@@ -286,6 +314,63 @@ class IncomingValidationService:
                 )
             return "invalid"
         return "valid"
+
+    def _without_transaction_types(self, node, diagnostics):
+        """Check SII transaction types and return a copy without them.
+
+        Return ``node`` itself when no IdDoc carries them, or ``None`` after
+        adding a schema diagnostic when one breaks the SII format.
+        """
+        id_docs = [
+            id_doc
+            for id_doc in node.iter(f"{{{SII_NS}}}IdDoc")
+            if any(
+                id_doc.find(f"{{{SII_NS}}}{name}") is not None
+                for name in TRANSACTION_TYPE_CODES
+            )
+        ]
+        if not id_docs:
+            return node
+        for id_doc in id_docs:
+            error = self._transaction_type_error(id_doc)
+            if error:
+                diagnostics.append(self._error("schema", error))
+                return None
+        stripped = copy.deepcopy(node)
+        for name in TRANSACTION_TYPE_CODES:
+            for element in list(stripped.iter(f"{{{SII_NS}}}{name}")):
+                element.getparent().remove(element)
+        return stripped
+
+    def _transaction_type_error(self, id_doc):
+        names = [etree.QName(child).localname for child in id_doc]
+        found = [name for name in names if name in TRANSACTION_TYPE_CODES]
+        allowed = (["TpoTranCompra"], ["TpoTranVenta"], list(TRANSACTION_TYPE_CODES))
+        if found not in allowed:
+            return self.env._(
+                "TpoTranCompra and TpoTranVenta may appear once each, in that order."
+            )
+        start = names.index(found[0])
+        end = start + len(found)
+        before = IDDOC_FIELDS_BEFORE_TRANSACTION_TYPES
+        if (
+            names[start:end] != found
+            or not set(names[:start]) <= before
+            or set(names[end:]) & before
+        ):
+            return self.env._(
+                "TpoTranCompra and TpoTranVenta must follow MntBruto and precede "
+                "FmaPago in IdDoc."
+            )
+        for name in found:
+            value = (id_doc.findtext(f"{{{SII_NS}}}{name}") or "").strip()
+            if value not in TRANSACTION_TYPE_CODES[name]:
+                return self.env._(
+                    "%(field)s has a code outside the SII table: %(value)s",
+                    field=name,
+                    value=value,
+                )
+        return False
 
     def _check_signature_shape(self, root, diagnostics):
         previous_count = len(diagnostics)
