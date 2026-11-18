@@ -1039,6 +1039,14 @@ msgstr ""
 
 #. module: l10n_cl_dte_inbox
 #. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid ""
+"The file re-wraps the original envelope; only the original envelope and its "
+"DTEs were verified."
+msgstr ""
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
 #: code:addons/l10n_cl_dte_inbox/models/incoming_document.py:0
 #: code:addons/l10n_cl_dte_inbox/models/incoming_import.py:0
 msgid "The incoming DTE XML is empty."

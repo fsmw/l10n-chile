@@ -226,14 +226,44 @@ class TestIncomingValidation(DteInvoiceTestCase):
             "signature", {item["stage"] for item in json.loads(bad.diagnostics)}
         )
 
-    def test_tampered_outer_signature_blocks_valid_children(self):
+    def test_tampered_outer_signature_is_a_warning_for_valid_children(self):
         content = self._envelope(self._signed()).replace(
             b"<NroResol>80", b"<NroResol>81"
         )
         batch = self.imports._import_xml(content)
+        self.assertEqual(batch.state, "imported", batch.diagnostics)
         self.assertEqual(batch.signature_state, "invalid")
         self.assertEqual(batch.line_ids.signature_state, "valid")
+        self.assertTrue(batch.line_ids.incoming_document_id)
+        diagnostics = json.loads(batch.diagnostics)
+        self.assertTrue(diagnostics)
+        self.assertEqual(
+            {(item["stage"], item.get("severity")) for item in diagnostics},
+            {("signature", "warning")},
+        )
+
+    def test_tampered_outer_signature_blocks_when_a_child_is_invalid(self):
+        second = self._signed(720).replace(b"<MntTotal>", b"<MntTotal>9", 1)
+        content = self._envelope(self._signed(), second).replace(
+            b"<NroResol>80", b"<NroResol>81"
+        )
+        batch = self.imports._import_xml(content)
+        self.assertEqual(batch.state, "invalid")
+        self.assertEqual(batch.signature_state, "invalid")
         self.assertFalse(batch.line_ids.incoming_document_id)
+        self.assertNotIn(
+            "warning", {item.get("severity") for item in json.loads(batch.diagnostics)}
+        )
+
+    def test_outer_signature_warning_does_not_hide_cover_errors(self):
+        content = (
+            self._envelope(self._signed())
+            .replace(b"<NroResol>80", b"<NroResol>81")
+            .replace(b"<NroDTE>1<", b"<NroDTE>2<", 1)
+        )
+        batch = self.imports._import_xml(content)
+        self.assertEqual(batch.state, "invalid")
+        self.assertIn("subtotals", batch.diagnostics)
 
     def test_schema_error_has_line_and_stage(self):
         content = self._signed().replace(b"<NroLinDet>1</NroLinDet>", b"")
@@ -396,6 +426,13 @@ class TestIncomingValidation(DteInvoiceTestCase):
             batch.state, "imported", batch.diagnostics + batch.line_ids.diagnostics
         )
         self.assertEqual(batch.imported_count, 1)
+        self.assertEqual(
+            [
+                (item["stage"], item.get("severity"))
+                for item in json.loads(batch.diagnostics)
+            ],
+            [("structure", "warning")],
+        )
 
     def test_tampered_dte_inside_nested_wrapper_is_rejected(self):
         content = self._nested(self._envelope(self._signed()))
