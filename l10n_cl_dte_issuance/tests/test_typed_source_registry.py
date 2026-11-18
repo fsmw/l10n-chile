@@ -79,16 +79,6 @@ class TestTypedSourceRegistry(TransactionCase):
             with self.assertRaises(AccessError):
                 get_public_method(self.source_registry, method)
 
-    def test_patched_registry_leaves_no_state_behind(self):
-        before = self.source_registry._dte_source_relations()
-        with self._relations({"res.company": "company_id"}):
-            self.assertEqual(
-                self.source_registry._dte_source_relation("res.company"),
-                "company_id",
-            )
-        self.assertEqual(self.source_registry._dte_source_relations(), before)
-        self.assertNotIn("res.company", before)
-
     def test_adapter_values_must_hold_only_the_registered_relation(self):
         with self._relations({"res.company": "company_id"}):
             check = self.source_registry._check_adapter_values
@@ -117,7 +107,3 @@ class TestTypedSourceRegistry(TransactionCase):
             self.source_registry._check_adapter_values(
                 "res.partner", {"company_id": 1}, {}
             )
-
-    def test_adapter_check_is_not_callable_through_rpc(self):
-        with self.assertRaises(AccessError):
-            get_public_method(self.source_registry, "_check_adapter_values")

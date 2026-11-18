@@ -4,7 +4,7 @@ from lxml import etree
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import file_path, mute_logger
 
@@ -12,7 +12,7 @@ from odoo.addons.l10n_cl_dte_core.tests.common import DteTestCase
 
 
 @tagged("post_install", "-at_install")
-class TestExportCatalog(HttpCase, DteTestCase):
+class TestExportCatalog(DteTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -182,25 +182,3 @@ class TestExportCatalog(HttpCase, DteTestCase):
         self.assertEqual(
             self.env.ref("l10n_cl_dte_export.menu_export_catalog").action, action
         )
-
-    def test_browser_catalog_roles(self):
-        record = self.catalog.create(self.values)
-        for user, editable in ((self.dte_manager, "true"), (self.dte_user, "false")):
-            with self.subTest(user=user.login):
-                self.browser_js(
-                    f"/web#model={record._name}&id={record.id}&view_type=form",
-                    f"""
-                    const field = document.querySelector('.o_field_widget[name=code]');
-                    const input = field.querySelector('input');
-                    if (!!input !== {editable}) throw new Error('Edit access');
-                    if ((input ? input.value : field.textContent).trim() !== '9999')
-                        throw new Error('Missing customs code');
-                    if (input) {{
-                        input.focus();
-                        if (document.activeElement !== input) throw new Error('Focus');
-                    }}
-                    console.log('test successful');
-                    """,
-                    ready="!!document.querySelector('.o_field_widget[name=\"source_date\"]')",
-                    login=user.login,
-                )

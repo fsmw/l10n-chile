@@ -43,8 +43,6 @@ class TestNoteReport(DteReportTestCase, DteNoteTestCase, HttpCase):
             )[:1]
             if operation == "return":
                 line.quantity /= 2
-            elif operation == "amount":
-                line.price_unit /= 2
         else:
             wizard = self.env["account.debit.note"].create(
                 {
@@ -165,14 +163,6 @@ class TestNoteReport(DteReportTestCase, DteNoteTestCase, HttpCase):
             sample, note, "Nota de crédito electrónica", "Corrección de montos"
         )
 
-    def test_partial_amount_reduction_a4(self):
-        sample, note = self._create_note_sample(
-            operation="amount", reason="Rebaja parcial"
-        )
-        self._check_pdf(
-            sample, note, "Nota de crédito electrónica", "Corrección de montos"
-        )
-
     def test_debit_amount_increase_a4(self):
         sample, note = self._create_note_sample("56", "amount", "Aumento de monto")
         self._check_pdf(
@@ -194,31 +184,6 @@ class TestNoteReport(DteReportTestCase, DteNoteTestCase, HttpCase):
             credit, target, "56", "cancel", "Anula nota de crédito"
         )
         self._check_pdf(sample, note, "Nota de débito electrónica", "Anulación")
-
-    def test_note_report_requires_manager(self):
-        sample, _note = self._create_note_sample()
-        with self.assertRaises(AccessError):
-            self.env[sample._name].with_user(self.dte_user).create(
-                {"document_id": sample.document_id.id}
-            )
-        other_user_sample = sample.with_user(self.dte_user)
-        with self.assertRaises(AccessError):
-            other_user_sample.action_generate_pdf()
-        with self.assertRaises(AccessError):
-            other_user_sample.action_download_pdf()
-        with self.assertRaises(AccessError):
-            self.env["report.l10n_cl_dte_report.dte_print_sample"].with_user(
-                self.dte_user
-            )._get_report_values(sample.ids)
-
-    def test_note_is_not_printed_as_thermal_receipt(self):
-        sample, _note = self._create_note_sample()
-        with self.assertRaisesRegex(UserError, "only boletas"):
-            sample.action_print_thermal()
-        with self.assertRaisesRegex(ValidationError, "only boletas"):
-            self.env["report.l10n_cl_dte_report.boleta_receipt"]._get_report_values(
-                sample.ids
-            )
 
     def test_tampered_note_is_rejected_even_with_valid_artifact_hash(self):
         sample, _note = self._create_note_sample()

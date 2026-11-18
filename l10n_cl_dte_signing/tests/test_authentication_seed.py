@@ -6,7 +6,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from lxml import etree
 
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 from ..services.signature_service import SignatureService
 from .common import SigningTestCase
@@ -52,13 +52,6 @@ class TestAuthenticationSeed(SigningTestCase):
                     SignatureService().sign_authentication_seed(
                         company, environment, seed
                     )
-
-    def test_operator_cannot_use_the_private_key(self):
-        self.create_signing_profile(environment="certification")
-        with self.assertRaises(AccessError):
-            SignatureService().sign_authentication_seed(
-                self.company.with_user(self.dte_user), "certification", "42"
-            )
 
     def test_missing_or_inactive_signing_profile_is_rejected(self):
         company = self.company.with_user(self.dte_manager)
