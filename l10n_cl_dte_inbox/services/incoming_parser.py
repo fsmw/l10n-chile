@@ -31,13 +31,43 @@ def _read_xml(content, translate):
     return root
 
 
+def _unwrap_export_envelope(root, translate):
+    """Return the original EnvioDTE that a third-party export re-wrapped.
+
+    Some exports nest the received envelope as EnvioDTE > SetDTE > (Caratula,
+    EnvioDTE). Only that single level is accepted; the wrapper itself carries no
+    fiscal content, so the original envelope and its DTEs are validated instead.
+    """
+    sets = root.findall(f"{{{SII_NS}}}SetDTE")
+    if len(sets) != 1:
+        return root
+    children = [node for node in sets[0] if isinstance(node.tag, str)]
+    originals = [node for node in children if node.tag == root.tag]
+    if not originals:
+        return root
+    if len(originals) != 1 or any(
+        node.tag not in {root.tag, f"{{{SII_NS}}}Caratula"} for node in children
+    ):
+        raise ValidationError(
+            translate("A wrapped envelope must contain one original EnvioDTE.")
+        )
+    return originals[0]
+
+
 def extract_incoming_dtes(content, translate):
-    """Parse bounded XML without resolving entities or accepting foreign wrappers."""
+    """Parse bounded XML without resolving entities or accepting foreign wrappers.
+
+    Return the envelope to validate (the original one for re-wrapped exports,
+    which then has a parent element) and its DTE nodes.
+    """
     root = _read_xml(content, translate)
+    envelope = root
     if root.tag == f"{{{SII_NS}}}DTE":
         documents = [root]
     elif root.tag in {f"{{{SII_NS}}}EnvioDTE", f"{{{SII_NS}}}EnvioBOLETA"}:
-        sets = root.findall(f"{{{SII_NS}}}SetDTE")
+        if root.tag == f"{{{SII_NS}}}EnvioDTE":
+            envelope = _unwrap_export_envelope(root, translate)
+        sets = envelope.findall(f"{{{SII_NS}}}SetDTE")
         if len(sets) != 1:
             raise ValidationError(translate("An incoming envelope needs one SetDTE."))
         documents = sets[0].findall(f"{{{SII_NS}}}DTE")
@@ -52,7 +82,7 @@ def extract_incoming_dtes(content, translate):
     ids = [node.get("ID") for node in root.iter() if node.get("ID")]
     if len(ids) != len(set(ids)):
         raise ValidationError(translate("XML identifiers must be unique in the file."))
-    return root, documents
+    return envelope, documents
 
 
 def parse_incoming_dte(content, translate=None):

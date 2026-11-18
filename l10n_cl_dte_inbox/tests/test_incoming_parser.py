@@ -4,7 +4,7 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase
 
-from ..services.incoming_parser import parse_incoming_dte
+from ..services.incoming_parser import extract_incoming_dtes, parse_incoming_dte
 
 
 class TestIncomingDteParser(TransactionCase):
@@ -53,6 +53,72 @@ class TestIncomingDteParser(TransactionCase):
         xml = self._xml().replace(b"<IdDoc>", b'<IdDoc ID="T33F12">')
         with self.assertRaises(ValidationError):
             parse_incoming_dte(xml, translate=str)
+
+    def test_nested_export_wrapper_yields_original_envelope(self):
+        envelope, documents = extract_incoming_dtes(self._nested(), str)
+
+        self.assertEqual(envelope.find(self._sii("SetDTE")).get("ID"), "SetDTE-inner")
+        self.assertIsNotNone(envelope.getparent())
+        self.assertEqual(
+            [node.find(self._sii("Documento")).get("ID") for node in documents],
+            ["T33F12"],
+        )
+
+    def test_plain_envelope_is_not_treated_as_wrapped(self):
+        plain = self._envelope(self._dte()).replace(
+            b"<EnvioDTE ", b'<EnvioDTE xmlns="http://www.sii.cl/SiiDte" ', 1
+        )
+        envelope, documents = extract_incoming_dtes(plain, str)
+
+        self.assertIsNone(envelope.getparent())
+        self.assertEqual(len(documents), 1)
+
+    def test_malformed_nested_wrappers_are_rejected(self):
+        inner = self._envelope(self._dte(), set_id=b"SetDTE-inner")
+        for content in (
+            # Two original envelopes in one wrapper.
+            self._nested(inner + inner.replace(b"SetDTE-inner", b"SetDTE-two")),
+            # A DTE beside the original envelope.
+            self._nested(inner + self._dte().replace(b"T33F12", b"T33F13")),
+            # An unknown element beside the original envelope.
+            self._nested(inner + b"<Extra/>"),
+            # More than one level of wrapping.
+            self._nested(self._envelope(inner, set_id=b"SetDTE-middle")),
+        ):
+            with self.subTest(content=content), self.assertRaises(ValidationError):
+                extract_incoming_dtes(content, str)
+
+    def test_nested_boleta_envelopes_are_not_unwrapped(self):
+        content = self._nested().replace(b"EnvioDTE", b"EnvioBOLETA")
+        with self.assertRaises(ValidationError):
+            extract_incoming_dtes(content, str)
+
+    @staticmethod
+    def _sii(tag):
+        return f"{{http://www.sii.cl/SiiDte}}{tag}"
+
+    @classmethod
+    def _dte(cls):
+        return (
+            cls._xml()
+            .split(b"?>", 1)[1]
+            .replace(b' xmlns="http://www.sii.cl/SiiDte"', b"", 1)
+        )
+
+    @staticmethod
+    def _envelope(body, set_id=b"SetDTE-inner"):
+        return (
+            b'<EnvioDTE version="1.0"><SetDTE ID="' + set_id + b'">'
+            b"<Caratula/>" + body + b"</SetDTE></EnvioDTE>"
+        )
+
+    @classmethod
+    def _nested(cls, body=None):
+        body = cls._envelope(cls._dte()) if body is None else body
+        return (
+            b'<EnvioDTE xmlns="http://www.sii.cl/SiiDte" version="1.0">'
+            b'<SetDTE ID="SetDTE-outer"><Caratula/>' + body + b"</SetDTE></EnvioDTE>"
+        )
 
     @staticmethod
     def _xml():
