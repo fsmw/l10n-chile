@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template id="custom_header_dte_folio" inherit_id="l10n_cl.custom_header">
+        <!-- The printed number must be the SII folio stamped in the TED. -->
+        <xpath expr="//t[@t-set='report_number']" position="after">
+            <t
+                t-set="dte_print"
+                t-value="o._name == 'account.move' and o._get_dte_print_values() or {}"
+            />
+            <t t-if="dte_print" t-set="report_number" t-value="dte_print['folio']" />
+        </xpath>
+    </template>
+    <!-- The Chilean invoice layout inherits this template, so both get it. -->
+    <template
+        id="report_invoice_document_dte_stamp"
+        inherit_id="account.report_invoice_document"
+    >
+        <xpath expr="//div[@id='right-elements']" position="after">
+            <t t-set="dte_print" t-value="o._get_dte_print_values()" />
+            <div t-if="dte_print" name="dte_stamp" class="col-6 mt8 text-center">
+                <img
+                    t-att-src="'data:image/png;base64,%s' % dte_print['barcode']"
+                    style="width: 100%; max-width: 380px;"
+                    alt="SII electronic stamp"
+                />
+                <div class="small">
+                    <strong>Timbre Electrónico SII</strong>
+                    <br />
+                    <span>Folio</span>
+                    <span t-out="dte_print['folio']" />
+                    <br />
+                    <span>Res. N°</span>
+                    <span t-out="dte_print['resolution_number']" />
+                    <span>de</span>
+                    <span t-out="dte_print['resolution_year']" />
+                    <span>- Verifique documento: www.sii.cl</span>
+                    <t t-if="dte_print['is_demo']">
+                        <br />
+                        <strong>DEMO - NOT VALID FOR TAX PURPOSES</strong>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

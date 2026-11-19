@@ -4,3 +4,4 @@
 from . import electronic_document
 from . import report_sample
 from . import report_sample_package
+from . import account_move
