@@ -30,6 +30,7 @@ class TestNoteGoldenXml(DteNoteTestCase):
         super().setUpClass()
         # SII requires GiroRecep on 33, 34 and 56; the generator emits it
         # from the receiver's activity description.
+        cls.dte_manager.sudo().name = "Synthetic DTE Seller"
         cls.receiver.sudo().l10n_cl_activity_description = "Comercio al por menor"
 
     def issue(self, note, code, folio):
@@ -44,6 +45,7 @@ class TestNoteGoldenXml(DteNoteTestCase):
     def test_credit_note_61_cancels_accepted_invoice_33(self):
         source, target, _snapshot = self.create_accepted_source("33")
         note = self.create_credit_note(source, target, operation="cancel")
+        note.invoice_user_id = self.dte_manager
         note.action_post()
         assert_golden_xml(
             self, self.issue(note, "61", 780), GOLDEN_DIR / "dte_61_cancel_33.xml"
@@ -60,6 +62,7 @@ class TestNoteGoldenXml(DteNoteTestCase):
             }
         )
         note.invoice_line_ids.write({"dte_note_origin_line_number": 1})
+        note.invoice_user_id = self.dte_manager
         note.action_post()
         assert_golden_xml(
             self, self.issue(note, "56", 790), GOLDEN_DIR / "dte_56_amount_33.xml"

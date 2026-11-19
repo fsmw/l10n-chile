@@ -4,6 +4,7 @@
 import base64
 import hashlib
 import io
+import re
 from unittest.mock import patch
 
 from pypdf import PdfReader
@@ -96,7 +97,7 @@ class TestNoteReport(DteReportTestCase, DteNoteTestCase, HttpCase):
                 "report.l10n_cl_dte_report.dte_print_sample"
             ]._get_report_values(sample.ids)["sample_data"][sample.id]
             barcode_encoder.assert_called_once_with(
-                _extract_ted_bytes(signed_xml),
+                re.sub(rb">\n[ \t]*<", b"><", _extract_ted_bytes(signed_xml)),
                 columns=18,
                 security_level=4,
             )

@@ -8,6 +8,10 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_fromstring
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import (
+    fixed_decimal,
+    serialize_unsigned_dte,
+)
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     SII_NAMESPACE,
     DteXmlComposer,
@@ -25,7 +29,12 @@ class NoteXmlComposer:
         """Build the CAF-signed TED using the common DTE_v10 primitive."""
         from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
 
-        return DteTedComposer().compose_ted(snapshot, caf, signature_service)
+        return DteTedComposer().compose_ted(
+            snapshot,
+            caf,
+            signature_service,
+            indented_layout=snapshot.get("wire_layout", False),
+        )
 
     def compose_unsigned_document(self, snapshot):  # noqa: C901
         """Serialize one note and its SII reference before inserting the TED."""
@@ -61,10 +70,14 @@ class NoteXmlComposer:
         if snapshot.get("certification"):
             nsmap["xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
         root = etree.Element(f"{{{SII_NAMESPACE}}}DTE", nsmap=nsmap, version="1.0")
+        wire_layout = snapshot.get("wire_layout")
+        folio = (
+            str(snapshot["folio"]) if wire_layout else f"{int(snapshot['folio']):010d}"
+        )
         document = etree.SubElement(
             root,
             f"{{{SII_NAMESPACE}}}Documento",
-            ID=f"F{int(snapshot['folio']):010d}T{code}",
+            ID=f"F{folio}T{code}",
         )
         header = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Encabezado")
         identification = etree.SubElement(header, f"{{{SII_NAMESPACE}}}IdDoc")
@@ -74,33 +87,42 @@ class NoteXmlComposer:
             ("FchEmis", snapshot["issue_date"]),
         ):
             _add_text(identification, name, value)
+        _add_optional_text(identification, "FmaPago", snapshot.get("payment_form"))
+        _add_optional_text(identification, "FchVenc", snapshot.get("due_date"))
         issuer_data = snapshot["issuer"]
         issuer = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Emisor")
-        for name in ("vat", "name", "activity", "activity_code"):
+        for name in ("vat", "name", "activity"):
             xml_name = {
                 "vat": "RUTEmisor",
                 "name": "RznSoc",
                 "activity": "GiroEmis",
-                "activity_code": "Acteco",
             }[name]
             _add_text(issuer, xml_name, issuer_data.get(name))
+        if wire_layout:
+            _add_optional_text(issuer, "CorreoEmisor", issuer_data.get("email"))
+        _add_text(issuer, "Acteco", issuer_data.get("activity_code"))
         for key, xml_name in (
             ("address", "DirOrigen"),
             ("commune", "CmnaOrigen"),
             ("city", "CiudadOrigen"),
         ):
             _add_optional_text(issuer, xml_name, issuer_data.get(key))
+        if wire_layout:
+            _add_optional_text(issuer, "CdgVendedor", issuer_data.get("seller"))
         receiver_data = snapshot["receiver"]
         receiver = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Receptor")
         _add_text(receiver, "RUTRecep", receiver_data.get("vat"))
         _add_text(receiver, "RznSocRecep", receiver_data.get("name"))
         for key, xml_name in (
             ("activity", "GiroRecep"),
+            ("contact", "Contacto"),
+            ("email", "CorreoRecep"),
             ("address", "DirRecep"),
             ("commune", "CmnaRecep"),
             ("city", "CiudadRecep"),
         ):
-            _add_optional_text(receiver, xml_name, receiver_data.get(key))
+            if wire_layout or key not in {"contact", "email"}:
+                _add_optional_text(receiver, xml_name, receiver_data.get(key))
         totals_data = snapshot["totals"]
         totals = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Totales")
         for key, xml_name in (
@@ -110,7 +132,14 @@ class NoteXmlComposer:
             ("vat", "IVA"),
             ("total", "MntTotal"),
         ):
-            _add_optional_text(totals, xml_name, totals_data.get(key))
+            value = totals_data.get(key)
+            _add_optional_text(
+                totals,
+                xml_name,
+                fixed_decimal(value, 2)
+                if wire_layout and key == "vat_rate" and value
+                else value,
+            )
         for index, line_data in enumerate(snapshot["lines"], start=1):
             detail = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Detalle")
             _add_text(detail, "NroLinDet", index)
@@ -119,11 +148,29 @@ class NoteXmlComposer:
             _add_text(detail, "NmbItem", line_data["name"])
             _add_optional_text(detail, "DscItem", line_data.get("description"))
             if not line_data.get("text_correction"):
-                _add_text(detail, "QtyItem", line_data["quantity"])
+                _add_text(
+                    detail,
+                    "QtyItem",
+                    fixed_decimal(line_data["quantity"], 6)
+                    if wire_layout
+                    else line_data["quantity"],
+                )
                 _add_optional_text(detail, "UnmdItem", line_data.get("uom"))
-                _add_text(detail, "PrcItem", line_data["unit_price"])
+                _add_text(
+                    detail,
+                    "PrcItem",
+                    fixed_decimal(line_data["unit_price"], 6)
+                    if wire_layout
+                    else line_data["unit_price"],
+                )
                 if line_data.get("discount_percent"):
-                    _add_text(detail, "DescuentoPct", line_data["discount_percent"])
+                    _add_text(
+                        detail,
+                        "DescuentoPct",
+                        fixed_decimal(line_data["discount_percent"], 2)
+                        if wire_layout
+                        else line_data["discount_percent"],
+                    )
                     discount = DteXmlComposer.line_discount_amount(
                         line_data["quantity"],
                         line_data["unit_price"],
@@ -144,6 +191,10 @@ class NoteXmlComposer:
             _add_text(reference, "RazonRef", ref["reason"])
         etree.SubElement(document, f"{{{SII_NAMESPACE}}}TED_PLACEHOLDER")
         _add_text(document, "TmstFirma", snapshot["document_timestamp"])
+        if wire_layout and snapshot.get("ted_xml"):
+            return serialize_unsigned_dte(
+                root, document, snapshot["ted_xml"], root_indent=2
+            )
         try:
             xml_bytes = etree.tostring(
                 root, encoding="ISO-8859-1", xml_declaration=True, pretty_print=True
