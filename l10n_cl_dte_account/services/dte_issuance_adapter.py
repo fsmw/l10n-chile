@@ -113,6 +113,8 @@ class InvoiceIssuanceAdapter(DteIssuanceAdapter):
             ],
             email=format_email(partner.email or commercial_partner.email),
         )
+        if move.dte_reference_ids:
+            snapshot["references"] = move.dte_reference_ids._dte_snapshot()
         return snapshot
 
     def compose_ted(self, snapshot, caf):

@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_dte_demo_setup_wizard_manager,dte.demo.setup.wizard manager,model_l10n_cl_dte_demo_setup_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_dte_invoice_reference_user,dte.invoice.reference user,model_l10n_cl_dte_invoice_reference,account.group_account_invoice,1,1,1,1
+access_dte_invoice_reference_readonly,dte.invoice.reference readonly,model_l10n_cl_dte_invoice_reference,account.group_account_readonly,1,0,0,0

@@ -13,7 +13,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import (
@@ -172,3 +172,32 @@ class TestGoldenXml(DteInvoiceTestCase):
         )
         with self.assertRaisesRegex(ValidationError, "19% VAT"):
             self.issue(invoice, "33", 730)
+
+    def test_invoice_33_cites_a_purchase_order(self):
+        invoice = self.make_posted_invoice(
+            "33",
+            [("Servicio de soporte", 1, 40000, 0)],
+            self.tax_19,
+            payment_form="2",
+            days=30,
+        )
+        purchase_order = self.env["l10n_latam.document.type"].search(
+            [("code", "=", "801"), ("country_id.code", "=", "CL")], limit=1
+        )
+        invoice.dte_reference_ids = [
+            Command.create(
+                {
+                    "document_type_id": purchase_order.id,
+                    "folio": "OC-4500123",
+                    "date": fields.Date.from_string("2026-01-10"),
+                    "reason": "Orden de compra del cliente",
+                }
+            )
+        ]
+        assert_golden_xml(
+            self,
+            self.issue(invoice, "33", 740),
+            GOLDEN_DIR / "dte_33_purchase_order.xml",
+        )
+        with self.assertRaises(UserError):
+            invoice.dte_reference_ids.reason = "Otra"

@@ -21,6 +21,7 @@ DTE_PROTECTED_FIELDS = frozenset(
         "invoice_line_ids",
         "line_ids",
         "state",
+        "dte_reference_ids",
     }
 )
 
@@ -39,6 +40,13 @@ class AccountMove(models.Model):
         string="DTE Document Type Code",
     )
     dte_issuance_available = fields.Boolean(compute="_compute_dte_issuance_available")
+    dte_reference_ids = fields.One2many(
+        "l10n_cl.dte.invoice.reference",
+        "move_id",
+        string="SII References",
+        copy=False,
+        help="Documents cited in the DTE, such as a purchase order or HES.",
+    )
 
     def _get_dte_source_documents(self):
         """Discover complete evidence links, then authorize as the caller."""
