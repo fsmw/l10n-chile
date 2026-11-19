@@ -8,11 +8,24 @@ class ElectronicSubmission(models.Model):
     _inherit = "l10n_cl.electronic.submission"
 
     def _job_query_sii_status(self):
-        """Queue the customer delivery once SII accepts an invoice DTE."""
+        """Queue the customer delivery once SII accepts a Production DTE.
+
+        Demo and Certification documents have no fiscal value and are never
+        sent to the customer automatically.
+        """
         result = super()._job_query_sii_status()
-        move = self.document_id.sudo().source_move_id
-        if self.state == "accepted" and move and move.dte_delivery_state == "not_sent":
-            move.with_delay(
-                identity_key=f"dte-deliver-{self.document_id.id}"
-            )._job_deliver_dte()
+        self._queue_customer_delivery()
         return result
+
+    def _queue_customer_delivery(self):
+        document = self.document_id.sudo()
+        move = document.source_move_id
+        if (
+            self.state == "accepted"
+            and document.sii_environment == "production"
+            and move
+            and move.dte_delivery_state == "not_sent"
+        ):
+            move.with_delay(identity_key=f"dte-deliver-{document.id}")._job_deliver_dte(
+                document.id
+            )

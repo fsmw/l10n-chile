@@ -4,6 +4,8 @@
 import base64
 import uuid
 
+import psycopg2
+
 from odoo import _, fields, models
 from odoo.exceptions import AccessError, UserError
 
@@ -35,17 +37,19 @@ class AccountMove(models.Model):
             move._dte_deliver(raise_on_error=True)
         return True
 
-    def _job_deliver_dte(self):
+    def _job_deliver_dte(self, document_id=None):
         """Deliver after SII acceptance; failures stay visible on the invoice."""
         for move in self:
             if move.dte_delivery_state == "not_sent":
-                move._dte_deliver(raise_on_error=False)
+                move._dte_deliver(raise_on_error=False, document_id=document_id)
         return True
 
-    def _dte_delivery_document(self):
+    def _dte_delivery_document(self, document_id=None):
+        """Return the accepted DTE to deliver: the given one or the latest."""
         self.ensure_one()
         documents = self.sudo().dte_document_ids.filtered(
             lambda document: document.fiscal_state == "accepted"
+            and (not document_id or document.id == document_id)
         )
         return documents.sorted("id")[-1:]
 
@@ -77,10 +81,10 @@ class AccountMove(models.Model):
             receiver_vat=self.partner_id.commercial_partner_id.vat,
         )
 
-    def _dte_deliver(self, raise_on_error):
+    def _dte_deliver(self, raise_on_error, document_id=None):
         self.ensure_one()
         try:
-            document = self._dte_delivery_document()
+            document = self._dte_delivery_document(document_id)
             if not document:
                 raise UserError(_("Only a DTE accepted by SII can be delivered."))
             recipient = self._dte_delivery_recipient()
@@ -89,11 +93,15 @@ class AccountMove(models.Model):
                     _("Set the customer's DTE exchange email or email address.")
                 )
             attachments = self._dte_delivery_attachments(document)
-        except UserError as error:
-            if raise_on_error:
+        except Exception as error:
+            if raise_on_error or isinstance(error, psycopg2.Error):
                 raise
+            # Rendering, evidence or envelope problems must be visible to the user.
             self.sudo().write(
-                {"dte_delivery_state": "failed", "dte_delivery_message": str(error)}
+                {
+                    "dte_delivery_state": "failed",
+                    "dte_delivery_message": str(error)[:250] or type(error).__name__,
+                }
             )
             return False
         self.env.ref(TEMPLATE).sudo().send_mail(
@@ -103,7 +111,7 @@ class AccountMove(models.Model):
         self.sudo().write(
             {
                 "dte_delivery_state": "sent",
-                "dte_delivery_message": _("Sent to %(email)s", email=recipient),
+                "dte_delivery_message": _("Queued for %(email)s", email=recipient),
             }
         )
         return True
