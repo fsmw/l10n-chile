@@ -210,8 +210,12 @@ class NoteXmlComposer:
             )
         return xml_bytes.replace(b"<TED_PLACEHOLDER/>", ted, 1)
 
-    def validate_document(self, xml_bytes, signature_service=None):
-        """Verify DTE_v10 XSD, one reference, CAF TED and XMLDSig."""
+    def validate_document(self, xml_bytes, signature_service=None, *, strict_sii=False):
+        """Verify DTE_v10 XSD, one reference, CAF TED and XMLDSig.
+
+        ``strict_sii`` applies the Production upload checks shared with
+        invoices: line discounts and the standalone SII signature form.
+        """
         if not isinstance(xml_bytes, bytes) or b"<!DOCTYPE" in xml_bytes.upper():
             raise ValidationError(_("DTE note XML must be bytes without a DTD."))
         try:
@@ -257,7 +261,11 @@ class NoteXmlComposer:
             raise ValidationError(_("The DTE note TED is missing DD, CAF, or FRMT."))
         signer = signature_service or SignatureService()
         signer.verify_ted(_extract_dd_bytes(xml_bytes), frmt, caf)
-        signer.verify_signature(xml_bytes)
+        if strict_sii:
+            DteXmlComposer()._validate_line_discounts(root)
+            signer.verify_signature(xml_bytes, sii_standalone=True)
+        else:
+            signer.verify_signature(xml_bytes)
         return True
 
     @staticmethod

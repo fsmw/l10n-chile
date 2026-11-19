@@ -27,10 +27,22 @@ BINDING = "transport_request_artifact_id"
 
 
 def _public_caf_identity(element):
+    """Compare CAF content, ignoring namespace and layout between elements.
+
+    Issuers re-indent the CAF inside the TED (the SII examples do too);
+    whitespace between elements carries no CAF data.
+    """
     fragment = deepcopy(element)
+    fragment.tail = None
     for node in fragment.iter():
-        if isinstance(node.tag, str) and etree.QName(node).namespace == SII[1:-1]:
+        if not isinstance(node.tag, str):
+            continue
+        if etree.QName(node).namespace == SII[1:-1]:
             node.tag = etree.QName(node).localname
+        if len(node) and node.text is not None and not node.text.strip():
+            node.text = None
+        if node.tail is not None and not node.tail.strip():
+            node.tail = None
     etree.cleanup_namespaces(fragment)
     return etree.tostring(fragment, method="c14n", exclusive=True, with_comments=False)
 

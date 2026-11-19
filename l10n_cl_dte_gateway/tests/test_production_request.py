@@ -13,6 +13,7 @@ from odoo.tests import tagged
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     DteXmlComposer,
+    _extract_caf_bytes,
     _extract_dd_bytes,
 )
 
@@ -74,6 +75,24 @@ class TestProductionRequest(ProductionRequestCase):
                     self.submission._prepare_production_request()
             self.assertFalse(self.submission.transport_request_artifact_id)
             self.assertEqual(self.document.artifact_ids, before)
+
+    def test_reindented_caf_in_the_ted_is_the_reserved_caf(self):
+        # Invoices and notes use the reference wire layout, which re-indents
+        # the CAF inside the TED.
+        ted = DteXmlComposer().compose_ted(self.snapshot, self.caf, invoice_layout=True)
+        self.assertNotIn(_extract_caf_bytes(base64.b64decode(self.caf.caf_file)), ted)
+        unsigned = DteXmlComposer().compose_unsigned_document(
+            {**self.snapshot, "ted_xml": ted}
+        )
+        signed = SignatureService().sign_document(self.company, "production", unsigned)
+        previous = self.document._get_signed_artifact()
+        replacement = self.create_artifact(self.document, "signed_xml", signed)
+        self.cr.execute(
+            "UPDATE l10n_cl_electronic_artifact SET supersedes_id = %s WHERE id = %s",
+            [previous.id, replacement.id],
+        )
+        replacement.invalidate_recordset()
+        self.assertTrue(self.submission._prepare_production_request())
 
     def test_signed_ted_must_match_reserved_caf_and_identity(self):
         data = self.build_caf_xml(

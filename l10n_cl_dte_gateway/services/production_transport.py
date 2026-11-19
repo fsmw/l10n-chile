@@ -20,6 +20,7 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import Signature
 from .certification_auth import PRODUCTION_BASE_URL, SiiTransportError
 from .envelope_composer import SiiEnvelopeComposer
 from .production_response_parser import (
+    TOKEN_REJECTED_CODES,
     UPLOAD_NOT_AUTHENTICATED,
     UPLOAD_NOT_PROCESSED,
     parse_status,
@@ -205,17 +206,23 @@ class ProductionSiiTransport:
         number, dv = self._rut(company.vat)
         auth = self.authentication_factory()
         try:
-            response = auth.soap(
-                "QueryEstUp",
-                "getEstUp",
-                {
-                    "Rut": number,
-                    "Dv": dv,
-                    "TrackId": track_id,
-                    "Token": auth.token(company),
-                },
-            )
-            return parse_status(response, track_id)
+            for retry in (False, True):
+                response = auth.soap(
+                    "QueryEstUp",
+                    "getEstUp",
+                    {
+                        "Rut": number,
+                        "Dv": dv,
+                        "TrackId": track_id,
+                        "Token": auth.token(company),
+                    },
+                )
+                result = parse_status(response, track_id)
+                if retry or result["transport_code"] not in TOKEN_REJECTED_CODES:
+                    return result
+                # SII rejected the cached token; refresh it and ask once more.
+                auth.invalidate_token(company)
+            return result
         except ValidationError as error:
             raise SiiTransportError(
                 str(error), response=locals().get("response")
