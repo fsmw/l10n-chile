@@ -177,3 +177,21 @@ class TestDteIssuance(DteInvoiceTestCase):
                 [("document_id", "=", document.id)]
             )
         )
+
+    def test_two_current_cafs_are_used_in_folio_order(self):
+        self.create_signing_profile()
+        later = self.validate_authorization(
+            document_code="33", folio_start=900, folio_end=900
+        )
+        first = self.validate_authorization(
+            document_code="33", folio_start=880, folio_end=880
+        )
+        folios = []
+        for _index in range(2):
+            invoice = self._manager_invoice(self.make_invoice())
+            folios.append(invoice.issue_dte().folio)
+        self.assertEqual(folios, [880, 900])
+        self.assertEqual(int(invoice.l10n_latam_document_number), 900)
+        self.assertIn("900", invoice.name)
+        self.assertEqual(first.state, "exhausted")
+        self.assertEqual(later.state, "exhausted")
