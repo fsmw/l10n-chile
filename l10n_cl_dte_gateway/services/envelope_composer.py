@@ -30,6 +30,7 @@ from .document_validation import get_document_validator, validate_document_paylo
 
 SII = "http://www.sii.cl/SiiDte"
 XSI = "http://www.w3.org/2001/XMLSchema-instance"
+SII_VAT = "60803000-K"
 
 
 def _tag(name):
@@ -84,6 +85,14 @@ class SiiEnvelopeComposer:
             )
         return configured_sender_vat
 
+    @staticmethod
+    def _receiver_vat(value):
+        """Format a receiver RUT as the Caratula expects (digits, dash, check)."""
+        normalized = re.sub(r"[^0-9K]", "", (value or "").upper())
+        if len(normalized) < 2:
+            raise ValidationError(_("The envelope receiver needs a valid RUT."))
+        return f"{normalized[:-1].lstrip('0')}-{normalized[-1]}"
+
     def get_sender_vat(self, envelope_bytes):
         """Read RutEnvia from a bounded EnvioDTE XML payload."""
         root = _parse(envelope_bytes)
@@ -103,7 +112,9 @@ class SiiEnvelopeComposer:
         header,
         signature_service=None,
         environment="certification",
+        receiver_vat=SII_VAT,
     ):
+        """Sign an EnvioDTE for SII or, with ``receiver_vat``, for the receiver."""
         if (
             environment not in {"certification", "production"}
             or company.dte_sii_environment != environment
@@ -174,7 +185,7 @@ class SiiEnvelopeComposer:
         cover = etree.SubElement(set_dte, _tag("Caratula"), version="1.0")
         _add(cover, "RutEmisor", issuer_vat)
         _add(cover, "RutEnvia", sender_vat)
-        _add(cover, "RutReceptor", "60803000-K")
+        _add(cover, "RutReceptor", self._receiver_vat(receiver_vat))
         resolution_date = header["resolution_date"]
         _add(
             cover,
