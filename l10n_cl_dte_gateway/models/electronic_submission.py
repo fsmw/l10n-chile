@@ -7,10 +7,12 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
+from ..services.certification_auth import SiiTransportError
 from ..services.document_validation import (
     get_document_validator,
     validate_document_payload,
 )
+from ..services.production_response_parser import upload_status_message
 
 
 class ElectronicSubmission(models.Model):
@@ -78,6 +80,13 @@ class ElectronicSubmission(models.Model):
     idempotency_key = fields.Char(required=True, index=True, copy=False)
     submitted_at = fields.Datetime(copy=False)
     last_checked_at = fields.Datetime(copy=False)
+    sii_message = fields.Text(
+        string="SII Message",
+        readonly=True,
+        copy=False,
+        help="Last diagnostic or observation returned by SII or by the "
+        "pre-dispatch checks.",
+    )
     attempt_ids = fields.One2many("l10n_cl.submission.attempt", "submission_id")
 
     @api.depends("environment")
@@ -144,9 +153,21 @@ class ElectronicSubmission(models.Model):
     def _write_internal(self, values):
         return super().write(values)
 
+    def _was_never_dispatched(self):
+        """Return whether every send attempt failed before reaching SII."""
+        self.ensure_one()
+        return all(
+            attempt.state == "failed"
+            for attempt in self.attempt_ids
+            if attempt.operation == "send"
+        )
+
     def action_enqueue_submission(self):
         """Schedule one submission using a durable OCA queue job."""
         self.ensure_one()
+        if self.state == "error" and self._was_never_dispatched():
+            # Nothing reached SII, so the corrected DTE can be queued again.
+            self._write_internal({"state": "pending"})
         if self.state != "pending":
             if self.state in {
                 "sending",
@@ -186,15 +207,12 @@ class ElectronicSubmission(models.Model):
             return True
         gateway = self._gateway()
         document = self.document_id
-        signed = document._get_signed_artifact()
-        if len(signed) != 1:
-            raise ValidationError(
-                _("A submission needs exactly one signed DTE artifact.")
-            )
-        signed.action_verify_integrity()
-        request_bytes = base64.b64decode(signed.content, validate=True)
-        self._validate_document_payload(request_bytes)
-        self._write_internal({"state": "sending"})
+        try:
+            request_bytes = self._prepare_send_request(gateway)
+        except (UserError, ValidationError) as error:
+            # Nothing left this server: keep a retryable error, not ambiguity.
+            return self._record_send_error(error)
+        self._write_internal({"state": "sending", "sii_message": False})
         attempt = self.env["l10n_cl.submission.attempt"].create(
             {
                 "submission_id": self.id,
@@ -202,6 +220,8 @@ class ElectronicSubmission(models.Model):
                 "request_digest": hashlib.sha256(request_bytes).hexdigest(),
             }
         )
+        if self.environment == "production":
+            return self._send_production_request(gateway, attempt, request_bytes)
         try:
             result = gateway.send_document(
                 self.company_id,
@@ -271,6 +291,65 @@ class ElectronicSubmission(models.Model):
                     "sii_submission_outcome_unknown",
                     correlation_key=self.idempotency_key,
                 )
+        return True
+
+    def _prepare_send_request(self, gateway):
+        """Return the exact bytes to transmit; raise before any network access."""
+        self.ensure_one()
+        signed = self.document_id._get_signed_artifact()
+        if len(signed) != 1:
+            raise ValidationError(
+                _("A submission needs exactly one signed DTE artifact.")
+            )
+        signed.action_verify_integrity()
+        request_bytes = base64.b64decode(signed.content, validate=True)
+        self._validate_document_payload(request_bytes)
+        if self.environment != "production":
+            return request_bytes
+        gateway.validate_configuration(self.company_id, self.environment)
+        envelope = self._prepare_production_request()
+        return base64.b64decode(
+            envelope.with_context(bin_size=False).content, validate=True
+        )
+
+    def _send_production_request(self, gateway, attempt, request_bytes):
+        """Upload the bound envelope and apply its verified outcome."""
+        self.ensure_one()
+        try:
+            result = gateway.send_envelope(
+                self.company_id, self.environment, request_bytes, self.idempotency_key
+            )
+        except SiiTransportError as error:
+            if not error.dispatched:
+                return self._record_send_error(error, attempt)
+            result = error
+        except (UserError, ValidationError) as error:
+            return self._record_send_error(error, attempt)
+        except Exception as error:  # the upload may have reached SII
+            if isinstance(error, psycopg2.Error):
+                raise
+            result = SiiTransportError(
+                type(error).__name__, dispatched=True, code="unexpected_error"
+            )
+        self._apply_production_outcome(attempt, result, "send")
+        if self.state == "rejected":
+            code = isinstance(result, dict) and result.get("transport_code")
+            self._write_internal({"sii_message": upload_status_message(code)})
+        elif self.state == "outcome_unknown":
+            self._write_internal({"sii_message": attempt.error_summary})
+        return True
+
+    def _record_send_error(self, error, attempt=None):
+        """Persist a failure that provably happened before SII received data."""
+        self.ensure_one()
+        message = str(error)[:4000]
+        if attempt:
+            attempt._complete(
+                "failed",
+                error_code=(getattr(error, "code", None) or type(error).__name__)[:128],
+                error_summary=message,
+            )
+        self._write_internal({"state": "error", "sii_message": message})
         return True
 
     def _validate_document_payload(self, request_bytes):

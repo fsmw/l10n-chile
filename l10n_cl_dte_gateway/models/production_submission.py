@@ -81,7 +81,7 @@ class ElectronicSubmissionProduction(models.Model):
             or self.document_id.sii_environment != "production"
             or self.company_id.dte_sii_environment != "production"
             or self.state != "pending"
-            or self.attempt_ids.filtered(lambda attempt: attempt.operation == "send")
+            or self._dispatched_send_attempts()
         ):
             raise UserError(
                 _(
@@ -90,8 +90,14 @@ class ElectronicSubmissionProduction(models.Model):
                 )
             )
 
+    def _dispatched_send_attempts(self):
+        """Send attempts that may have reached SII; failed ones never left Odoo."""
+        return self.attempt_ids.filtered(
+            lambda attempt: attempt.operation == "send" and attempt.state != "failed"
+        )
+
     def _write_internal(self, values):
-        """Dormant binding primitive; caller must verify fiscal envelope content."""
+        """Binding primitive; caller must verify fiscal envelope content."""
         if BINDING not in values:
             return super()._write_internal(values)
         if not self.env.su:
@@ -166,7 +172,7 @@ class ElectronicSubmissionProduction(models.Model):
         return sources[0]
 
     def _prepare_production_request(self):
-        """Dormant until enqueue and durable dispatch are activated together."""
+        """Bind the signed EnvioDTE once, before the first Production send."""
         self._check_production_operation_access()
         with self.env.cr.savepoint():
             self._lock_production_chain()
@@ -214,8 +220,7 @@ class ElectronicSubmissionProduction(models.Model):
             or attempt.operation != "send"
             or attempt.state != "started"
             or attempt.completed_at
-            or self.attempt_ids.filtered(lambda item: item.operation == "send")
-            != attempt
+            or self._dispatched_send_attempts() != attempt
             or attempt.request_digest != self.transport_request_artifact_id.sha256
         ):
             raise UserError(_("A unique pending Production send outcome is required."))
@@ -248,7 +253,7 @@ class ElectronicSubmissionProduction(models.Model):
             }
 
     def _apply_production_outcome(self, attempt, result, operation):
-        """Dormant send-only application; the caller owns the durable transaction."""
+        """Apply a send outcome; the caller owns the durable transaction."""
         self._check_production_operation_access()
         if not isinstance(result, Mapping | SiiTransportError):
             raise ValidationError(
