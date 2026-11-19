@@ -5,6 +5,7 @@ from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
     DteIssuanceAdapter,
 )
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import format_email
 
 from .note_reference_service import NoteReferenceService
 from .note_snapshot import NoteSnapshotService
@@ -48,9 +49,30 @@ class NoteIssuanceAdapter(DteIssuanceAdapter):
         }
 
     def capture_snapshot(self, move, caf, folio_number, document_code):
-        return self.snapshot_service.capture_note(
+        snapshot = self.snapshot_service.capture_note(
             move, caf, folio_number, document_code
         )
+
+        partner = move.partner_id
+        commercial = partner.commercial_partner_id
+        snapshot["wire_layout"] = True
+        snapshot["payment_form"] = move.invoice_payment_term_id.l10n_cl_sii_code or "2"
+        snapshot["due_date"] = (
+            move.invoice_date_due.isoformat()
+            if move.invoice_date_due
+            else snapshot["document_timestamp"][:10]
+        )
+        snapshot["issuer"] = dict(
+            snapshot["issuer"],
+            email=format_email(move.company_id.partner_id.email),
+            seller=(move.invoice_user_id.name or "")[:60],
+        )
+        snapshot["receiver"] = dict(
+            snapshot["receiver"],
+            email=format_email(partner.email or commercial.email),
+            contact=(partner.phone or commercial.phone or partner.email or "")[:80],
+        )
+        return snapshot
 
     def compose_ted(self, snapshot, caf):
         return self.xml_composer.compose_ted(snapshot, caf)
@@ -59,7 +81,9 @@ class NoteIssuanceAdapter(DteIssuanceAdapter):
         return self.xml_composer.compose_unsigned_document(snapshot)
 
     def sign_document(self, company, environment, unsigned_xml):
-        return SignatureService().sign_document(company, environment, unsigned_xml)
+        return SignatureService().sign_document(
+            company, environment, unsigned_xml, preserve_serialization=True
+        )
 
     def validate_document(self, xml_bytes):
         return self.xml_composer.validate_document(xml_bytes)

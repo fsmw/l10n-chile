@@ -1,10 +1,12 @@
 <DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
-    <Documento ID="F0000000790T56">
+    <Documento ID="F790T56">
         <Encabezado>
             <IdDoc>
                 <TipoDTE>56</TipoDTE>
                 <Folio>790</Folio>
                 <FchEmis>2026-01-15</FchEmis>
+                <FmaPago>2</FmaPago>
+                <FchVenc>2026-11-19</FchVenc>
             </IdDoc>
             <Emisor>
                 <RUTEmisor>76864280-K</RUTEmisor>
@@ -13,6 +15,7 @@
                 <Acteco>620200</Acteco>
                 <DirOrigen>Avenida Prueba 100</DirOrigen>
                 <CmnaOrigen>Santiago</CmnaOrigen>
+                <CdgVendedor>Synthetic DTE Seller</CdgVendedor>
             </Emisor>
             <Receptor>
                 <RUTRecep>76864280-K</RUTRecep>
@@ -23,7 +26,7 @@
             </Receptor>
             <Totales>
                 <MntNeto>1000</MntNeto>
-                <TasaIVA>19</TasaIVA>
+                <TasaIVA>19.00</TasaIVA>
                 <IVA>190</IVA>
                 <MntTotal>1190</MntTotal>
             </Totales>
@@ -32,8 +35,9 @@
             <NroLinDet>1</NroLinDet>
             <NmbItem>product_a</NmbItem>
             <DscItem>product_a</DscItem>
-            <QtyItem>1</QtyItem>
-            <PrcItem>1000</PrcItem>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>1000.000000</PrcItem>
             <MontoItem>1000</MontoItem>
         </Detalle>
         <Referencia>
@@ -62,12 +66,17 @@
         <TmstFirma>2026-01-15T12:00:00</TmstFirma>
     </Documento>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-        <SignedInfo>
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
             <CanonicalizationMethod
                 Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
             />
             <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-            <Reference URI="#F0000000790T56">
+            <Reference URI="#F790T56">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
                 <DigestValue>___ignore___</DigestValue>
             </Reference>

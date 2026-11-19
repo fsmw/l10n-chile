@@ -229,18 +229,8 @@ class NoteSnapshotService:
             )
         lines = result["effects"]
         code = str(document_code)
-        if code == "61" and move.dte_note_operation == "cancel":
-            serialization_mode = "full_cancel_summary"
-            lines = self._summary_lines(lines)
-        else:
-            serialization_mode = "detail"
-            if len(lines) > 60:
-                raise ValidationError(
-                    move.env._(
-                        "A partial DTE note supports at most 60 details; split "
-                        "this adjustment into multiple notes."
-                    )
-                )
+        if len(lines) > 60:
+            raise ValidationError(move.env._("A DTE note supports at most 60 details."))
         now = datetime.now(ZoneInfo("America/Santiago")).strftime("%Y-%m-%dT%H:%M:%S")
         amounts = result["amounts"]
         adjustment_effect = (
@@ -276,7 +266,7 @@ class NoteSnapshotService:
                 "target_note_id": target.id
                 if adjustment_effect == "restore_credit"
                 else None,
-                "serialization_mode": serialization_mode,
+                "serialization_mode": "detail",
             },
         }
 
@@ -392,6 +382,7 @@ class NoteSnapshotService:
             result.append(
                 {
                     "origin_line_number": ordinal,
+                    "uom": original.get("uom"),
                     "name": (original.get("name") or "")[:80],
                     "description": (line.name or original.get("description") or "")[
                         :1000
@@ -472,9 +463,6 @@ class NoteSnapshotService:
 
     def _allocate_vat(self, vat_total, lines):
         return NoteAdjustmentService(self.env).allocate_vat(vat_total, lines)
-
-    def _summary_lines(self, details):
-        return NoteAdjustmentService(self.env).summary_lines(details)
 
     def _snapshot_totals(self, snapshot):
         return NoteAdjustmentService(self.env).snapshot_totals(snapshot)
