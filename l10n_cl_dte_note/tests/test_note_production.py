@@ -61,7 +61,7 @@ class TestNoteProduction(DteNoteTestCase):
         ) as send:
             # The queue job runs as the user who issued the note.
             submission._job_send_to_sii()
-        self.assertEqual(submission.state, "submitted")
+        self.assertEqual(submission.state, "submitted", submission.sii_message)
         self.assertIn(b"<TipoDTE>61</TipoDTE>", send.call_args.args[2])
 
     def test_note_cannot_reference_a_dte_from_another_mode(self):
