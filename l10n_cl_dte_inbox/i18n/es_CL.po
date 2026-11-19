@@ -906,6 +906,18 @@ msgstr "El receptor del DTE no coincide con la empresa actual."
 #. module: l10n_cl_dte_inbox
 #. odoo-python
 #: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
+msgid ""
+"The DTE and its signature block both changed after signing, for example "
+"because another tool reformatted the file. Request the original XML from "
+"the issuer or from SII."
+msgstr ""
+"El DTE y su bloque de firma cambiaron después de firmarse, por ejemplo "
+"porque otra herramienta reformateó el archivo. Solicite el XML original al "
+"emisor o al SII."
+
+#. module: l10n_cl_dte_inbox
+#. odoo-python
+#: code:addons/l10n_cl_dte_inbox/services/incoming_validation.py:0
 msgid "The DTE signature structure is unsupported."
 msgstr "La estructura de firma del DTE no es compatible."
 
