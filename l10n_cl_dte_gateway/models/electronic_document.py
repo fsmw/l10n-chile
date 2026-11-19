@@ -40,9 +40,7 @@ class ElectronicDocument(models.Model):
         submission = self.env["l10n_cl.electronic.submission"].search(
             [("document_id", "=", self.id)]
         )
-        attempts = submission.attempt_ids.filtered(
-            lambda item: item.operation == "send"
-        )
+        attempts = submission._dispatched_send_attempts()
         if (
             not self.env.su
             or len(submission) != 1

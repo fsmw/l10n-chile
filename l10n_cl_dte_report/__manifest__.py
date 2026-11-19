@@ -3,8 +3,8 @@
 
 {
     "name": "Chile - DTE Reports",
-    "summary": "Render traceable Chilean DTE print samples",
-    "version": "18.0.1.0.0",
+    "summary": "Render Chilean DTE prints with the SII electronic stamp",
+    "version": "18.0.1.1.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
@@ -26,6 +26,7 @@
         "report/dte_document_templates.xml",
         "report/boleta_receipt_templates.xml",
         "report/certification_sample_templates.xml",
+        "report/invoice_report_templates.xml",
     ],
     "installable": True,
     "application": False,

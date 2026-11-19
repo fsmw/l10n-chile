@@ -19,7 +19,15 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import Signature
 
 from .certification_auth import PRODUCTION_BASE_URL, SiiTransportError
 from .envelope_composer import SiiEnvelopeComposer
-from .production_response_parser import parse_status, parse_upload, parse_xml, text
+from .production_response_parser import (
+    UPLOAD_NOT_AUTHENTICATED,
+    UPLOAD_NOT_PROCESSED,
+    parse_status,
+    parse_upload,
+    parse_xml,
+    text,
+    upload_status_message,
+)
 from .sii_authentication import ProductionSiiAuthentication
 
 
@@ -149,29 +157,43 @@ class ProductionSiiTransport:
         sender_number, sender_dv = self._rut(sender)
         auth = self.authentication_factory()
         try:
-            token = auth.token(company)
-            response = auth.post(
-                "/cgi_dte/UPL/DTEUpload",
-                upload=True,
-                data={
-                    "rutSender": sender_number,
-                    "dvSender": sender_dv,
-                    "rutCompany": issuer_number,
-                    "dvCompany": issuer_dv,
-                },
-                files={"archivo": ("EnvioDTE.xml", request_bytes, "text/xml")},
-                headers={
-                    "Cookie": "TOKEN=" + token,
-                    "Referer": PRODUCTION_BASE_URL,
-                    "Accept": "application/xml",
-                },
-            )
-            try:
-                return parse_upload(response, issuer, sender)
-            except ValidationError as error:
-                raise SiiTransportError(
-                    str(error), dispatched=True, response=response
-                ) from None
+            for retry in (False, True):
+                response = auth.post(
+                    "/cgi_dte/UPL/DTEUpload",
+                    upload=True,
+                    data={
+                        "rutSender": sender_number,
+                        "dvSender": sender_dv,
+                        "rutCompany": issuer_number,
+                        "dvCompany": issuer_dv,
+                    },
+                    files={"archivo": ("EnvioDTE.xml", request_bytes, "text/xml")},
+                    headers={
+                        "Cookie": "TOKEN=" + auth.token(company),
+                        "Referer": PRODUCTION_BASE_URL,
+                        "Accept": "application/xml",
+                    },
+                )
+                try:
+                    result = parse_upload(response, issuer, sender)
+                except ValidationError as error:
+                    raise SiiTransportError(
+                        str(error), dispatched=True, response=response
+                    ) from None
+                code = result["transport_code"]
+                if code not in UPLOAD_NOT_PROCESSED:
+                    return result
+                if retry or code != UPLOAD_NOT_AUTHENTICATED:
+                    # Transient: SII ignored the file, so it may be sent again.
+                    raise SiiTransportError(
+                        upload_status_message(code),
+                        dispatched=False,
+                        response=response,
+                        code=f"upload_status_{code}",
+                    )
+                # SII did not accept the cached token, so it ignored the file.
+                auth.invalidate_token(company)
+            return result
         finally:
             auth.close()
 

@@ -187,6 +187,13 @@ class CertificationAuthentication:
             _TOKEN_CACHE[key] = (monotonic() + _TOKEN_TTL_SECONDS, token)
         return token
 
+    def invalidate_token(self, company):
+        """Forget cached tokens after SII reports one as invalid or expired."""
+        prefix = (company.env.cr.dbname, company.id, self.environment)
+        with _TOKEN_CACHE_LOCK:
+            for key in [key for key in _TOKEN_CACHE if key[:3] == prefix]:
+                del _TOKEN_CACHE[key]
+
     def close(self):
         self.session.cookies.clear()
         self.session.close()

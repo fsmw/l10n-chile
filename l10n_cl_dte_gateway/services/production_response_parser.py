@@ -16,6 +16,28 @@ from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normal
 from .certification_response_parser import soap_payload as _certification_soap_payload
 
 MAX_RESPONSE_BYTES = 2_000_000
+UPLOAD_NOT_AUTHENTICATED = "5"
+# SII did not process the file: authentication failed or the system is locked.
+UPLOAD_NOT_PROCESSED = frozenset({UPLOAD_NOT_AUTHENTICATED, "9"})
+
+
+def upload_status_message(code):
+    """Describe a DTEUpload STATUS code as documented by SII."""
+    messages = {
+        "0": _("Upload OK"),
+        "1": _("Sender does not have permission to send"),
+        "2": _("File size error (too big or too small)"),
+        "3": _("Incomplete file (size differs from the size parameter)"),
+        "5": _("Not authenticated"),
+        "6": _("Company not authorized to send files"),
+        "7": _("Invalid schema"),
+        "8": _("Document signature error"),
+        "9": _("System locked"),
+    }
+    return _("SII upload status %(code)s: %(message)s") % {
+        "code": code or "?",
+        "message": messages.get(code, _("Internal error")),
+    }
 
 
 def parse_xml(data):
