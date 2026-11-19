@@ -87,6 +87,25 @@ class TestProductionSubmissionJob(ProductionRequestCase):
         self.assertEqual(self.submission.state, "submitted")
         self.assertEqual(len(self._send_attempts()), 2)
 
+    def test_locked_sii_system_is_a_retryable_error(self):
+        locked = SiiTransportError("System locked", dispatched=False, code="9")
+        self._send(side_effect=locked)
+        self.assertEqual(self.submission.state, "error")
+        self.assertEqual(self.document.fiscal_state, "unknown")
+        self.assertTrue(self.submission._was_never_dispatched())
+
+    def test_unapplicable_receipt_is_kept_as_unknown(self):
+        with patch.object(
+            type(self.submission),
+            "_apply_production_outcome",
+            side_effect=UserError("Receipt could not be verified"),
+        ):
+            self._send(return_value=self._upload())
+        self.assertEqual(self.submission.state, "outcome_unknown")
+        self.assertEqual(self.document.fiscal_state, "outcome_unknown")
+        self.assertEqual(self._send_attempts().state, "unknown")
+        self.assertFalse(self.submission._was_never_dispatched())
+
     def test_lost_upload_receipt_stays_unknown_and_blocks_resend(self):
         lost = SiiTransportError("Timeout", dispatched=True, code="timeout")
         self._send(side_effect=lost)
@@ -120,3 +139,14 @@ class TestProductionTokenRefresh(ProductionRequestCase):
         self.assertEqual(result["state"], "submitted")
         auth.invalidate_token.assert_called_once_with(self.company)
         self.assertEqual(auth.post.call_count, 2)
+
+    def test_repeated_not_authenticated_upload_is_not_a_rejection(self):
+        transport, auth = self._transport(self._receipt("5"), self._receipt("5"))
+        sender = self.company.dte_sii_sender_vat
+        with patch.object(
+            transport, "validate_request", return_value=(self.company.vat, sender)
+        ):
+            with self.assertRaises(SiiTransportError) as caught:
+                transport.send_envelope(self.company, "production", b"<x/>", "k")
+        self.assertFalse(caught.exception.dispatched)
+        self.assertEqual(caught.exception.code, "upload_status_5")

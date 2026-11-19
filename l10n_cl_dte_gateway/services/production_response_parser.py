@@ -17,6 +17,8 @@ from .certification_response_parser import soap_payload as _certification_soap_p
 
 MAX_RESPONSE_BYTES = 2_000_000
 UPLOAD_NOT_AUTHENTICATED = "5"
+# SII did not process the file: authentication failed or the system is locked.
+UPLOAD_NOT_PROCESSED = frozenset({UPLOAD_NOT_AUTHENTICATED, "9"})
 
 
 def upload_status_message(code):

@@ -153,14 +153,16 @@ class ElectronicSubmission(models.Model):
     def _write_internal(self, values):
         return super().write(values)
 
+    def _dispatched_send_attempts(self):
+        """Send attempts that may have reached SII; failed ones never left Odoo."""
+        return self.attempt_ids.filtered(
+            lambda attempt: attempt.operation == "send" and attempt.state != "failed"
+        )
+
     def _was_never_dispatched(self):
         """Return whether every send attempt failed before reaching SII."""
         self.ensure_one()
-        return all(
-            attempt.state == "failed"
-            for attempt in self.attempt_ids
-            if attempt.operation == "send"
-        )
+        return not self._dispatched_send_attempts()
 
     def action_enqueue_submission(self):
         """Schedule one submission using a durable OCA queue job."""
@@ -331,12 +333,34 @@ class ElectronicSubmission(models.Model):
             result = SiiTransportError(
                 type(error).__name__, dispatched=True, code="unexpected_error"
             )
-        self._apply_production_outcome(attempt, result, "send")
+        try:
+            self._apply_production_outcome(attempt, result, "send")
+        except Exception as error:  # the upload already happened
+            if isinstance(error, psycopg2.Error):
+                raise
+            return self._record_unverified_outcome(attempt, error)
         if self.state == "rejected":
             code = isinstance(result, dict) and result.get("transport_code")
             self._write_internal({"sii_message": upload_status_message(code)})
         elif self.state == "outcome_unknown":
             self._write_internal({"sii_message": attempt.error_summary})
+        return True
+
+    def _record_unverified_outcome(self, attempt, error):
+        """Keep an upload whose result could not be applied as unknown."""
+        message = str(error)[:4000]
+        attempt.sudo()._complete(
+            "unknown", error_code=type(error).__name__[:128], error_summary=message
+        )
+        self.sudo()._write_internal(
+            {"state": "outcome_unknown", "sii_message": message}
+        )
+        self.document_id.sudo().action_record_transition(
+            "outcome_unknown",
+            "sii_submission_outcome_unknown",
+            message=message,
+            correlation_key=self.idempotency_key,
+        )
         return True
 
     def _record_send_error(self, error, attempt=None):

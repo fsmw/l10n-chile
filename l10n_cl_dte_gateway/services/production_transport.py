@@ -21,10 +21,12 @@ from .certification_auth import PRODUCTION_BASE_URL, SiiTransportError
 from .envelope_composer import SiiEnvelopeComposer
 from .production_response_parser import (
     UPLOAD_NOT_AUTHENTICATED,
+    UPLOAD_NOT_PROCESSED,
     parse_status,
     parse_upload,
     parse_xml,
     text,
+    upload_status_message,
 )
 from .sii_authentication import ProductionSiiAuthentication
 
@@ -178,8 +180,17 @@ class ProductionSiiTransport:
                     raise SiiTransportError(
                         str(error), dispatched=True, response=response
                     ) from None
-                if retry or result["transport_code"] != UPLOAD_NOT_AUTHENTICATED:
+                code = result["transport_code"]
+                if code not in UPLOAD_NOT_PROCESSED:
                     return result
+                if retry or code != UPLOAD_NOT_AUTHENTICATED:
+                    # Transient: SII ignored the file, so it may be sent again.
+                    raise SiiTransportError(
+                        upload_status_message(code),
+                        dispatched=False,
+                        response=response,
+                        code=f"upload_status_{code}",
+                    )
                 # SII did not accept the cached token, so it ignored the file.
                 auth.invalidate_token(company)
             return result

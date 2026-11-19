@@ -90,12 +90,6 @@ class ElectronicSubmissionProduction(models.Model):
                 )
             )
 
-    def _dispatched_send_attempts(self):
-        """Send attempts that may have reached SII; failed ones never left Odoo."""
-        return self.attempt_ids.filtered(
-            lambda attempt: attempt.operation == "send" and attempt.state != "failed"
-        )
-
     def _write_internal(self, values):
         """Binding primitive; caller must verify fiscal envelope content."""
         if BINDING not in values:
