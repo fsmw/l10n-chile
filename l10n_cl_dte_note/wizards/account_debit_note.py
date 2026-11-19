@@ -4,6 +4,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
+from ..services.note_reference_service import NoteReferenceService
+
 
 class AccountDebitNote(models.TransientModel):
     _inherit = "account.debit.note"
@@ -48,8 +50,15 @@ class AccountDebitNote(models.TransientModel):
                 _("Select one source document with exactly one issued DTE.")
             )
         target = documents.ensure_one()
-        if target.fiscal_state != "accepted" or target.sii_environment != "demo":
-            raise UserError(_("A DTE debit note requires an accepted Demo source."))
+        if target.fiscal_state != "accepted" or (
+            not NoteReferenceService.is_ordinary_environment(target, target.company_id)
+        ):
+            raise UserError(
+                _(
+                    "A DTE debit note requires a source accepted in the "
+                    "company's current SII mode."
+                )
+            )
         allowed_operation = (
             target.document_code in {"33", "34"} and self.dte_note_operation == "amount"
         ) or (target.document_code == "61" and self.dte_note_operation == "cancel")

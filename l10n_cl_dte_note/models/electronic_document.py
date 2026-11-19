@@ -5,6 +5,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import SQL
 
+from ..services.note_reference_service import NoteReferenceService
+
 
 class ElectronicDocument(models.Model):
     _inherit = "l10n_cl.electronic.document"
@@ -66,9 +68,9 @@ class ElectronicDocument(models.Model):
                 raise ValidationError(
                     _("A DTE note must reference a durably queued and accepted source.")
                 )
-            if target.sii_environment != "demo":
+            if target.sii_environment not in NoteReferenceService.ORDINARY_ENVIRONMENTS:
                 raise ValidationError(
-                    _("DTE notes are currently restricted to Demo evidence.")
+                    _("DTE notes require a Demo or Production source.")
                 )
             if target.company_id != root.company_id or root.company_id.id != vals.get(
                 "company_id"

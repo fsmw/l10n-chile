@@ -44,11 +44,13 @@ class NoteSnapshotService:
                 )
             )
         certification_case = bool(certification_line)
+        environment = move.company_id.dte_sii_environment
         if move.currency_id.name != "CLP" or (
-            move.company_id.dte_sii_environment != "demo" and not certification_case
+            environment not in NoteReferenceService.ORDINARY_ENVIRONMENTS
+            and not certification_case
         ):
             raise ValidationError(
-                move.env._("DTE notes currently require CLP and Demo mode.")
+                move.env._("DTE notes require CLP and the Demo or Production mode.")
             )
         self._check_note_operator(move)
         reference_service = NoteReferenceService(move.env)
@@ -246,7 +248,11 @@ class NoteSnapshotService:
             "document_timestamp": now,
             "ted_timestamp": now,
             "company_id": company.id,
-            "sii_environment": ("certification" if result["certification"] else "demo"),
+            "sii_environment": (
+                "certification"
+                if result["certification"]
+                else move.company_id.dte_sii_environment
+            ),
             "issuer": issuer_snapshot,
             "receiver": source["receiver"],
             "totals": self._format_totals(amounts),

@@ -14,6 +14,15 @@ class NoteReferenceService:
     """Read fiscal evidence and compute the available adjustment capacity."""
 
     ROOT_DOCUMENT_CODES = frozenset({"33", "34", "39", "41"})
+    ORDINARY_ENVIRONMENTS = frozenset({"demo", "production"})
+
+    @classmethod
+    def is_ordinary_environment(cls, target_document, company):
+        """Ordinary notes stay in the source DTE's Demo or Production mode."""
+        return (
+            target_document.sii_environment in cls.ORDINARY_ENVIRONMENTS
+            and target_document.sii_environment == company.dte_sii_environment
+        )
 
     def __init__(self, env=None):
         self.env = env
@@ -84,12 +93,12 @@ class NoteReferenceService:
             or target_document.preparation_state != "queued"
         ):
             raise ValidationError(_("Only an accepted DTE can be referenced."))
-        if (
-            target_document.sii_environment != "demo"
-            or move.company_id.dte_sii_environment != "demo"
-        ):
+        if not self.is_ordinary_environment(target_document, move.company_id):
             raise ValidationError(
-                _("DTE credit and debit notes are available in Demo mode only.")
+                _(
+                    "The referenced DTE must be accepted in the company's "
+                    "current Demo or Production mode."
+                )
             )
         if target_document.company_id != move.company_id:
             raise ValidationError(

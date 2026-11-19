@@ -108,7 +108,7 @@ the cover-only correction or authorize an automatic resend.
 # Production preparation
 
 Use **DTE → Configuration → Production SII Readiness** to review the production
-setup for the DTE types the company plans to issue (33, 52, 56 and 61). The
+setup for the DTE types the company plans to issue (33, 34, 52, 56 and 61). The
 checklist inspects the SII resolution and sender identity, production signing
 profile, and a valid CAF with an available folio for each selected type.
 
