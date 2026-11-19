@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="mail_template_dte_delivery" model="mail.template">
+        <field name="name">DTE: Customer Delivery</field>
+        <field name="model_id" ref="account.model_account_move" />
+        <field name="email_from">{{ object.company_id.email_formatted }}</field>
+        <field
+            name="subject"
+        >{{ object.company_id.name }} - {{ object.l10n_latam_document_type_id.name or 'DTE' }} {{ object._dte_delivery_document().folio }}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Dear <t t-out="object.partner_id.name or ''" />,</p>
+                <p>
+        Attached is the electronic tax document
+        <t t-out="object.l10n_latam_document_type_id.name or ''" />
+        number <t t-out="object._dte_delivery_document().folio or ''" />
+        issued by <t t-out="object.company_id.name or ''" />, in XML and PDF.
+    </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="False" />
+    </record>
+</odoo>
