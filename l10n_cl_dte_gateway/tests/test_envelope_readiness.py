@@ -14,6 +14,7 @@ class TestSiiEnvelopeReadiness(SigningTestCase):
         self.company = self.company.with_user(self.dte_manager)
         self.company.sudo().write({"dte_sii_environment": "certification"})
         self.company.partner_id.sudo().write({"vat": "12345678-5"})
+        self.company.sudo().write({"dte_sii_sender_vat": "12345678-5"})
         self.create_signing_profile(environment="certification")
         self.gateway_factory = self.env["l10n_cl.sii.gateway.factory"].with_user(
             self.dte_manager
@@ -28,7 +29,7 @@ class TestSiiEnvelopeReadiness(SigningTestCase):
 
     def test_compose_rejects_a_different_sender_before_signing(self):
         signature_service = Mock()
-        signature_service.certification_signing_identity.return_value = (
+        signature_service.signing_identity.return_value = (
             object(),
             "12345678-5",
         )

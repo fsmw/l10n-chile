@@ -12,3 +12,5 @@ from . import test_production_upload_rejection
 from . import test_production_outcome_application
 from . import test_export_payload_envelope
 from . import test_envelope_result_import
+from . import test_certification_authentication
+from . import test_envelope_readiness
