@@ -253,32 +253,14 @@ class AccountMove(models.Model):
                     )
         return super().create(vals_list)
 
-    def write(self, vals):
-        protected = {
+    def _dte_protected_fields(self):
+        return super()._dte_protected_fields() | {
             "dte_note_target_document_id",
             "dte_note_operation",
             "dte_note_reason",
-            "l10n_latam_document_type_id",
-            "partner_id",
-            "invoice_date",
             "reversed_entry_id",
             "debit_origin_id",
-            "invoice_line_ids",
-            "state",
         }
-        if protected.intersection(vals) and any(move.dte_document_ids for move in self):
-            raise UserError(
-                _(
-                    "Fiscal identity and lines cannot change after DTE evidence "
-                    "has been created."
-                )
-            )
-        return super().write(vals)
-
-    def unlink(self):
-        if any(move.dte_document_ids for move in self):
-            raise UserError(_("A move with DTE evidence cannot be deleted."))
-        return super().unlink()
 
     def action_view_dte_notes(self):
         self.ensure_one()

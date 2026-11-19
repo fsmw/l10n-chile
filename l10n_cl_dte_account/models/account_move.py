@@ -10,6 +10,20 @@ from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapsho
 
 from ..services.dte_issuance_adapter import InvoiceIssuanceAdapter
 
+# Fields the signed DTE already states; changing them would desynchronize
+# accounting from the document SII received.
+DTE_PROTECTED_FIELDS = frozenset(
+    {
+        "partner_id",
+        "invoice_date",
+        "currency_id",
+        "l10n_latam_document_type_id",
+        "invoice_line_ids",
+        "line_ids",
+        "state",
+    }
+)
+
 
 class AccountMove(models.Model):
     _inherit = "account.move"
@@ -103,6 +117,35 @@ class AccountMove(models.Model):
     def _compute_dte_document_count(self):
         for move in self:
             move.dte_document_count = len(move.dte_document_ids)
+
+    def _dte_protected_fields(self):
+        """Extension point for addons that add fiscal fields to the move."""
+        return set(DTE_PROTECTED_FIELDS)
+
+    def _has_binding_dte(self):
+        """A DTE binds the move unless SII rejected it."""
+        return any(
+            document.fiscal_state != "rejected"
+            for document in self.sudo().dte_document_ids
+        )
+
+    def write(self, vals):
+        if self._dte_protected_fields().intersection(vals) and any(
+            move._has_binding_dte() for move in self
+        ):
+            raise UserError(
+                _(
+                    "This document has an issued DTE: its partner, date, type, "
+                    "lines and state cannot change. Issue a credit or debit note "
+                    "instead."
+                )
+            )
+        return super().write(vals)
+
+    def unlink(self):
+        if any(move._has_binding_dte() for move in self):
+            raise UserError(_("A document with an issued DTE cannot be deleted."))
+        return super().unlink()
 
     def action_view_dte_documents(self):
         self.ensure_one()
