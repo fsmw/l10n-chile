@@ -70,7 +70,7 @@
                         string="Queue Submission"
                         class="btn-primary"
                         groups="l10n_cl_dte_core.group_dte_manager"
-                        invisible="state != 'pending'"
+                        invisible="state not in ['pending', 'error']"
                     />
                     <button
                         name="action_enqueue_status_query"
@@ -105,6 +105,9 @@
                     <group string="Transport Timeline">
                         <field name="submitted_at" />
                         <field name="last_checked_at" />
+                    </group>
+                    <group string="SII Message" invisible="not sii_message">
+                        <field name="sii_message" nolabel="1" colspan="2" />
                     </group>
                     <notebook>
                         <page string="Transport Attempts">
