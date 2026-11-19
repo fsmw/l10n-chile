@@ -19,6 +19,9 @@ POLL_BASE_DELAY = timedelta(minutes=5)
 POLL_MAX_DELAY = timedelta(hours=6)
 POLL_MAX_EXPONENT = 10
 POLL_BATCH_SIZE = 200
+POLL_SEARCH_FACTOR = 5
+# After a month without a final answer the DTE needs a person, not a poller.
+POLL_MAX_AGE = timedelta(days=30)
 
 
 class ElectronicSubmission(models.Model):
@@ -410,21 +413,22 @@ class ElectronicSubmission(models.Model):
             raise UserError(_("A TrackID is required before status can be queried."))
         if self.state not in {"submitted", "processing", "outcome_unknown"}:
             raise UserError(_("This submission is not eligible for status polling."))
-        gateway = self._gateway()
-        query_number = (
-            len(self.attempt_ids.filtered(lambda item: item.operation == "query")) + 1
-        )
-        attempt = self.env["l10n_cl.submission.attempt"].create(
-            {
-                "submission_id": self.id,
-                "operation": "query",
-                "request_digest": hashlib.sha256(
-                    self.track_id.encode("utf-8")
-                ).hexdigest(),
-            }
+        query_number = len(self._query_attempts()) + 1
+        attempt = (
+            self.env["l10n_cl.submission.attempt"]
+            .sudo()
+            .create(
+                {
+                    "submission_id": self.id,
+                    "operation": "query",
+                    "request_digest": hashlib.sha256(
+                        self.track_id.encode("utf-8")
+                    ).hexdigest(),
+                }
+            )
         )
         try:
-            result = gateway.query_status(
+            result = self._gateway().query_status(
                 self.company_id,
                 self.environment,
                 self.track_id,
@@ -448,25 +452,9 @@ class ElectronicSubmission(models.Model):
                     _("SII did not return a final status (code %(code)s).")
                     % {"code": result.get("transport_code") or "?"}
                 )
-            response = self._create_response_artifact("status_response", raw_response)
-            attempt._complete("completed", response_digest=response.sha256)
-            message = self._status_message(result)
-            self._write_internal(
-                {
-                    "state": state,
-                    "last_checked_at": fields.Datetime.now(),
-                    "sii_message": message,
-                    "sii_has_observations": bool(
-                        state == "accepted" and result.get("error_summary")
-                    ),
-                }
-            )
-            self.document_id.action_record_transition(
-                state,
-                f"sii_status_{state}",
-                message=message or None,
-                artifact_id=response.id,
-            )
+            # The status, the submission and the DTE change together or not at all.
+            with self.env.cr.savepoint():
+                self._apply_status(attempt, result, state, raw_response)
         except Exception as error:
             if isinstance(error, psycopg2.Error):
                 raise
@@ -477,13 +465,35 @@ class ElectronicSubmission(models.Model):
                 error_code=type(error).__name__[:128],
                 error_summary=str(error)[:4000],
             )
-            self._write_internal(
+            self.sudo()._write_internal(
                 {
                     "last_checked_at": fields.Datetime.now(),
                     "sii_message": str(error)[:4000],
                 }
             )
         return True
+
+    def _apply_status(self, attempt, result, state, raw_response):
+        submission = self.sudo()
+        response = submission._create_response_artifact("status_response", raw_response)
+        attempt._complete("completed", response_digest=response.sha256)
+        message = self._status_message(result)
+        submission._write_internal(
+            {
+                "state": state,
+                "last_checked_at": fields.Datetime.now(),
+                "sii_message": message,
+                "sii_has_observations": bool(
+                    state == "accepted" and result.get("error_summary")
+                ),
+            }
+        )
+        submission.document_id.action_record_transition(
+            state,
+            f"sii_status_{state}",
+            message=message or None,
+            artifact_id=response.id,
+        )
 
     @staticmethod
     def _status_message(result):
@@ -518,13 +528,19 @@ class ElectronicSubmission(models.Model):
     def _cron_poll_sii_status(self, limit=POLL_BATCH_SIZE):
         """Queue status queries for submitted DTEs whose backoff has elapsed."""
         now = fields.Datetime.now()
+        # Demo keeps manual queries so its scripted scenarios stay predictable.
         candidates = self.sudo().search(
             [
-                ("environment", "in", ["demo", "production"]),
+                ("environment", "=", "production"),
                 ("state", "in", ["submitted", "processing", "outcome_unknown"]),
                 ("track_id", "!=", False),
+                ("submitted_at", ">=", now - POLL_MAX_AGE),
+                "|",
+                ("last_checked_at", "=", False),
+                ("last_checked_at", "<=", now - POLL_BASE_DELAY),
             ],
             order="last_checked_at asc nulls first, id asc",
+            limit=limit * POLL_SEARCH_FACTOR,
         )
         queued = 0
         for submission in candidates:

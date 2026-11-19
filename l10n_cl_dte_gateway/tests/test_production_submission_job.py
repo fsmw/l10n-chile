@@ -140,6 +140,17 @@ class TestProductionSubmissionJob(ProductionRequestCase):
         self.assertIn("001", self.submission.sii_message)
         self.assertEqual(self.submission._query_attempts().state, "failed")
 
+    def test_gateway_error_is_a_failed_query_with_backoff(self):
+        self._send(return_value=self._upload())
+        with patch.object(
+            type(self.submission), "_gateway", side_effect=UserError("No adapter")
+        ):
+            self.submission._job_query_sii_status()
+        self.assertEqual(self.submission.state, "submitted")
+        self.assertEqual(self.submission._query_attempts().state, "failed")
+        self.assertTrue(self.submission.last_checked_at)
+        self.assertGreater(self.submission._next_poll_at(), fields.Datetime.now())
+
     def test_poller_waits_for_the_backoff_before_asking_again(self):
         self._send(return_value=self._upload())
         self.submission._write_internal(
@@ -150,6 +161,15 @@ class TestProductionSubmissionJob(ProductionRequestCase):
             self.assertEqual(model._cron_poll_sii_status(), 1)
             delay.return_value._job_query_sii_status.assert_called_once()
             self.submission._write_internal({"last_checked_at": fields.Datetime.now()})
+            self.assertEqual(model._cron_poll_sii_status(), 0)
+            # Demo submissions are queried by hand only.
+            self.submission._write_internal({"last_checked_at": False})
+            self.env.cr.execute(
+                "UPDATE l10n_cl_electronic_submission SET environment = 'demo' "
+                "WHERE id = %s",
+                [self.submission.id],
+            )
+            self.submission.invalidate_recordset()
             self.assertEqual(model._cron_poll_sii_status(), 0)
 
 
