@@ -30,6 +30,7 @@ class TestProductionSiiTransport(TransactionCase):
             gateway, type(self.env["l10n_cl.sii.gateway.factory"].get_gateway("demo"))
         )
         self.assertIn("52", SUPPORTED_PRODUCTION_DTE_CODES)
+        self.assertIn("34", SUPPORTED_PRODUCTION_DTE_CODES)
 
     def test_query_status_maps_one_document_result(self):
         transport = Mock()

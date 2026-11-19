@@ -39,8 +39,15 @@ class AccountMoveReversal(models.TransientModel):
                 _("Select one source document with exactly one issued DTE.")
             )
         target = docs.ensure_one()
-        if target.fiscal_state != "accepted" or target.sii_environment != "demo":
-            raise UserError(_("A DTE credit note requires an accepted Demo source."))
+        if target.fiscal_state != "accepted" or (
+            not NoteReferenceService.is_ordinary_environment(target, move.company_id)
+        ):
+            raise UserError(
+                _(
+                    "A DTE credit note requires a source accepted in the "
+                    "company's current SII mode."
+                )
+            )
         if target.document_code not in NoteReferenceService.ROOT_DOCUMENT_CODES:
             raise ValidationError(
                 _("A DTE credit note cannot reference another credit or debit note.")

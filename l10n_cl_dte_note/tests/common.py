@@ -5,7 +5,7 @@ from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
 
 class DteNoteTestCase(DteInvoiceTestCase):
-    def create_accepted_source(self, code="33"):
+    def create_accepted_source(self, code="33", environment="demo"):
         move = self.make_invoice(code, taxable=code != "34")
         snapshot, _caf = self.capture(move, code=code, folio=730)
         manager_env = self.env["l10n_cl.electronic.document"].with_user(
@@ -15,7 +15,7 @@ class DteNoteTestCase(DteInvoiceTestCase):
             {
                 "name": f"Synthetic accepted source {code}",
                 "company_id": self.company.id,
-                "sii_environment": "demo",
+                "sii_environment": environment,
                 "document_code": code,
                 "source_key": f"note-source-{uuid.uuid4().hex}",
                 "source_move_id": move.id,

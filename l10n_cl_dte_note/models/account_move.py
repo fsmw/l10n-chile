@@ -86,7 +86,9 @@ class AccountMove(models.Model):
             move.dte_issuance_available = bool(
                 target
                 and target.fiscal_state == "accepted"
-                and target.sii_environment == "demo"
+                and NoteReferenceService.is_ordinary_environment(
+                    target, move.company_id
+                )
                 and move.state == "posted"
                 and move.dte_note_operation
                 and move.move_type
