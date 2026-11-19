@@ -78,7 +78,7 @@ class TestCertificationAuthentication(SigningTestCase):
 
     def test_seed_signing_rejects_other_environments_and_operators(self):
         self.create_signing_profile(environment="certification")
-        for environment, seed in [("production", "42"), ("certification", "invalid")]:
+        for environment, seed in [("demo", "42"), ("certification", "invalid")]:
             with (
                 self.subTest(environment=environment),
                 self.assertRaises(ValidationError),
