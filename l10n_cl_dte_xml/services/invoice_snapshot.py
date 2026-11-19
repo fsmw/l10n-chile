@@ -40,7 +40,20 @@ class InvoiceSnapshotService:
         invoice_lines = move.invoice_line_ids.filtered(
             lambda line: line.display_type == "product"
         )
-        line_snapshots, taxable_net, exempt_net = self._snapshot_lines(invoice_lines)
+        # Negative lines are global discounts (DscRcgGlobal), not details.
+        discount_lines = invoice_lines.filtered(lambda line: line.price_subtotal < 0)
+        line_snapshots, taxable_net, exempt_net = self._snapshot_lines(
+            invoice_lines - discount_lines
+        )
+        global_discounts, taxable_discount, exempt_discount = self._global_discounts(
+            discount_lines
+        )
+        taxable_net -= taxable_discount
+        exempt_net -= exempt_discount
+        if taxable_net < 0 or exempt_net < 0:
+            raise ValidationError(
+                _("Global discounts cannot exceed the lines they discount.")
+            )
         net_total = self._integer_amount(move.amount_untaxed, "invoice untaxed amount")
         additional_taxes = self._additional_taxes(move)
         vat_total = self._integer_amount(move.amount_tax, "invoice tax amount") - sum(
@@ -84,6 +97,7 @@ class InvoiceSnapshotService:
                 "total": str(int(total)),
             },
             "lines": line_snapshots,
+            "global_discounts": global_discounts,
         }
 
     def _validate_invoice(self, move, document_code):
@@ -269,6 +283,32 @@ class InvoiceSnapshotService:
             )
 
         return line_snapshots, taxable_net, exempt_net
+
+    def _global_discounts(self, discount_lines):
+        """Return SII global discounts and their taxable and exempt totals."""
+        if len(discount_lines) > 20:
+            raise ValidationError(_("A DTE supports at most 20 global discounts."))
+        discounts = []
+        taxable_total = exempt_total = Decimal("0")
+        for line in discount_lines:
+            taxable, additional_code = self._line_taxes(line.tax_ids)
+            if additional_code:
+                raise ValidationError(
+                    _("A global discount cannot carry an additional SII tax.")
+                )
+            value = -self._integer_amount(line.price_subtotal, "global discount")
+            if taxable:
+                taxable_total += value
+            else:
+                exempt_total += value
+            discounts.append(
+                {
+                    "description": (line.name or _("Discount")).strip()[:45],
+                    "value": str(int(value)),
+                    "exempt": not taxable,
+                }
+            )
+        return discounts, taxable_total, exempt_total
 
     def _line_taxes(self, taxes):
         """Return whether the line bears VAT and its SII additional tax code."""

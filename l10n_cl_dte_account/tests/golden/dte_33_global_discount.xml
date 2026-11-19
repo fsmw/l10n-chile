@@ -1,0 +1,86 @@
+<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+    <Documento ID="F750T33">
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE>33</TipoDTE>
+                <Folio>750</Folio>
+                <FchEmis>2026-01-15</FchEmis>
+                <FmaPago>1</FmaPago>
+                <FchVenc>2026-01-15</FchVenc>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor>76864280-K</RUTEmisor>
+                <RznSoc>Emisor Sintetico de Pruebas</RznSoc>
+                <GiroEmis>Servicios informaticos</GiroEmis>
+                <Acteco>620200</Acteco>
+                <DirOrigen>Avenida Prueba 100</DirOrigen>
+                <CmnaOrigen>Santiago</CmnaOrigen>
+                <CdgVendedor>Synthetic DTE Seller</CdgVendedor>
+            </Emisor>
+            <Receptor>
+                <RUTRecep>76864280-K</RUTRecep>
+                <RznSocRecep>Receptor Sintetico</RznSocRecep>
+                <GiroRecep>Comercio al por menor</GiroRecep>
+                <DirRecep>Calle Prueba 200</DirRecep>
+                <CmnaRecep>Santiago</CmnaRecep>
+            </Receptor>
+            <Totales>
+                <MntNeto>90000</MntNeto>
+                <TasaIVA>19.00</TasaIVA>
+                <IVA>17100</IVA>
+                <MntTotal>107100</MntTotal>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <NroLinDet>1</NroLinDet>
+            <NmbItem>Arriendo de equipo</NmbItem>
+            <DscItem>Arriendo de equipo</DscItem>
+            <QtyItem>2.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>50000.000000</PrcItem>
+            <MontoItem>100000</MontoItem>
+        </Detalle>
+        <DscRcgGlobal>
+            <NroLinDR>1</NroLinDR>
+            <TpoMov>D</TpoMov>
+            <GlosaDR>Descuento por volumen</GlosaDR>
+            <TpoValor>$</TpoValor>
+            <ValorDR>10000</ValorDR>
+        </DscRcgGlobal>
+        <TED version="1.0">
+            <DD>
+                <RE>76864280-K</RE>
+                <TD>33</TD>
+                <F>750</F>
+                <FE>2026-01-15</FE>
+                <RR>76864280-K</RR>
+                <RSR>Receptor Sintetico</RSR>
+                <MNT>107100</MNT>
+                <IT1>Arriendo de equipo</IT1>
+                <CAF>___ignore___</CAF>
+                <TSTED>2026-01-15T12:00:00</TSTED>
+            </DD>
+            <FRMT>___ignore___</FRMT>
+        </TED>
+        <TmstFirma>2026-01-15T12:00:00</TmstFirma>
+    </Documento>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <CanonicalizationMethod
+                Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+            />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#F750T33">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>___ignore___</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>___ignore___</SignatureValue>
+        <KeyInfo>___ignore___</KeyInfo>
+    </Signature>
+</DTE>
