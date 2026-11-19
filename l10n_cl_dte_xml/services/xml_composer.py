@@ -96,6 +96,11 @@ class DteXmlComposer:
         if totals_data.get("vat_rate"):
             _add_text(totals, "TasaIVA", fixed_decimal(totals_data["vat_rate"], 2))
         _add_optional_text(totals, "IVA", totals_data.get("vat"))
+        for additional in totals_data.get("additional_taxes") or []:
+            tax = etree.SubElement(totals, f"{{{SII_NAMESPACE}}}ImptoReten")
+            _add_text(tax, "TipoImp", additional["code"])
+            _add_text(tax, "TasaImp", fixed_decimal(additional["rate"], 2))
+            _add_text(tax, "MontoImp", additional["amount"])
         _add_text(totals, "MntTotal", totals_data["total"])
 
         for index, line_data in enumerate(snapshot["lines"], start=1):
@@ -120,6 +125,9 @@ class DteXmlComposer:
                     line_data["discount_percent"],
                 )
                 _add_text(detail, "DescuentoMonto", str(discount))
+            _add_optional_text(
+                detail, "CodImpAdic", line_data.get("additional_tax_code")
+            )
             _add_text(detail, "MontoItem", line_data["subtotal"])
 
         global_discount = snapshot.get("global_discount")

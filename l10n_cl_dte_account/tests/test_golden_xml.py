@@ -13,6 +13,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from odoo import Command, fields
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import (
@@ -126,3 +127,48 @@ class TestGoldenXml(DteInvoiceTestCase):
         assert_golden_xml(
             self, self.issue(invoice, "34", 710), GOLDEN_DIR / "dte_34_exempt.xml"
         )
+
+    def _sale_tax(self, name, amount, sii_code):
+        return (
+            self.env["account.tax"]
+            .sudo()
+            .create(
+                {
+                    "name": name,
+                    "amount": amount,
+                    "amount_type": "percent",
+                    "type_tax_use": "sale",
+                    "tax_group_id": self.tax_19.tax_group_id.id,
+                    "company_id": self.company.id,
+                    "l10n_cl_sii_code": sii_code,
+                }
+            )
+        )
+
+    def test_invoice_33_with_additional_tax(self):
+        ila = self._sale_tax("Synthetic ILA 10%", 10, 27)
+        invoice = self.make_posted_invoice(
+            "33",
+            [("Bebida analcoholica", 24, 1000, 0)],
+            self.tax_19 | ila,
+            payment_form="1",
+            days=0,
+        )
+        self.assertEqual(invoice.amount_total, 24000 + 4560 + 2400)
+        assert_golden_xml(
+            self,
+            self.issue(invoice, "33", 720),
+            GOLDEN_DIR / "dte_33_additional_tax.xml",
+        )
+
+    def test_vat_withholding_is_not_issued_as_vat(self):
+        withholding = self._sale_tax("Synthetic VAT withholding", -19, 15)
+        invoice = self.make_posted_invoice(
+            "33",
+            [("Servicio", 1, 10000, 0)],
+            self.tax_19 | withholding,
+            payment_form="1",
+            days=0,
+        )
+        with self.assertRaisesRegex(ValidationError, "19% VAT"):
+            self.issue(invoice, "33", 730)
