@@ -35,6 +35,22 @@ class DteXmlComposer:
             Decimal(quantity) * Decimal(unit_price) * Decimal(discount_percent) / 100
         ).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
 
+    @staticmethod
+    def _append_totals(header, totals_data):
+        """Serialize Totales, including one ImptoReten per additional tax."""
+        totals = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Totales")
+        _add_optional_text(totals, "MntNeto", totals_data.get("net"))
+        _add_optional_text(totals, "MntExe", totals_data.get("exempt"))
+        if totals_data.get("vat_rate"):
+            _add_text(totals, "TasaIVA", fixed_decimal(totals_data["vat_rate"], 2))
+        _add_optional_text(totals, "IVA", totals_data.get("vat"))
+        for additional in totals_data.get("additional_taxes") or []:
+            tax = etree.SubElement(totals, f"{{{SII_NAMESPACE}}}ImptoReten")
+            _add_text(tax, "TipoImp", additional["code"])
+            _add_text(tax, "TasaImp", fixed_decimal(additional["rate"], 2))
+            _add_text(tax, "MontoImp", additional["amount"])
+        _add_text(totals, "MntTotal", totals_data["total"])
+
     def compose_unsigned_document(self, snapshot, *, invoice_layout=False):
         """Serialize a previously prepared DTE snapshot.
 
@@ -89,19 +105,7 @@ class DteXmlComposer:
         ):
             _add_optional_text(receiver, xml_name, receiver_data.get(field_name))
 
-        totals_data = snapshot["totals"]
-        totals = etree.SubElement(header, f"{{{SII_NAMESPACE}}}Totales")
-        _add_optional_text(totals, "MntNeto", totals_data.get("net"))
-        _add_optional_text(totals, "MntExe", totals_data.get("exempt"))
-        if totals_data.get("vat_rate"):
-            _add_text(totals, "TasaIVA", fixed_decimal(totals_data["vat_rate"], 2))
-        _add_optional_text(totals, "IVA", totals_data.get("vat"))
-        for additional in totals_data.get("additional_taxes") or []:
-            tax = etree.SubElement(totals, f"{{{SII_NAMESPACE}}}ImptoReten")
-            _add_text(tax, "TipoImp", additional["code"])
-            _add_text(tax, "TasaImp", fixed_decimal(additional["rate"], 2))
-            _add_text(tax, "MontoImp", additional["amount"])
-        _add_text(totals, "MntTotal", totals_data["total"])
+        self._append_totals(header, snapshot["totals"])
 
         for index, line_data in enumerate(snapshot["lines"], start=1):
             detail = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Detalle")
