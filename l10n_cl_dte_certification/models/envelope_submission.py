@@ -213,25 +213,6 @@ class DteCertificationRun(models.Model):
                 and latest.state in {"submitted", "processing", "outcome_unknown"}
             )
 
-    def action_correct_sii_envelope(self):
-        from ..services.envelope_correction import CertificationEnvelopeCorrection
-
-        CertificationEnvelopeCorrection().prepare(self)
-        return {
-            "type": "ir.actions.client",
-            "tag": "display_notification",
-            "params": {
-                "title": _("Corrected SII Envelope"),
-                "message": _(
-                    "The corrected envelope is ready for validation. "
-                    "Original DTE, folios and SII evidence were retained."
-                ),
-                "type": "success",
-                "sticky": True,
-                "next": {"type": "ir.actions.client", "tag": "reload"},
-            },
-        }
-
     def action_query_sii_status(self):
         self.ensure_one()
         self._check_execution_access()

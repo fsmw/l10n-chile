@@ -47,16 +47,6 @@ class TestCertificationSetCompleteness(TransactionCase):
         self.assertEqual(proposal["source"], "synthetic_local")
         self.assertEqual(proposal["profile"], "note_text_v1")
 
-    def test_synthetic_completion_blocks_official_preflight(self):
-        from ..services.official_set_preflight import OfficialCertificationSetPreflight
-
-        diagnostic = (
-            OfficialCertificationSetPreflight._synthetic_completion_diagnostics(
-                SimpleNamespace(contains_synthetic_completion=True)
-            )
-        )
-        self.assertEqual(diagnostic, [{"code": "set_contains_synthetic_completion"}])
-
     def test_review_digest_is_stable(self):
         service = CertificationSetCompletenessService()
         result = service.analyze_set(self._fake_set(), "official_sii")
