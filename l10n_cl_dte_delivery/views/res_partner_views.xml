@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_partner_form_dte_delivery" model="ir.ui.view">
+        <field name="name">res.partner.form.dte.delivery</field>
+        <field name="model">res.partner</field>
+        <!-- l10n_cl names its partner form view_move_form. -->
+        <field name="inherit_id" ref="l10n_cl.view_move_form" />
+        <field name="arch" type="xml">
+            <field name="l10n_cl_sii_taxpayer_type" position="after">
+                <field
+                    name="l10n_cl_dte_email"
+                    widget="email"
+                    invisible="'CL' not in fiscal_country_codes"
+                    readonly="parent_id"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
