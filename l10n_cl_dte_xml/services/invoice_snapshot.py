@@ -19,6 +19,9 @@ class InvoiceSnapshotService:
     # This adapter serializes DTE_v10 invoices. Boletas (39/41) have a separate
     # SII format and lifecycle and must not enter this pipeline.
     SUPPORTED_DOCUMENT_CODES = frozenset({"33", "34"})
+    # SII additional taxes charged on top of VAT (ILA, meat and flour, ...).
+    # Withholdings that reduce the total (code 15 and others) are not issued here.
+    ADDITIONAL_TAX_CODES = frozenset({17, 18, 19, 23, 24, 25, 26, 27, 271})
 
     def validate_invoice_source(self, move, document_code):
         """Validate source and fiscal master data before reserving a folio."""
@@ -39,7 +42,10 @@ class InvoiceSnapshotService:
         )
         line_snapshots, taxable_net, exempt_net = self._snapshot_lines(invoice_lines)
         net_total = self._integer_amount(move.amount_untaxed, "invoice untaxed amount")
-        vat_total = self._integer_amount(move.amount_tax, "invoice tax amount")
+        additional_taxes = self._additional_taxes(move)
+        vat_total = self._integer_amount(move.amount_tax, "invoice tax amount") - sum(
+            Decimal(item["amount"]) for item in additional_taxes
+        )
         total = self._integer_amount(move.amount_total, "invoice total")
         if taxable_net + exempt_net != net_total:
             raise ValidationError(
@@ -74,6 +80,7 @@ class InvoiceSnapshotService:
                 "exempt": str(int(exempt_net)) if exempt_net else None,
                 "vat_rate": "19" if taxable_net else None,
                 "vat": str(int(vat_total)) if taxable_net else None,
+                "additional_taxes": additional_taxes,
                 "total": str(int(total)),
             },
             "lines": line_snapshots,
@@ -221,7 +228,7 @@ class InvoiceSnapshotService:
         taxable_net = Decimal("0")
         exempt_net = Decimal("0")
         for line in invoice_lines:
-            taxable = self._is_taxable_19_percent(line.tax_ids)
+            taxable, additional_code = self._line_taxes(line.tax_ids)
             subtotal = self._integer_amount(
                 line.price_subtotal, "invoice line subtotal"
             )
@@ -257,17 +264,69 @@ class InvoiceSnapshotService:
                     else None,
                     "subtotal": str(int(subtotal)),
                     "exempt": not taxable,
+                    "additional_tax_code": additional_code,
                 }
             )
 
         return line_snapshots, taxable_net, exempt_net
+
+    def _line_taxes(self, taxes):
+        """Return whether the line bears VAT and its SII additional tax code."""
+        additional = taxes.filtered(
+            lambda tax: tax.l10n_cl_sii_code in self.ADDITIONAL_TAX_CODES
+        )
+        taxable = self._is_taxable_19_percent(taxes - additional)
+        if len(additional) > 1:
+            raise ValidationError(_("An invoice line supports one additional SII tax."))
+        if additional and (
+            not taxable or additional.amount_type != "percent" or additional.amount <= 0
+        ):
+            raise ValidationError(
+                _(
+                    "Additional SII taxes must be positive percentages on lines "
+                    "that also bear VAT."
+                )
+            )
+        return taxable, str(additional.l10n_cl_sii_code) if additional else None
+
+    def _additional_taxes(self, move):
+        """Group posted additional tax amounts by SII code for the totals."""
+        result = {}
+        for line in move.line_ids.filtered(
+            lambda item: item.tax_line_id.l10n_cl_sii_code in self.ADDITIONAL_TAX_CODES
+        ):
+            tax = line.tax_line_id
+            entry = result.setdefault(
+                tax.l10n_cl_sii_code,
+                {
+                    "code": str(tax.l10n_cl_sii_code),
+                    "rate": self._decimal_text(abs(tax.amount)),
+                    "amount": Decimal("0"),
+                },
+            )
+            if entry["rate"] != self._decimal_text(abs(tax.amount)):
+                raise ValidationError(
+                    _("One SII additional tax code cannot use two rates.")
+                )
+            entry["amount"] += self._decimal(-line.balance)
+        additional = []
+        for code in sorted(result):
+            entry = result[code]
+            amount = self._integer_amount(entry["amount"], "additional tax amount")
+            if amount <= 0:
+                raise ValidationError(
+                    _("SII additional taxes must increase the invoice total.")
+                )
+            additional.append({**entry, "amount": str(int(amount))})
+        return additional
 
     def _is_taxable_19_percent(self, taxes):
         percentages = set()
         for tax in taxes:
             if tax.amount == 0:
                 continue
-            if tax.amount_type != "percent" or abs(tax.amount) != 19:
+            # A -19% tax is a VAT withholding, not VAT charged to the receiver.
+            if tax.amount_type != "percent" or tax.amount != 19:
                 raise ValidationError(
                     _("This issuance flow supports only 19% VAT and exempt lines.")
                 )
