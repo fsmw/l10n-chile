@@ -51,6 +51,45 @@ class DteXmlComposer:
             _add_text(tax, "MontoImp", additional["amount"])
         _add_text(totals, "MntTotal", totals_data["total"])
 
+    @staticmethod
+    def _append_global_discounts(document, snapshot):
+        """Serialize DscRcgGlobal from invoice lines or a certification case."""
+        if snapshot.get("global_discount") and snapshot.get("global_discounts"):
+            raise ValidationError(_("The DTE has two global discount sources."))
+        global_discount = snapshot.get("global_discount")
+        if global_discount:
+            if (
+                set(global_discount)
+                != {
+                    "movement",
+                    "description",
+                    "value_type",
+                    "value",
+                }
+                or global_discount["movement"] != "D"
+            ):
+                raise ValidationError(_("The global DTE discount is invalid."))
+            discount_node = etree.SubElement(
+                document, f"{{{SII_NAMESPACE}}}DscRcgGlobal"
+            )
+            _add_text(discount_node, "NroLinDR", 1)
+            _add_text(discount_node, "TpoMov", global_discount["movement"])
+            _add_optional_text(discount_node, "GlosaDR", global_discount["description"])
+            _add_text(discount_node, "TpoValor", global_discount["value_type"])
+            _add_text(discount_node, "ValorDR", global_discount["value"])
+
+        for index, discount in enumerate(snapshot.get("global_discounts") or [], 1):
+            discount_node = etree.SubElement(
+                document, f"{{{SII_NAMESPACE}}}DscRcgGlobal"
+            )
+            _add_text(discount_node, "NroLinDR", index)
+            _add_text(discount_node, "TpoMov", "D")
+            _add_optional_text(discount_node, "GlosaDR", discount["description"])
+            _add_text(discount_node, "TpoValor", "$")
+            _add_text(discount_node, "ValorDR", discount["value"])
+            if discount["exempt"]:
+                _add_text(discount_node, "IndExeDR", "1")
+
     def compose_unsigned_document(self, snapshot, *, invoice_layout=False):
         """Serialize a previously prepared DTE snapshot.
 
@@ -134,27 +173,7 @@ class DteXmlComposer:
             )
             _add_text(detail, "MontoItem", line_data["subtotal"])
 
-        global_discount = snapshot.get("global_discount")
-        if global_discount:
-            if (
-                set(global_discount)
-                != {
-                    "movement",
-                    "description",
-                    "value_type",
-                    "value",
-                }
-                or global_discount["movement"] != "D"
-            ):
-                raise ValidationError(_("The global DTE discount is invalid."))
-            discount_node = etree.SubElement(
-                document, f"{{{SII_NAMESPACE}}}DscRcgGlobal"
-            )
-            _add_text(discount_node, "NroLinDR", 1)
-            _add_text(discount_node, "TpoMov", global_discount["movement"])
-            _add_optional_text(discount_node, "GlosaDR", global_discount["description"])
-            _add_text(discount_node, "TpoValor", global_discount["value_type"])
-            _add_text(discount_node, "ValorDR", global_discount["value"])
+        self._append_global_discounts(document, snapshot)
 
         references = snapshot.get("references", [])
         if not isinstance(references, list) or len(references) > 40:

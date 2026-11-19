@@ -201,3 +201,19 @@ class TestGoldenXml(DteInvoiceTestCase):
         )
         with self.assertRaises(UserError):
             invoice.dte_reference_ids.reason = "Otra"
+
+    def test_invoice_33_with_global_discount(self):
+        invoice = self.make_posted_invoice(
+            "33",
+            [
+                ("Arriendo de equipo", 2, 50000, 0),
+                ("Descuento por volumen", 1, -10000, 0),
+            ],
+            self.tax_19,
+            payment_form="1",
+            days=0,
+        )
+        self.assertEqual(invoice.amount_untaxed, 90000)
+        signed = self.issue(invoice, "33", 750)
+        assert_golden_xml(self, signed, GOLDEN_DIR / "dte_33_global_discount.xml")
+        self.assertEqual(signed.count(b"<Detalle>"), 1)
