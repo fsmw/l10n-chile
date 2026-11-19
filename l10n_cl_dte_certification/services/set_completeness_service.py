@@ -5,8 +5,6 @@ import hashlib
 import json
 from decimal import Decimal, InvalidOperation
 
-from odoo import _
-
 from .receiver_activity_correction import (
     is_receiver_activity_correction,
     unresolved_source_instructions,
@@ -55,11 +53,14 @@ class CertificationSetCompletenessService:
                             _finding(
                                 "duplicate_invoice_receiver",
                                 "partner_id",
-                                _("Select a different receiver RUT for each invoice."),
+                                certification_set.env._(
+                                    "Select a different receiver RUT for each invoice."
+                                ),
                                 "existing_odoo_record",
                             )
                         )
                     used_ruts.add(rut)
+        env = getattr(certification_set, "env", None)
         for code, field in self._configuration_findings(certification_set):
             message = "Required company or set configuration is missing."
             if code == "missing_issuer_address":
@@ -75,8 +76,14 @@ class CertificationSetCompletenessService:
                     "Configure the Certification certificate in Set Configuration."
                 )
             elif code == "missing_sii_resolution":
-                message = _(
-                    "Enter the resolution date published for this company "
+                # Plain review objects carry no environment to translate with.
+                message = (
+                    env._(
+                        "Enter the resolution date published for this company "
+                        "in the SII Certification registry."
+                    )
+                    if env
+                    else "Enter the resolution date published for this company "
                     "in the SII Certification registry."
                 )
             results.append(

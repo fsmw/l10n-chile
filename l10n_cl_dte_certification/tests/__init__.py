@@ -6,3 +6,9 @@ from . import test_certification_run
 from . import test_certification_result_reconciliation
 from . import test_case_generation
 from . import test_set_missing_methods
+from . import test_certification_caf_client
+from . import test_certification_note_reference
+from . import test_certification_reconciliation
+from . import test_receiver_attestation
+from . import test_set_parser
+from . import test_set_completeness
