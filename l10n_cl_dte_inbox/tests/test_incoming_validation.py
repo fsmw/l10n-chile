@@ -571,3 +571,26 @@ class TestIncomingValidation(DteInvoiceTestCase):
                     any(message in item["message"] for item in document["diagnostics"]),
                     document["diagnostics"],
                 )
+
+    def test_reformatted_file_is_told_apart_from_altered_content(self):
+        # Third-party exports re-indent signed DTEs, which breaks both the
+        # Documento digest and SignedInfo; altered values keep SignedInfo intact.
+        reformatted = etree.fromstring(self._signed())
+        etree.indent(reformatted, space="  ")
+        altered = self._signed(720).replace(b"<MntTotal>", b"<MntTotal>9", 1)
+        for content, hinted in ((xml_bytes(reformatted), True), (altered, False)):
+            with self.subTest(reformatted=hinted):
+                result = IncomingValidationService(self.imports.env).inspect(content)
+
+                document = result["documents"][0]
+                messages = [
+                    item["message"]
+                    for item in document["diagnostics"]
+                    if item["stage"] == "signature"
+                ]
+                self.assertEqual(document["signature_state"], "invalid")
+                self.assertEqual(
+                    any("changed after signing" in item for item in messages),
+                    hinted,
+                    messages,
+                )

@@ -8,8 +8,12 @@ from collections import Counter
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import rsa
 from lxml import etree
-from odoo.addons.l10n_cl_dte_core.tools.xml_safety import safe_xml_schema
+from odoo.addons.l10n_cl_dte_core.tools.xml_safety import (
+    safe_fromstring,
+    safe_xml_schema,
+)
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import _extract_dd_bytes
 from odoo.exceptions import ValidationError
@@ -180,8 +184,10 @@ class IncomingValidationService:
             "BoletaDTE_v11.xsd" if boleta else "DTE_v10.xsd",
             result["diagnostics"],
         )
+        shape_supported = False
         try:
-            if not self._check_signature_shape(node, result["diagnostics"]):
+            shape_supported = self._check_signature_shape(node, result["diagnostics"])
+            if not shape_supported:
                 raise ValidationError(
                     self.env._("The DTE signature structure is unsupported.")
                 )
@@ -201,7 +207,14 @@ class IncomingValidationService:
                 ).hex()
         except (ValidationError, ValueError) as error:
             result["signature_state"] = "invalid"
-            result["diagnostics"].append(self._error("signature", str(error)))
+            message = str(error)
+            if shape_supported and self._changed_after_signing(content):
+                message = self.env._(
+                    "The DTE and its signature block both changed after signing, "
+                    "for example because another tool reformatted the file. "
+                    "Request the original XML from the issuer or from SII."
+                )
+            result["diagnostics"].append(self._error("signature", message))
         try:
             self._check_ted(node, content, result.get("identity", {}))
             result["ted_state"] = "valid"
@@ -397,6 +410,43 @@ class IncomingValidationService:
                     )
                 )
         return len(diagnostics) == previous_count
+
+    def _changed_after_signing(self, content):
+        """Return whether both the payload digest and SignedInfo fail to verify.
+
+        Altered content under an intact SignedInfo keeps the plain digest error;
+        only a file whose signed blocks were both re-serialized gets the hint.
+        """
+        root = safe_fromstring(content)
+        signature = root.find(f"{{{DS_NS}}}Signature")
+        signed_info = signature.find(f"{{{DS_NS}}}SignedInfo")
+        try:
+            public_key = self.signer._public_key_from_key_info(signature)
+            signature_bytes = base64.b64decode(
+                "".join(signature.findtext(f"{{{DS_NS}}}SignatureValue").split()),
+                validate=True,
+            )
+            expected_digest = base64.b64decode(
+                "".join(
+                    signed_info.findtext(
+                        f"{{{DS_NS}}}Reference/{{{DS_NS}}}DigestValue"
+                    ).split()
+                ),
+                validate=True,
+            )
+        except (AttributeError, ValidationError, ValueError):
+            return False
+        if not isinstance(
+            public_key, rsa.RSAPublicKey
+        ) or self.signer._verify_signed_info(public_key, signature_bytes, signed_info):
+            return False
+        try:
+            self.signer._verify_document_digest(
+                self.signer._select_payload(root), expected_digest
+            )
+        except ValidationError:
+            return True
+        return False
 
     def _check_envelope(self, root, result):
         cover = root.find(f"{{{SII_NS}}}SetDTE/{{{SII_NS}}}Caratula")
