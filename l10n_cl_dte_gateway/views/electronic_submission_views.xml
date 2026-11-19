@@ -105,6 +105,7 @@
                     <group string="Transport Timeline">
                         <field name="submitted_at" />
                         <field name="last_checked_at" />
+                        <field name="sii_has_observations" readonly="1" />
                     </group>
                     <group string="SII Message" invisible="not sii_message">
                         <field name="sii_message" nolabel="1" colspan="2" />

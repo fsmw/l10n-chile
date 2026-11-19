@@ -1,17 +1,19 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from datetime import timedelta
 from unittest.mock import Mock, patch
 
+from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from ..services.certification_auth import SiiTransportError
 from ..services.production_gateway import ProductionSiiGateway
-from ..services.production_response_parser import parse_upload
+from ..services.production_response_parser import parse_status, parse_upload
 from ..services.production_transport import ProductionSiiTransport
 from .common_production_request import ProductionRequestCase
-from .test_certification_transport import upload_response
+from .test_certification_transport import status_response, upload_response
 
 
 @tagged("post_install", "-at_install")
@@ -113,6 +115,43 @@ class TestProductionSubmissionJob(ProductionRequestCase):
         self.assertIn("Timeout", self.submission.sii_message)
         self.assertFalse(self.submission._was_never_dispatched())
 
+    def _poll(self, *responses):
+        self._send(return_value=self._upload())
+        results = [
+            {**parse_status(raw, "123"), "is_simulated": False} for raw in responses
+        ]
+        with patch.object(
+            ProductionSiiTransport, "query_envelope", side_effect=results
+        ):
+            for _response in responses:
+                self.submission._job_query_sii_status()
+
+    def test_observations_are_kept_on_acceptance(self):
+        self._poll(status_response(accepted=0, observed=1))
+        self.assertEqual(self.submission.state, "accepted")
+        self.assertEqual(self.document.fiscal_state, "accepted")
+        self.assertTrue(self.submission.sii_has_observations)
+        self.assertIn("observations", self.submission.sii_message)
+
+    def test_failed_query_keeps_the_confirmed_state(self):
+        self._poll(status_response(code="001"))
+        self.assertEqual(self.submission.state, "submitted")
+        self.assertEqual(self.document.fiscal_state, "submitted")
+        self.assertIn("001", self.submission.sii_message)
+        self.assertEqual(self.submission._query_attempts().state, "failed")
+
+    def test_poller_waits_for_the_backoff_before_asking_again(self):
+        self._send(return_value=self._upload())
+        self.submission._write_internal(
+            {"submitted_at": fields.Datetime.now() - timedelta(minutes=6)}
+        )
+        model = self.env["l10n_cl.electronic.submission"]
+        with patch.object(type(model), "with_delay") as delay:
+            self.assertEqual(model._cron_poll_sii_status(), 1)
+            delay.return_value._job_query_sii_status.assert_called_once()
+            self.submission._write_internal({"last_checked_at": fields.Datetime.now()})
+            self.assertEqual(model._cron_poll_sii_status(), 0)
+
 
 @tagged("post_install", "-at_install")
 class TestProductionTokenRefresh(ProductionRequestCase):
@@ -150,3 +189,13 @@ class TestProductionTokenRefresh(ProductionRequestCase):
                 transport.send_envelope(self.company, "production", b"<x/>", "k")
         self.assertFalse(caught.exception.dispatched)
         self.assertEqual(caught.exception.code, "upload_status_5")
+
+    def test_query_retries_once_after_token_rejection(self):
+        transport, auth = self._transport(
+            status_response(code="002"),
+            status_response(accepted=1),
+            operation="soap",
+        )
+        result = transport.query_envelope(self.company, "production", "123")
+        self.assertEqual(result["state"], "accepted")
+        auth.invalidate_token.assert_called_once_with(self.company)

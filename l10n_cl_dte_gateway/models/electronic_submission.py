@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from datetime import timedelta
 
 import psycopg2
 
@@ -13,6 +14,11 @@ from ..services.document_validation import (
     validate_document_payload,
 )
 from ..services.production_response_parser import upload_status_message
+
+POLL_BASE_DELAY = timedelta(minutes=5)
+POLL_MAX_DELAY = timedelta(hours=6)
+POLL_MAX_EXPONENT = 10
+POLL_BATCH_SIZE = 200
 
 
 class ElectronicSubmission(models.Model):
@@ -80,6 +86,12 @@ class ElectronicSubmission(models.Model):
     idempotency_key = fields.Char(required=True, index=True, copy=False)
     submitted_at = fields.Datetime(copy=False)
     last_checked_at = fields.Datetime(copy=False)
+    sii_has_observations = fields.Boolean(
+        string="Accepted with Observations",
+        readonly=True,
+        copy=False,
+        help="SII accepted the DTE with observations (reparos).",
+    )
     sii_message = fields.Text(
         string="SII Message",
         readonly=True,
@@ -433,33 +445,61 @@ class ElectronicSubmission(models.Model):
                 raise ValidationError(_("The SII status adapter returned no response."))
             if state not in {"submitted", "processing", "accepted", "rejected"}:
                 raise ValidationError(
-                    _("The SII status adapter returned an unknown state.")
+                    _("SII did not return a final status (code %(code)s).")
+                    % {"code": result.get("transport_code") or "?"}
                 )
             response = self._create_response_artifact("status_response", raw_response)
             attempt._complete("completed", response_digest=response.sha256)
+            message = self._status_message(result)
             self._write_internal(
-                {"state": state, "last_checked_at": fields.Datetime.now()}
+                {
+                    "state": state,
+                    "last_checked_at": fields.Datetime.now(),
+                    "sii_message": message,
+                    "sii_has_observations": bool(
+                        state == "accepted" and result.get("error_summary")
+                    ),
+                }
             )
             self.document_id.action_record_transition(
-                state, f"sii_status_{state}", artifact_id=response.id
+                state,
+                f"sii_status_{state}",
+                message=message or None,
+                artifact_id=response.id,
             )
         except Exception as error:
             if isinstance(error, psycopg2.Error):
                 raise
-            unknown = bool(getattr(error, "outcome_unknown", True))
+            # A failed query never changes what SII already confirmed: the
+            # TrackID stays valid and the next poll asks again.
             attempt._complete(
-                "unknown" if unknown else "failed",
+                "failed",
                 error_code=type(error).__name__[:128],
                 error_summary=str(error)[:4000],
             )
-            if unknown:
-                self._write_internal({"state": "outcome_unknown"})
-                self.document_id.action_record_transition(
-                    "outcome_unknown",
-                    "sii_status_outcome_unknown",
-                    correlation_key=self.idempotency_key,
-                )
+            self._write_internal(
+                {
+                    "last_checked_at": fields.Datetime.now(),
+                    "sii_message": str(error)[:4000],
+                }
+            )
         return True
+
+    @staticmethod
+    def _status_message(result):
+        """Summarize the SII status code, its text and any observations."""
+        parts = []
+        if result.get("transport_code"):
+            parts.append(
+                " ".join(
+                    part
+                    for part in (result["transport_code"], result.get("detail"))
+                    if part
+                )
+            )
+        if result.get("error_summary"):
+            parts.append(result["error_summary"])
+        return "\n".join(parts)[:4000] or False
 
     def action_enqueue_status_query(self):
         """Queue a status query for an existing TrackID."""
@@ -473,6 +513,43 @@ class ElectronicSubmission(models.Model):
         identity = f"dte-query-{self.id}-{fields.Datetime.now()}"
         self.with_delay(identity_key=identity)._job_query_sii_status()
         return True
+
+    @api.model
+    def _cron_poll_sii_status(self, limit=POLL_BATCH_SIZE):
+        """Queue status queries for submitted DTEs whose backoff has elapsed."""
+        now = fields.Datetime.now()
+        candidates = self.sudo().search(
+            [
+                ("environment", "in", ["demo", "production"]),
+                ("state", "in", ["submitted", "processing", "outcome_unknown"]),
+                ("track_id", "!=", False),
+            ],
+            order="last_checked_at asc nulls first, id asc",
+        )
+        queued = 0
+        for submission in candidates:
+            if queued >= limit:
+                break
+            if submission._next_poll_at() > now:
+                continue
+            queries = len(submission._query_attempts())
+            submission.with_delay(
+                identity_key=f"dte-poll-{submission.id}-{queries}"
+            )._job_query_sii_status()
+            queued += 1
+        return queued
+
+    def _query_attempts(self):
+        self.ensure_one()
+        return self.attempt_ids.filtered(lambda item: item.operation == "query")
+
+    def _next_poll_at(self):
+        """Back off exponentially from the last check, capped at a few hours."""
+        self.ensure_one()
+        reference = self.last_checked_at or self.submitted_at or self.create_date
+        exponent = min(len(self._query_attempts()), POLL_MAX_EXPONENT)
+        delay = min(POLL_BASE_DELAY * 2**exponent, POLL_MAX_DELAY)
+        return reference + delay
 
     def action_enqueue_reconciliation(self):
         """Reconcile an ambiguous send without resubmitting the DTE."""

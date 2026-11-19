@@ -17,6 +17,7 @@ from .certification_response_parser import soap_payload as _certification_soap_p
 
 MAX_RESPONSE_BYTES = 2_000_000
 UPLOAD_NOT_AUTHENTICATED = "5"
+TOKEN_REJECTED_CODES = frozenset({"001", "002", "003"})
 # SII did not process the file: authentication failed or the system is locked.
 UPLOAD_NOT_PROCESSED = frozenset({UPLOAD_NOT_AUTHENTICATED, "9"})
 
@@ -121,10 +122,12 @@ def parse_status(response, expected_track_id):
             _("The SII status response belongs to a different TrackID.")
         )
     code = text(root, "ESTADO")
+    detail = next((value.strip() for value in _values(root, "GLOSA")), "")
     result = {
         "state": "outcome_unknown",
         "track_id": expected_track_id,
         "transport_code": code,
+        "detail": detail[:1000],
         "raw_response": response,
         "counts": [],
     }
