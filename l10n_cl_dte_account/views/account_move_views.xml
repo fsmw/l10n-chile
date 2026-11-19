@@ -32,6 +32,23 @@
                 <field name="dte_issuance_available" invisible="1" />
                 <field name="dte_document_ids" invisible="1" />
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    name="dte_references"
+                    string="SII References"
+                    invisible="move_type not in ['out_invoice']"
+                >
+                    <field name="dte_reference_ids" readonly="dte_document_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="document_type_id" />
+                            <field name="folio" />
+                            <field name="date" />
+                            <field name="reason" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
             <xpath expr="//field[@name='l10n_latam_document_type_id']" position="after">
                 <div
                     name="dte_issuance_unavailable"
