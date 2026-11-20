@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="action_dispatch_guide" model="ir.actions.report">
+        <field name="name">Dispatch Guide</field>
+        <field name="model">l10n_cl.dte.dispatch</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_dte_dispatch_report.dispatch_guide</field>
+        <field name="report_file">l10n_cl_dte_dispatch_report.dispatch_guide</field>
+        <field
+            name="paperformat_id"
+            ref="l10n_cl_dte_report.paperformat_dte_print_sample"
+        />
+        <field
+            name="binding_model_id"
+            ref="l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch"
+        />
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="print_report_name">'GD-%s' % object.name</field>
+    </record>
+    <!-- Same layout as the print sample, keyed by dispatch guide. -->
+    <template id="dispatch_guide">
+        <t t-call="l10n_cl_dte_dispatch_report.dispatch_print" />
+    </template>
+</odoo>
