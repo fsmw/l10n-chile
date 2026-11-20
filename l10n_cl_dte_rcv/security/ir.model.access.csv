@@ -15,3 +15,4 @@ access_rcv_boleta_daily_user,rcv.boleta.daily user,model_l10n_cl_dte_rcv_boleta_
 access_rcv_boleta_daily_manager,rcv.boleta.daily manager,model_l10n_cl_dte_rcv_boleta_daily,l10n_cl_dte_core.group_dte_manager,1,1,1,0
 access_rcv_csv_import_wizard_manager,rcv.csv.import.wizard manager,model_l10n_cl_dte_rcv_csv_import_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
 access_rcv_year_wizard_user,rcv.year.wizard user,model_l10n_cl_dte_rcv_year_wizard,l10n_cl_dte_core.group_dte_user,1,1,1,1
+access_rcv_sync_wizard_manager,rcv.sync.wizard manager,model_l10n_cl_dte_rcv_sync_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1

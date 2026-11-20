@@ -3,3 +3,4 @@
 
 from . import rcv_csv_import_wizard
 from . import rcv_year_wizard
+from . import rcv_sync_wizard

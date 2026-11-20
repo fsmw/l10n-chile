@@ -29,23 +29,33 @@ Chile - Registro de Compras y Ventas (RCV) SII
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
 Storage for the SII purchase and sales register (Registro de Compras y
-Ventas, RCV) and import of its detail CSV.
+Ventas, RCV), read-only download of the register from the SII, and
+import of its detail CSV.
 
 The RCV is kept by period (company, year, month and operation:
-purchases, sales or receipt sales). Each read of a period, from a CSV
-file or from a later SII integration, is stored as a read with its
-coverage by SII state, the summary totals by document type, and the
-fiscal documents it reports. A document is identified by company,
-operation, document type, issuer RUT and folio; every read updates it
-and keeps an observation with the reported amounts, so the history of a
-document across reads is preserved.
+purchases, sales or receipt sales). Each read of a period, from the SII
+or from a CSV file, is stored as a read with its coverage by SII state,
+the summary totals by document type, and the fiscal documents it
+reports. A document is identified by company, operation, document type,
+issuer RUT and folio; every read updates it and keeps an observation
+with the reported amounts, so the history of a document across reads is
+preserved.
 
 A section whose detail does not prove its summary (missing rows,
 different counts or totals) is kept as partial. The absence of a
 document is never inferred from an incomplete read.
 
-This release does not query the SII and does not reconcile RCV documents
-with journal entries; those features are planned as separate addons.
+The SII read signs in to the SII website with the company's production
+signing certificate (mutual TLS) and calls, read-only, the services of
+the RCV pages: the summary of each RCV state (registered, claimed and
+pending for purchases; registered for sales) and the detail of each
+document type. Reads run in the background, and companies can opt in to
+a daily read of the current and previous month. Receipt sales (boletas)
+cannot be read from the SII yet, because there is no validated SII
+service for them.
+
+This release does not reconcile RCV documents with journal entries; that
+feature is planned as a separate addon.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -63,6 +73,33 @@ Usage
 DTE users read the register from DTE Issuance > Purchase and Sales
 Register. *Periods* opens the periods of the current year, creating the
 missing ones; *Open Fiscal Year* does the same for another year.
+
+To read a period from the SII, a DTE Manager clicks *Read from SII* on
+the period, or opens *Read from SII* and selects the company, operation
+(purchases or sales), year and month. The company needs a valid RUT and
+an active production signing profile (DTE Issuance > Configuration)
+whose certificate has its private key and is authorized at the SII for
+the company. The read is queued and processed in the background by the
+*SII RCV: Process Queued Reads* scheduled action; only one read per
+period is queued at a time. The result is stored as a new read of the
+period, with its coverage by SII state. A failed read records the failed
+step (sign-in, session token, RCV portal, session configuration, session
+load, session validation, session parameters or RCV start data) and its
+message; a period that already holds a stored read keeps it. Purchase
+details that the SII is still preparing (pending documents) are reported
+as unavailable and leave the read partial.
+
+For a daily read, a user who can edit companies enables *Daily SII RCV
+Read* on the company (Chilean DTE tab) and selects the *RCV Read User*,
+an active DTE Manager of that company, recorded as the requester. The
+*SII RCV: Schedule Daily Reads* scheduled action then queues, once per
+Chilean day, the purchases and sales of the current and previous month.
+
+The certificate and its private key are written only to a private
+temporary directory (files readable by the Odoo user only) for the
+duration of the read and removed afterwards; they are never logged.
+Requests use bounded timeouts, and a rate-limited or failing query is
+retried once.
 
 To import a CSV, a DTE Manager opens *Import CSV*, selects the company,
 operation (purchases or sales), year and month, and uploads the file.
@@ -83,7 +120,8 @@ listed on the resulting read, which is marked as partial (failed when no
 row is valid). The imported file and its SHA-256 are kept on the read.
 
 Records are restricted to the companies the user works in. DTE users can
-read the register; DTE Managers can also import.
+read the register; DTE Managers can also read it from the SII and import
+it.
 
 Bug Tracker
 ===========

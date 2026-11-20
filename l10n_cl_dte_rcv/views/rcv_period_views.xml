@@ -94,6 +94,14 @@
             <form string="RCV Period">
                 <header>
                     <button
+                        name="action_sync"
+                        type="object"
+                        string="Read from SII"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="operation == 'boleta'"
+                    />
+                    <button
                         name="action_open_documents"
                         type="object"
                         string="Documents"
