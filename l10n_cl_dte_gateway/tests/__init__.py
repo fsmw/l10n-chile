@@ -16,3 +16,4 @@ from . import test_certification_authentication
 from . import test_envelope_readiness
 from . import test_envelope_receiver
 from . import test_production_submission_job
+from . import test_claim_registry
