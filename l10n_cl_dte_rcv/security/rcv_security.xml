@@ -1,0 +1,46 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="rule_rcv_period_company" model="ir.rule">
+        <field name="name">RCV periods: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_period" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_sync_company" model="ir.rule">
+        <field name="name">RCV reads: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_sync" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_section_company" model="ir.rule">
+        <field name="name">RCV read sections: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_section" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_summary_company" model="ir.rule">
+        <field name="name">RCV summaries: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_summary" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_document_company" model="ir.rule">
+        <field name="name">RCV documents: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_document" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_observation_company" model="ir.rule">
+        <field name="name">RCV observations: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_observation" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_rcv_boleta_daily_company" model="ir.rule">
+        <field name="name">RCV daily receipt totals: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_boleta_daily" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
