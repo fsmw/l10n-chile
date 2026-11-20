@@ -102,6 +102,13 @@
                         invisible="operation == 'boleta'"
                     />
                     <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Reconcile"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="operation == 'boleta' or not current_sync_id"
+                    />
+                    <button
                         name="action_open_documents"
                         type="object"
                         string="Documents"

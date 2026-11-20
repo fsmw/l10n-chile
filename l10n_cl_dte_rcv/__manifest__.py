@@ -2,14 +2,20 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 {
     "name": "Chile - Registro de Compras y Ventas (RCV) SII",
-    "summary": "Períodos y documentos del RCV: lectura SII e importación CSV.",
-    "version": "18.0.1.1.0",
+    "summary": "RCV periods and documents: SII read, CSV import and reconciliation.",
+    "version": "18.0.1.2.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "development_status": "Alpha",
-    "depends": ["account", "l10n_cl_dte_core", "l10n_cl_dte_signing"],
+    "depends": [
+        "account",
+        "l10n_cl",
+        "l10n_cl_dte_core",
+        "l10n_cl_dte_account",
+        "l10n_cl_dte_signing",
+    ],
     "external_dependencies": {"python": ["requests"]},
     "data": [
         "security/rcv_security.xml",
@@ -20,7 +26,9 @@
         "views/rcv_document_views.xml",
         "views/rcv_wizard_views.xml",
         "views/res_company_views.xml",
+        "views/account_move_views.xml",
         "views/menus.xml",
+        "report/rcv_period_report.xml",
     ],
     "installable": True,
     "application": False,

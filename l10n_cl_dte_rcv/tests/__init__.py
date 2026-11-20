@@ -8,3 +8,5 @@ from . import test_rcv_csv_import
 from . import test_rcv_period
 from . import test_rcv_security
 from . import test_rcv_sii_read
+from . import test_rcv_matching
+from . import test_rcv_matching_access

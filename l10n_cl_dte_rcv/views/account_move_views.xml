@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_move_form_dte_rcv" model="ir.ui.view">
+        <field name="name">account.move.form.dte.rcv</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_view_dte_rcv_documents"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-list-alt"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                    invisible="not dte_rcv_document_count"
+                >
+                    <field
+                        name="dte_rcv_document_count"
+                        widget="statinfo"
+                        string="RCV"
+                    />
+                </button>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field
+                    name="dte_rcv_state"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                    invisible="move_type not in ('in_invoice', 'in_refund', 'out_invoice', 'out_refund')"
+                    decoration-success="dte_rcv_state == 'matched'"
+                    decoration-danger="dte_rcv_state == 'not_in_sii'"
+                    decoration-warning="dte_rcv_state == 'indeterminate'"
+                    widget="badge"
+                />
+                <field
+                    name="dte_rcv_sync_id"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                    invisible="not dte_rcv_sync_id"
+                />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_invoice_filter_dte_rcv" model="ir.ui.view">
+        <field name="name">account.move.search.dte.rcv</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='cancel']" position="after">
+                <separator />
+                <filter
+                    name="dte_rcv_not_in_sii"
+                    string="Not Reported in the RCV"
+                    domain="[('dte_rcv_state', '=', 'not_in_sii')]"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                />
+                <filter
+                    name="dte_rcv_indeterminate"
+                    string="RCV Incomplete"
+                    domain="[('dte_rcv_state', '=', 'indeterminate')]"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                />
+                <filter
+                    name="dte_rcv_matched"
+                    string="Reported in the RCV"
+                    domain="[('dte_rcv_state', '=', 'matched')]"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

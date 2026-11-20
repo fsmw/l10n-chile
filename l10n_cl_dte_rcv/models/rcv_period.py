@@ -4,6 +4,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from ..services.rcv_move_check import RcvMoveCheck
 from ..services.sii_rcv_client import RECEIPT_READ_UNSUPPORTED, SII_OPERATIONS
 
 RCV_OPERATIONS = [
@@ -128,6 +129,17 @@ class RcvPeriod(models.Model):
             "l10n_cl_dte_rcv.action_rcv_document"
         )
         action["domain"] = self._document_domain()
+        return action
+
+    def action_reconcile(self):
+        """Reconcile the documents of the periods; DTE managers only."""
+        document_model = self.env["l10n_cl.dte.rcv.document"]
+        documents = document_model.browse()
+        for period in self:
+            documents |= document_model.search(period._document_domain())
+        action = documents.action_reconcile()
+        for period in self.filtered("current_sync_id"):
+            RcvMoveCheck(self.env).check(period.current_sync_id)
         return action
 
     def action_sync(self):
