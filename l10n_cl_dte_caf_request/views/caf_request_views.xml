@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_caf_request_list" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.request.list</field>
+        <field name="model">l10n_cl.caf.request</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="state in ('failed', 'uncertain')"
+                decoration-success="state in ('success', 'reconciled')"
+                decoration-info="state in ('pending', 'approved')"
+            >
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="environment" />
+                <field name="document_code" />
+                <field name="requested_quantity" />
+                <field name="rule_id" optional="show" />
+                <field name="attempt_count" optional="hide" />
+                <field name="error_code" optional="show" />
+                <field name="completed_at" optional="hide" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+    <record id="view_caf_request_search" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.request.search</field>
+        <field name="model">l10n_cl.caf.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="company_id" />
+                <field name="document_code" />
+                <field name="rule_id" />
+                <filter
+                    name="to_approve"
+                    string="Pending Approval"
+                    domain="[('state', '=', 'pending')]"
+                />
+                <filter
+                    name="attention"
+                    string="Needs Attention"
+                    domain="[('state', 'in', ('failed', 'uncertain', 'partial'))]"
+                />
+                <filter
+                    name="uncertain"
+                    string="Uncertain"
+                    domain="[('state', '=', 'uncertain')]"
+                />
+                <group string="Group By">
+                    <filter
+                        name="group_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        name="group_document_code"
+                        string="DTE Type"
+                        context="{'group_by': 'document_code'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_caf_request_form" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.request.form</field>
+        <field name="model">l10n_cl.caf.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="Approve"
+                        class="btn-primary"
+                        invisible="state != 'pending'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_execute"
+                        type="object"
+                        string="Request CAF from SII"
+                        class="btn-primary"
+                        invisible="state != 'approved'"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        confirm="The SII may allocate folios irreversibly. Continue?"
+                    />
+                    <button
+                        name="action_retry"
+                        type="object"
+                        string="Retry"
+                        invisible="not can_retry"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_recover_from_sii"
+                        type="object"
+                        string="Recover CAF from SII"
+                        class="btn-primary"
+                        invisible="not can_recover"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Reconcile"
+                        invisible="not can_reconcile"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        invisible="state not in ('pending', 'approved', 'failed')"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="pending,approved,running,success"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                                readonly="id"
+                            />
+                            <field name="environment" readonly="state != 'pending'" />
+                            <field
+                                name="document_code"
+                                readonly="state != 'pending'"
+                            />
+                            <field
+                                name="requested_quantity"
+                                readonly="state != 'pending'"
+                            />
+                            <field name="rule_id" invisible="not rule_id" />
+                            <field
+                                name="availability_snapshot"
+                                invisible="not rule_id"
+                            />
+                        </group>
+                        <group>
+                            <field name="requested_by" />
+                            <field name="approved_by" />
+                            <field name="requested_at" />
+                            <field name="completed_at" />
+                            <field name="attempt_count" />
+                            <field name="folio_start" invisible="not folio_start" />
+                            <field name="folio_end" invisible="not folio_start" />
+                            <field name="authorization_id" />
+                        </group>
+                    </group>
+                    <group invisible="not error_code">
+                        <field name="error_code" />
+                        <field name="failure_phase" />
+                        <field name="sii_error_code" />
+                        <field
+                            name="sii_maximum_quantity"
+                            invisible="not sii_maximum_quantity"
+                        />
+                        <field name="error_message" />
+                    </group>
+                    <group invisible="not can_reconcile and state != 'reconciled'">
+                        <field
+                            name="reconciliation_authorization_id"
+                            readonly="not can_reconcile"
+                        />
+                        <field
+                            name="recovery_error_code"
+                            invisible="not recovery_error_code"
+                        />
+                        <field name="reconciled_by" />
+                        <field name="reconciled_at" />
+                    </group>
+                    <field name="can_retry" invisible="1" />
+                    <field name="can_reconcile" invisible="1" />
+                    <field name="can_recover" invisible="1" />
+                    <notebook>
+                        <page name="attempts" string="Attempts">
+                            <field name="attempt_ids">
+                                <list>
+                                    <field name="number" />
+                                    <field name="executed_by" />
+                                    <field name="started_at" />
+                                    <field name="completed_at" />
+                                    <field name="dispatch_started" />
+                                    <field name="folio_start" />
+                                    <field name="folio_end" />
+                                    <field name="error_code" />
+                                    <field name="failure_phase" />
+                                    <field name="state" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="evidence" string="Evidence">
+                            <field name="evidence_ids">
+                                <list>
+                                    <field name="attempt_id" />
+                                    <field name="environment" />
+                                    <field name="http_status" />
+                                    <field name="response_filename" column_invisible="1" />
+                                    <field
+                                        name="response_file"
+                                        filename="response_filename"
+                                        groups="l10n_cl_dte_core.group_dte_manager"
+                                    />
+                                    <field name="response_digest" />
+                                    <field name="caf_filename" column_invisible="1" />
+                                    <field
+                                        name="caf_file"
+                                        filename="caf_filename"
+                                        groups="l10n_cl_dte_core.group_dte_manager"
+                                    />
+                                    <field name="caf_digest" />
+                                    <field name="authorization_id" />
+                                    <field name="validation_error_code" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="note" string="Notes">
+                            <field name="note" readonly="state != 'pending'" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+    <record id="action_caf_request" model="ir.actions.act_window">
+        <field name="name">SII CAF Requests</field>
+        <field name="res_model">l10n_cl.caf.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

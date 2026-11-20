@@ -4,7 +4,7 @@
 {
     "name": "Chile - DTE Certification Sets",
     "summary": "Prepare, export and submit SII certification sets",
-    "version": "18.0.1.12.0",
+    "version": "18.0.1.13.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
@@ -19,6 +19,7 @@
         "l10n_cl_dte_gateway",
         "l10n_cl_dte_inbox",
         "l10n_cl_dte_report",
+        "l10n_cl_dte_caf_request",
     ],
     "external_dependencies": {"python": ["cryptography", "pycurl"]},
     "data": [

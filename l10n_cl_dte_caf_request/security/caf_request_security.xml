@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="rule_caf_request_company" model="ir.rule">
+        <field name="name">CAF requests: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_request" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_caf_request_attempt_company" model="ir.rule">
+        <field name="name">CAF request attempts: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_request_attempt" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_caf_request_evidence_company" model="ir.rule">
+        <field name="name">CAF request evidence: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_request_evidence" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_caf_replenishment_rule_company" model="ir.rule">
+        <field name="name">CAF replenishment rules: allowed companies</field>
+        <field name="model_id" ref="model_l10n_cl_caf_replenishment_rule" />
+        <field name="groups" eval="[(4, ref('l10n_cl_dte_core.group_dte_user'))]" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

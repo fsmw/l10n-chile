@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_caf_replenishment_rule_list" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.replenishment.rule.list</field>
+        <field name="model">l10n_cl.caf.replenishment.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="document_code" />
+                <field name="environment" />
+                <field name="available_folios" />
+                <field name="threshold" />
+                <field name="request_quantity" />
+                <field name="approval_mode" />
+                <field name="last_scan_state" optional="show" />
+                <field name="last_scan_at" optional="hide" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+    <record id="view_caf_replenishment_rule_form" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.replenishment.rule.form</field>
+        <field name="model">l10n_cl.caf.replenishment.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_scan"
+                        type="object"
+                        string="Evaluate Now"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                </header>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="document_code" />
+                            <field name="environment" />
+                            <field name="active" invisible="1" />
+                            <field name="available_folios" />
+                        </group>
+                        <group>
+                            <field name="threshold" />
+                            <field name="request_quantity" />
+                            <field name="cooldown_hours" />
+                            <field name="max_outstanding" />
+                        </group>
+                    </group>
+                    <group string="Execution">
+                        <field name="approval_mode" />
+                        <field
+                            name="execution_user_id"
+                            invisible="approval_mode != 'automatic'"
+                            required="approval_mode == 'automatic'"
+                        />
+                    </group>
+                    <group string="Last Evaluation">
+                        <field name="last_scan_at" />
+                        <field name="last_scan_state" />
+                        <field name="last_scan_available" />
+                        <field name="last_request_id" />
+                    </group>
+                    <field name="request_ids" readonly="1" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_caf_replenishment_rule_search" model="ir.ui.view">
+        <field name="name">l10n_cl.caf.replenishment.rule.search</field>
+        <field name="model">l10n_cl.caf.replenishment.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="company_id" />
+                <field name="document_code" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="action_caf_replenishment_rule" model="ir.actions.act_window">
+        <field name="name">CAF Replenishment Rules</field>
+        <field name="res_model">l10n_cl.caf.replenishment.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

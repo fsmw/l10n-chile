@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_caf_request_user,caf.request user,model_l10n_cl_caf_request,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_caf_request_manager,caf.request manager,model_l10n_cl_caf_request,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_caf_request_attempt_user,caf.request.attempt user,model_l10n_cl_caf_request_attempt,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_caf_request_evidence_user,caf.request.evidence user,model_l10n_cl_caf_request_evidence,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_caf_replenishment_rule_user,caf.replenishment.rule user,model_l10n_cl_caf_replenishment_rule,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_caf_replenishment_rule_manager,caf.replenishment.rule manager,model_l10n_cl_caf_replenishment_rule,l10n_cl_dte_core.group_dte_manager,1,1,1,1
