@@ -4,13 +4,14 @@
 {
     "name": "Chile - DTE Inbox",
     "summary": "Register and review incoming Chilean tax documents",
-    "version": "18.0.1.1.0",
+    "version": "18.0.1.2.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",
     "license": "AGPL-3",
     "development_status": "Beta",
     "depends": [
+        "mail",
         "l10n_cl_dte_core",
         "l10n_cl_dte_xml",
         "l10n_cl_dte_gateway",
@@ -23,6 +24,7 @@
         "views/incoming_import_wizard_views.xml",
         "views/incoming_document_views.xml",
         "views/incoming_import_views.xml",
+        "views/fetchmail_server_views.xml",
         "views/menus.xml",
     ],
     "installable": True,
