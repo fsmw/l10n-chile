@@ -12,6 +12,8 @@ from ..services.binding_service import IncomingAccountBindingService
 from ..services.common import BINDING
 from .common import NS, IncomingAccountCase
 
+SII = NS["s"]
+
 
 @tagged("post_install", "-at_install")
 class TestIncomingAccountBills(IncomingAccountCase):
@@ -50,6 +52,26 @@ class TestIncomingAccountBills(IncomingAccountCase):
                 self.assertEqual(move.l10n_latam_document_type_id.code, code)
                 self.assertEqual(move.amount_total, 1190)
                 self.assertEqual(move.state, "draft")
+
+    def test_invoice_with_other_currency_is_booked_in_pesos(self):
+        def add_other_currency(root):
+            totals = root.find(
+                f"{{{SII}}}Documento/{{{SII}}}Encabezado/{{{SII}}}Totales"
+            )
+            other = etree.Element(f"{{{SII}}}OtraMoneda")
+            for name, value in (
+                ("TpoMoneda", "DOLAR USA"),
+                ("TpoCambio", "950"),
+                ("MntNetoOtrMnda", "1.05"),
+                ("IVAOtrMnda", "0.20"),
+                ("MntTotOtrMnda", "1.25"),
+            ):
+                etree.SubElement(other, f"{{{SII}}}{name}").text = value
+            totals.addnext(other)
+
+        move = self.bill(self.wizard(self.source(transform=add_other_currency)))
+        self.assertEqual(move.currency_id.name, "CLP")
+        self.assertEqual(move.amount_total, 1190)
 
     def test_create_draft_34(self):
         source = self.source("34")

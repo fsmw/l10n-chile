@@ -200,6 +200,8 @@ class IncomingAccountEvidenceService:
             "PrcItem",
             "DescuentoPct",
             "DescuentoMonto",
+            # Informative foreign-currency amounts; the line stays in pesos.
+            "OtrMnda",
             "MontoItem",
         }
         totals = document.find("s:Encabezado/s:Totales", NS)
@@ -214,10 +216,9 @@ class IncomingAccountEvidenceService:
                 for c in detail
             ):
                 reject(self.env, "unsupported_feature")
-        if (
-            document.find("s:Encabezado/s:OtraMoneda", NS) is not None
-            or document.find("s:DscRcgGlobal", NS) is not None
-        ):
+        # A national DTE states its totals in pesos; OtraMoneda only repeats
+        # them in the invoice currency, so the bill is booked in CLP.
+        if document.find("s:DscRcgGlobal", NS) is not None:
             reject(self.env, "unsupported_feature")
         id_doc = document.find("s:Encabezado/s:IdDoc", NS)
         if (
