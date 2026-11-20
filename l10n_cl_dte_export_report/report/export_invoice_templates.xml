@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="report_invoice_document_dte_export"
+        inherit_id="account.report_invoice_document"
+    >
+        <xpath expr="//div[@id='right-elements']" position="after">
+            <t t-set="dte_export" t-value="o._get_dte_export_print_values()" />
+            <div t-if="dte_export" name="dte_export" class="col-12 mt8 small">
+                <strong>Datos de exportación</strong>
+                <table class="table table-sm table-borderless">
+                    <tr>
+                        <td>Moneda</td>
+                        <td>
+                            <span t-out="dte_export['currency']" />
+                            <span t-out="dte_export['total']" />
+                        </td>
+                    </tr>
+                    <tr t-if="dte_export['rate']">
+                        <td>Tipo de cambio / Total en pesos</td>
+                        <td>
+                            <span t-out="dte_export['rate']" />
+                            /
+                            <span>PESO CL</span>
+                            <span t-out="dte_export['clp_total']" />
+                        </td>
+                    </tr>
+                    <tr t-if="dte_export['recipient_country']">
+                        <td>País receptor</td>
+                        <td t-out="dte_export['recipient_country']" />
+                    </tr>
+                    <tr t-if="dte_export['destination']">
+                        <td>País de destino</td>
+                        <td t-out="dte_export['destination']" />
+                    </tr>
+                    <tr t-foreach="dte_export['rows']" t-as="row">
+                        <td t-out="row[0]" />
+                        <td t-out="row[1]" />
+                    </tr>
+                    <tr t-foreach="dte_export['references']" t-as="reference">
+                        <td>Referencia</td>
+                        <td>
+                            <span t-out="reference['document_type']" />
+                            N°
+                            <span t-out="reference['folio']" />
+                            -
+                            <span t-out="reference['date']" />
+                            <span t-if="reference.get('reason')">
+                                - <span t-out="reference['reason']" />
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+    </template>
+</odoo>

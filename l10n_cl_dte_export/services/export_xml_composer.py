@@ -69,10 +69,14 @@ class ExportXmlComposer:
     """Serialize and validate the SII Exportaciones payload of a 110."""
 
     def compose_ted(self, snapshot, caf_authorization, signature_service=None):
-        """CAF-sign the TED with the export total in its transaction currency."""
+        """CAF-sign the TED with the export total in its transaction currency.
+
+        It uses the TED layout of invoices verified in Production, with FRMT
+        on one line, which also keeps the printed PDF417 compact.
+        """
         _require_export_snapshot(snapshot)
         return DteTedComposer().compose_ted(
-            snapshot, caf_authorization, signature_service
+            snapshot, caf_authorization, signature_service, indented_layout=True
         )
 
     def compose_unsigned_document(self, snapshot):
