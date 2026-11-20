@@ -59,11 +59,13 @@ class PosBoletaIssuanceAdapter(BoletaIssuanceAdapter):
         ]
         if selected_id:
             domain.append(("id", "=", selected_id))
-        cafs = source.env["l10n_cl.caf.authorization"].search(domain)
-        if len(cafs) != 1:
+        # Use several current CAFs in folio order, oldest range first.
+        cafs = source.env["l10n_cl.caf.authorization"].search(
+            domain, order="folio_start asc, id asc", limit=1
+        )
+        if not cafs:
             raise ValidationError(
-                _("Select exactly one current validated CAF for DTE type %s.")
-                % document_code
+                _("Load a current validated CAF for DTE type %s.") % document_code
             )
         cafs._check_caf_integrity()
         return cafs

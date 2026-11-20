@@ -77,7 +77,17 @@ class AccountMove(models.Model):
             raise UserError(_("Select a Chilean DTE document type before issuing."))
         document_code = self.l10n_latam_document_type_id.code
         adapter = self._get_dte_issuance_adapter(document_code)
-        return DteIssuanceService().issue(self, adapter, document_code)
+        document = DteIssuanceService().issue(self, adapter, document_code)
+        self._sync_dte_folio(document)
+        return document
+
+    def _sync_dte_folio(self, document):
+        """The reserved CAF folio is the document number SII knows."""
+        self.ensure_one()
+        number = str(document.folio)
+        current = self.l10n_latam_document_number
+        if document.folio and not (current or "").lstrip("0") == number:
+            self.sudo().l10n_latam_document_number = number
 
     def _get_dte_issuance_adapter(self, document_code):
         self.ensure_one()
@@ -196,12 +206,16 @@ class AccountMove(models.Model):
         ]
         if selected_id:
             domain.append(("id", "=", selected_id))
-        authorizations = self.env["l10n_cl.caf.authorization"].search(domain)
-        if len(authorizations) != 1:
+        # Several current CAFs are used in folio order, oldest range first;
+        # an exhausted CAF leaves the "validated" state and drops out.
+        authorizations = self.env["l10n_cl.caf.authorization"].search(
+            domain, order="folio_start asc, id asc", limit=1
+        )
+        if not authorizations:
             raise UserError(
                 _(
-                    "Select exactly one current validated CAF for DTE type "
-                    "%(code)s before issuance."
+                    "Load a current validated CAF for DTE type %(code)s "
+                    "before issuance."
                 )
                 % {"code": document_code}
             )
