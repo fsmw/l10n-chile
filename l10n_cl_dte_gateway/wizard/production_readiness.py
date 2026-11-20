@@ -16,6 +16,8 @@ _DTE_TYPE_NAMES = {
     "56": "Electronic debit note",
     "61": "Electronic credit note",
     "110": "Electronic export invoice",
+    "111": "Electronic export debit note",
+    "112": "Electronic export credit note",
 }
 _DTE_TYPE_SELECTION = [
     (code, f"{code} - {_DTE_TYPE_NAMES[code]}")

@@ -6,6 +6,7 @@ from odoo.addons.l10n_cl_dte_account.services.dte_issuance_adapter import (
 )
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 
+from .export_reference_service import NOTE_CODES, ExportReferenceService
 from .export_snapshot import ExportSnapshotService
 from .export_xml_composer import ExportXmlComposer
 
@@ -21,6 +22,13 @@ class ExportIssuanceAdapter(DteIssuanceAdapter):
     def __init__(self):
         self.snapshot_service = ExportSnapshotService()
         self.xml_composer = ExportXmlComposer()
+
+    def prepare_document_values(self, move, document_code):
+        """Notes record their root export when the fiscal document is created."""
+        if str(document_code) in NOTE_CODES:
+            root = ExportReferenceService(move.env).root(move)
+            return {"export_root_document_id": root.id}
+        return {}
 
     def validate_source(self, move, document_code):
         """Reject an export invoice that cannot become a valid DTE."""

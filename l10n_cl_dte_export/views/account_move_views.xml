@@ -30,6 +30,14 @@
                             <field name="dte_export_nationality_id" />
                             <field name="dte_export_destination_id" />
                         </group>
+                        <group
+                            string="Export Note"
+                            invisible="dte_document_type_code not in ['111', '112']"
+                        >
+                            <field name="dte_export_target_id" />
+                            <field name="dte_export_correction" />
+                            <field name="dte_export_reason" />
+                        </group>
                         <group string="Exchange Rate">
                             <field name="dte_export_rate" />
                             <field name="dte_export_rate_date" />

@@ -21,7 +21,7 @@ from odoo.addons.l10n_cl_dte_xml.services.xml_composer import (
     _parse_document,
 )
 
-EXPORT_CODES = frozenset({"110"})
+EXPORT_CODES = frozenset({"110", "111", "112"})
 PREFIX = f"{{{SII_NAMESPACE}}}"
 MAX_REFERENCES = 40
 # Aduana children in XSD order, from the snapshot customs keys.
