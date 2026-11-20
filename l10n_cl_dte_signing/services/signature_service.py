@@ -394,7 +394,7 @@ class SignatureService:
         return etree.tostring(root, encoding="ISO-8859-1", xml_declaration=True)
 
     def sign_envelope(self, company, environment, unsigned_xml):
-        """Sign the SetDTE inside an already assembled SII EnvioDTE."""
+        """Sign the SetDTE inside an assembled SII EnvioDTE or EnvioBOLETA."""
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
@@ -419,8 +419,9 @@ class SignatureService:
         if not certificate.private_key_id or certificate.private_key_id.public:
             raise UserError(_("The signing certificate has no private key."))
         root = _parse_xml(unsigned_xml)
+        root_name = _local_name(root)
         if (
-            _local_name(root) != "EnvioDTE"
+            root_name not in {"EnvioDTE", "EnvioBOLETA"}
             or len(root.xpath("./*[local-name()='SetDTE']")) != 1
         ):
             raise ValidationError(_("The envelope must have one SetDTE."))
@@ -462,9 +463,9 @@ class SignatureService:
         opening_end = body.index(b">") + 1
         if not body[opening_end:].startswith(b"\n"):
             body = body[:opening_end] + b"\n" + body[opening_end:]
-        before, closing, after = body.rpartition(b"</EnvioDTE>")
+        before, closing, after = body.rpartition(f"</{root_name}>".encode())
         if not closing or after.strip():
-            raise ValidationError(_("The XML root element must be EnvioDTE."))
+            raise ValidationError(_("The XML root element must be an SII envelope."))
         envelope = (
             SII_XML_DECLARATION
             + b"\n"
