@@ -28,6 +28,10 @@ from .policy_service import IncomingAccountPolicyService
 NS = {"s": SII_NS}
 
 
+# Ordinals above the SII detail range identify global discount lines.
+GLOBAL_DISCOUNT_ORDINAL = 9000
+
+
 class IncomingAccountEvidenceService:
     def __init__(self, env):
         self.env = env
@@ -102,6 +106,12 @@ class IncomingAccountEvidenceService:
             # A note that only corrects text has no amounts to book.
             reject(self.env, "unsupported_feature")
         lines = [self._line(detail) for detail in node.findall("s:Detalle", NS)]
+        if not lines:
+            reject(self.env, "unsupported_feature")
+        lines += [
+            self._global_discount(discount)
+            for discount in node.findall("s:DscRcgGlobal", NS)
+        ]
         if not 1 <= len(lines) <= 2000 or len(
             {line["ordinal"] for line in lines}
         ) != len(lines):
@@ -145,6 +155,34 @@ class IncomingAccountEvidenceService:
             return format(number, "f")
         except ValueError:
             reject(self.env, "unsupported_feature", source_value=tag)
+
+    def _global_discount(self, node):
+        """Read a peso global discount as one negative line to map and book."""
+        number = canonical_folio(node.findtext("s:NroLinDR", namespaces=NS))
+        exempt = node.findtext("s:IndExeDR", default="", namespaces=NS)
+        if (
+            not number
+            or node.findtext("s:TpoMov", namespaces=NS) != "D"
+            or node.findtext("s:TpoValor", namespaces=NS) != "$"
+            or exempt not in {"", "1"}
+        ):
+            reject(self.env, "unsupported_feature")
+        value = self._number(node, "ValorDR")
+        return dict(
+            # Global discounts follow the 60 SII detail lines.
+            ordinal=GLOBAL_DISCOUNT_ORDINAL + int(number),
+            name=node.findtext("s:GlosaDR", default="", namespaces=NS)
+            or "Global discount",
+            description="",
+            codes=[],
+            quantity="1",
+            unit_price=format(-decimal(value), "f"),
+            unit="",
+            discount_percent="0",
+            discount_amount=None,
+            exempt=exempt == "1",
+            amount=format(-decimal(value), "f"),
+        )
 
     def _line(self, node):
         ordinal = canonical_folio(node.findtext("s:NroLinDet", namespaces=NS))
@@ -218,8 +256,6 @@ class IncomingAccountEvidenceService:
                 reject(self.env, "unsupported_feature")
         # A national DTE states its totals in pesos; OtraMoneda only repeats
         # them in the invoice currency, so the bill is booked in CLP.
-        if document.find("s:DscRcgGlobal", NS) is not None:
-            reject(self.env, "unsupported_feature")
         id_doc = document.find("s:Encabezado/s:IdDoc", NS)
         if (
             id_doc.findtext("s:MntBruto", default="0", namespaces=NS) != "0"

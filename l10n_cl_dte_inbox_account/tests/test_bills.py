@@ -73,6 +73,15 @@ class TestIncomingAccountBills(IncomingAccountCase):
         self.assertEqual(move.currency_id.name, "CLP")
         self.assertEqual(move.amount_total, 1190)
 
+    def test_global_discount_is_a_mapped_negative_line(self):
+        source = self.source(global_discount=100)
+        move = self.bill(self.wizard(source))
+        discount = move.invoice_line_ids.filtered(lambda line: line.price_unit < 0)
+        self.assertEqual(discount.price_unit, -100)
+        self.assertEqual(discount.dte_inbox_line_number, 9001)
+        self.assertEqual(move.amount_untaxed, 900)
+        self.assertEqual(move.amount_total, 1071)
+
     def test_create_draft_34(self):
         source = self.source("34")
         move = self.bill(self.wizard(source))
