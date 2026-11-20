@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<!-- Official public codes of the Chilean Customs COMEXT tables, snapshot
+     2026-09-21. Unit 0 (S.U.M) is left out: CodUnid* is a positiveInteger. -->
+<odoo noupdate="1">
+    <record id="export_catalog_sale_clause_1" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">1</field>
+        <field name="name">CIF</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_2" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">2</field>
+        <field name="name">CFR</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_3" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">3</field>
+        <field name="name">EXW</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_4" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">4</field>
+        <field name="name">FAS</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_5" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">5</field>
+        <field name="name">FOB</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_6" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">6</field>
+        <field name="name">S/CL</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_7" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">7</field>
+        <field name="name">FCA</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_8" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">8</field>
+        <field name="name">OTRA</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_9" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">9</field>
+        <field name="name">DDP</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_11" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">11</field>
+        <field name="name">CPT</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_12" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">12</field>
+        <field name="name">CIP</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_17" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">17</field>
+        <field name="name">DAT</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_sale_clause_18" model="l10n_cl.dte.export.catalog">
+        <field name="kind">sale_clause</field>
+        <field name="code">18</field>
+        <field name="name">DAP</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_01" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">01</field>
+        <field name="name">MARITIMA FLUVIAL Y LACUSTRE</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_04" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">04</field>
+        <field name="name">AEREO</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_05" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">05</field>
+        <field name="name">POSTAL</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_06" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">06</field>
+        <field name="name">FERROVIARIO</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_07" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">07</field>
+        <field name="name">CARRETERO TERRESTRE</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_08" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">08</field>
+        <field name="name">OLEODUCTOS GASODUCTOS</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_09" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">09</field>
+        <field name="name">TENDIDO ELECTRICO</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_10" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">10</field>
+        <field name="name">OTRA</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_transport_11" model="l10n_cl.dte.export.catalog">
+        <field name="kind">transport</field>
+        <field name="code">11</field>
+        <field name="name">COURIER AEREO</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_1" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">1</field>
+        <field name="name">TMB</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_2" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">2</field>
+        <field name="name">QMB</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_10" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">10</field>
+        <field name="name">U</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_11" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">11</field>
+        <field name="name">DOC</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_12" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">12</field>
+        <field name="name">U(JGO)</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_13" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">13</field>
+        <field name="name">MU</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_14" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">14</field>
+        <field name="name">MT</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_15" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">15</field>
+        <field name="name">MT2</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_16" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">16</field>
+        <field name="name">MCUB</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_17" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">17</field>
+        <field name="name">PAR</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_18" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">18</field>
+        <field name="name">KNFC</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_19" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">19</field>
+        <field name="name">CARTON</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+    <record id="export_catalog_unit_20" model="l10n_cl.dte.export.catalog">
+        <field name="kind">unit</field>
+        <field name="code">20</field>
+        <field name="name">KWH</field>
+        <field name="source_url">http://comext.aduana.cl:7001/codigos/buscar.do</field>
+        <field name="source_date">2026-09-21</field>
+    </record>
+</odoo>

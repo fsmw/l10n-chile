@@ -43,7 +43,7 @@ class TestExportPrint(ExportTestCase):
         values = invoice._get_dte_export_print_values()
         self.assertEqual(values["currency"], "DOLAR USA")
         self.assertEqual(values["clp_total"], "2346167")
-        self.assertIn(("Cláusula de venta", "5 - sale_clause 5"), values["rows"])
+        self.assertIn(("Cláusula de venta", "5 - FOB"), values["rows"])
         self.assertEqual(values["references"][0]["document_type"], "807")
         html = (
             self.env["ir.actions.report"]

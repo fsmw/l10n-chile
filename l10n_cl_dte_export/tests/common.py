@@ -40,10 +40,10 @@ class ExportTestCase(DteInvoiceTestCase):
 
     @classmethod
     def _catalog(cls, kind, code):
-        return (
-            cls.env["l10n_cl.dte.export.catalog"]
-            .sudo()
-            .create(
+        catalog = cls.env["l10n_cl.dte.export.catalog"].sudo()
+        existing = catalog.search([("kind", "=", kind), ("code", "=", code)])
+        return existing or (
+            catalog.create(
                 {
                     "kind": kind,
                     "code": code,

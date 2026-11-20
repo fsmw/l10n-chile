@@ -62,8 +62,9 @@ class TestExportCatalog(DteTestCase):
                     {**self.values, "kind": kind, "code": "9" * width}
                 )
                 self.assertEqual(record._validate_export_code(kind), "9" * width)
-                record.code = "1"
-                self.assertEqual(record._validate_export_code(kind), "1")
+                # A narrower code than the field width is valid as well.
+                record.code = "98"
+                self.assertEqual(record._validate_export_code(kind), "98")
                 for code in (
                     "1" + "0" * width,
                     "0",
@@ -108,18 +109,20 @@ class TestExportCatalog(DteTestCase):
             self.catalog.create(
                 [{**self.values, "code": "1"}, {**self.values, "code": "-2"}]
             )
-        self.assertFalse(self.catalog.search([("code", "=", "1")]))
+        self.assertFalse(
+            self.catalog.search([("kind", "=", "port"), ("code", "=", "1")])
+        )
 
     def test_unique_category_code_including_archived(self):
-        record = self.catalog.create({**self.values, "code": "1"})
-        other = self.catalog.create({**self.values, "kind": "unit", "code": "1"})
+        record = self.catalog.create({**self.values, "code": "99"})
+        other = self.catalog.create({**self.values, "kind": "unit", "code": "99"})
         record.action_archive()
         with (
             mute_logger("odoo.sql_db"),
             self.assertRaises(IntegrityError),
             self.cr.savepoint(),
         ):
-            self.catalog.create({**self.values, "code": "1"})
+            self.catalog.create({**self.values, "code": "99"})
         with (
             mute_logger("odoo.sql_db"),
             self.assertRaises(IntegrityError),
@@ -132,7 +135,7 @@ class TestExportCatalog(DteTestCase):
             self.assertRaises(IntegrityError),
             self.cr.savepoint(),
         ):
-            another.code = "1"
+            another.code = "99"
 
     def test_required_provenance(self):
         for field in ("name", "code", "kind", "source_url", "source_date"):
@@ -182,3 +185,16 @@ class TestExportCatalog(DteTestCase):
         self.assertEqual(
             self.env.ref("l10n_cl_dte_export.menu_export_catalog").action, action
         )
+
+    def test_official_customs_tables_are_loaded_and_valid(self):
+        catalog = self.env["l10n_cl.dte.export.catalog"]
+        expected = {"sale_clause": 13, "transport": 9, "unit": 13}
+        for kind, count in expected.items():
+            records = catalog.search([("kind", "=", kind)]).filtered(
+                lambda record: "comext.aduana.cl" in record.source_url
+            )
+            self.assertEqual(len(records), count, kind)
+            for record in records:
+                self.assertEqual(record._validate_export_code(kind), record.code)
+        fob = self.env.ref("l10n_cl_dte_export.export_catalog_sale_clause_5")
+        self.assertEqual((fob.code, fob.name), ("5", "FOB"))
