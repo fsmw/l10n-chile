@@ -59,6 +59,28 @@
                             <field name="dte_export_net_unit_id" />
                         </group>
                     </group>
+                    <separator string="Packages" />
+                    <field name="dte_export_package_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="type_id" />
+                            <field name="quantity" />
+                            <field name="marks" />
+                            <field name="container" />
+                            <field name="seal" />
+                            <field name="seal_issuer" />
+                        </list>
+                    </field>
+                    <separator string="Supporting References" />
+                    <field name="dte_export_reference_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="document_type" />
+                            <field name="folio" />
+                            <field name="date" />
+                            <field name="reason" />
+                        </list>
+                    </field>
                 </page>
             </xpath>
         </field>

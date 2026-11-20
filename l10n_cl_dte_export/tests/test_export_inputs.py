@@ -271,3 +271,40 @@ class TestExportInputs(DteInvoiceTestCase):
         ):
             with self.subTest(values=values), self.assertRaises(ValidationError):
                 move.write(values)
+
+    def test_packages_and_supporting_references(self):
+        move = self.draft().with_user(self.operator)
+        box = self._catalog("package", "13")
+        move.write(
+            {
+                "dte_export_package_ids": [
+                    (0, 0, {"type_id": box.id, "quantity": 12, "marks": "ACME"})
+                ],
+                "dte_export_reference_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "document_type": "807",
+                            "folio": "6001234567",
+                            "date": "2026-01-10",
+                        },
+                    )
+                ],
+            }
+        )
+        self.assertEqual(move.dte_export_package_ids.quantity, 12)
+        reference = {"document_type": "807", "folio": "1", "date": "2026-01-11"}
+        for values in (
+            {"dte_export_package_ids": [(0, 0, {"type_id": box.id, "quantity": 0})]},
+            {
+                "dte_export_package_ids": [
+                    (0, 0, {"type_id": self._catalog("unit", "01").id, "quantity": 1})
+                ]
+            },
+            {"dte_export_reference_ids": [(0, 0, dict(reference, document_type="33"))]},
+            {"dte_export_reference_ids": [(0, 0, reference)]},
+        ):
+            with self.subTest(values=values), self.assertRaises(ValidationError):
+                with self.cr.savepoint():
+                    move.write(values)
