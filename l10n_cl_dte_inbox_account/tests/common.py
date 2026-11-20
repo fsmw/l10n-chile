@@ -119,11 +119,20 @@ class IncomingAccountCase(DteInvoiceTestCase):
         self.unit = self.env.ref("uom.product_uom_unit")
         self.counter = 120000
 
-    def signed(self, code="33", mixed=False, transform=None, global_discount=0):
+    def signed(
+        self,
+        code="33",
+        mixed=False,
+        transform=None,
+        global_discount=0,
+        additional_tax=None,
+    ):
         invoice = self.make_invoice(code=code, post=False, taxable=code == "33")
         invoice.invoice_line_ids.write(
             {"quantity": 1, "price_unit": 1000, "discount": 0}
         )
+        if additional_tax:
+            invoice.invoice_line_ids.tax_ids |= additional_tax
         if global_discount:
             # A negative line is issued as a DscRcgGlobal by the generator.
             line = invoice.invoice_line_ids[:1]
@@ -223,12 +232,14 @@ class IncomingAccountCase(DteInvoiceTestCase):
         reviewed=True,
         content=None,
         global_discount=0,
+        additional_tax=None,
     ):
         content = content or self.signed(
             code=code,
             mixed=mixed,
             transform=transform,
             global_discount=global_discount,
+            additional_tax=additional_tax,
         )
         incoming = (
             self.env["l10n_cl.incoming.dte"]

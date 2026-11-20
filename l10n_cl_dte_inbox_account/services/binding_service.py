@@ -11,6 +11,7 @@ from .common import (
     VENDOR_MOVE_TYPES,
     IncomingAccountError,
     canonical_folio,
+    line_taxes,
     reject,
     source_snapshot,
     vat,
@@ -341,7 +342,17 @@ class IncomingAccountBindingService:
                         product_id=mapped["product_id"],
                         product_uom_id=mapped["uom_id"],
                         account_id=mapped["account_id"],
-                        tax_ids=[Command.set([mapped["tax_id"]])],
+                        tax_ids=[
+                            Command.set(
+                                line_taxes(
+                                    self.env,
+                                    journal.company_id,
+                                    document,
+                                    line,
+                                    mapped["tax_id"],
+                                ).ids
+                            )
+                        ],
                         quantity=float(line["quantity"]),
                         price_unit=float(line["unit_price"]),
                         discount=float(line["discount_percent"]),

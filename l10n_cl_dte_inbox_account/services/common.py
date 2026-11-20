@@ -25,6 +25,11 @@ VENDOR_MOVE_TYPES = {
 VENDOR_DOCUMENT_CODES = frozenset(VENDOR_MOVE_TYPES)
 VENDOR_BILL_TYPES = frozenset(VENDOR_MOVE_TYPES.values())
 
+# SII additional taxes charged on top of VAT (ILA, meat and flour, ...).
+ADDITIONAL_TAX_CODES = frozenset(
+    {"17", "18", "19", "23", "24", "25", "26", "27", "271"}
+)
+
 
 def vat(value):
     return re.sub(r"[^0-9K]", "", (value or "").upper())
@@ -140,3 +145,45 @@ def reject(env, code, **kwargs):
 
 def source_snapshot(document):
     return {key: value for key, value in document.items() if key != "information"}
+
+
+def additional_purchase_tax(env, company, code, rate=None):
+    """Return the one active purchase tax for an SII additional tax code."""
+    domain = [
+        ("company_id", "=", company.id),
+        ("type_tax_use", "=", "purchase"),
+        ("amount_type", "=", "percent"),
+        ("l10n_cl_sii_code", "=", int(code)),
+    ]
+    taxes = (
+        env["account.tax"]
+        .search(domain)
+        .filtered(lambda tax: rate is None or decimal(tax.amount) == decimal(rate))
+    )
+    if len(taxes) != 1:
+        reject(env, "tax_invalid", source_value=code)
+    return taxes
+
+
+def line_taxes(env, company, document, line, mapped_tax_id):
+    """The mapped VAT tax plus the SII additional tax the line declares."""
+    taxes = env["account.tax"].browse(mapped_tax_id)
+    code = line.get("additional_tax_code")
+    if not code:
+        return taxes
+    rates = [
+        item["rate"]
+        for item in document["totals"].get("additional_taxes", [])
+        if item["code"] == code
+    ]
+    if len(rates) != 1:
+        reject(env, "tax_invalid", ordinal=line["ordinal"])
+    return taxes | additional_purchase_tax(env, company, code, rates[0])
+
+
+def expected_tax_total(document):
+    """VAT plus the additional taxes stated in the signed totals."""
+    return decimal(document["totals"]["vat"]) + sum(
+        decimal(item["amount"])
+        for item in document["totals"].get("additional_taxes", [])
+    )
