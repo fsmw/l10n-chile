@@ -62,7 +62,8 @@ class TestExportInputs(DteInvoiceTestCase):
                 self.assertEqual(copied[field], move[field], field)
         move.action_post()
         self.assertEqual(move.state, "posted")
-        self.assertFalse(move.dte_issuance_available)
+        # Export 110 is issuable, but this source lacks the customs data.
+        self.assertTrue(move.dte_issuance_available)
         with self.assertRaises(UserError):
             move.issue_dte()
         self.assertFalse(move.dte_document_ids)

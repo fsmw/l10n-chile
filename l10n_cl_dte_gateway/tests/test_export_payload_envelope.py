@@ -13,6 +13,7 @@ from odoo.tests import tagged
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
 from odoo.addons.l10n_cl_dte_signing.tests.common import SigningTestCase
 
+from ..services.document_validation import get_document_validator
 from ..services.envelope_composer import SiiEnvelopeComposer
 from ..services.envelope_result_parser import _expected_documents
 
@@ -148,13 +149,15 @@ class TestExportPayloadEnvelope(SigningTestCase):
                 self.resolver.assert_not_called()
 
     def test_default_validator_hook_is_closed_for_unknown_and_export_codes(self):
-        model = self.env["l10n_cl.electronic.submission"]
+        # Export families need their own addon; the gateway default stays closed.
         for code in ("110", "111", "112", "999"):
             with (
                 self.subTest(code=code),
                 self.assertRaisesRegex(ValidationError, "validator"),
             ):
-                model._get_document_validator(code)
+                get_document_validator(code)
+        with self.assertRaisesRegex(ValidationError, "validator"):
+            self.env["l10n_cl.electronic.submission"]._get_document_validator("999")
 
     def test_extension_validation_failure_stops_composition(self):
         content = self.signed()

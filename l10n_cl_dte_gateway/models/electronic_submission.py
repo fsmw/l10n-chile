@@ -142,7 +142,9 @@ class ElectronicSubmission(models.Model):
             raise ValidationError(
                 _("The submission environment no longer matches its DTE snapshot.")
             )
-        return self.env["l10n_cl.sii.gateway.factory"].get_gateway(self.environment)
+        return self.env["l10n_cl.sii.gateway.factory"].get_gateway(
+            self.environment, document_validator_getter=self._get_document_validator
+        )
 
     def write(self, vals):  # pylint: disable=method-required-super
         if set(vals) != {"demo_scenario"}:

@@ -149,13 +149,15 @@ class SiiGatewayFactory(models.AbstractModel):
     _description = "DTE SII Gateway Factory"
 
     @api.model
-    def get_gateway(self, environment):
+    def get_gateway(self, environment, document_validator_getter=None):
         if environment == "demo":
             return DemoSiiGateway()
         if environment == "production":
             from .production_gateway import ProductionSiiGateway
 
-            return ProductionSiiGateway()
+            return ProductionSiiGateway(
+                document_validator_getter=document_validator_getter
+            )
         if environment in {"certification", "production"}:
             raise UserError(
                 _(

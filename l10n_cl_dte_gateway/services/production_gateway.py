@@ -4,20 +4,23 @@ import uuid
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_core.tools.dte_payload import select_dte_payload
+
 from .envelope_composer import SiiEnvelopeComposer
 from .production_response_parser import parse_xml
 from .production_transport import ProductionSiiTransport
 from .sii_gateway import SiiGateway
 
-SUPPORTED_PRODUCTION_DTE_CODES = {"33", "34", "52", "56", "61"}
+SUPPORTED_PRODUCTION_DTE_CODES = {"33", "34", "52", "56", "61", "110"}
 
 
 class ProductionSiiGateway(SiiGateway):
     """Implement the durable per-DTE gateway contract using one-DTE envelopes."""
 
-    def __init__(self, transport_factory=None):
-        """Accept an injectable production transport factory for isolated tests."""
+    def __init__(self, transport_factory=None, document_validator_getter=None):
+        """Accept injectable transport and per-type document validation."""
         self.transport_factory = transport_factory or ProductionSiiTransport
+        self.document_validator_getter = document_validator_getter
 
     def validate_configuration(self, company, environment):
         """Reject unready production configuration before the job enters sending."""
@@ -25,7 +28,10 @@ class ProductionSiiGateway(SiiGateway):
         return True
 
     def _transport(self):
-        return self.transport_factory()
+        transport = self.transport_factory()
+        if self.document_validator_getter:
+            transport.document_validator_getter = self.document_validator_getter
+        return transport
 
     def send_document(
         self, company, environment, request_bytes, idempotency_key, scenario
@@ -41,30 +47,24 @@ class ProductionSiiGateway(SiiGateway):
         dte = parse_xml(request_bytes)
         if dte.tag != "{http://www.sii.cl/SiiDte}DTE":
             raise ValidationError(_("The production request must be one signed DTE."))
-        doc = dte.find("{http://www.sii.cl/SiiDte}Documento")
-        header = (
-            doc.find("{http://www.sii.cl/SiiDte}Encabezado")
-            if doc is not None
-            else None
-        )
-        id_doc = (
-            header.find("{http://www.sii.cl/SiiDte}IdDoc")
-            if header is not None
-            else None
-        )
-        code = (
-            id_doc.findtext("{http://www.sii.cl/SiiDte}TipoDTE")
-            if id_doc is not None
-            else None
+        try:
+            payload = select_dte_payload(dte)
+        except ValueError as error:
+            raise ValidationError(
+                _("The production request has no single DTE payload.")
+            ) from error
+        code = payload.findtext(
+            "{http://www.sii.cl/SiiDte}Encabezado/{http://www.sii.cl/SiiDte}IdDoc"
+            "/{http://www.sii.cl/SiiDte}TipoDTE"
         )
         if code not in SUPPORTED_PRODUCTION_DTE_CODES:
             raise UserError(
                 _(
                     "Production DTE transport currently supports document types "
-                    "33, 34, 52, 56 and 61."
+                    "33, 34, 52, 56, 61 and 110."
                 )
             )
-        envelope = SiiEnvelopeComposer().compose(
+        envelope = SiiEnvelopeComposer(self.document_validator_getter).compose(
             company,
             [request_bytes],
             {

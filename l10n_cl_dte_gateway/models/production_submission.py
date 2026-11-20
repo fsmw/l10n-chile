@@ -190,7 +190,9 @@ class ElectronicSubmissionProduction(models.Model):
                 return submission.transport_request_artifact_id
             signed = submission.document_id._get_signed_artifact()
             signed.action_verify_integrity()
-            raw = ProductionSiiGateway().prepare_document(
+            raw = ProductionSiiGateway(
+                document_validator_getter=submission._get_document_validator
+            ).prepare_document(
                 submission.company_id,
                 submission.environment,
                 base64.b64decode(signed.content, validate=True),
@@ -337,9 +339,9 @@ class ElectronicSubmissionProduction(models.Model):
         signed.action_verify_integrity()
         original = base64.b64decode(signed.content, validate=True)
         raw = base64.b64decode(artifact.content, validate=True)
-        ProductionSiiTransport().validate_request(
-            submission.company_id, submission.environment, raw
-        )
+        ProductionSiiTransport(
+            document_validator_getter=submission._get_document_validator
+        ).validate_request(submission.company_id, submission.environment, raw)
         payload = validate_document_payload(
             original,
             submission._get_document_validator,
