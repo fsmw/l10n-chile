@@ -237,7 +237,7 @@ class ElectronicSubmission(models.Model):
                 "request_digest": hashlib.sha256(request_bytes).hexdigest(),
             }
         )
-        if self.environment == "production":
+        if self._uses_envelope_upload():
             return self._send_production_request(gateway, attempt, request_bytes)
         try:
             result = gateway.send_document(
@@ -310,6 +310,14 @@ class ElectronicSubmission(models.Model):
                 )
         return True
 
+    def _uses_envelope_upload(self):
+        """Production DTEs go through the verified EnvioDTE upload path.
+
+        Extension point for documents SII receives on another channel.
+        """
+        self.ensure_one()
+        return self.environment == "production"
+
     def _prepare_send_request(self, gateway):
         """Return the exact bytes to transmit; raise before any network access."""
         self.ensure_one()
@@ -321,7 +329,7 @@ class ElectronicSubmission(models.Model):
         signed.action_verify_integrity()
         request_bytes = base64.b64decode(signed.content, validate=True)
         self._validate_document_payload(request_bytes)
-        if self.environment != "production":
+        if not self._uses_envelope_upload():
             return request_bytes
         gateway.validate_configuration(self.company_id, self.environment)
         envelope = self._prepare_production_request()
