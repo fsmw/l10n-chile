@@ -10,10 +10,10 @@ from unittest.mock import patch
 from odoo import fields
 
 from odoo.addons.l10n_cl_dte_caf.tests.common import CafTestCase
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_client import LOGOUT_URL
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_types import HttpResponse
 
 from ..services.sii_caf_client import SiiCafClient
-from ..services.sii_caf_web_client import LOGOUT_URL
-from ..services.sii_caf_web_types import HttpResponse
 
 # Synthetic RUTs with valid check digits; they do not identify anyone.
 COMPANY_RUT = "76864280-K"

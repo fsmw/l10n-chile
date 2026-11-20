@@ -7,7 +7,7 @@ The helpers live in ``l10n_cl_dte_caf_request``; their host-bound validators
 default to the Certification host (maullin).
 """
 
-from odoo.addons.l10n_cl_dte_caf_request.services.sii_caf_web_helpers import (  # noqa: F401
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_helpers import (  # noqa: F401
     ERROR_MARKERS,
     LOGIN_MARKERS,
     MAX_RESPONSE_BYTES,

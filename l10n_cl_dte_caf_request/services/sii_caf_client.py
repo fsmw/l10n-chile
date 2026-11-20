@@ -20,6 +20,18 @@ from lxml import html as lxml_html
 
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_client import (
+    PORTAL_URLS,
+    SiiCafWebClient,
+)
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_types import (
+    CafAllocationRejected,
+    CafDispatchUncertain,
+    CafRequestRejected,
+    CafSessionExpired,
+    CafTransportError,
+    CafTransportUnavailable,
+)
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import (
     normalize_rut,
 )
@@ -28,15 +40,6 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
 )
 
 from .caf_errors import POST_DISPATCH, PRE_DISPATCH, SiiCafError
-from .sii_caf_web_client import PORTAL_URLS, SiiCafWebClient
-from .sii_caf_web_types import (
-    CafAllocationRejected,
-    CafDispatchUncertain,
-    CafRequestRejected,
-    CafSessionExpired,
-    CafTransportError,
-    CafTransportUnavailable,
-)
 
 _logger = logging.getLogger(__name__)
 

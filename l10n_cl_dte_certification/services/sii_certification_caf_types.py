@@ -7,7 +7,7 @@ They are shared with ``l10n_cl_dte_caf_request``, which owns the generic
 SII CAF web assistant client.
 """
 
-from odoo.addons.l10n_cl_dte_caf_request.services.sii_caf_web_types import (  # noqa: F401
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_types import (  # noqa: F401
     CafAllocationRejected,
     CafDispatchUncertain,
     CafRequestRejected,

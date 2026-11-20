@@ -7,7 +7,7 @@ The generic web assistant client lives in ``l10n_cl_dte_caf_request``; this
 module fixes it to the Certification environment (maullin).
 """
 
-from odoo.addons.l10n_cl_dte_caf_request.services.sii_caf_web_client import (  # noqa: F401
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_client import (  # noqa: F401
     ASSISTANT_TIMEOUT,
     AUTH_URL,
     CONNECT_TIMEOUT,

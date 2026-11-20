@@ -1,10 +1,14 @@
 # Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_client import SiiCafWebClient
+from odoo.addons.l10n_cl_dte_gateway.services.sii_caf_web_types import (
+    CafRequestRejected,
+    HttpResponse,
+)
+
 from ..services.caf_errors import POST_DISPATCH, PRE_DISPATCH, SiiCafError
 from ..services.sii_caf_client import SiiCafClient
-from ..services.sii_caf_web_client import SiiCafWebClient
-from ..services.sii_caf_web_types import CafRequestRejected, HttpResponse
 from .common import (
     BLOCKED_PAGE,
     REJECTION_PAGE,

@@ -19,7 +19,6 @@
         "l10n_cl_dte_gateway",
         "l10n_cl_dte_inbox",
         "l10n_cl_dte_report",
-        "l10n_cl_dte_caf_request",
     ],
     "external_dependencies": {"python": ["cryptography", "pycurl"]},
     "data": [

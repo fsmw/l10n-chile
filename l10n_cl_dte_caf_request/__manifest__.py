@@ -14,6 +14,7 @@
         "l10n_cl_dte_core",
         "l10n_cl_dte_caf",
         "l10n_cl_dte_signing",
+        "l10n_cl_dte_gateway",
     ],
     "external_dependencies": {"python": ["cryptography", "pycurl"]},
     "data": [
