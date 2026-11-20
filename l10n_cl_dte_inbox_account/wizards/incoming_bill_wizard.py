@@ -68,7 +68,7 @@ class IncomingDteBillWizard(models.TransientModel):
         check_company=True,
         domain=(
             "[('id', 'in', candidate_move_ids), ('state', '=', 'draft'), "
-            "('move_type', '=', 'in_invoice')]"
+            "('move_type', 'in', ('in_invoice', 'in_refund'))]"
         ),
     )
     line_ids = fields.One2many(

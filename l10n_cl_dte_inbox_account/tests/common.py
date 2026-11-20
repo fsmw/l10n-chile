@@ -9,6 +9,7 @@ from odoo.tests import new_test_user
 
 from odoo.addons.l10n_cl_dte_inbox.services.incoming_validation import xml_bytes
 from odoo.addons.l10n_cl_dte_signing.services.signature_service import SignatureService
+from odoo.addons.l10n_cl_dte_xml.services.ted_composer import DteTedComposer
 from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
@@ -155,8 +156,51 @@ class IncomingAccountCase(DteInvoiceTestCase):
             self.company.with_user(self.dte_manager), "demo", unsigned
         )
 
-    def source(self, code="33", mixed=False, transform=None, reviewed=True):
-        content = self.signed(code=code, mixed=mixed, transform=transform)
+    def signed_note(self, code="61"):
+        """Sign a supplier note citing an invoice; the composer only issues 33/34."""
+        invoice = self.make_invoice(code="33", post=False, taxable=True)
+        invoice.invoice_line_ids.write(
+            {"quantity": 1, "price_unit": 1000, "discount": 0}
+        )
+        invoice.action_post()
+        self.counter += 10
+        snapshot, _caf = self.capture(invoice, code="33", folio=self.counter)
+        note_caf = self.validate_authorization(
+            document_code=code, folio_start=self.counter, folio_end=self.counter + 3
+        )
+        ted = DteTedComposer().compose_ted(
+            {**snapshot, "document_code": code}, note_caf
+        )
+        unsigned = DteXmlComposer().compose_unsigned_document(
+            {
+                **snapshot,
+                "ted_xml": ted,
+                "references": [
+                    {
+                        "line_number": 1,
+                        "document_type": "33",
+                        "folio": "999",
+                        "date": snapshot["issue_date"],
+                        "reason": "Corrige monto",
+                        "reference_code": "3",
+                    }
+                ],
+            }
+        )
+        root = etree.fromstring(unsigned)
+        for node in root.iter():
+            if etree.QName(node).localname == "TipoDTE":
+                node.text = code
+            if etree.QName(node).localname == "Documento":
+                node.set("ID", node.get("ID").replace("T33", "T" + code))
+        return SignatureService().sign_document(
+            self.company.with_user(self.dte_manager), "demo", xml_bytes(root)
+        )
+
+    def source(
+        self, code="33", mixed=False, transform=None, reviewed=True, content=None
+    ):
+        content = content or self.signed(code=code, mixed=mixed, transform=transform)
         incoming = (
             self.env["l10n_cl.incoming.dte"]
             .with_user(self.dte_manager)

@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError, UserError
 
 from ..services.binding_context import trusted
 from ..services.binding_service import IncomingAccountBindingService
-from ..services.common import BINDING
+from ..services.common import BINDING, VENDOR_BILL_TYPES, VENDOR_DOCUMENT_CODES
 
 
 class AccountMoveLine(models.Model):
@@ -93,8 +93,8 @@ class AccountMoveLine(models.Model):
             return
         for move in moves.exists():
             if (
-                move.move_type == "in_invoice"
-                and move.l10n_latam_document_type_id.code in {"33", "34"}
+                move.move_type in VENDOR_BILL_TYPES
+                and move.l10n_latam_document_type_id.code in VENDOR_DOCUMENT_CODES
                 and (
                     move.company_id.dte_inbox_account_enabled
                     or self.env[BINDING]

@@ -5,7 +5,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError
 
 from ..services.binding_context import trusted
-from ..services.common import GROUP, canonical_folio, reject, vat
+from ..services.common import GROUP, VENDOR_MOVE_TYPES, canonical_folio, reject, vat
 
 
 class IncomingDteAccountBinding(models.Model):
@@ -43,7 +43,12 @@ class IncomingDteAccountBinding(models.Model):
     )
     issuer_vat = fields.Char(required=True, readonly=True, index=True)
     document_code = fields.Selection(
-        [("33", "Electronic Invoice"), ("34", "Exempt Electronic Invoice")],
+        [
+            ("33", "Electronic Invoice"),
+            ("34", "Exempt Electronic Invoice"),
+            ("56", "Electronic Debit Note"),
+            ("61", "Electronic Credit Note"),
+        ],
         required=True,
         readonly=True,
     )
@@ -117,7 +122,7 @@ class IncomingDteAccountBinding(models.Model):
             if (
                 incoming.company_id != binding.company_id
                 or move.company_id != binding.company_id
-                or move.move_type != "in_invoice"
+                or move.move_type != VENDOR_MOVE_TYPES.get(binding.document_code)
                 or binding.partner_id != move.commercial_partner_id
                 or binding.issuer_vat != vat(incoming.issuer_vat)
                 or binding.issuer_vat != vat(binding.partner_id.vat)

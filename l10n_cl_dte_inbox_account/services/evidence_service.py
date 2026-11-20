@@ -14,7 +14,15 @@ from odoo.addons.l10n_cl_dte_inbox.services.incoming_validation import (
     IncomingValidationService,
 )
 
-from .common import VERSION, canonical_folio, decimal, diagnostic, reject, vat
+from .common import (
+    VENDOR_DOCUMENT_CODES,
+    VERSION,
+    canonical_folio,
+    decimal,
+    diagnostic,
+    reject,
+    vat,
+)
 from .policy_service import IncomingAccountPolicyService
 
 NS = {"s": SII_NS}
@@ -76,7 +84,10 @@ class IncomingAccountEvidenceService:
             folio=canonical_folio(identity["folio"]),
             due_date=id_doc.findtext("s:FchVenc", default="", namespaces=NS),
         )
-        if identity["document_code"] not in {"33", "34"} or not identity["folio"]:
+        if (
+            identity["document_code"] not in VENDOR_DOCUMENT_CODES
+            or not identity["folio"]
+        ):
             reject(self.env, "unsupported_feature")
         amounts = {}
         for key, tag in (
@@ -87,6 +98,9 @@ class IncomingAccountEvidenceService:
             ("total", "MntTotal"),
         ):
             amounts[key] = self._number(totals, tag, "0" if tag != "MntTotal" else None)
+        if not amounts["total"]:
+            # A note that only corrects text has no amounts to book.
+            reject(self.env, "unsupported_feature")
         lines = [self._line(detail) for detail in node.findall("s:Detalle", NS)]
         if not 1 <= len(lines) <= 2000 or len(
             {line["ordinal"] for line in lines}

@@ -3,7 +3,7 @@
 
 from decimal import Decimal
 
-from .common import canonical_folio, decimal, digest, reject, vat
+from .common import VENDOR_MOVE_TYPES, canonical_folio, decimal, digest, reject, vat
 from .mapping_service import IncomingAccountMappingService
 
 
@@ -82,7 +82,7 @@ class IncomingAccountComparisonService:
         identity = document["identity"]
         if (
             move.company_id != self.env.company
-            or move.move_type != "in_invoice"
+            or move.move_type != VENDOR_MOVE_TYPES.get(identity["document_code"])
             or vat(move.commercial_partner_id.vat) != identity["issuer_vat"]
             or move.l10n_latam_document_type_id.code != identity["document_code"]
             or canonical_folio(move.l10n_latam_document_number) != identity["folio"]
@@ -138,11 +138,14 @@ class IncomingAccountComparisonService:
         payable = move.line_ids.filtered(
             lambda line: line.account_id.account_type == "liability_payable"
         )
+        # A vendor refund books the payable and the tax on the opposite side.
+        sign = -1 if move.move_type == "in_refund" else 1
         self._equal(
-            -decimal(document["totals"]["total"]), sum(payable.mapped("balance"))
+            -sign * decimal(document["totals"]["total"]),
+            sum(payable.mapped("balance")),
         )
         self._equal(
-            document["totals"]["vat"],
+            sign * decimal(document["totals"]["vat"]),
             sum(move.line_ids.filtered("tax_line_id").mapped("balance")),
         )
         return line_map

@@ -15,6 +15,17 @@ MAPPING = "l10n_cl.incoming.dte.account.mapping"
 VERSION = "incoming_account_v1"
 
 
+# Supplier DTE types turned into vendor bills, and the Odoo move each becomes.
+VENDOR_MOVE_TYPES = {
+    "33": "in_invoice",
+    "34": "in_invoice",
+    "56": "in_invoice",
+    "61": "in_refund",
+}
+VENDOR_DOCUMENT_CODES = frozenset(VENDOR_MOVE_TYPES)
+VENDOR_BILL_TYPES = frozenset(VENDOR_MOVE_TYPES.values())
+
+
 def vat(value):
     return re.sub(r"[^0-9K]", "", (value or "").upper())
 
@@ -72,7 +83,7 @@ def diagnostic(
             "The incoming environment differs from the active company environment."
         ),
         "unsupported_feature": env._(
-            "The XML contains economics outside the supported 33/34 scope."
+            "The XML contains economics outside the supported vendor bill scope."
         ),
         "supplier_missing": env._(
             "Create the supplier with its valid Chilean RUT before preparing this bill."
