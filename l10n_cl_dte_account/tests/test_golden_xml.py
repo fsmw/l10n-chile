@@ -54,7 +54,9 @@ class TestGoldenXml(DteInvoiceTestCase):
             )
         return base64.b64decode(document._get_signed_artifact().content)
 
-    def make_posted_invoice(self, code, lines, taxes, payment_form, days):
+    def make_posted_invoice(
+        self, code, lines, taxes, payment_form, days, currency=None
+    ):
         payment_term = (
             self.env["account.payment.term"]
             .sudo()
@@ -76,6 +78,7 @@ class TestGoldenXml(DteInvoiceTestCase):
                 "partner_id": self.receiver.id,
                 "invoice_date": fields.Date.from_string("2026-01-15"),
                 "invoice_payment_term_id": payment_term.id,
+                "currency_id": (currency or self.company.currency_id).id,
                 "invoice_user_id": self.dte_manager.id,
                 "l10n_latam_document_type_id": self.document_types[code].id,
                 "invoice_line_ids": [
@@ -217,3 +220,27 @@ class TestGoldenXml(DteInvoiceTestCase):
         signed = self.issue(invoice, "33", 750)
         assert_golden_xml(self, signed, GOLDEN_DIR / "dte_33_global_discount.xml")
         self.assertEqual(signed.count(b"<Detalle>"), 1)
+
+    def test_invoice_33_in_us_dollars(self):
+        usd = self.env.ref("base.USD").sudo()
+        usd.active = True
+        self.env["res.currency.rate"].sudo().create(
+            {
+                "name": "2026-01-01",
+                "currency_id": usd.id,
+                "company_id": self.company.id,
+                "rate": 1 / 950,
+            }
+        )
+        invoice = self.make_posted_invoice(
+            "33",
+            [("Licencia anual", 2, 100, 0)],
+            self.tax_19,
+            payment_form="2",
+            days=30,
+            currency=usd,
+        )
+        self.assertEqual(invoice.amount_total_signed, 226100)
+        assert_golden_xml(
+            self, self.issue(invoice, "33", 760), GOLDEN_DIR / "dte_33_usd.xml"
+        )

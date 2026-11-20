@@ -52,6 +52,19 @@ class DteXmlComposer:
         _add_text(totals, "MntTotal", totals_data["total"])
 
     @staticmethod
+    def _append_other_currency(header, other):
+        """Serialize OtraMoneda for an invoice issued in another currency."""
+        if not other:
+            return
+        node = etree.SubElement(header, f"{{{SII_NAMESPACE}}}OtraMoneda")
+        _add_text(node, "TpoMoneda", other["currency"])
+        _add_text(node, "TpoCambio", other["rate"])
+        _add_optional_text(node, "MntNetoOtrMnda", other.get("net"))
+        _add_optional_text(node, "MntExeOtrMnda", other.get("exempt"))
+        _add_optional_text(node, "IVAOtrMnda", other.get("vat"))
+        _add_text(node, "MntTotOtrMnda", other["total"])
+
+    @staticmethod
     def _append_global_discounts(document, snapshot):
         """Serialize DscRcgGlobal from invoice lines or a certification case."""
         if snapshot.get("global_discount") and snapshot.get("global_discounts"):
@@ -145,6 +158,7 @@ class DteXmlComposer:
             _add_optional_text(receiver, xml_name, receiver_data.get(field_name))
 
         self._append_totals(header, snapshot["totals"])
+        self._append_other_currency(header, snapshot.get("other_currency"))
 
         for index, line_data in enumerate(snapshot["lines"], start=1):
             detail = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Detalle")

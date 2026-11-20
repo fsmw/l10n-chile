@@ -54,12 +54,16 @@ class InvoiceSnapshotService:
             raise ValidationError(
                 _("Global discounts cannot exceed the lines they discount.")
             )
-        net_total = self._integer_amount(move.amount_untaxed, "invoice untaxed amount")
-        additional_taxes = self._additional_taxes(move)
-        vat_total = self._integer_amount(move.amount_tax, "invoice tax amount") - sum(
-            Decimal(item["amount"]) for item in additional_taxes
+        # Amounts come from the company-currency (CLP) side of the entry, so
+        # an invoice in another currency is issued in pesos.
+        net_total = self._integer_amount(
+            move.amount_untaxed_signed, "invoice untaxed amount"
         )
-        total = self._integer_amount(move.amount_total, "invoice total")
+        additional_taxes = self._additional_taxes(move)
+        vat_total = self._integer_amount(
+            move.amount_tax_signed, "invoice tax amount"
+        ) - sum(Decimal(item["amount"]) for item in additional_taxes)
+        total = self._integer_amount(move.amount_total_signed, "invoice total")
         if taxable_net + exempt_net != net_total:
             raise ValidationError(
                 _("Invoice lines do not reconcile to the posted untaxed amount.")
@@ -98,6 +102,7 @@ class InvoiceSnapshotService:
             },
             "lines": line_snapshots,
             "global_discounts": global_discounts,
+            "other_currency": self._other_currency(move, additional_taxes),
         }
 
     def _validate_invoice(self, move, document_code):
@@ -123,8 +128,16 @@ class InvoiceSnapshotService:
         company = move.company_id
         if company.partner_id.country_id.code != "CL":
             raise ValidationError(_("The issuing company must be registered in Chile."))
-        if move.currency_id.name != "CLP":
-            raise ValidationError(_("This issuance flow supports CLP invoices only."))
+        if move.currency_id != company.currency_id and not (
+            move.currency_id.l10n_cl_short_name
+        ):
+            raise ValidationError(
+                _(
+                    "Set the SII short name of currency %(currency)s before "
+                    "issuing an invoice in that currency."
+                )
+                % {"currency": move.currency_id.name}
+            )
         if not move.invoice_date:
             raise ValidationError(_("The invoice must have an issue date."))
         errors = self._fiscal_master_data_errors(move, document_code)
@@ -243,9 +256,7 @@ class InvoiceSnapshotService:
         exempt_net = Decimal("0")
         for line in invoice_lines:
             taxable, additional_code = self._line_taxes(line.tax_ids)
-            subtotal = self._integer_amount(
-                line.price_subtotal, "invoice line subtotal"
-            )
+            subtotal, unit_price = self._line_clp_amounts(line)
             if taxable:
                 taxable_net += subtotal
             else:
@@ -272,7 +283,7 @@ class InvoiceSnapshotService:
                         uom_xml_ids.get(line.product_uom_id.id),
                         line.product_uom_id.name,
                     ),
-                    "unit_price": self._decimal_text(line.price_unit),
+                    "unit_price": unit_price,
                     "discount_percent": self._decimal_text(line.discount)
                     if line.discount
                     else None,
@@ -296,7 +307,7 @@ class InvoiceSnapshotService:
                 raise ValidationError(
                     _("A global discount cannot carry an additional SII tax.")
                 )
-            value = -self._integer_amount(line.price_subtotal, "global discount")
+            value = -self._line_clp_amounts(line)[0]
             if taxable:
                 taxable_total += value
             else:
@@ -309,6 +320,54 @@ class InvoiceSnapshotService:
                 }
             )
         return discounts, taxable_total, exempt_total
+
+    def _line_clp_amounts(self, line):
+        """Return the line subtotal and unit price in pesos."""
+        subtotal = self._integer_amount(-line.balance, "invoice line subtotal")
+        if line.currency_id == line.company_currency_id:
+            return subtotal, self._decimal_text(line.price_unit)
+        quantity = self._decimal(line.quantity)
+        discount = self._decimal(line.discount)
+        if not quantity or discount >= 100:
+            raise ValidationError(
+                _("A foreign-currency line needs a quantity and a price.")
+            )
+        gross = Decimal(subtotal) / (1 - discount / 100)
+        return subtotal, self._decimal_text(
+            (gross / quantity).quantize(Decimal("0.000001"))
+        )
+
+    def _other_currency(self, move, additional_taxes):
+        """Return the OtraMoneda totals for an invoice in another currency."""
+        if move.currency_id == move.company_id.currency_id:
+            return None
+        currency = move.currency_id
+        lines = move.invoice_line_ids.filtered(
+            lambda line: line.display_type == "product"
+        )
+        taxable = sum(
+            line.price_subtotal for line in lines if self._line_taxes(line.tax_ids)[0]
+        )
+        exempt = sum(lines.mapped("price_subtotal")) - taxable
+        additional = sum(
+            -line.amount_currency
+            for line in move.line_ids
+            if line.tax_line_id.l10n_cl_sii_code in self.ADDITIONAL_TAX_CODES
+        )
+        digits = currency.decimal_places
+
+        def amount(value):
+            return f"{currency.round(value):.{digits}f}" if value else None
+
+        rate = Decimal(str(move.amount_total_signed)) / Decimal(str(move.amount_total))
+        return {
+            "currency": currency.l10n_cl_short_name.strip(),
+            "rate": self._decimal_text(rate.quantize(Decimal("0.0001"))),
+            "net": amount(taxable),
+            "exempt": amount(exempt),
+            "vat": amount(move.amount_tax - additional),
+            "total": amount(move.amount_total),
+        }
 
     def _line_taxes(self, taxes):
         """Return whether the line bears VAT and its SII additional tax code."""
