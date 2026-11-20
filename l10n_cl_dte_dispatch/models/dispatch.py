@@ -142,6 +142,15 @@ class DteDispatch(models.Model):
         adapter = DispatchIssuanceAdapter(self.env["l10n_cl.dte.dispatch.xml.composer"])
         return DteIssuanceService().prepare(self, adapter, DOCUMENT_CODE)
 
+    def action_issue_document(self):
+        """Sign the frozen guide as DTE 52 and queue it for SII.
+
+        A guide prepared earlier is queued without another folio.
+        """
+        self.ensure_one()
+        adapter = DispatchIssuanceAdapter(self.env["l10n_cl.dte.dispatch.xml.composer"])
+        return DteIssuanceService().issue(self, adapter, DOCUMENT_CODE)
+
     def action_freeze_snapshot(self):
         """Store the canonical snapshot and its digest, then freeze the dispatch."""
         snapshot = self.env[SNAPSHOT_MODEL]

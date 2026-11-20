@@ -29,10 +29,16 @@
                         invisible="state != 'draft'"
                     />
                     <button
-                        name="action_prepare_document"
-                        string="Prepare DTE"
+                        name="action_issue_document"
+                        string="Issue DTE"
                         type="object"
                         class="btn-primary"
+                        invisible="state != 'frozen'"
+                    />
+                    <button
+                        name="action_prepare_document"
+                        string="Sign Only"
+                        type="object"
                         invisible="state != 'frozen'"
                     />
                     <button
