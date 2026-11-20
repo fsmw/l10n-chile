@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_move_form_dte_dispatch_reference" model="ir.ui.view">
+        <field name="name">account.move.form.dte.dispatch.reference</field>
+        <field name="model">account.move</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_account.view_move_form_dte_issuance"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='dte_reference_ids']/list/field[@name='document_type_id']"
+                position="before"
+            >
+                <field
+                    name="dispatch_document_id"
+                    optional="show"
+                    options="{'no_create': True}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
