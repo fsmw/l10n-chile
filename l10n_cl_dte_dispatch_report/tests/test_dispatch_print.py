@@ -81,3 +81,16 @@ class TestDispatchPrint(DispatchRecordMixin, DteReportTestCase):
         image.save(buffer, format="PNG", optimize=False)
         # Act / Assert
         self.assertEqual(guide["barcode"], base64.b64encode(buffer.getvalue()).decode())
+
+    def test_dte_user_prints_the_guide_from_the_dispatch(self):
+        document = self._signed_document()
+        dispatch = document.source_dispatch_id
+        action = self.env.ref("l10n_cl_dte_dispatch_report.action_dispatch_guide")
+        html, _content_type = (
+            self.env["ir.actions.report"]
+            .with_user(self.dte_user)
+            ._render_qweb_html(action.id, dispatch.ids)
+        )
+        text = html.decode()
+        self.assertIn(str(document.folio), text)
+        self.assertIn("data:image/png;base64,", text)
