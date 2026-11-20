@@ -137,6 +137,25 @@ class AccountMove(models.Model):
                         % {"code": code}
                     )
 
+    # Export notes 111/112 and the correction they make on the root 110.
+    dte_export_target_id = fields.Many2one(
+        "l10n_cl.electronic.document",
+        string="Root Export DTE",
+        copy=False,
+        index=True,
+        check_company=True,
+        ondelete="restrict",
+        domain=[("document_code", "=", "110"), ("fiscal_state", "=", "accepted")],
+    )
+    dte_export_correction = fields.Selection(
+        [("1", "Cancel export"), ("2", "Correct text"), ("3", "Correct amounts")],
+        string="Export Correction",
+        copy=False,
+    )
+    dte_export_reason = fields.Char(
+        string="Export Correction Reason", size=90, copy=False
+    )
+
     @api.constrains(*CATALOG_FIELDS, *NONNEGATIVE_FIELDS, "dte_export_carrier_vat")
     def _check_export_customs_inputs(self):
         caf = self.env["l10n_cl.caf.authorization"]
@@ -182,6 +201,12 @@ class AccountMove(models.Model):
         if str(document_code) in ExportIssuanceAdapter.SUPPORTED_DOCUMENT_CODES:
             return ExportIssuanceAdapter()
         return super()._get_dte_issuance_adapter(document_code)
+
+    def _get_dte_allowed_move_types(self, document_code):
+        """Export 110 and 111 are invoices; the credit note 112 is a refund."""
+        if str(document_code) in ExportIssuanceAdapter.SUPPORTED_DOCUMENT_CODES:
+            return ("out_refund",) if str(document_code) == "112" else ("out_invoice",)
+        return super()._get_dte_allowed_move_types(document_code)
 
     def _check_dte_source_access(self, document_code):
         result = super()._check_dte_source_access(document_code)

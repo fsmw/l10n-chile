@@ -9,6 +9,8 @@ from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
+from .export_reference_service import TEXT, ExportReferenceService
+
 _lt = LazyTranslate(__name__)
 
 # SII rule for export documents: the receiver has no Chilean RUT.
@@ -43,19 +45,19 @@ WEIGHTS = (
 class ExportSnapshotService:
     """Validate and capture an export invoice for the SII Exportaciones DTE."""
 
-    SUPPORTED_DOCUMENT_CODES = frozenset({"110"})
+    MOVE_TYPES = {"110": "out_invoice", "111": "out_invoice", "112": "out_refund"}
+    SUPPORTED_DOCUMENT_CODES = frozenset(MOVE_TYPES)
 
     def validate_source(self, move, document_code):
-        """Reject an export source that cannot become a valid 110."""
+        """Reject an export source that cannot become a valid export DTE."""
         move.ensure_one()
         env = move.env
-        if str(document_code) not in self.SUPPORTED_DOCUMENT_CODES:
+        code = str(document_code)
+        if code not in self.SUPPORTED_DOCUMENT_CODES:
+            raise ValidationError(env._("The export document type is not supported."))
+        if move.state != "posted" or move.move_type != self.MOVE_TYPES[code]:
             raise ValidationError(
-                env._("Export notes 111 and 112 are not supported yet.")
-            )
-        if move.state != "posted" or move.move_type != "out_invoice":
-            raise ValidationError(
-                env._("Only posted customer invoices can be issued as exports.")
+                env._("Only the posted customer document can be issued as an export.")
             )
         if move.dte_document_type_code != str(document_code):
             raise ValidationError(
@@ -64,11 +66,14 @@ class ExportSnapshotService:
         if move.company_id.country_id.code != "CL":
             raise ValidationError(env._("The issuing company must be Chilean."))
         errors = self._issuer_errors(move.company_id)
-        errors += self._receiver_errors(move)
-        errors += self._customs_errors(move)
+        if code == "110":
+            errors += self._receiver_errors(move)
+            errors += self._customs_errors(move)
         errors += self._currency_errors(move)
         if errors:
             raise ValidationError("\n".join(errors))
+        if code != "110":
+            ExportReferenceService(env).validate(move, code)
         self._lines(move)
         return True
 
@@ -80,6 +85,8 @@ class ExportSnapshotService:
         if caf_authorization.company_id != move.company_id:
             raise ValidationError(move.env._("The CAF belongs to another company."))
         caf_authorization._check_caf_integrity()
+        if str(document_code) != "110":
+            return self._capture_note(move, folio_number, str(document_code))
         stamp = InvoiceSnapshotService()._chile_timestamp()
         lines = self._lines(move)
         totals = self._totals(move, lines)
@@ -102,6 +109,45 @@ class ExportSnapshotService:
             "customs": self._customs(move, lines),
             "lines": lines,
             "references": self._references(move),
+        }
+
+    def _capture_note(self, move, folio_number, document_code):
+        """A note keeps the recipient and customs profile of its root 110."""
+        references = ExportReferenceService(move.env)
+        root = references.root(move)
+        references.lock_root(root)
+        root, root_snapshot = references.validate(move, document_code)
+        stamp = InvoiceSnapshotService()._chile_timestamp()
+        lines = self._lines(move)
+        text_only = move.dte_export_correction == TEXT
+        totals = self._totals(move, lines, allow_zero=text_only)
+        customs = dict(root_snapshot["customs"], total_items=len(lines))
+        return {
+            "schema_version": 1,
+            "company_id": move.company_id.id,
+            "source_model": "account.move",
+            "source_id": move.id,
+            "document_code": document_code,
+            "folio": int(folio_number),
+            "issue_date": fields.Date.to_date(move.invoice_date).isoformat(),
+            "document_timestamp": stamp,
+            "ted_timestamp": stamp,
+            "issuer": self._issuer(move.company_id),
+            "receiver": root_snapshot["receiver"],
+            "identification": dict(root_snapshot["identification"], due_date=None),
+            "currency": self._currency(move),
+            "totals": totals,
+            "other_currency": self._other_currency(move, totals),
+            "customs": customs,
+            "lines": lines,
+            "references": [references.reference(move, root_snapshot)]
+            + self._references(move),
+            "adjustment": {
+                "root_document_id": root.id,
+                "root_snapshot_sha256": root.payload_digest,
+                "correction": move.dte_export_correction,
+                "reason": move.dte_export_reason.strip(),
+            },
         }
 
     # Validation -----------------------------------------------------------
@@ -275,14 +321,14 @@ class ExportSnapshotService:
             "exempt": True,
         }
 
-    def _totals(self, move, lines):
+    def _totals(self, move, lines, allow_zero=False):
         total = sum((Decimal(line["subtotal"]) for line in lines), Decimal(0))
         untaxed = Decimal(self._money(move, move.amount_untaxed))
         if total != untaxed or untaxed != Decimal(self._money(move, move.amount_total)):
             raise ValidationError(
                 move.env._("The export totals do not reconcile with its lines.")
             )
-        if total <= 0:
+        if total < 0 or (total == 0 and not allow_zero):
             raise ValidationError(move.env._("An export total must be positive."))
         return {"exempt": self._decimal_text(total), "total": self._decimal_text(total)}
 
