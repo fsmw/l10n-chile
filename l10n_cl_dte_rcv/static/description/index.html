@@ -371,20 +371,29 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Alpha" src="https://img.shields.io/badge/maturity-Alpha-red.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/l10n-chile/tree/18.0/l10n_cl_dte_rcv"><img alt="OCA/l10n-chile" src="https://img.shields.io/badge/github-OCA%2Fl10n--chile-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/l10n-chile-18-0/l10n-chile-18-0-l10n_cl_dte_rcv"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/l10n-chile&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
 <p>Storage for the SII purchase and sales register (Registro de Compras y
-Ventas, RCV) and import of its detail CSV.</p>
+Ventas, RCV), read-only download of the register from the SII, and
+import of its detail CSV.</p>
 <p>The RCV is kept by period (company, year, month and operation:
-purchases, sales or receipt sales). Each read of a period, from a CSV
-file or from a later SII integration, is stored as a read with its
-coverage by SII state, the summary totals by document type, and the
-fiscal documents it reports. A document is identified by company,
-operation, document type, issuer RUT and folio; every read updates it
-and keeps an observation with the reported amounts, so the history of a
-document across reads is preserved.</p>
+purchases, sales or receipt sales). Each read of a period, from the SII
+or from a CSV file, is stored as a read with its coverage by SII state,
+the summary totals by document type, and the fiscal documents it
+reports. A document is identified by company, operation, document type,
+issuer RUT and folio; every read updates it and keeps an observation
+with the reported amounts, so the history of a document across reads is
+preserved.</p>
 <p>A section whose detail does not prove its summary (missing rows,
 different counts or totals) is kept as partial. The absence of a
 document is never inferred from an incomplete read.</p>
-<p>This release does not query the SII and does not reconcile RCV documents
-with journal entries; those features are planned as separate addons.</p>
+<p>The SII read signs in to the SII website with the company’s production
+signing certificate (mutual TLS) and calls, read-only, the services of
+the RCV pages: the summary of each RCV state (registered, claimed and
+pending for purchases; registered for sales) and the detail of each
+document type. Reads run in the background, and companies can opt in to
+a daily read of the current and previous month. Receipt sales (boletas)
+cannot be read from the SII yet, because there is no validated SII
+service for them.</p>
+<p>This release does not reconcile RCV documents with journal entries; that
+feature is planned as a separate addon.</p>
 <div class="admonition important">
 <p class="first admonition-title">Important</p>
 <p class="last">This is an alpha version, the data model and design can change at any time without warning.
@@ -409,6 +418,30 @@ Only for development or testing purpose, do not use in production.
 <p>DTE users read the register from DTE Issuance &gt; Purchase and Sales
 Register. <em>Periods</em> opens the periods of the current year, creating the
 missing ones; <em>Open Fiscal Year</em> does the same for another year.</p>
+<p>To read a period from the SII, a DTE Manager clicks <em>Read from SII</em> on
+the period, or opens <em>Read from SII</em> and selects the company, operation
+(purchases or sales), year and month. The company needs a valid RUT and
+an active production signing profile (DTE Issuance &gt; Configuration)
+whose certificate has its private key and is authorized at the SII for
+the company. The read is queued and processed in the background by the
+<em>SII RCV: Process Queued Reads</em> scheduled action; only one read per
+period is queued at a time. The result is stored as a new read of the
+period, with its coverage by SII state. A failed read records the failed
+step (sign-in, session token, RCV portal, session configuration, session
+load, session validation, session parameters or RCV start data) and its
+message; a period that already holds a stored read keeps it. Purchase
+details that the SII is still preparing (pending documents) are reported
+as unavailable and leave the read partial.</p>
+<p>For a daily read, a user who can edit companies enables <em>Daily SII RCV
+Read</em> on the company (Chilean DTE tab) and selects the <em>RCV Read User</em>,
+an active DTE Manager of that company, recorded as the requester. The
+<em>SII RCV: Schedule Daily Reads</em> scheduled action then queues, once per
+Chilean day, the purchases and sales of the current and previous month.</p>
+<p>The certificate and its private key are written only to a private
+temporary directory (files readable by the Odoo user only) for the
+duration of the read and removed afterwards; they are never logged.
+Requests use bounded timeouts, and a rate-limited or failing query is
+retried once.</p>
 <p>To import a CSV, a DTE Manager opens <em>Import CSV</em>, selects the company,
 operation (purchases or sales), year and month, and uploads the file.
 The CSV can use commas or semicolons and UTF-8 or Latin-1 encoding.
@@ -426,7 +459,8 @@ or amount, or a document repeated in the file, is not imported: it is
 listed on the resulting read, which is marked as partial (failed when no
 row is valid). The imported file and its SHA-256 are kept on the read.</p>
 <p>Records are restricted to the companies the user works in. DTE users can
-read the register; DTE Managers can also import.</p>
+read the register; DTE Managers can also read it from the SII and import
+it.</p>
 </div>
 <div class="section" id="bug-tracker">
 <h1><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h1>

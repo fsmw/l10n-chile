@@ -71,6 +71,7 @@
                         </group>
                         <group>
                             <field name="requested_by" />
+                            <field name="scheduled_for" invisible="not scheduled_for" />
                             <field name="started_at" />
                             <field name="finished_at" />
                             <field name="detail_count" />

@@ -2,7 +2,9 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
+
+from ..services.sii_rcv_client import RECEIPT_READ_UNSUPPORTED, SII_OPERATIONS
 
 RCV_OPERATIONS = [
     ("purchase", "Purchases"),
@@ -11,6 +13,8 @@ RCV_OPERATIONS = [
 ]
 DOCUMENT_OPERATIONS = [("purchase", "Purchases"), ("sale", "Sales")]
 RCV_SOURCES = [("sii", "SII"), ("csv", "CSV")]
+MANAGER_GROUP = "l10n_cl_dte_core.group_dte_manager"
+ACTIVE_READ_STATES = ("queued", "running")
 MIN_YEAR = 2000
 MAX_YEAR = 9999
 
@@ -125,6 +129,69 @@ class RcvPeriod(models.Model):
         )
         action["domain"] = self._document_domain()
         return action
+
+    def action_sync(self):
+        """Queue an SII read of each period; only DTE managers can start it."""
+        self._check_sii_read_allowed()
+        for period in self:
+            period._queue_sii_read(self.env.user)
+        self.env["l10n_cl.dte.rcv.sync"]._trigger_processing()
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": "info",
+                "message": self.env._(
+                    "The SII read was queued. Its result is shown on the period "
+                    "once it finishes."
+                ),
+                "next": {"type": "ir.actions.act_window_close"},
+            },
+        }
+
+    def _check_sii_read_allowed(self):
+        if not self.env.user.has_group(MANAGER_GROUP):
+            raise AccessError(
+                self.env._("Only a DTE manager can read the RCV from the SII.")
+            )
+        if self.company_id - self.env.companies:
+            raise UserError(
+                self.env._("Select one of the companies you are working in.")
+            )
+        if any(period.operation not in SII_OPERATIONS for period in self):
+            raise UserError(str(RECEIPT_READ_UNSUPPORTED))
+
+    def _active_sii_read(self):
+        self.ensure_one()
+        return self.env["l10n_cl.dte.rcv.sync"].search(
+            [
+                ("period_id", "=", self.id),
+                ("source", "=", "sii"),
+                ("state", "in", ACTIVE_READ_STATES),
+            ],
+            limit=1,
+        )
+
+    def _queue_sii_read(self, user, scheduled_for=False):
+        """Return the queued or running SII read of the period, or queue one."""
+        self.ensure_one()
+        active = self._active_sii_read()
+        if active:
+            return active
+        sync = self.env["l10n_cl.dte.rcv.sync"].create(
+            {
+                "name": self.env._("SII %(period)s", period=self.name),
+                "period_id": self.id,
+                "company_id": self.company_id.id,
+                "operation": self.operation,
+                "requested_by": user.id,
+                "source": "sii",
+                "scheduled_for": scheduled_for,
+            }
+        )
+        if self.state in ("not_synced", "failed"):
+            self.state = "pending"
+        return sync
 
     @api.model
     def _ensure_year(self, year, company):

@@ -1,0 +1,28 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_company_form_dte_rcv" model="ir.ui.view">
+        <field name="name">res.company.form.dte.rcv</field>
+        <field name="model">res.company</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_core.view_company_form_dte_environment"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='dte_sii_settings']" position="inside">
+                <group
+                    string="Purchase and Sales Register"
+                    name="dte_rcv"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                >
+                    <field name="dte_rcv_daily_read" />
+                    <field
+                        name="dte_rcv_read_user_id"
+                        required="dte_rcv_daily_read"
+                        invisible="not dte_rcv_daily_read"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
