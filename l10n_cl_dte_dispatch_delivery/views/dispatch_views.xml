@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_dispatch_form_delivery" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.dispatch.form.delivery</field>
+        <field name="model">l10n_cl.dte.dispatch</field>
+        <field name="inherit_id" ref="l10n_cl_dte_dispatch.view_dispatch_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_send_dte_to_customer"
+                    type="object"
+                    string="Send to Customer"
+                    invisible="state != 'frozen'"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                />
+                <field
+                    name="dte_delivery_state"
+                    widget="badge"
+                    invisible="state != 'frozen'"
+                />
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field
+                    name="dte_delivery_message"
+                    invisible="not dte_delivery_message"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

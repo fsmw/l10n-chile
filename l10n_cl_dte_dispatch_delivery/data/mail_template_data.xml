@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="mail_template_dispatch_delivery" model="mail.template">
+        <field name="name">DTE: Delivery Guide to Customer</field>
+        <field name="model_id" ref="l10n_cl_dte_dispatch.model_l10n_cl_dte_dispatch" />
+        <field name="email_from">{{ object.company_id.email_formatted }}</field>
+        <field
+            name="subject"
+        >{{ object.company_id.name }} - Delivery guide {{ object._dte_delivery_document().folio }}</field>
+        <field name="body_html" type="html">
+            <div>
+                <p>Dear <t t-out="object.partner_id.name or ''" />,</p>
+                <p>
+        Attached is the electronic delivery guide number
+        <t t-out="object._dte_delivery_document().folio or ''" />
+        issued by <t t-out="object.company_id.name or ''" />, in XML and PDF.
+    </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="False" />
+    </record>
+</odoo>
