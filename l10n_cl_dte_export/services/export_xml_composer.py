@@ -191,6 +191,9 @@ class ExportXmlComposer:
         _add_text(totals, "MntExe", snapshot["totals"]["exempt"])
         _add_text(totals, "MntTotal", snapshot["totals"]["total"])
         other = snapshot["other_currency"]
+        # A zero text correction has nothing to convert; the block is optional.
+        if not Decimal(other["total"]):
+            return
         node = etree.SubElement(header, PREFIX + "OtraMoneda")
         _add_text(node, "TpoMoneda", other["sii_name"])
         _add_text(node, "TpoCambio", other["rate"])
@@ -207,7 +210,9 @@ class ExportXmlComposer:
         _add_optional_text(detail, "DscItem", line.get("description"))
         _add_text(detail, "QtyItem", line["quantity"])
         _add_optional_text(detail, "UnmdItem", line.get("uom"))
-        _add_text(detail, "PrcItem", line["unit_price"])
+        # The SII price type starts at 0.000001: a text correction omits it.
+        if Decimal(line["unit_price"]) > 0:
+            _add_text(detail, "PrcItem", line["unit_price"])
         _add_text(detail, "MontoItem", line["subtotal"])
 
     def _append_references(self, document, references):

@@ -218,7 +218,7 @@ class ExportSnapshotService:
         errors = []
         if not self._sii_currency_name(move.currency_id):
             errors.append(env._("Export: the currency has no SII name."))
-        if move.currency_id.name == "CLP":
+        if move.currency_id.name == "CLP" or move.dte_export_correction == TEXT:
             return errors
         rate = self._decimal(move.dte_export_rate or 0)
         if not 0 < rate <= MAX_RATE:

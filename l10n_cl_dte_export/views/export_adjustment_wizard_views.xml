@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_export_adjustment_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.export.adjustment.wizard.form</field>
+        <field name="model">l10n_cl.dte.export.adjustment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="move_id" readonly="1" />
+                    <field name="target_document_id" />
+                    <field name="company_id" invisible="1" />
+                    <field name="document_code" />
+                    <field name="correction" />
+                    <field name="reason" />
+                </group>
+                <footer>
+                    <button
+                        name="action_create_note"
+                        type="object"
+                        string="Create Draft Note"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_export_adjustment_wizard" model="ir.actions.act_window">
+        <field name="name">Export Note</field>
+        <field name="res_model">l10n_cl.dte.export.adjustment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_move_id': active_id}</field>
+    </record>
+</odoo>
