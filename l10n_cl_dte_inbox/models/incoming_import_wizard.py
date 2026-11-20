@@ -7,6 +7,8 @@ import binascii
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
+from .incoming_response import RESPONSE_ACTIONS
+
 
 class IncomingDteImportWizard(models.TransientModel):
     _name = "l10n_cl.incoming.dte.import.wizard"
@@ -52,10 +54,15 @@ class IncomingDteResponseWizard(models.TransientModel):
     incoming_document_id = fields.Many2one(
         "l10n_cl.incoming.dte", required=True, readonly=True
     )
-    response_code = fields.Char(required=True)
+    response_code = fields.Selection(
+        RESPONSE_ACTIONS,
+        required=True,
+        help="Action registered in the SII registry of received DTEs.",
+    )
     response_text = fields.Char(required=True)
     contract_reference = fields.Char(
         required=True,
+        default="SII registroreclamodteservice",
         help=(
             "Identify the current official SII technical contract used for "
             "this response."
