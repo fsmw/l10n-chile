@@ -1,9 +1,37 @@
 # Copyright 2026 FSMW
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 EXPORT_CODES = {"110", "111", "112"}
+CATALOG = "l10n_cl.dte.export.catalog"
+# Customs catalog fields and the catalog category each one must use.
+CATALOG_FIELDS = {
+    "dte_export_payment_id": "payment",
+    "dte_export_sale_mode_id": "sale_mode",
+    "dte_export_sale_clause_id": "sale_clause",
+    "dte_export_transport_id": "transport",
+    "dte_export_loading_port_id": "port",
+    "dte_export_unloading_port_id": "port",
+    "dte_export_tare_unit_id": "unit",
+    "dte_export_gross_unit_id": "unit",
+    "dte_export_net_unit_id": "unit",
+}
+NONNEGATIVE_FIELDS = (
+    "dte_export_clause_total",
+    "dte_export_tare",
+    "dte_export_gross_weight",
+    "dte_export_net_weight",
+    "dte_export_freight",
+    "dte_export_insurance",
+)
+MAX_TARE = 9_999_999
+
+
+def _catalog(string, kind):
+    return fields.Many2one(
+        CATALOG, string=string, ondelete="restrict", domain=[("kind", "=", kind)]
+    )
 
 
 class AccountMove(models.Model):
@@ -34,6 +62,60 @@ class AccountMove(models.Model):
     dte_export_rate_source = fields.Char(
         string="Export Exchange Rate Source", copy=False
     )
+    # Customs data of the Aduana block (SII DTE format, export documents).
+    dte_export_payment_id = _catalog("Export Payment Method", "payment")
+    dte_export_sale_mode_id = _catalog("Sale Mode", "sale_mode")
+    dte_export_sale_clause_id = _catalog("Sale Clause", "sale_clause")
+    dte_export_clause_total = fields.Monetary(
+        string="Sale Clause Total", currency_field="currency_id"
+    )
+    dte_export_transport_id = _catalog("Transport Mode", "transport")
+    dte_export_transport_name = fields.Char(string="Ship or Vehicle", size=40)
+    dte_export_transport_extra = fields.Char(string="Additional Transport ID", size=20)
+    dte_export_carrier_vat = fields.Char(
+        string="Carrier RUT",
+        size=10,
+        help="Chilean RUT without dots, as in the XML: 76086428-5.",
+    )
+    dte_export_carrier_name = fields.Char(string="Carrier Name", size=40)
+    dte_export_booking = fields.Char(string="Booking", size=20)
+    dte_export_operator = fields.Char(string="Operator", size=20)
+    dte_export_loading_port_id = _catalog("Loading Port", "port")
+    dte_export_loading_extra = fields.Char(string="Additional Loading Port ID", size=20)
+    dte_export_unloading_port_id = _catalog("Unloading Port", "port")
+    dte_export_unloading_extra = fields.Char(
+        string="Additional Unloading Port ID", size=20
+    )
+    dte_export_tare = fields.Integer(string="Tare")
+    dte_export_tare_unit_id = _catalog("Tare Unit", "unit")
+    dte_export_gross_weight = fields.Float(string="Gross Weight", digits=(10, 2))
+    dte_export_gross_unit_id = _catalog("Gross Weight Unit", "unit")
+    dte_export_net_weight = fields.Float(string="Net Weight", digits=(10, 2))
+    dte_export_net_unit_id = _catalog("Net Weight Unit", "unit")
+    dte_export_freight = fields.Monetary(string="Freight", currency_field="currency_id")
+    dte_export_insurance = fields.Monetary(
+        string="Insurance", currency_field="currency_id"
+    )
+
+    @api.constrains(*CATALOG_FIELDS, *NONNEGATIVE_FIELDS, "dte_export_carrier_vat")
+    def _check_export_customs_inputs(self):
+        caf = self.env["l10n_cl.caf.authorization"]
+        for move in self:
+            for name, kind in CATALOG_FIELDS.items():
+                if move[name] and move[name].kind != kind:
+                    raise ValidationError(
+                        _("%(field)s needs a %(kind)s customs code.")
+                        % {"field": move._fields[name].string, "kind": kind}
+                    )
+            if any(move[name] < 0 for name in NONNEGATIVE_FIELDS):
+                raise ValidationError(
+                    _("Customs amounts and weights cannot be negative.")
+                )
+            if move.dte_export_tare > MAX_TARE:
+                raise ValidationError(_("The tare has at most seven digits."))
+            carrier = move.dte_export_carrier_vat
+            if carrier and not caf._is_valid_vat(caf._normalize_vat(carrier)):
+                raise ValidationError(_("The carrier RUT is not a valid Chilean RUT."))
 
     def _check_export_access(self, operation):
         self.ensure_one()

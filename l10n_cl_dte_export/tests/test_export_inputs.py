@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 from unittest.mock import patch
 
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user
 
@@ -234,3 +234,40 @@ class TestExportInputs(DteInvoiceTestCase):
         move.sudo()._check_dte_source_access("110")
         with self.assertRaises(UserError):
             move._check_dte_source_access("111")
+
+    def _catalog(self, kind, code):
+        return (
+            self.env["l10n_cl.dte.export.catalog"]
+            .sudo()
+            .create(
+                {
+                    "kind": kind,
+                    "code": code,
+                    "name": f"{kind} {code}",
+                    "source_url": "https://www.aduana.cl/",
+                    "source_date": "2026-01-01",
+                }
+            )
+        )
+
+    def test_customs_inputs_use_their_catalog_and_valid_values(self):
+        move = self.draft().with_user(self.operator)
+        port = self._catalog("port", "906")
+        unit = self._catalog("unit", "06")
+        move.write(
+            {
+                "dte_export_loading_port_id": port.id,
+                "dte_export_gross_weight": 1250.5,
+                "dte_export_gross_unit_id": unit.id,
+                "dte_export_carrier_vat": "76086428-5",
+            }
+        )
+        self.assertEqual(move.dte_export_loading_port_id, port)
+        for values in (
+            {"dte_export_unloading_port_id": unit.id},
+            {"dte_export_net_weight": -1},
+            {"dte_export_tare": 10_000_000},
+            {"dte_export_carrier_vat": "76086428-0"},
+        ):
+            with self.subTest(values=values), self.assertRaises(ValidationError):
+                move.write(values)

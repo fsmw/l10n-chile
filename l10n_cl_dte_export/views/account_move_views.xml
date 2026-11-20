@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_move_form_dte_export" model="ir.ui.view">
+        <field name="name">account.move.form.dte.export</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    name="dte_export"
+                    string="Export"
+                    invisible="dte_document_type_code not in ['110', '111', '112']"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                >
+                    <group>
+                        <group string="Operation">
+                            <field name="dte_export_service" />
+                            <field name="dte_export_payment_id" />
+                            <field name="dte_export_sale_mode_id" />
+                            <field name="dte_export_sale_clause_id" />
+                            <field name="dte_export_clause_total" />
+                            <field name="dte_export_freight" />
+                            <field name="dte_export_insurance" />
+                        </group>
+                        <group string="Recipient">
+                            <field name="dte_export_receiver_id" />
+                            <field name="dte_export_receiver_extra_id" />
+                            <field name="dte_export_nationality_id" />
+                            <field name="dte_export_destination_id" />
+                        </group>
+                        <group string="Exchange Rate">
+                            <field name="dte_export_rate" />
+                            <field name="dte_export_rate_date" />
+                            <field name="dte_export_rate_source" />
+                        </group>
+                        <group string="Transport">
+                            <field name="dte_export_transport_id" />
+                            <field name="dte_export_transport_name" />
+                            <field name="dte_export_transport_extra" />
+                            <field name="dte_export_carrier_vat" />
+                            <field name="dte_export_carrier_name" />
+                            <field name="dte_export_booking" />
+                            <field name="dte_export_operator" />
+                        </group>
+                        <group string="Ports">
+                            <field name="dte_export_loading_port_id" />
+                            <field name="dte_export_loading_extra" />
+                            <field name="dte_export_unloading_port_id" />
+                            <field name="dte_export_unloading_extra" />
+                        </group>
+                        <group string="Weights">
+                            <field name="dte_export_tare" />
+                            <field name="dte_export_tare_unit_id" />
+                            <field name="dte_export_gross_weight" />
+                            <field name="dte_export_gross_unit_id" />
+                            <field name="dte_export_net_weight" />
+                            <field name="dte_export_net_unit_id" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
