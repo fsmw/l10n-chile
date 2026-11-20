@@ -11,8 +11,8 @@ Both are SOAP 1.1 RPC operations authenticated with the SII token cookie.
 import requests
 from lxml import etree
 
-from odoo import _
 from odoo.exceptions import ValidationError
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
 
@@ -20,6 +20,7 @@ from .certification_auth import SiiTransportError
 from .production_response_parser import parse_xml
 from .sii_authentication import CertificationAuthentication, ProductionSiiAuthentication
 
+_lt = LazyTranslate(__name__, default_lang="en_US")
 SOAP = "http://schemas.xmlsoap.org/soap/envelope/"
 SERVICE_NAMESPACE = "http://ws.registroreclamodte.diii.sdi.sii.cl"
 ENDPOINTS = {
@@ -44,18 +45,20 @@ def parse_claim_response(content, operation):
     faults = root.xpath("//*[local-name()='Fault']")
     if faults:
         raise ValidationError(
-            _("The SII claim registry returned a SOAP fault: %(fault)s")
-            % {"fault": _child_text(faults[0], "faultstring") or "?"}
+            _lt(
+                "The SII claim registry returned a SOAP fault: %(fault)s",
+                fault=_child_text(faults[0], "faultstring") or "?",
+            )
         )
     returns = root.xpath(
         "//*[local-name()=$op]/*[local-name()='return']", op=operation + "Response"
     )
     if len(returns) != 1:
-        raise ValidationError(_("The SII claim registry answer is malformed."))
+        raise ValidationError(_lt("The SII claim registry answer is malformed."))
     node = returns[0]
     code = _child_text(node, "codResp")
     if not code.lstrip("-").isdigit():
-        raise ValidationError(_("The SII claim registry returned no response code."))
+        raise ValidationError(_lt("The SII claim registry returned no response code."))
     events = [
         {
             "code": _child_text(event, "codEvento"),
@@ -92,7 +95,7 @@ class SiiClaimRegistryClient:
     def __init__(self, environment, session=None, authentication_factory=None):
         if environment not in ENDPOINTS:
             raise ValidationError(
-                _("The SII claim registry is only available in SII modes.")
+                _lt("The SII claim registry is only available in SII modes.")
             )
         self.environment = environment
         self.session = session or requests.Session()
@@ -104,7 +107,7 @@ class SiiClaimRegistryClient:
     def register_action(self, company, issuer_vat, document_code, folio, action):
         """Register ACD, RCD, ERM, RFP or RFT for a supplier DTE."""
         if action not in ACTIONS:
-            raise ValidationError(_("Unknown acceptance or claim action."))
+            raise ValidationError(_lt("Unknown acceptance or claim action."))
         return self._call(
             company,
             "ingresarAceptacionReclamoDoc",
@@ -155,12 +158,12 @@ class SiiClaimRegistryClient:
         except requests.RequestException:
             # The registry is idempotent per action; a lost answer is re-asked.
             raise SiiTransportError(
-                _("The connection with the SII claim registry failed."),
+                _lt("The connection with the SII claim registry failed."),
                 dispatched=True,
             ) from None
         if len(content) > MAX_RESPONSE_BYTES:
             raise SiiTransportError(
-                _("The SII claim registry answer exceeds the allowed size."),
+                _lt("The SII claim registry answer exceeds the allowed size."),
                 dispatched=True,
             )
         return parse_claim_response(content, operation)
