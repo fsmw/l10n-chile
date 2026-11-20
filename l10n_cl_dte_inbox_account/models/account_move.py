@@ -9,6 +9,8 @@ from ..services.binding_service import IncomingAccountBindingService
 from ..services.common import (
     BINDING,
     GROUP,
+    VENDOR_BILL_TYPES,
+    VENDOR_DOCUMENT_CODES,
     canonical_folio,
     reject,
     source_snapshot,
@@ -45,7 +47,7 @@ class AccountMove(models.Model):
                 if (
                     company.dte_inbox_account_enabled
                     and vals.get("move_type", self.env.context.get("default_move_type"))
-                    == "in_invoice"
+                    in VENDOR_BILL_TYPES
                     and partner
                 ):
                     IncomingAccountBindingService(self.env)._lock_suppliers(partner)
@@ -118,7 +120,7 @@ class AccountMove(models.Model):
                 bound
                 or (
                     move.company_id.dte_inbox_account_enabled
-                    and move.move_type == "in_invoice"
+                    and move.move_type in VENDOR_BILL_TYPES
                 )
             ):
                 partners = move.partner_id | self.env["res.partner"].browse(
@@ -153,7 +155,7 @@ class AccountMove(models.Model):
         for move in self:
             bound = self.env[BINDING].sudo().search_count([("move_id", "=", move.id)])
             if bound or (
-                move.move_type == "in_invoice"
+                move.move_type in VENDOR_BILL_TYPES
                 and move.company_id.dte_inbox_account_enabled
             ):
                 IncomingAccountBindingService(self.env)._lock_suppliers(move.partner_id)
@@ -165,8 +167,8 @@ class AccountMove(models.Model):
     def _check_incoming_account_identity(self):
         for move in self:
             if (
-                move.move_type != "in_invoice"
-                or move.l10n_latam_document_type_id.code not in {"33", "34"}
+                move.move_type not in VENDOR_BILL_TYPES
+                or move.l10n_latam_document_type_id.code not in VENDOR_DOCUMENT_CODES
             ):
                 continue
             bound = self.env[BINDING].sudo().search([("move_id", "=", move.id)])

@@ -41,6 +41,16 @@ class TestIncomingAccountBills(IncomingAccountCase):
         self.assertEqual(len(move.dte_inbox_binding_ids), 1)
         self.assertEqual(sum(move.line_ids.mapped("balance")), 0)
 
+    def test_supplier_notes_become_vendor_refunds_and_debits(self):
+        for code, move_type in (("61", "in_refund"), ("56", "in_invoice")):
+            with self.subTest(code=code):
+                source = self.source(content=self.signed_note(code))
+                move = self.bill(self.wizard(source))
+                self.assertEqual(move.move_type, move_type)
+                self.assertEqual(move.l10n_latam_document_type_id.code, code)
+                self.assertEqual(move.amount_total, 1190)
+                self.assertEqual(move.state, "draft")
+
     def test_create_draft_34(self):
         source = self.source("34")
         move = self.bill(self.wizard(source))

@@ -3,7 +3,7 @@
 
 from odoo.exceptions import AccessError
 
-from .common import GROUP, reject, vat
+from .common import GROUP, VENDOR_DOCUMENT_CODES, VENDOR_MOVE_TYPES, reject, vat
 
 
 class IncomingAccountPolicyService:
@@ -43,7 +43,7 @@ class IncomingAccountPolicyService:
         if document["identity"]["receiver_vat"] != vat(company.vat):
             reject(self.env, "identity_mismatch")
         if (
-            document["identity"]["document_code"] not in {"33", "34"}
+            document["identity"]["document_code"] not in VENDOR_DOCUMENT_CODES
             or document["currency"] != "CLP"
         ):
             reject(self.env, "unsupported_feature")
@@ -92,7 +92,7 @@ class IncomingAccountPolicyService:
         journal.check_access("read")
         move = self.env["account.move"].new(
             dict(
-                move_type="in_invoice",
+                move_type=VENDOR_MOVE_TYPES[document_code],
                 company_id=journal.company_id.id,
                 journal_id=journal.id,
                 partner_id=partner.id,

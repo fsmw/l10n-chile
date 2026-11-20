@@ -8,6 +8,7 @@ from odoo.tools import SQL
 from .binding_context import internal_context
 from .common import (
     BINDING,
+    VENDOR_MOVE_TYPES,
     IncomingAccountError,
     canonical_folio,
     reject,
@@ -303,7 +304,7 @@ class IncomingAccountBindingService:
             .search(
                 [
                     ("company_id", "=", company.id),
-                    ("move_type", "=", "in_invoice"),
+                    ("move_type", "=", VENDOR_MOVE_TYPES[identity["document_code"]]),
                     (
                         "l10n_latam_document_type_id.code",
                         "=",
@@ -348,7 +349,7 @@ class IncomingAccountBindingService:
                 )
             )
         values = dict(
-            move_type="in_invoice",
+            move_type=VENDOR_MOVE_TYPES[identity["document_code"]],
             company_id=journal.company_id.id,
             partner_id=partner.id,
             journal_id=journal.id,
