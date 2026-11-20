@@ -82,6 +82,31 @@ class TestIncomingAccountBills(IncomingAccountCase):
         self.assertEqual(move.amount_untaxed, 900)
         self.assertEqual(move.amount_total, 1071)
 
+    def test_additional_tax_is_resolved_by_sii_code(self):
+        ila_sale = self.tax_19.copy(
+            dict(name="Synthetic ILA sale", amount=10, l10n_cl_sii_code=27)
+        )
+        # The Chilean chart already provides the 10% ILA purchase tax (code 27).
+        ila_purchase = (
+            self.env["account.tax"]
+            .sudo()
+            .search(
+                [
+                    ("company_id", "=", self.recipient.id),
+                    ("type_tax_use", "=", "purchase"),
+                    ("l10n_cl_sii_code", "=", 27),
+                    ("amount", "=", 10),
+                ]
+            )
+        )
+        self.assertEqual(len(ila_purchase), 1)
+        move = self.bill(self.wizard(self.source(additional_tax=ila_sale)))
+        self.assertEqual(
+            move.invoice_line_ids.tax_ids, self.purchase_vat | ila_purchase
+        )
+        self.assertEqual(move.amount_tax, 290)
+        self.assertEqual(move.amount_total, 1290)
+
     def test_create_draft_34(self):
         source = self.source("34")
         move = self.bill(self.wizard(source))

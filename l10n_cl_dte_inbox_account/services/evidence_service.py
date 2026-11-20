@@ -15,6 +15,7 @@ from odoo.addons.l10n_cl_dte_inbox.services.incoming_validation import (
 )
 
 from .common import (
+    ADDITIONAL_TAX_CODES,
     VENDOR_DOCUMENT_CODES,
     VERSION,
     canonical_folio,
@@ -125,6 +126,9 @@ class IncomingAccountEvidenceService:
             and decimal(amounts["vat_rate"]) != 19
         ):
             reject(self.env, "unsupported_feature")
+        additional = self._additional_taxes(totals)
+        if additional:
+            amounts["additional_taxes"] = additional
         result = dict(
             version=VERSION,
             identity=identity,
@@ -155,6 +159,30 @@ class IncomingAccountEvidenceService:
             return format(number, "f")
         except ValueError:
             reject(self.env, "unsupported_feature", source_value=tag)
+
+    def _additional_code(self, node):
+        codes = node.findall("s:CodImpAdic", NS)
+        if len(codes) > 1 or (
+            codes and codes[0].text.strip() not in ADDITIONAL_TAX_CODES
+        ):
+            reject(self.env, "unsupported_feature")
+        return codes[0].text.strip() if codes else None
+
+    def _additional_taxes(self, totals):
+        """ImptoReten charged on top of VAT; withholdings stay unsupported."""
+        result = []
+        for node in totals.findall("s:ImptoReten", NS):
+            code = node.findtext("s:TipoImp", default="", namespaces=NS).strip()
+            if code not in ADDITIONAL_TAX_CODES:
+                reject(self.env, "unsupported_feature")
+            result.append(
+                dict(
+                    code=code,
+                    rate=self._number(node, "TasaImp"),
+                    amount=self._number(node, "MontoImp"),
+                )
+            )
+        return result
 
     def _global_discount(self, node):
         """Read a peso global discount as one negative line to map and book."""
@@ -198,7 +226,7 @@ class IncomingAccountEvidenceService:
             and node.find("s:DescuentoPct", NS) is None
         ):
             reject(self.env, "unsupported_feature")
-        return dict(
+        line = dict(
             ordinal=int(ordinal),
             name=node.findtext("s:NmbItem", default="", namespaces=NS),
             description=node.findtext("s:DscItem", default="", namespaces=NS),
@@ -219,9 +247,22 @@ class IncomingAccountEvidenceService:
             exempt=exempt == "1",
             amount=self._number(node, "MontoItem"),
         )
+        # Only documents with additional taxes get the key, so evidence that
+        # was already bound keeps its digest.
+        code = self._additional_code(node)
+        if code:
+            line["additional_tax_code"] = code
+        return line
 
     def _check_supported_features(self, document):
-        allowed_totals = {"MntNeto", "MntExe", "TasaIVA", "IVA", "MntTotal"}
+        allowed_totals = {
+            "MntNeto",
+            "MntExe",
+            "TasaIVA",
+            "IVA",
+            "ImptoReten",
+            "MntTotal",
+        }
         allowed_detail = {
             "NroLinDet",
             "CdgItem",
@@ -240,6 +281,7 @@ class IncomingAccountEvidenceService:
             "DescuentoMonto",
             # Informative foreign-currency amounts; the line stays in pesos.
             "OtrMnda",
+            "CodImpAdic",
             "MontoItem",
         }
         totals = document.find("s:Encabezado/s:Totales", NS)

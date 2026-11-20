@@ -3,7 +3,16 @@
 
 from decimal import Decimal
 
-from .common import VENDOR_MOVE_TYPES, canonical_folio, decimal, digest, reject, vat
+from .common import (
+    VENDOR_MOVE_TYPES,
+    canonical_folio,
+    decimal,
+    digest,
+    expected_tax_total,
+    line_taxes,
+    reject,
+    vat,
+)
 from .mapping_service import IncomingAccountMappingService
 
 
@@ -41,7 +50,7 @@ class IncomingAccountComparisonService:
                 price_unit=float(line["unit_price"]),
                 quantity=float(line["quantity"]),
                 discount=float(line["discount_percent"]),
-                tax_ids=self.env["account.tax"].browse(mapped["tax_id"]),
+                tax_ids=line_taxes(self.env, company, document, line, mapped["tax_id"]),
             )
             bases.append(base)
             if line["discount_amount"] is not None:
@@ -72,8 +81,9 @@ class IncomingAccountComparisonService:
             vat=str(summary["tax_amount_currency"]),
             total=str(summary["total_amount_currency"]),
         )
-        for key, value in actual.items():
-            self._equal(document["totals"][key], value)
+        for key in ("net", "exempt", "total"):
+            self._equal(document["totals"][key], actual[key])
+        self._equal(expected_tax_total(document), actual["vat"])
         return actual
 
     def compare_move(self, document, move, line_map=None):
@@ -116,11 +126,13 @@ class IncomingAccountComparisonService:
                 ("amount", line.price_subtotal),
             ):
                 self._equal(source[key], value, source["ordinal"])
-            if len(line.tax_ids) != 1:
+            additional = line_taxes(self.env, move.company_id, document, source, [])
+            vat_taxes = line.tax_ids - additional
+            if len(vat_taxes) != 1 or line.tax_ids != vat_taxes | additional:
                 reject(self.env, "tax_invalid", ordinal=source["ordinal"])
             values = dict(
                 account_id=line.account_id.id,
-                tax_id=line.tax_ids.id,
+                tax_id=vat_taxes.id,
                 product_id=line.product_id.id,
                 uom_id=line.product_uom_id.id,
             )
@@ -130,7 +142,7 @@ class IncomingAccountComparisonService:
             mapped.append(dict(source=source, **values))
         self.preview(document, mapped, move.journal_id)
         self._equal(document["totals"]["total"], move.amount_total)
-        self._equal(document["totals"]["vat"], move.amount_tax)
+        self._equal(expected_tax_total(document), move.amount_tax)
         self._equal(
             decimal(document["totals"]["net"]) + decimal(document["totals"]["exempt"]),
             move.amount_untaxed,
@@ -145,7 +157,7 @@ class IncomingAccountComparisonService:
             sum(payable.mapped("balance")),
         )
         self._equal(
-            sign * decimal(document["totals"]["vat"]),
+            sign * expected_tax_total(document),
             sum(move.line_ids.filtered("tax_line_id").mapped("balance")),
         )
         return line_map
