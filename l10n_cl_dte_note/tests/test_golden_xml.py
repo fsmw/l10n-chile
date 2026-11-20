@@ -64,6 +64,9 @@ class TestNoteGoldenXml(DteNoteTestCase):
         note.invoice_line_ids.write({"dte_note_origin_line_number": 1})
         note.invoice_user_id = self.dte_manager
         note.action_post()
+        # Without a due date FchVenc falls back to the issue day; fix it so
+        # the golden file does not depend on the day the test runs.
+        note.sudo().invoice_date_due = note.invoice_date
         assert_golden_xml(
             self, self.issue(note, "56", 790), GOLDEN_DIR / "dte_56_amount_33.xml"
         )
