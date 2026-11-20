@@ -7,6 +7,15 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(action_export_adjustment_wizard)d"
+                    type="action"
+                    string="Export Note"
+                    invisible="state != 'posted' or dte_document_type_code != '110'"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
+            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page
                     name="dte_export"

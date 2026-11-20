@@ -6,3 +6,4 @@ access_export_package_account,Export package accounting,model_l10n_cl_dte_export
 access_export_package_readonly,Export package reader,model_l10n_cl_dte_export_package,account.group_account_readonly,1,0,0,0
 access_export_reference_account,Export reference accounting,model_l10n_cl_dte_export_reference,account.group_account_invoice,1,1,1,1
 access_export_reference_readonly,Export reference reader,model_l10n_cl_dte_export_reference,account.group_account_readonly,1,0,0,0
+access_export_adjustment_wizard,Export note wizard,model_l10n_cl_dte_export_adjustment_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1

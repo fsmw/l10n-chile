@@ -104,3 +104,77 @@ class ExportTestCase(DteInvoiceTestCase):
         )
         invoice.action_post()
         return invoice
+
+
+# Lifecycle steps after signing, with the evidence each one records.
+REMAINING_STEPS = (
+    ("queued", "sii_request"),
+    ("submitted", "sii_response"),
+    ("accepted", "status_response"),
+)
+
+
+class ExportNoteCase(ExportTestCase):
+    """An accepted export 110 with CAF for its notes 111 and 112."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        for code in ("111", "112"):
+            cls.document_types[code] = cls.env["l10n_latam.document.type"].search(
+                [("country_id", "=", cls.chile.id), ("code", "=", code)], limit=1
+            )
+
+    def setUp(self):
+        super().setUp()
+        self.create_signing_profile()
+        for code in ("110", "111", "112"):
+            self.validate_authorization(
+                document_code=code, folio_start=300, folio_end=320
+            )
+        self.root = self._accept(self._issue(self._export()))
+
+    def _issue(self, move):
+        return move.with_user(self.dte_manager).issue_dte()
+
+    def _accept(self, document):
+        document = document.with_user(self.dte_manager)
+        for state, role in REMAINING_STEPS:
+            if (state == "queued" and document.preparation_state == "queued") or (
+                state == "submitted" and document.fiscal_state != "unknown"
+            ):
+                continue
+            artifact = self.create_artifact(document, role, f"test {state}".encode())
+            document.action_record_transition(
+                state, f"test_{state}", artifact_id=artifact.id
+            )
+        self.assertEqual(document.fiscal_state, "accepted")
+        return document
+
+    def _note(self, code, amount, correction="3", **values):
+        move_type = "out_refund" if code == "112" else "out_invoice"
+        note = self.init_invoice(
+            move_type,
+            partner=self.buyer,
+            invoice_date="2026-01-20",
+            products=[self.product_a],
+            taxes=[],
+            currency=self.usd,
+        )
+        note.invoice_line_ids.write(
+            {"quantity": 1, "price_unit": amount, "tax_ids": [(5, 0, 0)]}
+        )
+        note.write(
+            {
+                "l10n_latam_document_type_id": self.document_types[code].id,
+                "dte_export_target_id": self.root.id,
+                "dte_export_correction": correction,
+                "dte_export_reason": "Price adjustment",
+                "dte_export_rate": 951.10,
+                "dte_export_rate_date": "2026-01-20",
+                "dte_export_rate_source": "BCCh observed dollar 2026-01-20",
+                **values,
+            }
+        )
+        note.action_post()
+        return note
