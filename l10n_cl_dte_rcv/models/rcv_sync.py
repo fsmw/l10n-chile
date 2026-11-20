@@ -8,6 +8,8 @@ import psycopg2
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
+from ..services.rcv_matcher import RcvMatcher
+from ..services.rcv_move_check import RcvMoveCheck
 from ..services.rcv_normalizer import RcvNormalizer
 from ..services.sii_rcv_client import SII_OPERATIONS, SiiRcvClient
 from .rcv_period import RCV_OPERATIONS, RCV_SOURCES
@@ -93,12 +95,28 @@ class RcvSync(models.Model):
     ]
 
     def _on_rcv_documents_stored(self):
-        """Run after the normalizer stored the documents of this read.
+        """Reconcile the documents of this read once they are stored.
 
-        Extension point for later integrations, such as reconciling the stored
-        documents with journal entries. The base implementation does nothing.
+        It runs within the read, with the rights of whoever stores it: the
+        superuser for the scheduled SII read, the DTE manager for a CSV import.
+        Without access to journal entries nothing is reconciled and the
+        documents stay pending. The final state of the read is written later,
+        so only the coverage of its sections is used.
         """
         self.ensure_one()
+        matcher = RcvMatcher(self.env)
+        if not matcher.can_read_moves():
+            _logger.info(
+                "RCV read %s: documents not reconciled, the user cannot read "
+                "journal entries.",
+                self.id,
+            )
+            return False
+        documents = self.env["l10n_cl.dte.rcv.document"].search(
+            [("last_sync_id", "=", self.id)]
+        )
+        matcher.reconcile(documents)
+        RcvMoveCheck(self.env).check(self)
         return True
 
     # SII read

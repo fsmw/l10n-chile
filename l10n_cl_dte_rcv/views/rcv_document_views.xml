@@ -24,6 +24,27 @@
                 />
                 <separator />
                 <filter
+                    name="missing_in_accounting"
+                    string="Missing in Accounting"
+                    domain="[('reconciliation_state', '=', 'missing')]"
+                />
+                <filter
+                    name="with_differences"
+                    string="Differences"
+                    domain="[('reconciliation_state', 'in', ('period_diff', 'amount_diff', 'duplicate', 'review'))]"
+                />
+                <filter
+                    name="indeterminate"
+                    string="Indeterminate"
+                    domain="[('reconciliation_state', '=', 'indeterminate')]"
+                />
+                <filter
+                    name="matched"
+                    string="Matched"
+                    domain="[('reconciliation_state', '=', 'matched')]"
+                />
+                <separator />
+                <filter
                     name="archived"
                     string="Archived"
                     domain="[('active', '=', False)]"
@@ -45,6 +66,11 @@
                         context="{'group_by': 'document_type_code'}"
                     />
                     <filter
+                        name="group_reconciliation"
+                        string="Reconciliation"
+                        context="{'group_by': 'reconciliation_state'}"
+                    />
+                    <filter
                         name="group_sii_state"
                         string="SII State"
                         context="{'group_by': 'sii_state'}"
@@ -57,7 +83,13 @@
         <field name="name">l10n_cl.dte.rcv.document.list</field>
         <field name="model">l10n_cl.dte.rcv.document</field>
         <field name="arch" type="xml">
-            <list string="RCV Documents" create="false">
+            <list
+                string="RCV Documents"
+                create="false"
+                decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review')"
+                decoration-info="reconciliation_state in ('pending', 'indeterminate')"
+            >
                 <field name="tax_period" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="operation" />
@@ -71,9 +103,26 @@
                 <field name="net_amount" sum="Net" />
                 <field name="exempt_amount" sum="Exempt" />
                 <field name="vat_amount" sum="VAT" />
+                <field name="fiscal_vat_amount" sum="Fiscal VAT" optional="hide" />
                 <field name="total_amount" sum="Total" />
                 <field name="sii_state" />
                 <field name="source" optional="hide" />
+                <field
+                    name="reconciliation_state"
+                    widget="badge"
+                    decoration-success="reconciliation_state == 'matched'"
+                    decoration-danger="reconciliation_state in ('missing', 'duplicate')"
+                    decoration-warning="reconciliation_state in ('period_diff', 'amount_diff', 'review')"
+                    decoration-info="reconciliation_state in ('pending', 'indeterminate')"
+                />
+                <field name="reconciliation_reason_code" optional="hide" />
+                <field name="tax_comparison_state" optional="hide" />
+                <field name="tax_allocation_state" optional="hide" />
+                <field
+                    name="move_id"
+                    optional="hide"
+                    groups="account.group_account_invoice,account.group_account_readonly"
+                />
                 <field name="currency_id" column_invisible="1" />
             </list>
         </field>
@@ -83,7 +132,46 @@
         <field name="model">l10n_cl.dte.rcv.document</field>
         <field name="arch" type="xml">
             <form string="RCV Document" create="false" edit="false">
+                <header>
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Reconcile"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_link_move"
+                        type="object"
+                        string="Link Entry"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                    <button
+                        name="action_unlink_move"
+                        type="object"
+                        string="Unlink Entry"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="not has_move"
+                    />
+                    <field name="has_move" invisible="1" />
+                    <field
+                        name="reconciliation_state"
+                        widget="statusbar"
+                        statusbar_visible="pending,matched"
+                    />
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_open_move"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-file-text-o"
+                            string="Journal Entry"
+                            invisible="not has_move"
+                            groups="account.group_account_invoice,account.group_account_readonly"
+                        />
+                    </div>
                     <widget
                         name="web_ribbon"
                         title="Archived"
@@ -112,6 +200,33 @@
                             <field name="last_sync_id" />
                         </group>
                     </group>
+                    <group string="Reconciliation" name="reconciliation">
+                        <group>
+                            <field
+                                name="move_id"
+                                groups="account.group_account_invoice,account.group_account_readonly"
+                            />
+                            <field name="reconciliation_reason_code" />
+                            <field
+                                name="manual_link_state"
+                                invisible="not manual_link_state"
+                            />
+                        </group>
+                        <group>
+                            <field name="tax_comparison_state" />
+                            <field name="tax_allocation_state" />
+                        </group>
+                        <field
+                            name="reconciliation_message"
+                            colspan="2"
+                            invisible="not reconciliation_message"
+                        />
+                        <field
+                            name="tax_allocation_note"
+                            colspan="2"
+                            invisible="not tax_allocation_note"
+                        />
+                    </group>
                     <group string="Issuer and Counterpart">
                         <group>
                             <field name="issuer_vat" />
@@ -129,10 +244,63 @@
                         <field name="vat_amount" />
                         <field name="vat_not_recoverable" />
                         <field name="common_vat" />
+                        <field name="fiscal_vat_amount" />
                         <field name="tax_breakdown_available" />
                         <field name="total_amount" />
                     </group>
                     <notebook>
+                        <page
+                            string="Candidate Entries"
+                            name="candidates"
+                            groups="account.group_account_invoice,account.group_account_readonly"
+                        >
+                            <field name="candidate_move_ids" readonly="1">
+                                <list>
+                                    <field name="name" />
+                                    <field name="partner_id" />
+                                    <field name="invoice_date" />
+                                    <field name="date" />
+                                    <field name="amount_total_signed" />
+                                    <field name="state" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Reconciliation Log" name="match_log">
+                            <field name="match_log_ids" readonly="1">
+                                <list>
+                                    <field name="create_date" />
+                                    <field name="event_type" />
+                                    <field name="user_id" />
+                                    <field name="reconciliation_state" />
+                                    <field name="reconciliation_reason_code" />
+                                    <field name="reason" />
+                                    <field name="rule_version" optional="hide" />
+                                </list>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="create_date" />
+                                            <field name="event_type" />
+                                            <field name="user_id" />
+                                        </group>
+                                        <group>
+                                            <field
+                                                name="previous_move_id"
+                                                groups="account.group_account_invoice,account.group_account_readonly"
+                                            />
+                                            <field
+                                                name="move_id"
+                                                groups="account.group_account_invoice,account.group_account_readonly"
+                                            />
+                                            <field name="reconciliation_state" />
+                                            <field name="reconciliation_reason_code" />
+                                        </group>
+                                    </group>
+                                    <field name="reason" />
+                                    <field name="decision_data" />
+                                </form>
+                            </field>
+                        </page>
                         <page string="History" name="history">
                             <field name="observation_ids" readonly="1">
                                 <list>
@@ -160,5 +328,17 @@
         <field name="res_model">l10n_cl.dte.rcv.document</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_rcv_document_search" />
+    </record>
+    <record id="action_rcv_document_reconcile" model="ir.actions.server">
+        <field name="name">Reconcile</field>
+        <field name="model_id" ref="model_l10n_cl_dte_rcv_document" />
+        <field name="binding_model_id" ref="model_l10n_cl_dte_rcv_document" />
+        <field name="binding_view_types">list</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]"
+        />
+        <field name="state">code</field>
+        <field name="code">action = records.action_reconcile()</field>
     </record>
 </odoo>

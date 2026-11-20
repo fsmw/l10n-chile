@@ -77,8 +77,12 @@ class RcvNormalizer:
     def __init__(self, env):
         self.env = env
 
-    def apply(self, sync, sections):
-        """Store ``sections`` on ``sync`` and return ``success`` or ``partial``."""
+    def apply(self, sync, sections, notify=True):
+        """Store ``sections`` on ``sync`` and return ``success`` or ``partial``.
+
+        Unless ``notify`` is False, ``sync._on_rcv_documents_stored()`` runs
+        once everything is stored.
+        """
         if not sync.response_hash:
             sync.response_hash = payload_hash(sections)
         observed, incomplete = 0, False
@@ -87,15 +91,18 @@ class RcvNormalizer:
             observed += count
             incomplete = incomplete or section_incomplete
         sync.write({"summary_count": len(sync.summary_ids), "detail_count": observed})
-        sync._on_rcv_documents_stored()
+        if notify:
+            sync._on_rcv_documents_stored()
         return "partial" if incomplete else "success"
 
     def apply_csv(self, sync, result):
         """Store a parsed CSV (``RcvCsvResult``) on ``sync``; return its state."""
-        state = self.apply(sync, [self._csv_section(result.rows)])
+        state = self.apply(sync, [self._csv_section(result.rows)], notify=False)
         if result.errors:
             state = "partial" if result.rows else "failed"
             self._record_csv_errors(sync, result.errors, state)
+        # Invalid rows make the section partial before anything is concluded.
+        sync._on_rcv_documents_stored()
         now = fields.Datetime.now()
         sync.write({"state": state, "finished_at": now})
         sync.period_id.write(

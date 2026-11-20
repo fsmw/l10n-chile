@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="action_report_rcv_period" model="ir.actions.report">
+        <field name="name">RCV Book</field>
+        <field name="model">l10n_cl.dte.rcv.period</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_cl_dte_rcv.report_rcv_period</field>
+        <field name="report_file">l10n_cl_dte_rcv.report_rcv_period</field>
+        <field
+            name="print_report_name"
+        >'RCV-%s-%s' % (object.tax_period, object.operation)</field>
+        <field name="binding_model_id" ref="model_l10n_cl_dte_rcv_period" />
+        <field name="binding_type">report</field>
+    </record>
+    <template id="report_rcv_period">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="o.company_id" />
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>RCV Book: <span t-field="o.name" /></h2>
+                        <p>
+                            Company: <span t-field="o.company_id.name" />.
+                            Source: <span t-field="o.current_sync_id.source" />.
+                            Last read: <span t-field="o.last_sync_at" />.
+                            State: <span t-field="o.state" />.
+                        </p>
+                        <div
+                            t-if="o.state != 'success'"
+                            class="alert alert-warning"
+                            role="alert"
+                        >
+                            The read is incomplete or pending: the document totals
+                            are not necessarily the fiscal totals of the period.
+                        </div>
+                        <h3>Summary by Document Type</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>SII State</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Documents</th>
+                                    <th class="text-end">Net</th>
+                                    <th class="text-end">Exempt</th>
+                                    <th class="text-end">VAT</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="o.current_sync_id.summary_ids"
+                                    t-as="line"
+                                >
+                                    <td>
+                                        <span t-field="line.sii_state" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_type_code" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.document_count" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.net_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.exempt_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.vat_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.total_amount" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Documents</h3>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Folio</th>
+                                    <th>Date</th>
+                                    <th>Issuer RUT</th>
+                                    <th>Counterpart RUT</th>
+                                    <th class="text-end">Net</th>
+                                    <th class="text-end">Exempt</th>
+                                    <th class="text-end">VAT</th>
+                                    <th class="text-end">Total</th>
+                                    <th>Reconciliation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    t-foreach="o.current_sync_id.document_ids"
+                                    t-as="line"
+                                >
+                                    <td>
+                                        <span t-field="line.document_type_code" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.folio" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.document_date" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.issuer_vat" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.counterpart_vat" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.net_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.exempt_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.vat_amount" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="line.total_amount" />
+                                    </td>
+                                    <td>
+                                        <span t-field="line.reconciliation_state" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

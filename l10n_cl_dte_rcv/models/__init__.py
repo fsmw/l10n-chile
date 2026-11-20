@@ -8,4 +8,6 @@ from . import rcv_summary
 from . import rcv_document
 from . import rcv_observation
 from . import rcv_boleta_daily
+from . import rcv_match_log
 from . import res_company
+from . import account_move

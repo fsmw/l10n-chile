@@ -100,4 +100,52 @@
         <field name="view_id" ref="view_rcv_year_wizard_form" />
         <field name="target">new</field>
     </record>
+    <record id="view_rcv_link_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.link.wizard.form</field>
+        <field name="model">l10n_cl.dte.rcv.link.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Link RCV Document">
+                <div class="alert alert-info" role="alert" invisible="mode != 'link'">
+                    Only journal entries with the document type, folio and RUT of
+                    the RCV document can be linked. The link is compared at once
+                    and kept by later automatic reconciliations.
+                </div>
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="mode != 'unlink'"
+                >
+                    The automatic reconciliation will not link this document again
+                    until it is linked manually.
+                </div>
+                <group>
+                    <field name="document_id" />
+                    <field name="mode" invisible="1" />
+                    <field name="company_id" invisible="1" />
+                    <field name="candidate_move_ids" invisible="1" />
+                    <field name="current_move_id" />
+                    <field
+                        name="move_id"
+                        invisible="mode != 'link'"
+                        required="mode == 'link'"
+                        domain="[('id', 'in', candidate_move_ids)]"
+                        options="{'no_create': True}"
+                    />
+                    <field
+                        name="reason"
+                        placeholder="Explain the review behind this decision."
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Confirm"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>
