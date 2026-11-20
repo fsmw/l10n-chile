@@ -1,0 +1,98 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_rcv_draft_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.draft.wizard.form</field>
+        <field name="model">l10n_cl.dte.rcv.draft.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Prepare Vendor Bill Draft">
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    invisible="not incoming_dte_id"
+                >
+                    The inbox holds the received DTE of this purchase: the draft is prepared from its signed XML in the next step.
+                </div>
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="incoming_dte_id"
+                >
+                    No received DTE: review the lines, accounts and taxes proposed from the RCV amounts.
+                </div>
+                <group>
+                    <group>
+                        <field name="document_id" />
+                        <field name="tax_period" />
+                        <field name="issuer_vat" />
+                        <field name="issuer_name" />
+                        <field name="incoming_dte_id" invisible="not incoming_dte_id" />
+                    </group>
+                    <group>
+                        <field name="company_id" invisible="1" />
+                        <field name="currency_id" invisible="1" />
+                        <field name="net_amount" />
+                        <field name="exempt_amount" />
+                        <field name="vat_amount" />
+                        <field name="total_amount" />
+                    </group>
+                </group>
+                <group string="Supplier and Journal">
+                    <group>
+                        <field name="partner_candidate_ids" invisible="1" />
+                        <field
+                            name="partner_id"
+                            invisible="not partner_candidate_ids"
+                            options="{'no_create': True}"
+                        />
+                        <field
+                            name="create_partner"
+                            invisible="partner_candidate_ids"
+                        />
+                        <field
+                            name="new_partner_name"
+                            invisible="partner_candidate_ids or not create_partner"
+                            required="create_partner"
+                        />
+                    </group>
+                    <group>
+                        <field name="journal_id" options="{'no_create': True}" />
+                    </group>
+                </group>
+                <field name="line_ids" invisible="incoming_dte_id">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle" />
+                        <field name="name" />
+                        <field name="component" />
+                        <field name="account_id" options="{'no_create': True}" />
+                        <field
+                            name="tax_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True}"
+                        />
+                        <field name="price_unit" />
+                        <field name="company_id" column_invisible="1" />
+                        <field name="currency_id" column_invisible="1" />
+                    </list>
+                </field>
+                <footer>
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Create Draft"
+                        class="btn-primary"
+                        invisible="incoming_dte_id"
+                    />
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Prepare from the Received DTE"
+                        class="btn-primary"
+                        invisible="not incoming_dte_id"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

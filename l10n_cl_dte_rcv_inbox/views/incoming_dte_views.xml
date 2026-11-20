@@ -1,0 +1,30 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_form_rcv" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form.rcv</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_document_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="RCV"
+                    name="rcv_documents"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                >
+                    <field name="rcv_document_ids" readonly="1">
+                        <list create="0" edit="0" delete="0">
+                            <field name="tax_period" />
+                            <field name="document_type_code" />
+                            <field name="folio" />
+                            <field name="sii_state" />
+                            <field name="reconciliation_state" />
+                            <field name="total_amount" />
+                            <field name="currency_id" column_invisible="1" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
