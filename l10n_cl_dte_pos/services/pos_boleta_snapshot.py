@@ -7,6 +7,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_boleta.services.boleta_snapshot import (
+    BOLETA_ENVIRONMENTS,
     BoletaSnapshotService,
 )
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import (
@@ -45,12 +46,8 @@ class PosBoletaSnapshotService:
             raise ValidationError(
                 order.env._("Electronic boletas must be issued in CLP.")
             )
-        if order.company_id.dte_sii_environment != "demo":
-            raise ValidationError(
-                order.env._(
-                    "POS boleta issuance is currently available only in Demo mode."
-                )
-            )
+        if order.company_id.dte_sii_environment not in BOLETA_ENVIRONMENTS:
+            raise ValidationError(order.env._("Select the company's SII mode first."))
         if order.amount_total <= 0:
             raise ValidationError(
                 order.env._("Refunds and zero-value orders are not supported.")

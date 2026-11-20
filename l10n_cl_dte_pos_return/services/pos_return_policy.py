@@ -6,6 +6,10 @@ from decimal import Decimal, InvalidOperation
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import SQL
 
+from odoo.addons.l10n_cl_dte_note.services.note_reference_service import (
+    NoteReferenceService,
+)
+
 from .pos_fiscal_evidence import available_amounts, read_snapshot
 from .pos_line_mapping import PosLineMappingService
 
@@ -57,10 +61,11 @@ class PosReturnPolicyService:
             )
         if (
             session.currency_id.name != "CLP"
-            or session.company_id.sudo().dte_sii_environment != "demo"
+            or session.company_id.sudo().dte_sii_environment
+            not in NoteReferenceService.ORDINARY_ENVIRONMENTS
         ):
             raise ValidationError(
-                env._("POS returns currently require CLP and Demo evidence.")
+                env._("POS returns require CLP and the Demo or Production mode.")
             )
         if session.config_id.cash_rounding:
             raise ValidationError(env._("POS returns do not support cash rounding."))
@@ -84,7 +89,8 @@ class PosReturnPolicyService:
             or documents.document_code not in {"39", "41"}
             or documents.preparation_state != "queued"
             or documents.fiscal_state != "accepted"
-            or documents.sii_environment != "demo"
+            or documents.sii_environment
+            != original.company_id.sudo().dte_sii_environment
         ):
             raise ValidationError(
                 self.env._(

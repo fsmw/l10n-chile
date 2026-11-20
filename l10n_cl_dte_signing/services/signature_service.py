@@ -395,7 +395,10 @@ class SignatureService:
 
     def sign_envelope(self, company, environment, unsigned_xml):
         """Sign the SetDTE inside an assembled SII EnvioDTE or EnvioBOLETA."""
-        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+        # Like sign_document: internal workflows sign through a sudo environment.
+        if not company.env.su and not company.env.user.has_group(
+            "l10n_cl_dte_core.group_dte_manager"
+        ):
             raise AccessError(_("Only a DTE manager can use the signing certificate."))
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
             [

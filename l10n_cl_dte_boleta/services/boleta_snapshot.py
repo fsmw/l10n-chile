@@ -8,6 +8,9 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
+# Boletas reach SII through its REST service in certification and production.
+BOLETA_ENVIRONMENTS = frozenset({"demo", "certification", "production"})
+
 
 class BoletaSnapshotService:
     """Validate and snapshot posted invoices for Chilean boleta DTEs."""
@@ -49,10 +52,8 @@ class BoletaSnapshotService:
             raise ValidationError(
                 move.env._("Set the invoice date before issuing a boleta.")
             )
-        if move.company_id.dte_sii_environment != "demo":
-            raise ValidationError(
-                move.env._("Boleta issuance is currently available only in Demo mode.")
-            )
+        if move.company_id.dte_sii_environment not in BOLETA_ENVIRONMENTS:
+            raise ValidationError(move.env._("Select the company's SII mode first."))
 
         issuer = move.company_id.partner_id
         missing = []

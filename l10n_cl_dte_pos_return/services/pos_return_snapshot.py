@@ -157,7 +157,7 @@ class PosReturnSnapshotService:
             "document_timestamp": timestamp,
             "ted_timestamp": timestamp,
             "company_id": order.company_id.id,
-            "sii_environment": "demo",
+            "sii_environment": order.company_id.dte_sii_environment,
             "issuer": source["issuer"],
             "receiver": source["receiver"],
             "totals": totals,
