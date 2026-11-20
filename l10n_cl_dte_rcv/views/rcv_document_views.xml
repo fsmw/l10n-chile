@@ -1,0 +1,164 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_rcv_document_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.search</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="arch" type="xml">
+            <search string="RCV Documents">
+                <field name="folio" />
+                <field name="issuer_vat" />
+                <field name="issuer_name" />
+                <field name="counterpart_vat" />
+                <field name="tax_period" />
+                <field name="document_type_code" />
+                <filter
+                    name="purchases"
+                    string="Purchases"
+                    domain="[('operation', '=', 'purchase')]"
+                />
+                <filter
+                    name="sales"
+                    string="Sales"
+                    domain="[('operation', '=', 'sale')]"
+                />
+                <separator />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_period"
+                        string="Tax Period"
+                        context="{'group_by': 'tax_period'}"
+                    />
+                    <filter
+                        name="group_operation"
+                        string="Operation"
+                        context="{'group_by': 'operation'}"
+                    />
+                    <filter
+                        name="group_document_type"
+                        string="Document Type"
+                        context="{'group_by': 'document_type_code'}"
+                    />
+                    <filter
+                        name="group_sii_state"
+                        string="SII State"
+                        context="{'group_by': 'sii_state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_rcv_document_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.list</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="arch" type="xml">
+            <list string="RCV Documents" create="false">
+                <field name="tax_period" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="operation" />
+                <field name="document_type_code" />
+                <field name="folio" />
+                <field name="document_date" />
+                <field name="issuer_vat" />
+                <field name="issuer_name" />
+                <field name="counterpart_vat" optional="hide" />
+                <field name="counterpart_name" optional="hide" />
+                <field name="net_amount" sum="Net" />
+                <field name="exempt_amount" sum="Exempt" />
+                <field name="vat_amount" sum="VAT" />
+                <field name="total_amount" sum="Total" />
+                <field name="sii_state" />
+                <field name="source" optional="hide" />
+                <field name="currency_id" column_invisible="1" />
+            </list>
+        </field>
+    </record>
+    <record id="view_rcv_document_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.form</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="arch" type="xml">
+            <form string="RCV Document" create="false" edit="false">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="operation" />
+                            <field name="tax_period" />
+                            <field name="source" />
+                            <field name="active" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="document_type_code" />
+                            <field name="document_type_name" />
+                            <field name="folio" />
+                            <field name="document_date" />
+                            <field name="accounting_date" />
+                            <field name="sii_state" />
+                            <field name="last_sync_id" />
+                        </group>
+                    </group>
+                    <group string="Issuer and Counterpart">
+                        <group>
+                            <field name="issuer_vat" />
+                            <field name="issuer_name" />
+                        </group>
+                        <group>
+                            <field name="counterpart_vat" />
+                            <field name="counterpart_name" />
+                        </group>
+                    </group>
+                    <group string="Amounts">
+                        <field name="currency_id" invisible="1" />
+                        <field name="net_amount" />
+                        <field name="exempt_amount" />
+                        <field name="vat_amount" />
+                        <field name="vat_not_recoverable" />
+                        <field name="common_vat" />
+                        <field name="tax_breakdown_available" />
+                        <field name="total_amount" />
+                    </group>
+                    <notebook>
+                        <page string="History" name="history">
+                            <field name="observation_ids" readonly="1">
+                                <list>
+                                    <field name="observed_at" />
+                                    <field name="tax_period" />
+                                    <field name="sii_state" />
+                                    <field name="net_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="vat_not_recoverable" />
+                                    <field name="common_vat" />
+                                    <field name="tax_breakdown_available" />
+                                    <field name="total_amount" />
+                                    <field name="source" />
+                                    <field name="currency_id" column_invisible="1" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_rcv_document" model="ir.actions.act_window">
+        <field name="name">RCV Documents</field>
+        <field name="res_model">l10n_cl.dte.rcv.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rcv_document_search" />
+    </record>
+</odoo>

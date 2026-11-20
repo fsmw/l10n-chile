@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rcv_period_user,rcv.period user,model_l10n_cl_dte_rcv_period,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_period_manager,rcv.period manager,model_l10n_cl_dte_rcv_period,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_sync_user,rcv.sync user,model_l10n_cl_dte_rcv_sync,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_sync_manager,rcv.sync manager,model_l10n_cl_dte_rcv_sync,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_section_user,rcv.section user,model_l10n_cl_dte_rcv_section,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_section_manager,rcv.section manager,model_l10n_cl_dte_rcv_section,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_summary_user,rcv.summary user,model_l10n_cl_dte_rcv_summary,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_summary_manager,rcv.summary manager,model_l10n_cl_dte_rcv_summary,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_document_user,rcv.document user,model_l10n_cl_dte_rcv_document,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_document_manager,rcv.document manager,model_l10n_cl_dte_rcv_document,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_observation_user,rcv.observation user,model_l10n_cl_dte_rcv_observation,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_observation_manager,rcv.observation manager,model_l10n_cl_dte_rcv_observation,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_boleta_daily_user,rcv.boleta.daily user,model_l10n_cl_dte_rcv_boleta_daily,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_rcv_boleta_daily_manager,rcv.boleta.daily manager,model_l10n_cl_dte_rcv_boleta_daily,l10n_cl_dte_core.group_dte_manager,1,1,1,0
+access_rcv_csv_import_wizard_manager,rcv.csv.import.wizard manager,model_l10n_cl_dte_rcv_csv_import_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_rcv_year_wizard_user,rcv.year.wizard user,model_l10n_cl_dte_rcv_year_wizard,l10n_cl_dte_core.group_dte_user,1,1,1,1

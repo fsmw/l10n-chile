@@ -1,0 +1,163 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_rcv_sync_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.sync.search</field>
+        <field name="model">l10n_cl.dte.rcv.sync</field>
+        <field name="arch" type="xml">
+            <search string="RCV Reads">
+                <field name="name" />
+                <field name="period_id" />
+                <field name="state" />
+                <field name="source" />
+                <filter
+                    name="not_complete"
+                    string="Not Complete"
+                    domain="[('state', '!=', 'success')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        name="group_source"
+                        string="Source"
+                        context="{'group_by': 'source'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_rcv_sync_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.sync.list</field>
+        <field name="model">l10n_cl.dte.rcv.sync</field>
+        <field name="arch" type="xml">
+            <list string="RCV Reads" create="false">
+                <field name="name" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="period_id" />
+                <field name="operation" />
+                <field name="source" />
+                <field name="state" widget="badge" />
+                <field name="requested_by" optional="hide" />
+                <field name="started_at" optional="hide" />
+                <field name="finished_at" />
+                <field name="detail_count" />
+                <field name="error_code" optional="hide" />
+            </list>
+        </field>
+    </record>
+    <record id="view_rcv_sync_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.sync.form</field>
+        <field name="model">l10n_cl.dte.rcv.sync</field>
+        <field name="arch" type="xml">
+            <form string="RCV Read" create="false" edit="false">
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="period_id" />
+                            <field name="operation" />
+                            <field name="source" />
+                        </group>
+                        <group>
+                            <field name="requested_by" />
+                            <field name="started_at" />
+                            <field name="finished_at" />
+                            <field name="detail_count" />
+                            <field name="summary_count" />
+                        </group>
+                    </group>
+                    <group string="Errors" invisible="not error_code">
+                        <field name="error_code" />
+                        <field name="error_message" />
+                    </group>
+                    <group string="Evidence">
+                        <field name="response_hash" />
+                        <field name="source_file_id" />
+                    </group>
+                    <field name="currency_id" invisible="1" />
+                    <notebook>
+                        <page string="Coverage by Section" name="sections">
+                            <field name="section_ids" readonly="1">
+                                <list
+                                    decoration-danger="state == 'failed'"
+                                    decoration-warning="state == 'partial'"
+                                >
+                                    <field name="sii_state" />
+                                    <field name="state" widget="badge" />
+                                    <field name="document_type_codes" />
+                                    <field name="expected_document_count" />
+                                    <field name="observed_document_count" />
+                                    <field name="error_message" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Summary" name="summary">
+                            <field name="summary_ids" readonly="1">
+                                <list>
+                                    <field name="sii_state" />
+                                    <field name="document_type_code" />
+                                    <field name="document_type_name" />
+                                    <field name="document_count" />
+                                    <field name="net_amount" />
+                                    <field name="exempt_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="vat_not_recoverable" optional="hide" />
+                                    <field name="common_vat" optional="hide" />
+                                    <field name="total_amount" />
+                                    <field name="currency_id" column_invisible="1" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observations" name="observations">
+                            <field name="observation_ids" readonly="1">
+                                <list>
+                                    <field name="document_id" />
+                                    <field name="sii_state" />
+                                    <field name="net_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="total_amount" />
+                                    <field name="currency_id" column_invisible="1" />
+                                </list>
+                            </field>
+                        </page>
+                        <page
+                            string="Daily Receipts"
+                            name="boleta_daily"
+                            invisible="operation != 'boleta'"
+                        >
+                            <field name="boleta_daily_ids" readonly="1">
+                                <list>
+                                    <field name="day" />
+                                    <field name="document_type_code" />
+                                    <field name="document_count" />
+                                    <field name="net_amount" />
+                                    <field name="exempt_amount" />
+                                    <field name="vat_amount" />
+                                    <field name="total_amount" />
+                                    <field name="currency_id" column_invisible="1" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_rcv_sync" model="ir.actions.act_window">
+        <field name="name">RCV Reads</field>
+        <field name="res_model">l10n_cl.dte.rcv.sync</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_rcv_sync_search" />
+    </record>
+</odoo>

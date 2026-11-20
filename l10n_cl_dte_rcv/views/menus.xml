@@ -1,0 +1,51 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_rcv_root"
+        name="Purchase and Sales Register"
+        parent="l10n_cl_dte_core.menu_dte_root"
+        sequence="15"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
+        id="menu_rcv_periods"
+        name="Periods"
+        parent="menu_rcv_root"
+        action="action_rcv_period_year"
+        sequence="10"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
+        id="menu_rcv_documents"
+        name="Documents"
+        parent="menu_rcv_root"
+        action="action_rcv_document"
+        sequence="20"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
+        id="menu_rcv_reads"
+        name="Reads"
+        parent="menu_rcv_root"
+        action="action_rcv_sync"
+        sequence="30"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+    <menuitem
+        id="menu_rcv_csv_import"
+        name="Import CSV"
+        parent="menu_rcv_root"
+        action="action_rcv_csv_import_wizard"
+        sequence="40"
+        groups="l10n_cl_dte_core.group_dte_manager"
+    />
+    <menuitem
+        id="menu_rcv_year"
+        name="Open Fiscal Year"
+        parent="menu_rcv_root"
+        action="action_rcv_year_wizard"
+        sequence="50"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+</odoo>
