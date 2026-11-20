@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rcv_draft_wizard_manager,rcv.draft.wizard manager,model_l10n_cl_dte_rcv_draft_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_rcv_draft_wizard_line_manager,rcv.draft.wizard.line manager,model_l10n_cl_dte_rcv_draft_wizard_line,l10n_cl_dte_core.group_dte_manager,1,1,1,1

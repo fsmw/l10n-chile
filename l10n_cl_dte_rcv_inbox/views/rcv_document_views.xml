@@ -1,0 +1,98 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_rcv_document_form_inbox" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.form.inbox</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="inherit_id" ref="l10n_cl_dte_rcv.view_rcv_document_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_unlink_move']" position="after">
+                <button
+                    name="action_create_rcv_draft"
+                    type="object"
+                    string="Prepare Draft Bill"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                    invisible="operation != 'purchase' or reconciliation_state != 'missing'"
+                />
+                <button
+                    name="action_link_rcv_incoming_dte"
+                    type="object"
+                    string="Find Received DTE"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                    invisible="operation != 'purchase'"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_open_rcv_incoming_dte"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-envelope-o"
+                    string="Received DTE"
+                    invisible="not incoming_dte_id"
+                />
+            </xpath>
+            <xpath expr="//field[@name='manual_link_state']" position="after">
+                <field name="incoming_dte_id" invisible="operation != 'purchase'" />
+            </xpath>
+            <xpath expr="//field[@name='reconciliation_message']" position="before">
+                <field
+                    name="dte_rcv_draft_error"
+                    colspan="2"
+                    invisible="not dte_rcv_draft_error"
+                />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_rcv_document_list_inbox" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.list.inbox</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="inherit_id" ref="l10n_cl_dte_rcv.view_rcv_document_list" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reconciliation_reason_code']" position="after">
+                <field name="incoming_dte_id" optional="hide" />
+                <field name="dte_rcv_draft_error" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_rcv_document_search_inbox" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.rcv.document.search.inbox</field>
+        <field name="model">l10n_cl.dte.rcv.document</field>
+        <field name="inherit_id" ref="l10n_cl_dte_rcv.view_rcv_document_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='matched']" position="after">
+                <separator />
+                <filter
+                    name="with_received_dte"
+                    string="With Received DTE"
+                    domain="[('incoming_dte_id', '!=', False)]"
+                />
+                <filter
+                    name="without_received_dte"
+                    string="Without Received DTE"
+                    domain="[('operation', '=', 'purchase'), ('incoming_dte_id', '=', False)]"
+                />
+                <filter
+                    name="draft_error"
+                    string="Draft Not Prepared"
+                    domain="[('dte_rcv_draft_error', '!=', False)]"
+                />
+            </xpath>
+        </field>
+    </record>
+    <record id="action_rcv_document_link_incoming" model="ir.actions.server">
+        <field name="name">Find Received DTEs</field>
+        <field name="model_id" ref="l10n_cl_dte_rcv.model_l10n_cl_dte_rcv_document" />
+        <field
+            name="binding_model_id"
+            ref="l10n_cl_dte_rcv.model_l10n_cl_dte_rcv_document"
+        />
+        <field name="binding_view_types">list</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]"
+        />
+        <field name="state">code</field>
+        <field name="code">action = records.action_link_rcv_incoming_dte()</field>
+    </record>
+</odoo>
