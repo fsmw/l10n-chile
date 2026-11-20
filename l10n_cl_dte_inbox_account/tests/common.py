@@ -119,11 +119,29 @@ class IncomingAccountCase(DteInvoiceTestCase):
         self.unit = self.env.ref("uom.product_uom_unit")
         self.counter = 120000
 
-    def signed(self, code="33", mixed=False, transform=None):
+    def signed(self, code="33", mixed=False, transform=None, global_discount=0):
         invoice = self.make_invoice(code=code, post=False, taxable=code == "33")
         invoice.invoice_line_ids.write(
             {"quantity": 1, "price_unit": 1000, "discount": 0}
         )
+        if global_discount:
+            # A negative line is issued as a DscRcgGlobal by the generator.
+            line = invoice.invoice_line_ids[:1]
+            invoice.write(
+                {
+                    "invoice_line_ids": [
+                        Command.create(
+                            dict(
+                                name="Descuento comercial",
+                                quantity=1,
+                                price_unit=-global_discount,
+                                account_id=line.account_id.id,
+                                tax_ids=[Command.set(line.tax_ids.ids)],
+                            )
+                        )
+                    ]
+                }
+            )
         if mixed:
             invoice.write(
                 {
@@ -198,9 +216,20 @@ class IncomingAccountCase(DteInvoiceTestCase):
         )
 
     def source(
-        self, code="33", mixed=False, transform=None, reviewed=True, content=None
+        self,
+        code="33",
+        mixed=False,
+        transform=None,
+        reviewed=True,
+        content=None,
+        global_discount=0,
     ):
-        content = content or self.signed(code=code, mixed=mixed, transform=transform)
+        content = content or self.signed(
+            code=code,
+            mixed=mixed,
+            transform=transform,
+            global_discount=global_discount,
+        )
         incoming = (
             self.env["l10n_cl.incoming.dte"]
             .with_user(self.dte_manager)
