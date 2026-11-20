@@ -152,6 +152,7 @@ class ExportXmlComposer:
         _add_text(node, "Folio", snapshot["folio"])
         _add_text(node, "FchEmis", snapshot["issue_date"])
         _add_optional_text(node, "IndServicio", identification.get("service_indicator"))
+        _add_optional_text(node, "FmaPago", identification.get("payment_form"))
         _add_optional_text(node, "FmaPagExp", identification.get("export_payment_code"))
         _add_optional_text(node, "FchVenc", identification.get("due_date"))
 
@@ -165,6 +166,7 @@ class ExportXmlComposer:
         _add_optional_text(node, "DirOrigen", (issuer.get("address") or "")[:70])
         _add_optional_text(node, "CmnaOrigen", (issuer.get("commune") or "")[:20])
         _add_optional_text(node, "CiudadOrigen", (issuer.get("city") or "")[:20])
+        _add_optional_text(node, "CdgVendedor", issuer.get("seller"))
 
     def _append_receiver(self, header, receiver):
         node = etree.SubElement(header, PREFIX + "Receptor")
@@ -174,7 +176,11 @@ class ExportXmlComposer:
         foreign = etree.SubElement(node, PREFIX + "Extranjero")
         _add_text(foreign, "Nacionalidad", receiver["nationality_code"])
         _add_optional_text(foreign, "IdAdicRecep", receiver.get("extra_id"))
+        _add_optional_text(node, "GiroRecep", receiver.get("activity"))
+        _add_optional_text(node, "Contacto", receiver.get("contact"))
+        _add_optional_text(node, "CorreoRecep", receiver.get("email"))
         _add_optional_text(node, "DirRecep", (receiver.get("address") or "")[:70])
+        _add_optional_text(node, "CmnaRecep", (receiver.get("commune") or "")[:20])
         _add_optional_text(node, "CiudadRecep", (receiver.get("city") or "")[:20])
 
     def _append_customs(self, header, customs):

@@ -7,6 +7,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.l10n_cl_dte_xml.services.dte_wire_format import format_email
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
 from .export_reference_service import TEXT, ExportReferenceService
@@ -100,7 +101,10 @@ class ExportSnapshotService:
             "issue_date": fields.Date.to_date(move.invoice_date).isoformat(),
             "document_timestamp": stamp,
             "ted_timestamp": stamp,
-            "issuer": self._issuer(move.company_id),
+            "issuer": dict(
+                self._issuer(move.company_id),
+                seller=(move.invoice_user_id.name or "")[:60] or None,
+            ),
             "receiver": self._receiver(move),
             "identification": self._identification(move),
             "currency": self._currency(move),
@@ -244,12 +248,22 @@ class ExportSnapshotService:
         street = " ".join(
             part.strip() for part in (partner.street, partner.street2) if part
         )
+        contact = move.partner_id
+        region = partner.state_id.name or partner.country_id.name or ""
         return {
             "vat": FOREIGN_RECEIVER_RUT,
             "name": partner.name.strip(),
             "commercial_partner_id": partner.id,
+            "activity": (
+                getattr(partner, "l10n_cl_activity_description", "") or ""
+            ).strip()[:40]
+            or None,
+            "contact": (contact.phone or partner.phone or contact.email or "")[:80]
+            or None,
+            "email": format_email(contact.email or partner.email) or None,
             "address": street or None,
-            "city": (partner.city or "").strip() or None,
+            "commune": (partner.city or "").strip() or None,
+            "city": region.strip() or None,
             "country_code": partner.country_id.l10n_cl_customs_code,
             "foreign_id": move.dte_export_receiver_id.strip(),
             "nationality_code": move.dte_export_nationality_id.l10n_cl_customs_code,
@@ -261,6 +275,7 @@ class ExportSnapshotService:
         due = move.invoice_date_due
         return {
             "service_indicator": None if service == "goods" else service,
+            "payment_form": move.invoice_payment_term_id.l10n_cl_sii_code or None,
             "export_payment_code": move.dte_export_payment_id.code or None,
             "due_date": due.isoformat() if due and due != move.invoice_date else None,
         }

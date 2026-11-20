@@ -53,6 +53,9 @@ class TestExportXml(ExportTestCase):
         header = "sii:Exportaciones/sii:Encabezado/"
         self.assertEqual(text(header + "sii:Receptor/sii:RUTRecep"), "55555555-5")
         self.assertIsNone(root.find(".//sii:Extranjero/sii:NumId", NS))
+        receiver = header + "sii:Receptor/sii:"
+        self.assertEqual(text(receiver + "CmnaRecep"), "Miami")
+        self.assertEqual(text(receiver + "CiudadRecep"), self.usa.name)
         self.assertEqual(text(header + "sii:Totales/sii:TpoMoneda"), "DOLAR USA")
         self.assertEqual(text(header + "sii:OtraMoneda/sii:TpoMoneda"), "PESO CL")
         customs = header + "sii:Transporte/sii:Aduana/"
