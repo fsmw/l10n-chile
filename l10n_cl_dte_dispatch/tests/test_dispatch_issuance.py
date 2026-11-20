@@ -40,6 +40,20 @@ class TestDispatchIssuance(DispatchRecordMixin, DteInvoiceTestCase):
         roles = set(document.artifact_ids.mapped("role"))
         self.assertTrue({"source_snapshot", "unsigned_xml", "signed_xml"} <= roles)
 
+    def test_issue_queues_the_guide_for_sii_without_another_folio(self):
+        self._prepare_setup()
+        dispatch = self._frozen_dispatch()
+        prepared = dispatch.action_prepare_document()
+        document = dispatch.action_issue_document()
+        self.assertEqual(document, prepared)
+        self.assertEqual(document.preparation_state, "queued")
+        submission = self.env["l10n_cl.electronic.submission"].search(
+            [("document_id", "=", document.id)]
+        )
+        submission._job_send_to_sii()
+        self.assertEqual(submission.state, "submitted")
+        self.assertEqual(document.fiscal_state, "submitted")
+
     def test_prepare_requires_a_frozen_dispatch(self):
         # Arrange
         self._prepare_setup()
