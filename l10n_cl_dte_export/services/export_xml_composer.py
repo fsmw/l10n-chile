@@ -111,7 +111,7 @@ class ExportXmlComposer:
             xml_bytes = xml_bytes.replace(placeholder, ted_xml)
         return xml_bytes
 
-    def validate_document(self, xml_bytes, signature_service=None):
+    def validate_document(self, xml_bytes, signature_service=None, *, strict_sii=False):
         """Check the SII XSD, export totals, the TED and the XML signature."""
         root = _parse_document(xml_bytes)
         document = root.find(PREFIX + "Exportaciones")
@@ -133,7 +133,10 @@ class ExportXmlComposer:
         if dd is None or caf is None or not frmt:
             raise ValidationError(_("The export TED is missing DD, CAF, or FRMT."))
         signature_service.verify_ted(_extract_dd_bytes(xml_bytes), frmt, caf)
-        signature_service.verify_signature(xml_bytes)
+        if strict_sii:
+            signature_service.verify_signature(xml_bytes, sii_standalone=True)
+        else:
+            signature_service.verify_signature(xml_bytes)
         return True
 
     # Header -----------------------------------------------------------------

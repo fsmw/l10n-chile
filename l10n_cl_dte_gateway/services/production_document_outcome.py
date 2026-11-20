@@ -13,10 +13,10 @@ from collections.abc import Mapping
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import LazyTranslate
 
+from .production_gateway import SUPPORTED_PRODUCTION_DTE_CODES
 from .production_response_parser import MAX_RESPONSE_BYTES
 
 _lt = LazyTranslate(__name__, default_lang="en_US")
-NATIONAL_DOCUMENT_CODES = frozenset({"33", "34", "52", "56", "61"})
 
 
 class ProductionDocumentOutcome:
@@ -25,9 +25,9 @@ class ProductionDocumentOutcome:
     def _validate_result(self, result, document_code):
         if (
             not isinstance(document_code, str)
-            or document_code not in NATIONAL_DOCUMENT_CODES
+            or document_code not in SUPPORTED_PRODUCTION_DTE_CODES
         ):
-            raise ValidationError(_lt("Unsupported national DTE document type."))
+            raise ValidationError(_lt("Unsupported production DTE document type."))
         if not isinstance(result, Mapping) or result.get("is_simulated") is not False:
             raise ValidationError(_lt("A non-simulated SII result is required."))
         raw = result.get("raw_response")

@@ -3,7 +3,7 @@
 {
     "name": "Chile - DTE Export Documents",
     "summary": "Customs catalog and source inputs for export invoices and notes",
-    "version": "18.0.1.2.0",
+    "version": "18.0.1.3.0",
     "category": "Accounting/Localizations",
     "author": "FSMW, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",

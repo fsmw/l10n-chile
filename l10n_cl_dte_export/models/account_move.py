@@ -3,6 +3,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from ..services.export_issuance_adapter import ExportIssuanceAdapter
 from .export_children import (
     MAX_PACKAGES,
     MAX_SUPPORTING_REFERENCES,
@@ -174,6 +175,13 @@ class AccountMove(models.Model):
             raise AccessError(
                 _("Export inputs require a DTE user, or a manager for notes.")
             )
+
+    def _get_dte_issuance_adapter(self, document_code):
+        """Issue export invoices 110 through the export format adapter."""
+        self.ensure_one()
+        if str(document_code) in ExportIssuanceAdapter.SUPPORTED_DOCUMENT_CODES:
+            return ExportIssuanceAdapter()
+        return super()._get_dte_issuance_adapter(document_code)
 
     def _check_dte_source_access(self, document_code):
         result = super()._check_dte_source_access(document_code)

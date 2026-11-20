@@ -35,11 +35,12 @@ from .sii_authentication import ProductionSiiAuthentication
 class ProductionSiiTransport:
     """Authenticate, upload, and query EnvioDTE envelopes in Production."""
 
-    def __init__(self, authentication_factory=None):
-        """Accept an injectable authentication factory for isolated tests."""
+    def __init__(self, authentication_factory=None, document_validator_getter=None):
+        """Accept injectable authentication and per-type document validation."""
         self.authentication_factory = (
             authentication_factory or ProductionSiiAuthentication
         )
+        self.document_validator_getter = document_validator_getter
 
     def validate_configuration(self, company, environment):
         """Validate production readiness before any external dispatch."""
@@ -116,7 +117,7 @@ class ProductionSiiTransport:
         """Validate the signed EnvioDTE payload before network access."""
         self.validate_configuration(company, environment)
         company = company.sudo()
-        SiiEnvelopeComposer().validate(
+        SiiEnvelopeComposer(self.document_validator_getter).validate(
             request_bytes,
             signature_service=SignatureService(),
             environment="production",
