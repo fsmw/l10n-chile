@@ -3,6 +3,12 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 
+from .export_children import (
+    MAX_PACKAGES,
+    MAX_SUPPORTING_REFERENCES,
+    UNIQUE_SUPPORTING_TYPES,
+)
+
 EXPORT_CODES = {"110", "111", "112"}
 CATALOG = "l10n_cl.dte.export.catalog"
 # Customs catalog fields and the catalog category each one must use.
@@ -96,6 +102,39 @@ class AccountMove(models.Model):
     dte_export_insurance = fields.Monetary(
         string="Insurance", currency_field="currency_id"
     )
+
+    dte_export_package_ids = fields.One2many(
+        "l10n_cl.dte.export.package", "move_id", string="Export Packages", copy=True
+    )
+    dte_export_reference_ids = fields.One2many(
+        "l10n_cl.dte.export.reference",
+        "move_id",
+        string="Export Supporting References",
+        copy=True,
+    )
+
+    def _check_export_children(self):
+        """Limits of the export XML on packages and supporting references."""
+        for move in self.exists():
+            if len(move.dte_export_package_ids) > MAX_PACKAGES:
+                raise ValidationError(_("An export declares at most ten packages."))
+            references = move.dte_export_reference_ids
+            if len(references) > MAX_SUPPORTING_REFERENCES:
+                raise ValidationError(
+                    _("An export carries at most 39 supporting references.")
+                )
+            keys = [(ref.document_type, ref.folio, ref.date) for ref in references]
+            if len(keys) != len(set(keys)):
+                raise ValidationError(_("A supporting reference is repeated."))
+            for code in UNIQUE_SUPPORTING_TYPES:
+                if (
+                    len(references.filtered(lambda ref, c=code: ref.document_type == c))
+                    > 1
+                ):
+                    raise ValidationError(
+                        _("Document type %(code)s appears at most once.")
+                        % {"code": code}
+                    )
 
     @api.constrains(*CATALOG_FIELDS, *NONNEGATIVE_FIELDS, "dte_export_carrier_vat")
     def _check_export_customs_inputs(self):
