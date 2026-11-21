@@ -52,7 +52,10 @@ class NoteSnapshotService:
             and not certification_case
         ):
             raise ValidationError(
-                move.env._("DTE notes require CLP and the Demo or Production mode.")
+                move.env._(
+                    "DTE notes require CLP and the Demo, Certification or "
+                    "Production mode."
+                )
             )
         self._check_note_operator(move)
         reference_service = NoteReferenceService(move.env)

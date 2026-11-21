@@ -63,8 +63,9 @@ references and operations are rejected before folio reservation.
 The module extends ``account.move``, ``account.move.line``,
 ``account.move.reversal`` and ``account.debit.note``; it does not
 replace the accounting entries or create separate fiscal folio
-sequences. Production SII transport and certification-mode note issuance
-are outside this release.
+sequences. In Certification and Production mode the referenced DTE must
+be accepted in the company's current mode; the note then follows that
+mode's SII submission queue, as described in the SII gateway addon.
 
 A private root-first chain-lock prefix is available for the national
 transport workflow. It remains dormant until coordinated transport and

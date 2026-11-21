@@ -65,7 +65,10 @@ class PosReturnPolicyService:
             not in NoteReferenceService.ORDINARY_ENVIRONMENTS
         ):
             raise ValidationError(
-                env._("POS returns require CLP and the Demo or Production mode.")
+                env._(
+                    "POS returns require CLP and the Demo, Certification or "
+                    "Production mode."
+                )
             )
         if session.config_id.cash_rounding:
             raise ValidationError(env._("POS returns do not support cash rounding."))

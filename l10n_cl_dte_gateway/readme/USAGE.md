@@ -17,14 +17,18 @@ authorized sender RUTs. Tokens remain in memory and are never stored in attempts
 Production transport uses a separate signing profile and production CAF records;
 never reuse Certification material as Production evidence.
 
-Certification issuance from Accounting
---------------------------------------
+Certification issuance
+----------------------
 
-With the company SII mode set to Certification, invoices 33 and 34 follow the
-same individual submission queue as Production, but upload to `maullin.sii.cl`.
+With the company SII mode set to Certification, every DTE type that Production
+sends as an individual EnvioDTE follows the same submission queue, but uploads
+to `maullin.sii.cl`: invoices 33 and 34, purchase invoice 46, delivery guide 52
+(issued from its dispatch record), debit and credit notes 56 and 61, and export
+documents 110, 111 and 112. Each type keeps its own fiscal validator, and notes
+must reference a DTE accepted in Certification.
 Configure the issuer and authorized sender RUTs, the SII resolution date, one
 active non-synthetic Certification signing profile and non-synthetic
-Certification CAFs. Issuing the invoice signs the DTE; the queued send then
+Certification CAFs. Issuing the document signs the DTE; the queued send then
 binds a signed EnvioDTE with that single DTE and resolution number 0 before the
 upload. The TrackID and raw receipt are kept on the submission. Use **Query SII
 Status**, or let the polling cron run, to record the per-DTE result: a TrackID
@@ -33,9 +37,8 @@ only proves reception, and acceptance requires the EPR counter of this DTE.
 A Production certificate or CAF blocks a Certification send, and vice versa.
 A failure confirmed before upload is a retryable error that reuses the same DTE,
 folio and envelope. A lost upload answer stays as an unknown outcome for manual
-reconciliation; it is never resent automatically. Other document types are
-not transmitted individually in Certification; use the certification sets.
-Boletas keep the SII REST channel. Certification documents are never e-mailed
+reconciliation; it is never resent automatically. Boletas 39 and 41 keep the
+SII REST channel. Certification documents are never e-mailed
 to customers automatically.
 
 Individual submissions reserve an optional, immutable transport-envelope link.
