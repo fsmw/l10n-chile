@@ -141,7 +141,8 @@ class IncomingDteResponse(models.Model):
         raise UserError(_("Incoming DTE response history must be retained."))
 
     def _write_internal(self, values):
-        return super().write(values)
+        # Managers only read this immutable history; the workflow writes it.
+        return super(IncomingDteResponse, self.sudo()).write(values)
 
     def _check_manager(self):
         if not self.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):

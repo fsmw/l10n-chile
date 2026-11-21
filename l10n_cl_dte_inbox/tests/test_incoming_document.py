@@ -13,6 +13,7 @@ from odoo.addons.l10n_cl_dte_gateway.services.claim_registry import (
 )
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase
+from odoo.tests.common import new_test_user
 
 
 class TestIncomingDte(TransactionCase):
@@ -147,3 +148,27 @@ class TestIncomingDte(TransactionCase):
             + b"""</RUTRecep></Receptor>
         </Encabezado></Documento></DTE>"""
         )
+
+    def test_dte_manager_without_admin_rights_registers_responses(self):
+        """A queued job runs as the manager who enqueued it, not as superuser."""
+        manager = new_test_user(
+            self.env,
+            login="inbox-registry-manager",
+            groups="base.group_user,l10n_cl_dte_core.group_dte_manager",
+            company_id=self.company.id,
+            company_ids=[(6, 0, self.company.ids)],
+        )
+        answer = {
+            "code": 0,
+            "description": "Respuesta SII",
+            "events": [],
+            "success": True,
+            "raw_response": b"<answer/>",
+        }
+        for environment in (None, "production"):
+            with self.subTest(environment=environment), self.cr.savepoint() as point:
+                _document, response = self._response("ACD", environment)
+                with self._registry("register_action", return_value=answer):
+                    response.with_user(manager).action_enqueue()
+                self.assertEqual(response.state, "accepted")
+                point.rollback()
