@@ -27,7 +27,9 @@ class TestF29Report(TaxReportsTestCase):
         cls._document("out_invoice", "33", 1000, cls.sale_vat)
         cls._document("out_invoice", "33", 2000, cls.sale_vat)
         cls._document("out_invoice", "39", 500, cls.sale_vat)
-        cls._document("out_refund", "61", 200, cls.sale_vat)
+        # Paper credit note 60 shares boxes 509/510 with 61; an electronic 61
+        # needs a referenced DTE once l10n_cl_dte_note is installed.
+        cls._document("out_refund", "60", 200, cls.sale_vat)
         cls._document("out_invoice", "34", 300, no_tax)
         cls._document("out_invoice", "110", 400, no_tax, partner=cls.foreign_customer)
         # Purchases: recoverable, non-recoverable, common use, purchase

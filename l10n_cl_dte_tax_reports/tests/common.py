@@ -10,7 +10,7 @@ COMPANY_RUT = "76111111-6"
 CUSTOMER_RUT = "76222222-1"
 SUPPLIER_RUT = "76333333-7"
 FEE_ISSUER_RUT = "15555555-6"
-DOCUMENT_CODES = ("33", "34", "39", "46", "56", "61", "71", "110")
+DOCUMENT_CODES = ("33", "34", "39", "46", "56", "60", "61", "71", "110")
 
 
 class TaxReportsTestCase(AccountTestInvoicingCommon):
@@ -34,12 +34,16 @@ class TaxReportsTestCase(AccountTestInvoicingCommon):
         cls.purchase_vat_common_use = chart.ref("iva_compra_uso_comun")
         cls.vat_total_retention = chart.ref("I_RTI")
         cls.second_category = chart.ref("I_IR2C_2026")
+        types = cls.env["l10n_latam.document.type"].with_context(active_test=False)
         cls.document_types = {
-            code: cls.env["l10n_latam.document.type"].search(
+            code: types.search(
                 [("code", "=", code), ("country_id.code", "=", "CL")], limit=1
             )
             for code in DOCUMENT_CODES
         }
+        # l10n_cl ships the paper credit note 60 inactive; a company that
+        # still issues it activates the type.
+        cls.document_types["60"].sudo().active = True
         cls.folio = 1000
 
     @classmethod
