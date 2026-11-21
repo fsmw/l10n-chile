@@ -1,0 +1,40 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.received46</field>
+        <field name="model">res.config.settings</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_inbox_account.res_config_settings_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='dte_inbox_account']" position="inside">
+                <setting
+                    id="dte_inbox_account_received46_setting"
+                    string="Received purchase invoices (DTE 46)"
+                    company_dependent="1"
+                    help="Book a DTE 46 our buyer issued to us as a customer invoice with the VAT it retained."
+                >
+                    <div class="content-group">
+                        <label for="dte_inbox_account_received46_journal_id" />
+                        <field
+                            name="dte_inbox_account_received46_journal_id"
+                            options="{'no_create': True}"
+                        />
+                        <label for="dte_inbox_account_received46_vat_tax_id" />
+                        <field
+                            name="dte_inbox_account_received46_vat_tax_id"
+                            options="{'no_create': True}"
+                        />
+                        <label for="dte_inbox_account_received46_retention_tax_id" />
+                        <field
+                            name="dte_inbox_account_received46_retention_tax_id"
+                            options="{'no_create': True}"
+                        />
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

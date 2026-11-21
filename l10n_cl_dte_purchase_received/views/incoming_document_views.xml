@@ -1,0 +1,40 @@
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form.received46</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_inbox_account.incoming_document_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_prepare_vendor_bill']" position="after">
+                <button
+                    name="action_prepare_customer_invoice"
+                    type="object"
+                    string="Prepare Customer Invoice"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+                    invisible="state != 'reviewed' or document_code != '46' or account_binding_ids"
+                />
+            </xpath>
+            <xpath
+                expr="//button[@name='action_open_vendor_bill']"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >not account_binding_ids or document_code == '46'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_open_vendor_bill']" position="after">
+                <button
+                    name="action_open_vendor_bill"
+                    type="object"
+                    string="Customer Invoice"
+                    groups="l10n_cl_dte_inbox_account.group_inbox_account_user"
+                    invisible="not account_binding_ids or document_code != '46'"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
