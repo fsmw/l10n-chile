@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_dte_assignment_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.assignment.list</field>
+        <field name="model">l10n_cl.dte.assignment</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="name" />
+                <field name="move_id" />
+                <field name="partner_id" />
+                <field name="amount" />
+                <field name="environment" />
+                <field name="track_id" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'accepted'"
+                    decoration-danger="state in ('rejected', 'annulled', 'error')"
+                    decoration-warning="state == 'outcome_unknown'"
+                />
+                <field name="company_id" groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dte_assignment_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.assignment.form</field>
+        <field name="model">l10n_cl.dte.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_build_aec"
+                        type="object"
+                        string="Sign AEC"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state != 'draft' or not id"
+                    />
+                    <button
+                        name="action_send"
+                        type="object"
+                        string="Send to SII"
+                        class="btn-primary"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state not in ('signed', 'error')"
+                    />
+                    <button
+                        name="action_query_status"
+                        type="object"
+                        string="Check SII Status"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state not in ('submitted', 'processing')"
+                    />
+                    <button
+                        name="action_reconcile"
+                        type="object"
+                        string="Check SII Registry"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state != 'outcome_unknown'"
+                    />
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                        invisible="state not in ('draft', 'signed', 'error', 'outcome_unknown')"
+                        confirm="Cancel only after checking the SII assignment registry. Continue?"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,signed,submitted,accepted"
+                    />
+                </header>
+                <sheet>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="state != 'outcome_unknown'"
+                    >
+                        The SII answer to the upload was lost. The AEC is never
+                        uploaded again automatically: check the SII assignment
+                        registry first.
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Invoice">
+                            <field name="move_id" />
+                            <field name="document_id" />
+                            <field name="environment" />
+                            <field name="company_id" invisible="1" />
+                        </group>
+                        <group string="Assignment">
+                            <field name="partner_id" readonly="state != 'draft'" />
+                            <field name="amount" readonly="state != 'draft'" />
+                            <field name="last_due_date" readonly="state != 'draft'" />
+                            <field name="assignor_email" readonly="state != 'draft'" />
+                            <field name="debtor_email" readonly="state != 'draft'" />
+                            <field
+                                name="notification_email"
+                                readonly="state != 'draft'"
+                            />
+                        </group>
+                    </group>
+                    <group string="Declarations">
+                        <field name="sworn_declaration" readonly="state != 'draft'" />
+                        <field name="other_conditions" readonly="state != 'draft'" />
+                    </group>
+                    <notebook>
+                        <page name="sii" string="SII">
+                            <group>
+                                <group>
+                                    <field name="track_id" />
+                                    <field name="sii_status" />
+                                    <field name="submitted_at" />
+                                    <field name="last_checked_at" />
+                                </group>
+                                <group>
+                                    <field name="signer_name" />
+                                    <field name="signer_vat" />
+                                    <field name="aec_timestamp" />
+                                    <field name="aec_sha256" />
+                                </group>
+                            </group>
+                            <field name="sii_message" />
+                        </page>
+                        <page name="evidence" string="Evidence">
+                            <field name="evidence_ids">
+                                <list>
+                                    <field name="created_at" />
+                                    <field name="role" />
+                                    <field name="file_name" />
+                                    <field name="byte_count" />
+                                    <field name="sha256" />
+                                    <field
+                                        name="content"
+                                        filename="file_name"
+                                        groups="l10n_cl_dte_core.group_dte_manager"
+                                    />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="attempts" string="Attempts">
+                            <field name="attempt_ids">
+                                <list>
+                                    <field name="started_at" />
+                                    <field name="operation" />
+                                    <field name="state" />
+                                    <field name="error_code" />
+                                    <field name="error_summary" />
+                                    <field name="request_digest" />
+                                    <field name="response_digest" />
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dte_assignment_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.assignment.search</field>
+        <field name="model">l10n_cl.dte.assignment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="move_id" />
+                <field name="partner_id" />
+                <field name="track_id" />
+                <filter
+                    name="in_progress"
+                    string="In Progress"
+                    domain="[('state', 'in', ('signed', 'sending', 'submitted', 'processing', 'outcome_unknown', 'error'))]"
+                />
+                <filter
+                    name="assigned"
+                    string="Assigned"
+                    domain="[('state', '=', 'accepted')]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dte_assignment" model="ir.actions.act_window">
+        <field name="name">Invoice Assignments (AEC)</field>
+        <field name="res_model">l10n_cl.dte.assignment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_dte_assignment"
+        name="Invoice Assignments"
+        parent="l10n_cl_dte_core.menu_dte_operations"
+        action="action_dte_assignment"
+        sequence="40"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+</odoo>
