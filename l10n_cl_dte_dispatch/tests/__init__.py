@@ -11,3 +11,4 @@ from . import test_dispatch_views
 from . import test_dispatch_electronic_document
 from . import test_dispatch_issuance
 from . import test_golden_xml
+from . import test_dispatch_certification

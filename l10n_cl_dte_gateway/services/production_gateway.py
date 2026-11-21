@@ -11,22 +11,14 @@ from .production_response_parser import parse_xml
 from .production_transport import ProductionSiiTransport
 from .sii_gateway import SiiGateway
 
-SUPPORTED_PRODUCTION_DTE_CODES = {
-    "33",
-    "34",
-    "46",
-    "52",
-    "56",
-    "61",
-    "110",
-    "111",
-    "112",
-}
-# Certification issuance from Accounting covers invoices; the other types are
-# exercised through the certification-set envelopes.
-SUPPORTED_CERTIFICATION_DTE_CODES = frozenset({"33", "34"})
+# DTE types SII receives individually as one-DTE EnvioDTE uploads. Boletas 39
+# and 41 use the separate SII REST channel.
+SUPPORTED_PRODUCTION_DTE_CODES = frozenset(
+    {"33", "34", "46", "52", "56", "61", "110", "111", "112"}
+)
+# Certification (maullin) accepts the same EnvioDTE types as Production.
 SUPPORTED_DTE_CODES = {
-    "certification": SUPPORTED_CERTIFICATION_DTE_CODES,
+    "certification": SUPPORTED_PRODUCTION_DTE_CODES,
     "production": SUPPORTED_PRODUCTION_DTE_CODES,
 }
 # Real SII environments that receive individual DTEs as one-DTE EnvioDTE uploads.
@@ -77,17 +69,14 @@ class ProductionSiiGateway(SiiGateway):
     def check_document_code(self, document_code):
         """Reject DTE types this environment does not transmit individually."""
         if document_code not in SUPPORTED_DTE_CODES[self.environment]:
-            if self.environment == "certification":
-                raise UserError(
-                    _(
-                        "Certification DTE transport from Accounting supports "
-                        "document types 33 and 34."
-                    )
-                )
             raise UserError(
                 _(
-                    "Production DTE transport currently supports document types "
-                    "33, 34, 46, 52, 56, 61, 110, 111 and 112."
+                    "%(environment)s DTE transport currently supports document "
+                    "types %(codes)s.",
+                    environment=environment_label(self.environment),
+                    codes=", ".join(
+                        sorted(SUPPORTED_DTE_CODES[self.environment], key=int)
+                    ),
                 )
             )
         return True

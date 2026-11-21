@@ -7,12 +7,15 @@ import base64
 from contextlib import contextmanager
 from unittest.mock import MagicMock, patch
 
+from lxml import etree
+
 from odoo import fields
 
 from ..services import certification_auth
 from .test_certification_transport import soap_response, upload_response
 
 SYNTHETIC_VAT = "12345678-5"
+SII = "{http://www.sii.cl/SiiDte}"
 
 
 def configure_company_certification(case):
@@ -132,3 +135,49 @@ def fake_sii(session):
     with patch.object(certification_auth.requests, "Session", return_value=session):
         yield session
     certification_auth._TOKEN_CACHE.clear()
+
+
+def assert_certification_round_trip(case, submission, code):
+    """Upload one queued DTE to a mocked maullin and record its accepted result.
+
+    Checks that the EnvioDTE was bound before the upload carried its exact
+    bytes, that it declares ``code`` and resolution 0, and that acceptance comes
+    from the per-DTE EPR counter after a TrackID was received.
+    """
+    document = submission.document_id
+    case.assertEqual(document.sii_environment, "certification")
+    case.assertEqual(submission.environment, "certification")
+    # Some family fixtures reset the issuer RUT; SII echoes the actual issuer.
+    receipt = upload_response().replace(
+        b"<RUTCOMPANY>" + SYNTHETIC_VAT.encode(),
+        b"<RUTCOMPANY>" + submission.company_id.vat.encode(),
+    )
+    session = FakeSiiSession(upload=receipt, statuses=[dte_status_response(code)])
+    with fake_sii(session):
+        submission._job_send_to_sii()
+        envelope = submission.transport_request_artifact_id
+        case.assertTrue(envelope, submission.sii_message)
+        sends = submission.attempt_ids.filtered(
+            lambda attempt: attempt.operation == "send"
+        )
+        case.assertEqual(sends.request_digest, envelope.sha256)
+        case.assertEqual(session.uploads, [base64.b64decode(envelope.content)])
+        case.assertEqual(submission.state, "submitted", submission.sii_message)
+        case.assertEqual(submission.track_id, "123")
+        submission.with_context(queue_job__no_delay=True).action_enqueue_status_query()
+    upload = session.uploads[0]
+    case.assertIn(b"<EnvioDTE", upload)
+    case.assertIn(f"<TpoDTE>{code}</TpoDTE>".encode(), upload)
+    root = etree.fromstring(upload)
+    case.assertEqual(len(root.findall(f"{SII}SetDTE/{SII}DTE")), 1)
+    case.assertEqual(root.findtext(f"{SII}SetDTE/{SII}Caratula/{SII}NroResol"), "0")
+    case.assertTrue(
+        all(url.startswith("https://maullin.sii.cl/") for url in session.urls)
+    )
+    case.assertEqual(session.upload_count(), 1)
+    case.assertEqual(submission.state, "accepted", submission.sii_message)
+    case.assertEqual(document.fiscal_state, "accepted")
+    roles = document.artifact_ids.mapped("role")
+    case.assertIn("sii_response", roles)
+    case.assertIn("status_response", roles)
+    return upload

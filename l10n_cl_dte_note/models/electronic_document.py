@@ -70,7 +70,7 @@ class ElectronicDocument(models.Model):
                 )
             if target.sii_environment not in NoteReferenceService.ORDINARY_ENVIRONMENTS:
                 raise ValidationError(
-                    _("DTE notes require a Demo or Production source.")
+                    _("DTE notes require a Demo, Certification or Production source.")
                 )
             if target.company_id != root.company_id or root.company_id.id != vals.get(
                 "company_id"

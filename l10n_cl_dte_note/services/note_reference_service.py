@@ -17,11 +17,11 @@ class NoteReferenceService:
     """Read fiscal evidence and compute the available adjustment capacity."""
 
     ROOT_DOCUMENT_CODES = frozenset({"33", "34", "39", "41"})
-    ORDINARY_ENVIRONMENTS = frozenset({"demo", "production"})
+    ORDINARY_ENVIRONMENTS = frozenset({"demo", "certification", "production"})
 
     @classmethod
     def is_ordinary_environment(cls, target_document, company):
-        """Ordinary notes stay in the source DTE's Demo or Production mode."""
+        """Ordinary notes stay in the SII mode of their source DTE."""
         return (
             target_document.sii_environment in cls.ORDINARY_ENVIRONMENTS
             and target_document.sii_environment == company.dte_sii_environment
@@ -100,7 +100,7 @@ class NoteReferenceService:
             raise ValidationError(
                 _(
                     "The referenced DTE must be accepted in the company's "
-                    "current Demo or Production mode."
+                    "current Demo, Certification or Production mode."
                 )
             )
         if target_document.company_id != move.company_id:

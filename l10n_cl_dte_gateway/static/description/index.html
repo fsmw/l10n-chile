@@ -376,7 +376,7 @@ state reconciliation and retained raw evidence.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#usage" id="toc-entry-1">Usage</a><ul>
-<li><a class="reference internal" href="#certification-issuance-from-accounting" id="toc-entry-2">Certification issuance from Accounting</a></li>
+<li><a class="reference internal" href="#certification-issuance" id="toc-entry-2">Certification issuance</a></li>
 <li><a class="reference internal" href="#sii-reception-format-and-correction" id="toc-entry-3">SII reception format and correction</a></li>
 <li><a class="reference internal" href="#refreshing-asynchronous-envelope-responses" id="toc-entry-4">Refreshing asynchronous envelope responses</a></li>
 </ul>
@@ -410,26 +410,29 @@ profile, its private key, and the issuer and authorized sender RUTs.
 Tokens remain in memory and are never stored in attempts. Production
 transport uses a separate signing profile and production CAF records;
 never reuse Certification material as Production evidence.</p>
-<div class="section" id="certification-issuance-from-accounting">
-<h2><a class="toc-backref" href="#toc-entry-2">Certification issuance from Accounting</a></h2>
-<p>With the company SII mode set to Certification, invoices 33 and 34
-follow the same individual submission queue as Production, but upload to
-<tt class="docutils literal">maullin.sii.cl</tt>. Configure the issuer and authorized sender RUTs, the
-SII resolution date, one active non-synthetic Certification signing
-profile and non-synthetic Certification CAFs. Issuing the invoice signs
-the DTE; the queued send then binds a signed EnvioDTE with that single
-DTE and resolution number 0 before the upload. The TrackID and raw
-receipt are kept on the submission. Use <strong>Query SII Status</strong>, or let the
-polling cron run, to record the per-DTE result: a TrackID only proves
-reception, and acceptance requires the EPR counter of this DTE.</p>
+<div class="section" id="certification-issuance">
+<h2><a class="toc-backref" href="#toc-entry-2">Certification issuance</a></h2>
+<p>With the company SII mode set to Certification, every DTE type that
+Production sends as an individual EnvioDTE follows the same submission
+queue, but uploads to <tt class="docutils literal">maullin.sii.cl</tt>: invoices 33 and 34, purchase
+invoice 46, delivery guide 52 (issued from its dispatch record), debit
+and credit notes 56 and 61, and export documents 110, 111 and 112. Each
+type keeps its own fiscal validator, and notes must reference a DTE
+accepted in Certification. Configure the issuer and authorized sender
+RUTs, the SII resolution date, one active non-synthetic Certification
+signing profile and non-synthetic Certification CAFs. Issuing the
+document signs the DTE; the queued send then binds a signed EnvioDTE
+with that single DTE and resolution number 0 before the upload. The
+TrackID and raw receipt are kept on the submission. Use <strong>Query SII
+Status</strong>, or let the polling cron run, to record the per-DTE result: a
+TrackID only proves reception, and acceptance requires the EPR counter
+of this DTE.</p>
 <p>A Production certificate or CAF blocks a Certification send, and vice
 versa. A failure confirmed before upload is a retryable error that
 reuses the same DTE, folio and envelope. A lost upload answer stays as
 an unknown outcome for manual reconciliation; it is never resent
-automatically. Other document types are not transmitted individually in
-Certification; use the certification sets. Boletas keep the SII REST
-channel. Certification documents are never e-mailed to customers
-automatically.</p>
+automatically. Boletas 39 and 41 keep the SII REST channel.
+Certification documents are never e-mailed to customers automatically.</p>
 <p>Individual submissions reserve an optional, immutable transport-envelope
 link. Existing records keep that link empty on upgrade; their evidence
 is not rebuilt. Only a trusted internal workflow can bind same-document

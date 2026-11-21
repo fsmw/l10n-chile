@@ -18,7 +18,11 @@ from odoo.addons.l10n_cl_dte_xml.services.xml_composer import DteXmlComposer
 from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
 from ..services.certification_document_transport import CertificationDocumentTransport
-from ..services.production_gateway import ProductionSiiGateway
+from ..services.production_gateway import (
+    SUPPORTED_DTE_CODES,
+    SUPPORTED_PRODUCTION_DTE_CODES,
+    ProductionSiiGateway,
+)
 from .common_certification_request import (
     FakeSiiSession,
     configure_company_certification,
@@ -33,7 +37,7 @@ SII = "{http://www.sii.cl/SiiDte}"
 
 
 class CertificationRequestCase(DteInvoiceTestCase):
-    """Issue synthetic 33/34 DTEs in Certification with offline crypto."""
+    """Issue synthetic invoice DTEs in Certification with offline crypto."""
 
     def setUp(self):
         super().setUp()
@@ -256,14 +260,20 @@ class TestCertificationSubmissionJob(CertificationRequestCase):
         self.assertIn("Certification signing profile", submission.sii_message)
         self.assertEqual(session.urls, [])
 
-    def test_factory_routes_certification_to_maullin_for_invoices_only(self):
+    def test_factory_routes_certification_to_maullin_for_envelope_types(self):
         gateway = self.env["l10n_cl.sii.gateway.factory"].get_gateway("certification")
         self.assertIsInstance(gateway, ProductionSiiGateway)
         self.assertIsInstance(gateway._transport(), CertificationDocumentTransport)
-        for code in ("33", "34"):
+        # Certification accepts exactly the EnvioDTE types Production accepts.
+        self.assertEqual(
+            SUPPORTED_DTE_CODES["certification"], SUPPORTED_PRODUCTION_DTE_CODES
+        )
+        for code in sorted(SUPPORTED_PRODUCTION_DTE_CODES):
             self.assertTrue(gateway.check_document_code(code))
-        with self.assertRaisesRegex(UserError, "33 and 34"):
-            gateway.check_document_code("56")
+        # Boletas use the SII REST channel, never an individual EnvioDTE.
+        for code in ("39", "41"):
+            with self.assertRaisesRegex(UserError, "Certification DTE transport"):
+                gateway.check_document_code(code)
         with self.assertRaisesRegex(UserError, "another environment"):
             gateway.validate_configuration(self.company, "production")
 
