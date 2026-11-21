@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- /shop/dte_document route -->
+    <template id="dte_document" name="Checkout Tax Document">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">Shop - Tax Document</t>
+            <t t-set="show_navigation_button" t-value="False" />
+            <t t-set="redirect" t-valuef="/shop/dte_document" />
+            <t t-set="oe_structure">
+                <div
+                    class="oe_structure"
+                    id="oe_structure_l10n_cl_dte_website_sale_document_1"
+                />
+            </t>
+            <h3 class="mb-4">Tax document</h3>
+            <form
+                action="/shop/dte_document"
+                method="post"
+                class="o_l10n_cl_dte_document_form"
+            >
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    t-att-value="request.csrf_token()"
+                    t-nocache="The csrf token must always be up to date."
+                />
+                <div
+                    t-if="dte_errors"
+                    class="alert alert-danger"
+                    role="alert"
+                    name="dte_errors"
+                >
+                    <p t-foreach="dte_errors.values()" t-as="error" class="mb-0">
+                        <t t-out="error" />
+                    </p>
+                </div>
+                <div class="btn-group mb-3" role="radiogroup">
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="l10n_cl_dte_document_kind"
+                        id="l10n_cl_dte_kind_boleta"
+                        value="boleta"
+                        t-att-checked="dte_values['kind'] != 'factura'"
+                    />
+                    <label
+                        class="btn btn-outline-primary"
+                        for="l10n_cl_dte_kind_boleta"
+                    >Boleta (final consumer)</label>
+                    <input
+                        type="radio"
+                        class="btn-check"
+                        name="l10n_cl_dte_document_kind"
+                        id="l10n_cl_dte_kind_factura"
+                        value="factura"
+                        t-att-checked="dte_values['kind'] == 'factura'"
+                    />
+                    <label
+                        class="btn btn-outline-primary"
+                        for="l10n_cl_dte_kind_factura"
+                    >Factura (company)</label>
+                </div>
+                <div class="o_l10n_cl_dte_factura_fields row">
+                    <div class="col-lg-6 mb-3">
+                        <label class="col-form-label" for="l10n_cl_dte_receiver_vat">
+                            RUT
+                        </label>
+                        <input
+                            type="text"
+                            id="l10n_cl_dte_receiver_vat"
+                            name="l10n_cl_dte_receiver_vat"
+                            placeholder="12345678-5"
+                            maxlength="12"
+                            t-att-value="dte_values['vat']"
+                            t-attf-class="form-control #{'vat' in dte_errors and 'is-invalid' or ''}"
+                        />
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <label class="col-form-label" for="l10n_cl_dte_receiver_name">
+                            Business name
+                        </label>
+                        <input
+                            type="text"
+                            id="l10n_cl_dte_receiver_name"
+                            name="l10n_cl_dte_receiver_name"
+                            maxlength="100"
+                            t-att-value="dte_values['name']"
+                            t-attf-class="form-control #{'name' in dte_errors and 'is-invalid' or ''}"
+                        />
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label
+                            class="col-form-label"
+                            for="l10n_cl_dte_receiver_activity"
+                        >
+                            Business activity (giro)
+                        </label>
+                        <input
+                            type="text"
+                            id="l10n_cl_dte_receiver_activity"
+                            name="l10n_cl_dte_receiver_activity"
+                            maxlength="40"
+                            t-att-value="dte_values['activity']"
+                            t-attf-class="form-control #{'activity' in dte_errors and 'is-invalid' or ''}"
+                        />
+                    </div>
+                    <div class="col-12 mb-3" name="dte_billing_address">
+                        <span class="col-form-label d-block">Billing address</span>
+                        <div
+                            t-out="billing_partner"
+                            t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"
+                            t-attf-class="#{'address' in dte_errors and 'text-danger' or ''}"
+                        />
+                        <a
+                            t-if="can_edit_billing"
+                            t-attf-href="/shop/address?partner_id=#{billing_partner.id}&amp;address_type=billing"
+                        >Edit billing address</a>
+                    </div>
+                </div>
+                <t t-call="website_sale.navigation_buttons">
+                    <t t-set="_form_send_navigation" t-value="True" />
+                    <t t-set="_cta_classes" t-valuef="a-submit" />
+                </t>
+            </form>
+        </t>
+    </template>
+</odoo>
