@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_incoming_exchange"
+        name="Exchange Responses"
+        parent="l10n_cl_dte_inbox.menu_incoming_dte"
+        action="incoming_exchange_action"
+        sequence="20"
+        groups="l10n_cl_dte_core.group_dte_user"
+    />
+</odoo>
