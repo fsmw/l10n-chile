@@ -34,10 +34,7 @@ class CertificationSiiTransport:
             raise UserError(
                 _("This SII envelope transport is restricted to Certification.")
             )
-        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            raise AccessError(
-                _("Only a DTE manager can use the Certification transport.")
-            )
+        self._check_transport_access(company)
         profiles = company.env["l10n_cl.dte.signing.profile"].search(
             [
                 ("company_id", "=", company.id),
@@ -73,6 +70,14 @@ class CertificationSiiTransport:
                 _("The SII sender RUT must match the signing certificate holder.")
             )
         return True
+
+    @staticmethod
+    def _check_transport_access(company):
+        """Certification-set envelopes are operated by DTE managers only."""
+        if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
+            raise AccessError(
+                _("Only a DTE manager can use the Certification transport.")
+            )
 
     @staticmethod
     def _rut(value):

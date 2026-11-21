@@ -12,11 +12,18 @@ from odoo.addons.l10n_cl_dte_gateway.services.boleta_rest import SiiBoletaRestCl
 from odoo.addons.l10n_cl_dte_gateway.services.certification_auth import (
     SiiTransportError,
 )
+from odoo.addons.l10n_cl_dte_gateway.tests.common_certification_request import (
+    FakeSiiSession,
+    configure_company_certification,
+    create_sii_caf,
+    fake_sii,
+)
 from odoo.addons.l10n_cl_dte_gateway.tests.test_production_readiness import (
     TestDteProductionReadiness,
 )
 from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
+from ..services.boleta_rest_gateway import BoletaRestGateway
 from ..services.boleta_snapshot import BoletaSnapshotService
 
 
@@ -79,3 +86,36 @@ class TestBoletaRestIssue(DteInvoiceTestCase):
             submission._job_send_to_sii()
         self.assertEqual(submission.state, "error")
         self.assertTrue(submission._was_never_dispatched())
+
+
+@tagged("post_install", "-at_install")
+class TestBoletaCertificationRest(TestBoletaRestIssue):
+    """Certification boletas keep the REST channel, never the DTEUpload path.
+
+    The inherited Production scenarios also run here against Certification.
+    """
+
+    def setUp(self):
+        super(TestBoletaRestIssue, self).setUp()
+        configure_company_certification(self)
+        create_sii_caf(self, "certification", code="39", folio_start=700)
+
+    def test_certification_boleta_uses_rest_not_envelope_upload(self):
+        _document, submission = self._issue()
+        self.assertEqual(submission.environment, "certification")
+        self.assertFalse(submission._uses_envelope_upload())
+        self.assertIsInstance(submission._gateway(), BoletaRestGateway)
+        upload = {
+            "state": "submitted",
+            "track_id": "4568",
+            "transport_code": "REC",
+            "raw_response": b'{"trackid": 4568}',
+        }
+        with (
+            fake_sii(FakeSiiSession()) as session,
+            patch.object(SiiBoletaRestClient, "send_envelope", return_value=upload),
+        ):
+            submission._job_send_to_sii()
+        self.assertEqual(submission.state, "submitted", submission.sii_message)
+        self.assertEqual(session.urls, [])
+        self.assertFalse(submission.transport_request_artifact_id)

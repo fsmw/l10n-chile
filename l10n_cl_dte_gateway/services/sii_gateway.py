@@ -34,6 +34,10 @@ class SiiGateway:
     def reconcile_submission(self, company, environment, identity, scenario):
         raise NotImplementedError
 
+    def check_document_code(self, document_code):
+        """Reject a DTE type before queueing when the transport cannot send it."""
+        return True
+
     def send_envelope(self, company, environment, request_bytes, idempotency_key):
         raise NotImplementedError
 
@@ -152,19 +156,13 @@ class SiiGatewayFactory(models.AbstractModel):
     def get_gateway(self, environment, document_validator_getter=None):
         if environment == "demo":
             return DemoSiiGateway()
-        if environment == "production":
+        if environment in {"certification", "production"}:
+            # One-DTE EnvioDTE uploads to maullin (Certification) or palena.
             from .production_gateway import ProductionSiiGateway
 
             return ProductionSiiGateway(
-                document_validator_getter=document_validator_getter
-            )
-        if environment in {"certification", "production"}:
-            raise UserError(
-                _(
-                    "No SII transport adapter is installed for %(environment)s. "
-                    "The DTE has not been sent."
-                )
-                % {"environment": environment}
+                document_validator_getter=document_validator_getter,
+                environment=environment,
             )
         raise ValidationError(_("The DTE SII environment is invalid."))
 
