@@ -46,6 +46,8 @@ class CertificationAuthentication:
 
     environment = "certification"
     base_url = BASE_URL
+    # Certification-set tools authenticate interactively as a DTE manager.
+    require_manager = True
 
     def __init__(self, session=None):
         self.session = session or requests.Session()
@@ -126,7 +128,7 @@ class CertificationAuthentication:
     def token(self, company):
         self.env = company.env
         signature_service = SignatureService()
-        if self.environment == "certification":
+        if self.environment == "certification" and self.require_manager:
             certificate, _sender = signature_service.certification_signing_identity(
                 company
             )

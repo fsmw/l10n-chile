@@ -18,9 +18,12 @@ from odoo.addons.l10n_cl_dte_signing.services.signature_service import (
 from ..services.certification_auth import SiiTransportError
 from ..services.document_validation import validate_document_payload
 from ..services.production_document_outcome import ProductionDocumentOutcome
-from ..services.production_gateway import ProductionSiiGateway
+from ..services.production_gateway import (
+    SII_ENVELOPE_ENVIRONMENTS,
+    ProductionSiiGateway,
+    environment_label,
+)
 from ..services.production_response_parser import parse_upload, parse_xml
-from ..services.production_transport import ProductionSiiTransport
 
 SII = "{http://www.sii.cl/SiiDte}"
 BINDING = "transport_request_artifact_id"
@@ -87,19 +90,36 @@ class ElectronicSubmissionProduction(models.Model):
         )
         self.invalidate_recordset()
 
+    def _has_envelope_environment(self):
+        """The submission, its DTE and its company share one real SII mode."""
+        return (
+            self.environment in SII_ENVELOPE_ENVIRONMENTS
+            and self.document_id.sii_environment == self.environment
+            and self.company_id.dte_sii_environment == self.environment
+        )
+
+    def _environment_label(self):
+        return environment_label(self.environment)
+
+    def _envelope_gateway(self):
+        """Return the one-DTE envelope gateway bound to this submission's mode."""
+        return ProductionSiiGateway(
+            document_validator_getter=self._get_document_validator,
+            environment=self.environment,
+        )
+
     def _check_request_preparation(self):
         if (
-            self.environment != "production"
-            or self.document_id.sii_environment != "production"
-            or self.company_id.dte_sii_environment != "production"
+            not self._has_envelope_environment()
             or self.state != "pending"
             or self._dispatched_send_attempts()
         ):
             raise UserError(
                 _(
-                    "Only pending Production submissions without a send attempt "
-                    "can bind an envelope."
+                    "Only pending %(environment)s submissions without a send "
+                    "attempt can bind an envelope."
                 )
+                % {"environment": self._environment_label()}
             )
 
     def _write_internal(self, values):
@@ -178,7 +198,7 @@ class ElectronicSubmissionProduction(models.Model):
         return sources[0]
 
     def _prepare_production_request(self):
-        """Bind the signed EnvioDTE once, before the first Production send."""
+        """Bind the signed EnvioDTE once, before the first SII send."""
         self._check_production_operation_access()
         with self.env.cr.savepoint():
             self._lock_production_chain()
@@ -190,9 +210,7 @@ class ElectronicSubmissionProduction(models.Model):
                 return submission.transport_request_artifact_id
             signed = submission.document_id._get_signed_artifact()
             signed.action_verify_integrity()
-            raw = ProductionSiiGateway(
-                document_validator_getter=submission._get_document_validator
-            ).prepare_document(
+            raw = submission._envelope_gateway().prepare_document(
                 submission.company_id,
                 submission.environment,
                 base64.b64decode(signed.content, validate=True),
@@ -216,9 +234,7 @@ class ElectronicSubmissionProduction(models.Model):
         document = self.document_id
         if (
             operation != "send"
-            or self.environment != "production"
-            or document.sii_environment != "production"
-            or self.company_id.dte_sii_environment != "production"
+            or not self._has_envelope_environment()
             or self.state != "sending"
             or self.track_id
             or document.fiscal_state != "unknown"
@@ -231,7 +247,10 @@ class ElectronicSubmissionProduction(models.Model):
             or self._dispatched_send_attempts() != attempt
             or attempt.request_digest != self.transport_request_artifact_id.sha256
         ):
-            raise UserError(_("A unique pending Production send outcome is required."))
+            raise UserError(
+                _("A unique pending %(environment)s send outcome is required.")
+                % {"environment": self._environment_label()}
+            )
 
     def _normalize_production_receipt(self, result, response, request):
         if isinstance(result, SiiTransportError):
@@ -339,9 +358,9 @@ class ElectronicSubmissionProduction(models.Model):
         signed.action_verify_integrity()
         original = base64.b64decode(signed.content, validate=True)
         raw = base64.b64decode(artifact.content, validate=True)
-        ProductionSiiTransport(
-            document_validator_getter=submission._get_document_validator
-        ).validate_request(submission.company_id, submission.environment, raw)
+        submission._envelope_gateway().validate_request(
+            submission.company_id, submission.environment, raw
+        )
         payload = validate_document_payload(
             original,
             submission._get_document_validator,
@@ -380,12 +399,13 @@ class ElectronicSubmissionProduction(models.Model):
             or folio.state == "void"
             or folio.number != document.folio
             or caf.is_synthetic
-            or caf.sii_environment != "production"
+            or caf.sii_environment != submission.environment
             or caf.company_id != submission.company_id
             or caf.document_code != document.document_code
         ):
             raise ValidationError(
-                _("The request requires its non-synthetic Production CAF.")
+                _("The request requires its non-synthetic %(environment)s CAF.")
+                % {"environment": submission._environment_label()}
             )
         caf._check_caf_integrity()
         embedded = payload.findall(f"{SII}TED/{SII}DD/{SII}CAF")
@@ -396,6 +416,7 @@ class ElectronicSubmissionProduction(models.Model):
             or _public_caf_identity(embedded[0]) != _public_caf_identity(reserved)
         ):
             raise ValidationError(
-                _("The signed TED must contain the reserved Production CAF.")
+                _("The signed TED must contain the reserved %(environment)s CAF.")
+                % {"environment": submission._environment_label()}
             )
         return raw

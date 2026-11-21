@@ -23,6 +23,17 @@ class TestSignatureService(SigningTestCase):
         self.assertEqual(selected, profile)
         self.assertEqual(holder, "12345678-5")
 
+    def test_certification_identity_needs_a_manager_or_internal_workflow(self):
+        profile = self.create_signing_profile(environment="certification")
+        company = self.company.with_user(self.dte_user)
+        service = SignatureService()
+        with self.assertRaises(AccessError):
+            service.signing_identity(company, "certification")
+        with self.assertRaises(AccessError):
+            service.certification_signing_identity(company.sudo())
+        selected, _holder = service.signing_identity(company.sudo(), "certification")
+        self.assertEqual(selected, profile)
+
     def test_dte_user_signs_only_through_privileged_issuance_context(self):
         self.create_signing_profile()
         company = self.company.with_user(self.dte_user)

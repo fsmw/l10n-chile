@@ -18,3 +18,4 @@ from . import test_envelope_receiver
 from . import test_production_submission_job
 from . import test_claim_registry
 from . import test_boleta_rest
+from . import test_certification_submission_job

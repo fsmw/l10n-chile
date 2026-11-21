@@ -22,20 +22,79 @@ SUPPORTED_PRODUCTION_DTE_CODES = {
     "111",
     "112",
 }
+# Certification issuance from Accounting covers invoices; the other types are
+# exercised through the certification-set envelopes.
+SUPPORTED_CERTIFICATION_DTE_CODES = frozenset({"33", "34"})
+SUPPORTED_DTE_CODES = {
+    "certification": SUPPORTED_CERTIFICATION_DTE_CODES,
+    "production": SUPPORTED_PRODUCTION_DTE_CODES,
+}
+# Real SII environments that receive individual DTEs as one-DTE EnvioDTE uploads.
+SII_ENVELOPE_ENVIRONMENTS = frozenset(SUPPORTED_DTE_CODES)
+
+
+def environment_label(environment):
+    """Return the user-facing name of a real SII environment."""
+    return _("Certification") if environment == "certification" else _("Production")
 
 
 class ProductionSiiGateway(SiiGateway):
-    """Implement the durable per-DTE gateway contract using one-DTE envelopes."""
+    """Implement the durable per-DTE gateway contract using one-DTE envelopes.
 
-    def __init__(self, transport_factory=None, document_validator_getter=None):
+    The gateway is bound to one real SII environment: Production (palena) or
+    Certification (maullin). Its name predates Certification issuance.
+    """
+
+    def __init__(
+        self,
+        transport_factory=None,
+        document_validator_getter=None,
+        environment="production",
+    ):
         """Accept injectable transport and per-type document validation."""
-        self.transport_factory = transport_factory or ProductionSiiTransport
+        if environment not in SII_ENVELOPE_ENVIRONMENTS:
+            raise ValidationError(_("The DTE SII environment is invalid."))
+        self.environment = environment
+        self.transport_factory = transport_factory or self._default_transport()
         self.document_validator_getter = document_validator_getter
 
+    def _default_transport(self):
+        if self.environment == "certification":
+            from .certification_document_transport import (
+                CertificationDocumentTransport,
+            )
+
+            return CertificationDocumentTransport
+        return ProductionSiiTransport
+
     def validate_configuration(self, company, environment):
-        """Reject unready production configuration before the job enters sending."""
+        """Reject unready configuration before the job enters sending."""
+        if environment != self.environment:
+            raise UserError(_("The SII gateway is bound to another environment."))
         self._transport().validate_configuration(company, environment)
         return True
+
+    def check_document_code(self, document_code):
+        """Reject DTE types this environment does not transmit individually."""
+        if document_code not in SUPPORTED_DTE_CODES[self.environment]:
+            if self.environment == "certification":
+                raise UserError(
+                    _(
+                        "Certification DTE transport from Accounting supports "
+                        "document types 33 and 34."
+                    )
+                )
+            raise UserError(
+                _(
+                    "Production DTE transport currently supports document types "
+                    "33, 34, 46, 52, 56, 61, 110, 111 and 112."
+                )
+            )
+        return True
+
+    def validate_request(self, company, environment, request_bytes):
+        """Verify retained envelope bytes with this environment's transport."""
+        return self._transport().validate_request(company, environment, request_bytes)
 
     def _transport(self):
         transport = self.transport_factory()
@@ -56,34 +115,32 @@ class ProductionSiiGateway(SiiGateway):
         company = company.sudo()
         dte = parse_xml(request_bytes)
         if dte.tag != "{http://www.sii.cl/SiiDte}DTE":
-            raise ValidationError(_("The production request must be one signed DTE."))
+            raise ValidationError(_("The SII request must be one signed DTE."))
         try:
             payload = select_dte_payload(dte)
         except ValueError as error:
             raise ValidationError(
-                _("The production request has no single DTE payload.")
+                _("The SII request has no single DTE payload.")
             ) from error
-        code = payload.findtext(
-            "{http://www.sii.cl/SiiDte}Encabezado/{http://www.sii.cl/SiiDte}IdDoc"
-            "/{http://www.sii.cl/SiiDte}TipoDTE"
-        )
-        if code not in SUPPORTED_PRODUCTION_DTE_CODES:
-            raise UserError(
-                _(
-                    "Production DTE transport currently supports document types "
-                    "33, 34, 46, 52, 56, 61, 110, 111 and 112."
-                )
+        self.check_document_code(
+            payload.findtext(
+                "{http://www.sii.cl/SiiDte}Encabezado/{http://www.sii.cl/SiiDte}IdDoc"
+                "/{http://www.sii.cl/SiiDte}TipoDTE"
             )
+        )
         envelope = SiiEnvelopeComposer(self.document_validator_getter).compose(
             company,
             [request_bytes],
             {
                 "id": "SetDTE-" + uuid.uuid4().hex,
                 "sender_vat": company.dte_sii_sender_vat,
-                "resolution_number": company.dte_sii_resolution_number,
+                # SII certification envelopes always declare resolution 0.
+                "resolution_number": "0"
+                if environment == "certification"
+                else company.dte_sii_resolution_number,
                 "resolution_date": company.dte_sii_resolution_date,
             },
-            environment="production",
+            environment=environment,
         )
         return envelope
 
@@ -146,5 +203,5 @@ class ProductionSiiGateway(SiiGateway):
         )
 
     def query_envelope(self, company, environment, track_id):
-        """Delegate a TrackID query to the production transport."""
+        """Delegate a TrackID query to this environment's transport."""
         return self._transport().query_envelope(company, environment, track_id)

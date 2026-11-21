@@ -13,6 +13,7 @@ from ..services.document_validation import (
     get_document_validator,
     validate_document_payload,
 )
+from ..services.production_gateway import SII_ENVELOPE_ENVIRONMENTS
 from ..services.production_response_parser import upload_status_message
 
 POLL_BASE_DELAY = timedelta(minutes=5)
@@ -198,8 +199,11 @@ class ElectronicSubmission(models.Model):
             }:
                 return True
             raise UserError(_("Only a pending SII submission can be enqueued."))
-        self._gateway()
+        gateway = self._gateway()
         document = self.document_id
+        if self.environment == "certification" and self._uses_envelope_upload():
+            # Fail before queueing so an unsupported type keeps its folio free.
+            gateway.check_document_code(document.document_code)
         signed = document._get_signed_artifact()
         if len(signed) != 1:
             raise ValidationError(
@@ -313,12 +317,13 @@ class ElectronicSubmission(models.Model):
         return True
 
     def _uses_envelope_upload(self):
-        """Production DTEs go through the verified EnvioDTE upload path.
+        """Real SII DTEs go through the verified one-DTE EnvioDTE upload path.
 
-        Extension point for documents SII receives on another channel.
+        Certification uploads to maullin and Production to palena. Extension
+        point for documents SII receives on another channel.
         """
         self.ensure_one()
-        return self.environment == "production"
+        return self.environment in SII_ENVELOPE_ENVIRONMENTS
 
     def _prepare_send_request(self, gateway):
         """Return the exact bytes to transmit; raise before any network access."""
@@ -541,7 +546,7 @@ class ElectronicSubmission(models.Model):
         # Demo keeps manual queries so its scripted scenarios stay predictable.
         candidates = self.sudo().search(
             [
-                ("environment", "=", "production"),
+                ("environment", "in", sorted(SII_ENVELOPE_ENVIRONMENTS)),
                 ("state", "in", ["submitted", "processing", "outcome_unknown"]),
                 ("track_id", "!=", False),
                 ("submitted_at", ">=", now - POLL_MAX_AGE),

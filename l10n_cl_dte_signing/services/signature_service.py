@@ -55,11 +55,14 @@ class SignatureService:
         if environment not in {"certification", "production"}:
             raise ValidationError(_("A real SII environment is required."))
         if not company.env.user.has_group("l10n_cl_dte_core.group_dte_manager"):
-            if (
-                manager_only
-                or environment == "certification"
-                or not company.env.su
-                and not company.env.user.has_group("l10n_cl_dte_core.group_dte_user")
+            # Queued issuance workflows check the operator before entering sudo
+            # mode; interactive Certification tools stay manager-only.
+            if manager_only or (
+                not company.env.su
+                and (
+                    environment == "certification"
+                    or not company.env.user.has_group("l10n_cl_dte_core.group_dte_user")
+                )
             ):
                 raise AccessError(
                     _("Only a DTE manager can use the signing certificate.")

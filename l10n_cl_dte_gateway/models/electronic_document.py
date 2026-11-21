@@ -4,6 +4,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
 
+from ..services.production_gateway import SII_ENVELOPE_ENVIRONMENTS
+
 
 class ElectronicDocument(models.Model):
     _inherit = "l10n_cl.electronic.document"
@@ -14,7 +16,7 @@ class ElectronicDocument(models.Model):
         )
         if (
             self.env.su
-            and self.sii_environment == "production"
+            and self.sii_environment in SII_ENVELOPE_ENVIRONMENTS
             and domain == "fiscal"
             and current == "unknown"
             and target_state == "rejected"
@@ -44,9 +46,9 @@ class ElectronicDocument(models.Model):
         if (
             not self.env.su
             or len(submission) != 1
-            or submission.environment != "production"
-            or self.sii_environment != "production"
-            or self.company_id.dte_sii_environment != "production"
+            or submission.environment not in SII_ENVELOPE_ENVIRONMENTS
+            or self.sii_environment != submission.environment
+            or self.company_id.dte_sii_environment != submission.environment
             or self.preparation_state != "queued"
             or self.fiscal_state != "unknown"
             or submission.state != "sending"
@@ -63,9 +65,7 @@ class ElectronicDocument(models.Model):
             or artifact.role != "sii_response"
             or attempts.response_digest != artifact.sha256
         ):
-            raise ValidationError(
-                _("A verified Production upload rejection is required.")
-            )
+            raise ValidationError(_("A verified SII upload rejection is required."))
         artifact.with_context(bin_size=False).action_verify_integrity()
         request = submission._verify_production_request()
         if (

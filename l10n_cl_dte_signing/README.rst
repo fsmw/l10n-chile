@@ -49,6 +49,13 @@ certificate from the company's Demo configuration; the generated record
 is visibly marked synthetic and cannot be used by Certification or
 Production.
 
+XMLDSig canonicalization materializes inherited namespace declarations
+before signing or verification. This avoids incorrect empty namespace
+declarations when canonicalizing nested nodes. Previously generated XML
+must be verified again after this correction. Existing fiscal artifacts
+are preserved; the update does not rewrite stored signatures or reserve
+replacement folios.
+
 Bug Tracker
 ===========
 
