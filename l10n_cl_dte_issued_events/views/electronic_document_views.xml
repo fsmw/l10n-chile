@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_electronic_document_form_receiver" model="ir.ui.view">
+        <field name="name">l10n_cl.electronic.document.form.receiver</field>
+        <field name="model">l10n_cl.electronic.document</field>
+        <field name="inherit_id" ref="l10n_cl_dte_core.view_electronic_document_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="Receiver Responses"
+                    name="receiver_responses"
+                    groups="l10n_cl_dte_core.group_dte_user"
+                >
+                    <field name="receiver_tracked" invisible="1" />
+                    <div class="mb-2">
+                        <button
+                            name="action_check_receiver_response"
+                            type="object"
+                            string="Check Receiver Response"
+                            class="btn-secondary"
+                            icon="fa-refresh"
+                            groups="l10n_cl_dte_core.group_dte_manager"
+                            invisible="not receiver_tracked"
+                        />
+                    </div>
+                    <group>
+                        <group>
+                            <field name="receiver_state" widget="badge" />
+                            <field name="receiver_reception_at" />
+                            <field name="receiver_deadline" />
+                        </group>
+                        <group>
+                            <field name="receiver_last_check_at" />
+                            <field name="receiver_next_check_at" />
+                            <field name="receiver_check_count" />
+                            <field name="receiver_check_message" />
+                            <field name="receiver_tracking_done" />
+                        </group>
+                    </group>
+                    <field name="receiver_event_ids" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_receiver_response_list" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.receiver.response.list</field>
+        <field name="model">l10n_cl.dte.receiver.response</field>
+        <field name="arch" type="xml">
+            <list
+                create="0"
+                delete="0"
+                edit="0"
+                decoration-warning="match_state != 'matched'"
+            >
+                <field name="create_date" string="Received" />
+                <field name="name" />
+                <field name="kind" />
+                <field name="responder_vat" />
+                <field name="match_state" widget="badge" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+            </list>
+        </field>
+    </record>
+    <record id="view_receiver_response_form" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.receiver.response.form</field>
+        <field name="model">l10n_cl.dte.receiver.response</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="kind" />
+                            <field name="channel" />
+                            <field name="match_state" widget="badge" />
+                        </group>
+                        <group>
+                            <field name="responder_vat" />
+                            <field name="signed_at" />
+                            <field name="sha256" />
+                            <field name="byte_count" />
+                            <field
+                                name="content"
+                                filename="name"
+                                groups="l10n_cl_dte_core.group_dte_manager"
+                            />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                    </group>
+                    <field
+                        name="diagnostics"
+                        invisible="not diagnostics"
+                        class="text-warning"
+                    />
+                    <notebook>
+                        <page string="Events" name="events">
+                            <field name="event_ids" />
+                        </page>
+                        <page string="Issued DTEs" name="documents">
+                            <field name="document_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_receiver_response_search" model="ir.ui.view">
+        <field name="name">l10n_cl.dte.receiver.response.search</field>
+        <field name="model">l10n_cl.dte.receiver.response</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="responder_vat" />
+                <filter
+                    name="not_matched"
+                    string="Not Matched"
+                    domain="[('match_state', '!=', 'matched')]"
+                />
+                <filter
+                    name="kind_group"
+                    string="Kind"
+                    context="{'group_by': 'kind'}"
+                />
+            </search>
+        </field>
+    </record>
+    <record id="action_receiver_response" model="ir.actions.act_window">
+        <field name="name">Receiver Responses</field>
+        <field name="res_model">l10n_cl.dte.receiver.response</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

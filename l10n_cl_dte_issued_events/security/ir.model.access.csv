@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_receiver_event_user,receiver.event.user,model_l10n_cl_dte_receiver_event,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_receiver_response_user,receiver.response.user,model_l10n_cl_dte_receiver_response,l10n_cl_dte_core.group_dte_user,1,0,0,0
