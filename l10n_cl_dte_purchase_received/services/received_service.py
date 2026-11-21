@@ -23,7 +23,12 @@ from odoo.addons.l10n_cl_dte_inbox_account.services.policy_service import (
     IncomingAccountPolicyService,
 )
 
-from .common import PURCHASE_CODE, SALE_MOVE_TYPE, reject_received
+from .common import (
+    PURCHASE_CODE,
+    SALE_MOVE_TYPE,
+    TOTAL_RETENTION_CODE,
+    reject_received,
+)
 from .comparison_service import ReceivedPurchaseComparisonService
 from .evidence_service import ReceivedPurchaseEvidenceService
 
@@ -64,7 +69,14 @@ class ReceivedPurchaseService:
             reject(self.env, "unsupported_feature")
         if incoming.sii_environment != company.dte_sii_environment:
             reject(self.env, "environment_mismatch")
-        return company._get_dte_received46_configuration()
+        config = company._get_dte_received46_configuration()
+        mapped = company._dte_received46_partial_taxes()
+        for item in document["totals"]["retentions"]:
+            if item["code"] != TOTAL_RETENTION_CODE and item["code"] not in mapped:
+                reject_received(
+                    self.env, "retention_unmapped", source_value=item["code"]
+                )
+        return config
 
     def resolve_customer(self, company, issuer_vat):
         try:
@@ -257,7 +269,8 @@ class ReceivedPurchaseService:
             accounting_date=str(preview["accounting_date"]),
             config=[
                 [record._name, record.id, str(record.write_date)]
-                for record in config.values()
+                for records in config.values()
+                for record in records
             ],
         )
         return self.binding.comparison.preview_digest(preview["document"], choices)

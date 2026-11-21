@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.addons.l10n_cl_dte_inbox_account.services.common import decimal
 
 from ..services.common import (
+    PARTIAL_RETENTION_RATES,
     TOTAL_RETENTION_CODE,
     TOTAL_RETENTION_RATE,
     VAT_RATE,
@@ -50,10 +51,27 @@ class ResCompany(models.Model):
         ),
     )
 
+    dte_inbox_account_received46_partial_tax_ids = fields.Many2many(
+        "account.tax",
+        "res_company_received46_partial_tax_rel",
+        "company_id",
+        "tax_id",
+        string="Partial VAT Retained by the Buyer",
+        check_company=True,
+        domain="[('company_id', '=', id), ('type_tax_use', '=', 'sale')]",
+        help=(
+            "One sale tax per SII partial retention code (30-48) the buyers"
+            " use, at the negative official rate of that code (for example"
+            " -8% with SII code 32 for cattle), whose tax account holds the"
+            " VAT retained on our sale."
+        ),
+    )
+
     @api.constrains(
         "dte_inbox_account_received46_journal_id",
         "dte_inbox_account_received46_vat_tax_id",
         "dte_inbox_account_received46_retention_tax_id",
+        "dte_inbox_account_received46_partial_tax_ids",
     )
     def _check_dte_received46_settings(self):
         for company in self:
@@ -64,6 +82,31 @@ class ResCompany(models.Model):
             for tax, rate, code in company._dte_received46_tax_specs():
                 if tax:
                     company._check_dte_received46_tax(tax, rate, code)
+            company._check_dte_received46_partial_taxes()
+
+    def _check_dte_received46_partial_taxes(self):
+        """Each mapped tax uses a supported code at its official rate, once."""
+        self.ensure_one()
+        taxes = self.dte_inbox_account_received46_partial_tax_ids
+        codes = [str(tax.l10n_cl_sii_code) for tax in taxes]
+        if len(set(codes)) != len(codes):
+            reject_received(self.env, "received46_not_configured")
+        for tax, code in zip(taxes, codes, strict=True):
+            if code not in PARTIAL_RETENTION_RATES:
+                reject_received(
+                    self.env, "received46_not_configured", source_value=code
+                )
+            self._check_dte_received46_tax(
+                tax, -PARTIAL_RETENTION_RATES[code], int(code)
+            )
+
+    def _dte_received46_partial_taxes(self):
+        """Return {SII code: sale tax} of the configured partial retentions."""
+        self.ensure_one()
+        return {
+            str(tax.l10n_cl_sii_code): tax
+            for tax in self.dte_inbox_account_received46_partial_tax_ids
+        }
 
     def _dte_received46_tax_specs(self):
         self.ensure_one()
@@ -108,7 +151,11 @@ class ResCompany(models.Model):
             reject_received(self.env, "received46_not_configured")
 
     def _get_dte_received46_configuration(self):
-        """Return the journal and taxes that book a received DTE 46, or refuse."""
+        """Return the journal and taxes that book a received DTE 46, or refuse.
+
+        Partial retention taxes are optional; a document using an unmapped
+        code is refused when it is prepared.
+        """
         self.ensure_one()
         if (
             self.country_id.code != "CL"
@@ -122,8 +169,10 @@ class ResCompany(models.Model):
             if not tax:
                 reject_received(self.env, "received46_not_configured")
             self._check_dte_received46_tax(tax, rate, code)
+        self._check_dte_received46_partial_taxes()
         return dict(
             journal=self.dte_inbox_account_received46_journal_id,
             vat_tax=self.dte_inbox_account_received46_vat_tax_id,
             retention_tax=self.dte_inbox_account_received46_retention_tax_id,
+            partial_retention_taxes=self.dte_inbox_account_received46_partial_tax_ids,
         )

@@ -40,6 +40,9 @@ class ReceivedPurchaseCase(IncomingAccountCase):
         cls.retention = cls._tax(
             env, "Synthetic VAT retained by buyer", -19, 15, cls.retained_account, group
         )
+        cls.cattle_retention = cls._tax(
+            env, "Synthetic cattle VAT retained 8%", -8, 32, cls.retained_account, group
+        )
         cls.received46_config = dict(
             dte_inbox_account_received46_journal_id=cls.sale_journal.id,
             dte_inbox_account_received46_vat_tax_id=cls.sale_vat.id,
@@ -81,7 +84,9 @@ class ReceivedPurchaseCase(IncomingAccountCase):
             )
         )
 
-    def signed_purchase(self, retention_code="15", receiver=None, retained=None):
+    def signed_purchase(
+        self, retention_code="15", receiver=None, retained=None, rate="19"
+    ):
         """Sign a DTE 46 the synthetic buyer issues to the recipient company."""
         invoice = self.make_invoice(
             code="33", post=False, taxable=True, partner=receiver
@@ -96,10 +101,17 @@ class ReceivedPurchaseCase(IncomingAccountCase):
             document_code="46", folio_start=self.counter, folio_end=self.counter + 3
         )
         totals = dict(snapshot["totals"])
-        amount = retained if retained is not None else totals["vat"]
+        vat_amount = int(totals["vat"])
+        amount = (
+            retained
+            if retained is not None
+            else str(round(vat_amount * int(rate) / 19))
+        )
         totals["additional_taxes"] = [
-            dict(code=retention_code, rate="19", amount=amount)
+            dict(code=retention_code, rate=rate, amount=amount)
         ]
+        if vat_amount > int(amount):
+            totals["vat_not_retained"] = str(vat_amount - int(amount))
         totals["total"] = str(int(totals["total"]) - int(amount))
         purchase = dict(
             snapshot,

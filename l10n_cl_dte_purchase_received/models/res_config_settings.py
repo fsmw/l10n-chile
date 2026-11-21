@@ -27,3 +27,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'sale')]",
     )
+    dte_inbox_account_received46_partial_tax_ids = fields.Many2many(
+        related="company_id.dte_inbox_account_received46_partial_tax_ids",
+        readonly=False,
+        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'sale')]",
+    )

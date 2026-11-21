@@ -70,10 +70,77 @@ class TestReceivedPurchase(ReceivedPurchaseCase):
             move.issue_dte()
         self.assert_entry(move)
 
-    def test_partial_retention_is_refused(self):
-        wizard = self.purchase_wizard(self.purchase_source(retention_code="30"))
+    def test_unsupported_retention_codes_are_refused(self):
+        self._map_partial_retentions(self.cattle_retention)
+        cases = (
+            (dict(retention_code="40"), "retention_partial"),
+            (dict(retention_code="32"), "retention_unsupported"),
+            (dict(retention_code="32", rate="8", retained="100"), "amount_mismatch"),
+        )
+        for kwargs, code in cases:
+            with self.subTest(code=code):
+                wizard = self.purchase_wizard(self.purchase_source(**kwargs))
+                self.assertTrue(wizard.has_blockers)
+                self.assertIn(code, wizard.diagnostic_text)
+
+    def _map_partial_retentions(self, taxes):
+        self.recipient.sudo().dte_inbox_account_received46_partial_tax_ids = taxes
+
+    def test_received_46_with_partial_retention_is_booked(self):
+        self._map_partial_retentions(self.cattle_retention)
+        source = self.purchase_source(retention_code="32", rate="8")
+        wizard = self.purchase_wizard(source)
+        self.assertEqual(wizard.source_total, 1110)
+        move = self.customer_invoice(wizard)
+        self.assertEqual(
+            move.invoice_line_ids.tax_ids, self.sale_vat | self.cattle_retention
+        )
+        self.assertEqual(move.amount_total, 1110)
+        move.action_post()
+        lines = move.line_ids
+        receivable = lines.filtered(
+            lambda line: line.account_id.account_type == "asset_receivable"
+        )
+        self.assertEqual(sum(receivable.mapped("balance")), 1110)
+        retained = lines.filtered(
+            lambda line: line.tax_line_id == self.cattle_retention
+        )
+        self.assertEqual(retained.account_id, self.retained_account)
+        self.assertEqual(sum(retained.mapped("balance")), 80)
+        self.assertEqual(
+            sum(
+                lines.filtered(lambda line: line.tax_line_id == self.sale_vat).mapped(
+                    "balance"
+                )
+            ),
+            -190,
+        )
+
+    def test_unmapped_partial_retention_is_refused(self):
+        self._map_partial_retentions(self.cattle_retention)
+        wizard = self.purchase_wizard(
+            self.purchase_source(retention_code="34", rate="4")
+        )
         self.assertTrue(wizard.has_blockers)
-        self.assertIn("retention_partial", wizard.diagnostic_text)
+        self.assertIn("retention_unmapped", wizard.diagnostic_text)
+
+    def test_partial_retention_taxes_are_validated(self):
+        env = self.env(su=True)
+        group = self.sale_vat.tax_group_id
+        wrong_rate = self._tax(
+            env, "Cattle at a wrong rate", -10, 32, self.retained_account, group
+        )
+        unsupported = self._tax(
+            env, "Unsupported code", -19, 40, self.retained_account, group
+        )
+        duplicate = self.cattle_retention.copy(dict(name="Second cattle tax"))
+        for taxes in (wrong_rate, unsupported, self.cattle_retention | duplicate):
+            with self.subTest(taxes=taxes.mapped("name")):
+                with self.assertRaises(IncomingAccountError) as error:
+                    self._map_partial_retentions(taxes)
+                self.assertEqual(
+                    error.exception.diagnostic["code"], "received46_not_configured"
+                )
 
     def test_retention_must_cover_the_vat(self):
         source = self.purchase_source(retained="100")
