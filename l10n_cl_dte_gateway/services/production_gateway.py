@@ -11,7 +11,17 @@ from .production_response_parser import parse_xml
 from .production_transport import ProductionSiiTransport
 from .sii_gateway import SiiGateway
 
-SUPPORTED_PRODUCTION_DTE_CODES = {"33", "34", "52", "56", "61", "110", "111", "112"}
+SUPPORTED_PRODUCTION_DTE_CODES = {
+    "33",
+    "34",
+    "46",
+    "52",
+    "56",
+    "61",
+    "110",
+    "111",
+    "112",
+}
 
 
 class ProductionSiiGateway(SiiGateway):
@@ -61,7 +71,7 @@ class ProductionSiiGateway(SiiGateway):
             raise UserError(
                 _(
                     "Production DTE transport currently supports document types "
-                    "33, 34, 52, 56, 61, 110, 111 and 112."
+                    "33, 34, 46, 52, 56, 61, 110, 111 and 112."
                 )
             )
         envelope = SiiEnvelopeComposer(self.document_validator_getter).compose(

@@ -201,8 +201,8 @@ class InvoiceSnapshotService:
             move.company_id, move.partner_id, document_code
         )
 
-    def fiscal_master_data_errors(self, company, partner, document_code):
-        """Validate the fiscal parties before an invoice or folio is created."""
+    def issuer_master_data_errors(self, company):
+        """Return the missing fiscal data of the issuing company."""
         caf_model = company.env["l10n_cl.caf.authorization"]
         errors = []
         issuer = company.partner_id
@@ -222,7 +222,12 @@ class InvoiceSnapshotService:
             errors.append(_("Company: enter the DTE origin address."))
         if not (issuer.city or "").strip():
             errors.append(_("Company: enter the DTE origin commune."))
+        return errors
 
+    def fiscal_master_data_errors(self, company, partner, document_code):
+        """Validate the fiscal parties before an invoice or folio is created."""
+        caf_model = company.env["l10n_cl.caf.authorization"]
+        errors = self.issuer_master_data_errors(company)
         receiver = partner.commercial_partner_id
         receiver_vat = caf_model._normalize_vat(receiver.vat)
         if not caf_model._is_valid_vat(receiver_vat):

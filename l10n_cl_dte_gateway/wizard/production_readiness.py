@@ -12,6 +12,7 @@ from ..services.production_transport import ProductionSiiTransport
 _DTE_TYPE_NAMES = {
     "33": "Electronic invoice",
     "34": "Electronic exempt invoice",
+    "46": "Electronic purchase invoice",
     "52": "Electronic delivery guide",
     "56": "Electronic debit note",
     "61": "Electronic credit note",

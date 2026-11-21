@@ -24,6 +24,9 @@ from .dte_wire_format import fixed_decimal, serialize_unsigned_dte
 from .ted_composer import DteTedComposer
 
 SII_NAMESPACE = "http://www.sii.cl/SiiDte"
+# Invoice-shaped DTE_v10 documents: invoices 33/34 and the purchase invoice 46,
+# whose snapshot is prepared by l10n_cl_dte_purchase.
+SUPPORTED_SNAPSHOT_CODES = frozenset({"33", "34", "46"})
 
 
 class DteXmlComposer:
@@ -363,7 +366,7 @@ def _find_local_text(element, name):
 def _require_supported_snapshot(snapshot):
     if not isinstance(snapshot, dict):
         raise ValidationError(_("The invoice snapshot must be a mapping."))
-    if snapshot.get("document_code") not in {"33", "34"}:
+    if snapshot.get("document_code") not in SUPPORTED_SNAPSHOT_CODES:
         raise ValidationError(_("The selected DTE type is not supported."))
     if not snapshot.get("lines"):
         raise ValidationError(_("A DTE needs at least one detail line."))
