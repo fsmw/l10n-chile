@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="rule_f29_box_company" model="ir.rule">
+        <field name="name">F29 box: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_f29_box" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_f29_report_company" model="ir.rule">
+        <field name="name">F29 worksheet: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_f29_report" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rule_eight_column_balance_company" model="ir.rule">
+        <field name="name">Eight-column balance: multi-company</field>
+        <field name="model_id" ref="model_l10n_cl_eight_column_balance" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

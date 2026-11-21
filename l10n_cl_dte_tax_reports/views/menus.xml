@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_l10n_cl_tax_reports"
+        name="Chile"
+        parent="account.menu_finance_reports"
+        sequence="90"
+        groups="account.group_account_readonly,account.group_account_manager"
+    />
+    <menuitem
+        id="menu_f29_report"
+        action="action_f29_report"
+        parent="menu_l10n_cl_tax_reports"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_eight_column_balance"
+        action="action_eight_column_balance"
+        parent="menu_l10n_cl_tax_reports"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_f29_box"
+        action="action_f29_box"
+        parent="account.account_account_menu"
+        sequence="90"
+        groups="account.group_account_manager"
+    />
+</odoo>

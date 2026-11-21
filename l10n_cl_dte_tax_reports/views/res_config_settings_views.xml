@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.l10n.cl.tax.reports</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//block[@name='default_taxes_setting_container']"
+                position="after"
+            >
+                <block
+                    title="Chilean F29 Worksheet"
+                    name="l10n_cl_f29_setting_container"
+                    invisible="country_code != 'CL'"
+                >
+                    <setting
+                        string="PPM rate"
+                        help="Monthly provisional payment rate on net sales."
+                    >
+                        <field name="l10n_cl_f29_ppm_rate" />
+                    </setting>
+                    <setting
+                        string="Proportional factor"
+                        help="Usable share of the common-use VAT credit."
+                    >
+                        <field name="l10n_cl_f29_proportional_factor" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

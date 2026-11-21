@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_f29_report_form" model="ir.ui.view">
+        <field name="name">l10n_cl.f29.report.form</field>
+        <field name="model">l10n_cl.f29.report</field>
+        <field name="arch" type="xml">
+            <form string="F29 Worksheet">
+                <header>
+                    <button
+                        name="action_compute"
+                        string="Compute"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button name="action_print_pdf" string="Print PDF" type="object" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="currency_id" invisible="True" />
+                            <field name="year" options="{'format': false}" />
+                            <field name="month" />
+                            <field name="date_from" />
+                            <field name="date_to" />
+                        </group>
+                        <group>
+                            <field name="previous_credit_remainder" />
+                            <field name="proportional_factor" />
+                            <field name="ppm_rate" />
+                        </group>
+                    </group>
+                    <field name="line_ids" readonly="True">
+                        <list decoration-bf="line_type == 'total'">
+                            <field name="currency_id" column_invisible="True" />
+                            <field name="line_type" column_invisible="True" />
+                            <field name="section" />
+                            <field name="name" />
+                            <field name="count_code" />
+                            <field name="count" />
+                            <field name="amount_code" />
+                            <field name="amount" />
+                        </list>
+                    </field>
+                    <group>
+                        <group string="VAT">
+                            <field name="total_debits" />
+                            <field name="total_credits" />
+                            <field name="vat_payable" />
+                            <field name="credit_remainder" />
+                        </group>
+                        <group string="Other Taxes">
+                            <field name="total_withholdings" />
+                            <field name="ppm_base" />
+                            <field name="ppm_amount" />
+                            <field name="total_payable" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_f29_report" model="ir.actions.act_window">
+        <field name="name">F29 Worksheet</field>
+        <field name="res_model">l10n_cl.f29.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

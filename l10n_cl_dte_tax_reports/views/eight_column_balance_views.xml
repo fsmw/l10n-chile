@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_eight_column_balance_form" model="ir.ui.view">
+        <field name="name">l10n_cl.eight.column.balance.form</field>
+        <field name="model">l10n_cl.eight.column.balance</field>
+        <field name="arch" type="xml">
+            <form string="Eight-Column Balance">
+                <group>
+                    <field name="company_id" groups="base.group_multi_company" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                </group>
+                <footer>
+                    <button
+                        name="action_view_lines"
+                        string="View"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button name="action_print_pdf" string="Print PDF" type="object" />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_eight_column_balance" model="ir.actions.act_window">
+        <field name="name">Eight-Column Balance</field>
+        <field name="res_model">l10n_cl.eight.column.balance</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <record id="view_eight_column_balance_line_list" model="ir.ui.view">
+        <field name="name">l10n_cl.eight.column.balance.line.list</field>
+        <field name="model">l10n_cl.eight.column.balance.line</field>
+        <field name="arch" type="xml">
+            <list
+                create="false"
+                edit="false"
+                delete="false"
+                decoration-bf="line_type != 'account'"
+            >
+                <field name="line_type" column_invisible="True" />
+                <field name="currency_id" column_invisible="True" />
+                <field name="name" string="Account" />
+                <field name="debit" sum="Total" />
+                <field name="credit" sum="Total" />
+                <field name="debit_balance" sum="Total" />
+                <field name="credit_balance" sum="Total" />
+                <field name="assets" sum="Total" />
+                <field name="liabilities" sum="Total" />
+                <field name="losses" sum="Total" />
+                <field name="gains" sum="Total" />
+            </list>
+        </field>
+    </record>
+    <record id="view_eight_column_balance_line_pivot" model="ir.ui.view">
+        <field name="name">l10n_cl.eight.column.balance.line.pivot</field>
+        <field name="model">l10n_cl.eight.column.balance.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Eight-Column Balance">
+                <field name="line_type" type="row" />
+                <field name="debit" type="measure" />
+                <field name="credit" type="measure" />
+                <field name="debit_balance" type="measure" />
+                <field name="credit_balance" type="measure" />
+                <field name="assets" type="measure" />
+                <field name="liabilities" type="measure" />
+                <field name="losses" type="measure" />
+                <field name="gains" type="measure" />
+            </pivot>
+        </field>
+    </record>
+    <record id="view_eight_column_balance_line_search" model="ir.ui.view">
+        <field name="name">l10n_cl.eight.column.balance.line.search</field>
+        <field name="model">l10n_cl.eight.column.balance.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="account_id" />
+                <filter
+                    name="accounts"
+                    string="Accounts"
+                    domain="[('line_type', '=', 'account')]"
+                />
+                <group>
+                    <filter
+                        name="group_line_type"
+                        string="Line Type"
+                        context="{'group_by': 'line_type'}"
+                    />
+                    <filter
+                        name="group_account_type"
+                        string="Account Type"
+                        context="{'group_by': 'account_type'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_eight_column_balance_line" model="ir.actions.act_window">
+        <field name="name">Eight-Column Balance</field>
+        <field name="res_model">l10n_cl.eight.column.balance.line</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="search_view_id" ref="view_eight_column_balance_line_search" />
+    </record>
+</odoo>

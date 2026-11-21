@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="f29_box_sale_invoice" model="l10n_cl.f29.box">
+        <field name="name">Invoices issued</field>
+        <field name="sequence">10</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">503</field>
+        <field name="amount_code">502</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_a_f_dte'), ref('l10n_cl.dc_a_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Debito Fiscal</field>
+        <field name="sign">1</field>
+        <field name="total_effect">debit</field>
+    </record>
+    <record id="f29_box_sale_receipt" model="l10n_cl.f29.box">
+        <field name="name">Receipts issued</field>
+        <field name="sequence">20</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">110</field>
+        <field name="amount_code">111</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_b_f_dte'), ref('l10n_cl.dc_b_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Debito Fiscal</field>
+        <field name="sign">1</field>
+        <field name="total_effect">debit</field>
+    </record>
+    <record id="f29_box_sale_debit_note" model="l10n_cl.f29.box">
+        <field name="name">Debit notes issued</field>
+        <field name="sequence">30</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">512</field>
+        <field name="amount_code">513</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_nd_f_dte'), ref('l10n_cl.dc_nd_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Debito Fiscal</field>
+        <field name="sign">1</field>
+        <field name="total_effect">debit</field>
+    </record>
+    <record id="f29_box_sale_credit_note" model="l10n_cl.f29.box">
+        <field name="name">Credit notes issued</field>
+        <field name="sequence">40</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">509</field>
+        <field name="amount_code">510</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_nc_f_dte'), ref('l10n_cl.dc_nc_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Debito Fiscal</field>
+        <field name="sign">-1</field>
+        <field name="total_effect">debit_reduce</field>
+    </record>
+    <record id="f29_box_sale_exempt" model="l10n_cl.f29.box">
+        <field name="name">Exempt invoices and receipts issued</field>
+        <field name="sequence">50</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">586</field>
+        <field name="amount_code">142</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_y_f_dte'), ref('l10n_cl.dc_y_f_dtn'), ref('l10n_cl.dc_b_e_dte'), ref('l10n_cl.dc_b_e_dtn')])]"
+        />
+        <field name="amount_source">untaxed</field>
+        <field name="sign">1</field>
+        <field name="total_effect">none</field>
+    </record>
+    <record id="f29_box_sale_export" model="l10n_cl.f29.box">
+        <field name="name">Export documents</field>
+        <field name="sequence">60</field>
+        <field name="section">sale</field>
+        <field name="move_scope">sale</field>
+        <field name="count_code">585</field>
+        <field name="amount_code">20</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_fe_dte'), ref('l10n_cl.dc_ndex_dte'), ref('l10n_cl.dc_ncex_dte')])]"
+        />
+        <field name="amount_source">untaxed</field>
+        <field name="sign">1</field>
+        <field name="total_effect">none</field>
+    </record>
+    <record id="f29_box_purchase_invoice" model="l10n_cl.f29.box">
+        <field name="name">Invoices received with recoverable VAT</field>
+        <field name="sequence">70</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="count_code">519</field>
+        <field name="amount_code">520</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_a_f_dte'), ref('l10n_cl.dc_a_f_dtn'), ref('l10n_cl.dc_fc_f_dte'), ref('l10n_cl.dc_fc_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Pagado Compras Recuperables
+IVA Pagado Compras Supermercado</field>
+        <field name="sign">1</field>
+        <field name="total_effect">credit</field>
+    </record>
+    <record id="f29_box_purchase_common_use" model="l10n_cl.f29.box">
+        <field name="name">Common-use VAT on documents received (proportional)</field>
+        <field name="sequence">80</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="amount_code">520</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_a_f_dte'), ref('l10n_cl.dc_a_f_dtn'), ref('l10n_cl.dc_fc_f_dte'), ref('l10n_cl.dc_fc_f_dtn'), ref('l10n_cl.dc_nd_f_dte'), ref('l10n_cl.dc_nd_f_dtn'), ref('l10n_cl.dc_nc_f_dte'), ref('l10n_cl.dc_nc_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Pagado Compras Uso Común</field>
+        <field name="sign">1</field>
+        <field name="total_effect">credit</field>
+        <field name="apply_proportional_factor" eval="True" />
+    </record>
+    <record id="f29_box_purchase_fixed_asset" model="l10n_cl.f29.box">
+        <field name="name">Fixed asset invoices received</field>
+        <field name="sequence">90</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="count_code">524</field>
+        <field name="amount_code">525</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_a_f_dte'), ref('l10n_cl.dc_a_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">Compras Activo Fijo</field>
+        <field name="sign">1</field>
+        <field name="total_effect">credit</field>
+    </record>
+    <record id="f29_box_purchase_fixed_asset_common" model="l10n_cl.f29.box">
+        <field name="name">Common-use fixed asset VAT (proportional)</field>
+        <field name="sequence">100</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="amount_code">525</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_a_f_dte'), ref('l10n_cl.dc_a_f_dtn'), ref('l10n_cl.dc_nd_f_dte'), ref('l10n_cl.dc_nd_f_dtn'), ref('l10n_cl.dc_nc_f_dte'), ref('l10n_cl.dc_nc_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">Compras Activo Fijo Uso Común</field>
+        <field name="sign">1</field>
+        <field name="total_effect">credit</field>
+        <field name="apply_proportional_factor" eval="True" />
+    </record>
+    <record id="f29_box_purchase_debit_note" model="l10n_cl.f29.box">
+        <field name="name">Debit notes received</field>
+        <field name="sequence">110</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="count_code">531</field>
+        <field name="amount_code">532</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_nd_f_dte'), ref('l10n_cl.dc_nd_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Pagado Compras Recuperables
+IVA Pagado Compras Supermercado
+Compras Activo Fijo</field>
+        <field name="sign">1</field>
+        <field name="total_effect">credit</field>
+    </record>
+    <record id="f29_box_purchase_credit_note" model="l10n_cl.f29.box">
+        <field name="name">Credit notes received</field>
+        <field name="sequence">120</field>
+        <field name="section">purchase</field>
+        <field name="move_scope">purchase</field>
+        <field name="count_code">527</field>
+        <field name="amount_code">528</field>
+        <field
+            name="document_type_ids"
+            eval="[Command.set([ref('l10n_cl.dc_nc_f_dte'), ref('l10n_cl.dc_nc_f_dtn')])]"
+        />
+        <field name="amount_source">tax</field>
+        <field name="tag_names">IVA Pagado Compras Recuperables
+IVA Pagado Compras Supermercado
+Compras Activo Fijo</field>
+        <field name="sign">-1</field>
+        <field name="total_effect">credit_reduce</field>
+    </record>
+    <record id="f29_box_purchase_not_recoverable" model="l10n_cl.f29.box">
+        <field name="name">Purchases without right to VAT credit (net amount)</field>
+        <field name="sequence">130</field>
+        <field name="section">info</field>
+        <field name="move_scope">purchase</field>
+        <field name="count_code">564</field>
+        <field name="amount_code">521</field>
+        <field name="amount_source">base</field>
+        <field name="tag_names">Compras IVA No Recuperable
+Compras de Activo Fijo No Recuperable</field>
+        <field name="sign">1</field>
+        <field name="total_effect">none</field>
+    </record>
+    <record id="f29_box_withholding_vat_total" model="l10n_cl.f29.box">
+        <field name="name">VAT withheld on purchase invoices (total retention)</field>
+        <field name="sequence">140</field>
+        <field name="section">withholding</field>
+        <field name="move_scope">purchase</field>
+        <field name="amount_code">39</field>
+        <field name="amount_source">tax</field>
+        <field name="tag_names">Retención Total (compras)</field>
+        <field name="sign">-1</field>
+        <field name="total_effect">withholding</field>
+    </record>
+    <record id="f29_box_withholding_second_category" model="l10n_cl.f29.box">
+        <field name="name">Second category income tax withheld (fees)</field>
+        <field name="sequence">150</field>
+        <field name="section">withholding</field>
+        <field name="move_scope">purchase</field>
+        <field name="amount_code">151</field>
+        <field name="amount_source">tax</field>
+        <field name="tag_names">Retención Segunda Categoría</field>
+        <field name="sign">-1</field>
+        <field name="total_effect">withholding</field>
+    </record>
+</odoo>
