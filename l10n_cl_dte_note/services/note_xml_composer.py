@@ -130,7 +130,6 @@ class NoteXmlComposer:
             ("exempt", "MntExe"),
             ("vat_rate", "TasaIVA"),
             ("vat", "IVA"),
-            ("total", "MntTotal"),
         ):
             value = totals_data.get(key)
             _add_optional_text(
@@ -140,6 +139,12 @@ class NoteXmlComposer:
                 if wire_layout and key == "vat_rate" and value
                 else value,
             )
+        for additional in totals_data.get("additional_taxes") or []:
+            tax = etree.SubElement(totals, f"{{{SII_NAMESPACE}}}ImptoReten")
+            _add_text(tax, "TipoImp", additional["code"])
+            _add_text(tax, "TasaImp", fixed_decimal(additional["rate"], 2))
+            _add_text(tax, "MontoImp", additional["amount"])
+        _add_optional_text(totals, "MntTotal", totals_data.get("total"))
         for index, line_data in enumerate(snapshot["lines"], start=1):
             detail = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Detalle")
             _add_text(detail, "NroLinDet", index)
@@ -177,7 +182,13 @@ class NoteXmlComposer:
                         line_data["discount_percent"],
                     )
                     _add_text(detail, "DescuentoMonto", str(discount))
+            _add_optional_text(
+                detail, "CodImpAdic", line_data.get("additional_tax_code")
+            )
             _add_text(detail, "MontoItem", line_data["subtotal"])
+        DteXmlComposer._append_global_discounts(
+            document, {"global_discounts": snapshot.get("global_discounts")}
+        )
         for index, ref in enumerate(refs, start=1):
             reference = etree.SubElement(document, f"{{{SII_NAMESPACE}}}Referencia")
             for name, value in (
@@ -214,7 +225,8 @@ class NoteXmlComposer:
         """Verify DTE_v10 XSD, one reference, CAF TED and XMLDSig.
 
         ``strict_sii`` applies the Production upload checks shared with
-        invoices: line discounts and the standalone SII signature form.
+        invoices: line discounts, the exempt total net of exempt global
+        discounts and the standalone SII signature form.
         """
         if not isinstance(xml_bytes, bytes) or b"<!DOCTYPE" in xml_bytes.upper():
             raise ValidationError(_("DTE note XML must be bytes without a DTD."))
@@ -263,6 +275,7 @@ class NoteXmlComposer:
         signer.verify_ted(_extract_dd_bytes(xml_bytes), frmt, caf)
         if strict_sii:
             DteXmlComposer()._validate_line_discounts(root)
+            DteXmlComposer._validate_exempt_total(root)
             signer.verify_signature(xml_bytes, sii_standalone=True)
         else:
             signer.verify_signature(xml_bytes)

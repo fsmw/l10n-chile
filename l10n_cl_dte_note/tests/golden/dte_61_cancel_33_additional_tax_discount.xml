@@ -1,0 +1,128 @@
+<DTE xmlns="http://www.sii.cl/SiiDte" version="1.0">
+    <Documento ID="F810T61">
+        <Encabezado>
+            <IdDoc>
+                <TipoDTE>61</TipoDTE>
+                <Folio>810</Folio>
+                <FchEmis>2026-01-15</FchEmis>
+                <FmaPago>2</FmaPago>
+                <FchVenc>2026-01-15</FchVenc>
+            </IdDoc>
+            <Emisor>
+                <RUTEmisor>76864280-K</RUTEmisor>
+                <RznSoc>Emisor Sintetico de Pruebas</RznSoc>
+                <GiroEmis>Servicios informaticos</GiroEmis>
+                <Acteco>620200</Acteco>
+                <DirOrigen>Avenida Prueba 100</DirOrigen>
+                <CmnaOrigen>Santiago</CmnaOrigen>
+                <CdgVendedor>Synthetic DTE Seller</CdgVendedor>
+            </Emisor>
+            <Receptor>
+                <RUTRecep>76864280-K</RUTRecep>
+                <RznSocRecep>Receptor Sintetico</RznSocRecep>
+                <GiroRecep>Comercio al por menor</GiroRecep>
+                <DirRecep>Calle Prueba 200</DirRecep>
+                <CmnaRecep>Santiago</CmnaRecep>
+            </Receptor>
+            <Totales>
+                <MntNeto>18000</MntNeto>
+                <MntExe>2700</MntExe>
+                <TasaIVA>19.00</TasaIVA>
+                <IVA>3420</IVA>
+                <ImptoReten>
+                    <TipoImp>26</TipoImp>
+                    <TasaImp>20.50</TasaImp>
+                    <MontoImp>2050</MontoImp>
+                </ImptoReten>
+                <MntTotal>26170</MntTotal>
+            </Totales>
+        </Encabezado>
+        <Detalle>
+            <NroLinDet>1</NroLinDet>
+            <NmbItem>Cerveza artesanal</NmbItem>
+            <DscItem>Cerveza artesanal</DscItem>
+            <QtyItem>10.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>1000.000000</PrcItem>
+            <CodImpAdic>26</CodImpAdic>
+            <MontoItem>10000</MontoItem>
+        </Detalle>
+        <Detalle>
+            <NroLinDet>2</NroLinDet>
+            <NmbItem>Servicio de despacho</NmbItem>
+            <DscItem>Servicio de despacho</DscItem>
+            <QtyItem>2.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>5000.000000</PrcItem>
+            <MontoItem>10000</MontoItem>
+        </Detalle>
+        <Detalle>
+            <NroLinDet>3</NroLinDet>
+            <IndExe>1</IndExe>
+            <NmbItem>Flete exento</NmbItem>
+            <DscItem>Flete exento</DscItem>
+            <QtyItem>1.000000</QtyItem>
+            <UnmdItem>U</UnmdItem>
+            <PrcItem>3000.000000</PrcItem>
+            <MontoItem>3000</MontoItem>
+        </Detalle>
+        <DscRcgGlobal>
+            <NroLinDR>1</NroLinDR>
+            <TpoMov>D</TpoMov>
+            <GlosaDR>Descuento global</GlosaDR>
+            <TpoValor>$</TpoValor>
+            <ValorDR>2000</ValorDR>
+        </DscRcgGlobal>
+        <DscRcgGlobal>
+            <NroLinDR>2</NroLinDR>
+            <TpoMov>D</TpoMov>
+            <GlosaDR>Descuento exento</GlosaDR>
+            <TpoValor>$</TpoValor>
+            <ValorDR>300</ValorDR>
+            <IndExeDR>1</IndExeDR>
+        </DscRcgGlobal>
+        <Referencia>
+            <NroLinRef>1</NroLinRef>
+            <TpoDocRef>33</TpoDocRef>
+            <FolioRef>730</FolioRef>
+            <FchRef>2026-01-15</FchRef>
+            <CodRef>1</CodRef>
+            <RazonRef>Corrección sintética</RazonRef>
+        </Referencia>
+        <TED version="1.0">
+            <DD>
+                <RE>76864280-K</RE>
+                <TD>61</TD>
+                <F>810</F>
+                <FE>2026-01-15</FE>
+                <RR>76864280-K</RR>
+                <RSR>Receptor Sintetico</RSR>
+                <MNT>26170</MNT>
+                <IT1>Cerveza artesanal</IT1>
+                <CAF>___ignore___</CAF>
+                <TSTED>2026-01-15T12:00:00</TSTED>
+            </DD>
+            <FRMT>___ignore___</FRMT>
+        </TED>
+        <TmstFirma>2026-01-15T12:00:00</TmstFirma>
+    </Documento>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <CanonicalizationMethod
+                Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+            />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#F810T61">
+                <Transforms>
+                    <Transform
+                        Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
+                    />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>___ignore___</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>___ignore___</SignatureValue>
+        <KeyInfo>___ignore___</KeyInfo>
+    </Signature>
+</DTE>

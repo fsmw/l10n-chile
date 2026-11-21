@@ -74,6 +74,26 @@ Discounted detail lines include both the percentage and its CLP amount.
 The discount amount uses decimal half-up rounding; the snapshot line
 subtotal is preserved.
 
+Notes also reference invoices with SII additional taxes (for example
+ILA) and global discounts. Each note detail keeps the additional tax
+code (``CodImpAdic``) of the original line it adjusts, with the same
+rate, and the note totals carry one ``ImptoReten`` per code with the
+note's own amounts. A debit note increasing amounts applies the same
+codes and rates and cannot carry a global discount.
+
+A full cancellation reproduces the original global discounts
+(``DscRcgGlobal``) so its totals equal the original totals. For partial
+credits the global discounts are allocated per line: each original line
+receives a share of the taxable or exempt discounts proportional to its
+amount (integer CLP, largest remainder, line order on ties), and a
+credit of part of a line takes the same proportion of the line's
+remaining share, rounded half up; the last credit of a line takes the
+whole remaining share. Keep the credit note's discount lines at the
+amount this rule gives; the issuance error states it when they differ.
+The available amounts are net of discounts and include additional taxes
+per line, per tax code and in total, so the sum of notes cannot exceed
+the original. Text corrections remain without amounts.
+
 Bug Tracker
 ===========
 

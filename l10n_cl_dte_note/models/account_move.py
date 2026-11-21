@@ -55,6 +55,19 @@ class AccountMove(models.Model):
         for move in self:
             move.dte_note_count = len(move.dte_note_move_ids)
 
+    def _compute_l10n_latam_document_type(self):
+        """Keep the fiscal type of a DTE note bound to its referenced DTE.
+
+        The native debit wizard of l10n_latam recomputes the document type
+        after creating the draft and would replace type 56 by the first
+        available debit type; the note type is fixed by its fiscal reference.
+        """
+        notes = self.filtered(
+            lambda move: move.dte_note_target_document_id
+            and move.l10n_latam_document_type_id.code in {"61", "56"}
+        )
+        return super(AccountMove, self - notes)._compute_l10n_latam_document_type()
+
     def _get_dte_issuance_adapter(self, document_code):
         self.ensure_one()
         if str(document_code) in NoteIssuanceAdapter.supported_document_codes:

@@ -5,8 +5,8 @@ from odoo.addons.l10n_cl_dte_xml.tests.common import DteInvoiceTestCase
 
 
 class DteNoteTestCase(DteInvoiceTestCase):
-    def create_accepted_source(self, code="33", environment="demo"):
-        move = self.make_invoice(code, taxable=code != "34")
+    def create_accepted_source(self, code="33", environment="demo", move=None):
+        move = move or self.make_invoice(code, taxable=code != "34")
         snapshot, _caf = self.capture(move, code=code, folio=730)
         manager_env = self.env["l10n_cl.electronic.document"].with_user(
             self.dte_manager

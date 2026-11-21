@@ -7,3 +7,4 @@ from . import test_export_wizard_dispatch
 from . import test_national_chain_lock
 from . import test_golden_xml
 from . import test_note_production
+from . import test_note_additional_taxes

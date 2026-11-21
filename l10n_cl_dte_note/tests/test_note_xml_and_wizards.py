@@ -181,3 +181,40 @@ class TestNoteXmlAndWizards(DteNoteTestCase):
         self.assertTrue(
             issued.artifact_ids.filtered(lambda item: item.role == "sii_response")
         )
+
+    def test_debit_wizard_cancels_an_accepted_credit_note(self):
+        source, target, _snapshot = self.create_accepted_source()
+        self.validate_authorization(document_code="61", folio_start=790, folio_end=795)
+        self.validate_authorization(document_code="56", folio_start=796, folio_end=799)
+        self.create_signing_profile()
+        credit = self.create_credit_note(source, target)
+        credit.action_post()
+        document = credit.with_user(self.dte_manager).issue_dte()
+        for state, role in (
+            ("submitted", "sii_response"),
+            ("accepted", "status_response"),
+        ):
+            document.action_record_transition(
+                state,
+                f"test_{state}",
+                artifact_id=self.create_artifact(document, role, b"synthetic").id,
+            )
+        wizard = (
+            self.env["account.debit.note"]
+            .with_user(self.dte_manager)
+            .with_context(active_model="account.move", active_ids=credit.ids)
+            .create(
+                {
+                    "move_ids": [(6, 0, credit.ids)],
+                    "reason": "Anula nota de credito",
+                    "dte_note_operation": "cancel",
+                }
+            )
+        )
+        debit = self.env["account.move"].browse(wizard.create_debit()["res_id"])
+        self.assertEqual(debit.l10n_latam_document_type_id.code, "56")
+        self.assertEqual(debit.dte_note_target_document_id, document)
+        debit.action_post()
+        issued = debit.with_user(self.dte_manager).issue_dte()
+        self.assertEqual(issued.document_code, "56")
+        self.assertEqual(issued.note_target_document_id, document)
