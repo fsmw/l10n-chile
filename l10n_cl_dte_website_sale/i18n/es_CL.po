@@ -1,0 +1,195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_cl_dte_website_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-21 03:20+0000\n"
+"PO-Revision-Date: 2026-11-21 03:20+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "<span class=\"col-form-label d-block\">Billing address</span>"
+msgstr "<span class=\"col-form-label d-block\">Dirección de facturación</span>"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "A factura needs a billing address in Chile with street and commune."
+msgstr ""
+"La factura requiere una dirección de facturación en Chile con calle y "
+"comuna."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "Activate the Chilean document type %s first."
+msgstr "Active primero el tipo de documento chileno %s."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/website.py:0
+msgid "Back to delivery"
+msgstr "Volver a la entrega"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/website.py:0
+msgid "Back to tax document"
+msgstr "Volver al documento tributario"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Boleta (final consumer)"
+msgstr "Boleta (consumidor final)"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Business activity (giro)"
+msgstr "Giro"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Business name"
+msgstr "Razón social"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields,field_description:l10n_cl_dte_website_sale.field_sale_order__l10n_cl_dte_document_kind
+msgid "Chilean Tax Document"
+msgstr "Documento tributario chileno"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "Choose either a boleta or a factura."
+msgstr "Elija una boleta o una factura."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/website.py:0
+msgid "Continue checkout"
+msgstr "Continuar con la compra"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Edit billing address"
+msgstr "Editar dirección de facturación"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields.selection,name:l10n_cl_dte_website_sale.selection__sale_order__l10n_cl_dte_document_kind__factura
+msgid "Electronic invoice (factura)"
+msgstr "Factura electrónica"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields.selection,name:l10n_cl_dte_website_sale.selection__sale_order__l10n_cl_dte_document_kind__boleta
+msgid "Electronic receipt (boleta)"
+msgstr "Boleta electrónica"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "Enter a valid Chilean RUT for the factura."
+msgstr "Ingrese un RUT chileno válido para la factura."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "Enter the business activity (giro) for the factura."
+msgstr "Ingrese el giro para la factura."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "Enter the business name for the factura."
+msgstr "Ingrese la razón social para la factura."
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Factura (company)"
+msgstr "Factura (empresa)"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields,field_description:l10n_cl_dte_website_sale.field_sale_order__l10n_cl_dte_receiver_activity
+msgid "Factura Activity (Giro)"
+msgstr "Giro de la factura"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields,field_description:l10n_cl_dte_website_sale.field_sale_order__l10n_cl_dte_receiver_name
+msgid "Factura Business Name"
+msgstr "Razón social de la factura"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields,field_description:l10n_cl_dte_website_sale.field_sale_order__l10n_cl_dte_receiver_vat
+msgid "Factura RUT"
+msgstr "RUT de la factura"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid ""
+"Order %(order)s cannot be invoiced as a factura:\n"
+"%(errors)s"
+msgstr ""
+"El pedido %(order)s no se puede facturar con factura:\n"
+"%(errors)s"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "RUT"
+msgstr "RUT"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model,name:l10n_cl_dte_website_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Shop - Tax Document"
+msgstr "Tienda - Documento tributario"
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/website.py:0
+msgid "Tax Document"
+msgstr "Documento tributario"
+
+#. module: l10n_cl_dte_website_sale
+#: model_terms:ir.ui.view,arch_db:l10n_cl_dte_website_sale.dte_document
+msgid "Tax document"
+msgstr "Documento tributario"
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model.fields,help:l10n_cl_dte_website_sale.field_sale_order__l10n_cl_dte_document_kind
+msgid ""
+"Tax document requested by the eCommerce customer. Website orders of Chilean "
+"companies without a choice are invoiced as a boleta."
+msgstr ""
+"Documento tributario solicitado por el cliente del comercio electrónico. Los"
+" pedidos web de empresas chilenas sin elección se facturan como boleta."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "The business activity cannot exceed %s characters."
+msgstr "El giro no puede superar %s caracteres."
+
+#. module: l10n_cl_dte_website_sale
+#. odoo-python
+#: code:addons/l10n_cl_dte_website_sale/models/sale_order.py:0
+msgid "The business name cannot exceed %s characters."
+msgstr "La razón social no puede superar %s caracteres."
+
+#. module: l10n_cl_dte_website_sale
+#: model:ir.model,name:l10n_cl_dte_website_sale.model_website
+msgid "Website"
+msgstr "Sitio web"

@@ -1,0 +1,9 @@
+// Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+// License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+// Factura fields only matter when the customer chooses a factura.
+.o_l10n_cl_dte_document_form:has(#l10n_cl_dte_kind_boleta:checked) {
+    .o_l10n_cl_dte_factura_fields {
+        display: none;
+    }
+}
