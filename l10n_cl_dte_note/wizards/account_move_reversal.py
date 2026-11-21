@@ -53,10 +53,15 @@ class AccountMoveReversal(models.TransientModel):
                 _("A DTE credit note cannot reference another credit or debit note.")
             )
         snapshot = NoteReferenceService(move.env).read_original_snapshot(target)
-        source_lines = move.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product"
+        source_lines = self._dte_detail_lines(move, snapshot)
+        discounts = sorted(
+            int(-line.price_subtotal)
+            for line in move.invoice_line_ids - source_lines
+            if line.display_type == "product"
         )
-        if len(source_lines) != len(snapshot["lines"]):
+        if len(source_lines) != len(snapshot["lines"]) or discounts != sorted(
+            int(item["value"]) for item in snapshot.get("global_discounts") or []
+        ):
             raise ValidationError(
                 _("The accounting lines no longer match the immutable DTE snapshot.")
             )
@@ -68,6 +73,16 @@ class AccountMoveReversal(models.TransientModel):
                     _("The original accounting lines changed after DTE acceptance.")
                 )
         return target
+
+    @staticmethod
+    def _dte_detail_lines(move, snapshot):
+        """Product lines that are fiscal details, not global discounts."""
+        lines = move.invoice_line_ids.filtered(
+            lambda line: line.display_type == "product"
+        )
+        if snapshot.get("global_discounts"):
+            lines = lines.filtered(lambda line: line.price_subtotal >= 0)
+        return lines
 
     def _prepare_dte_credit_values(self, move):
         """Prepare Chilean type 61 and the immutable reference for the reversal."""
@@ -122,10 +137,10 @@ class AccountMoveReversal(models.TransientModel):
             return super().reverse_moves(is_modify=is_modify)
 
         source = self.move_ids.ensure_one()
-        self._dte_credit_target(source)
-        source_lines = source.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product"
+        snapshot = NoteReferenceService(source.env).read_original_snapshot(
+            self._dte_credit_target(source)
         )
+        source_lines = self._dte_detail_lines(source, snapshot)
         ordinals = {
             str(line.id): ordinal for ordinal, line in enumerate(source_lines, start=1)
         }
@@ -134,9 +149,7 @@ class AccountMoveReversal(models.TransientModel):
             is_modify=is_modify
         )
         credit = reversal_wizard.new_move_ids.ensure_one()
-        credit_lines = credit.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product"
-        )
+        credit_lines = self._dte_detail_lines(credit, snapshot)
         if len(source_lines) != len(credit_lines) or credit_lines.mapped(
             "dte_note_origin_line_number"
         ) != list(range(1, len(source_lines) + 1)):

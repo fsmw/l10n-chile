@@ -9,6 +9,9 @@ from decimal import Decimal
 from odoo import _, fields
 from odoo.exceptions import ValidationError
 
+from .note_adjustment import NoteAdjustmentService
+from .note_fiscal_components import NoteFiscalComponents
+
 
 class NoteReferenceService:
     """Read fiscal evidence and compute the available adjustment capacity."""
@@ -300,10 +303,15 @@ class NoteReferenceService:
         return True
 
     def calculate_available_amounts(self, root_document):
-        """Subtract reserved credits and restore accepted debit cancellations."""
+        """Subtract reserved credits and restore accepted debit cancellations.
+
+        Amounts are net of the original global discounts and include its SII
+        additional taxes, per document, per tax code and per detail line.
+        """
         root_document.ensure_one()
         original = self.read_original_snapshot(root_document)
         totals = self._snapshot_amounts(original)
+        codes = self._snapshot_codes(original)
         lines = self._initial_line_amounts(original)
         notes = self.env["l10n_cl.electronic.document"].search(
             [
@@ -318,24 +326,24 @@ class NoteReferenceService:
             snap = self.read_original_snapshot(note)
             by_id[note.id] = snap
             if note.document_code == "61" and note.fiscal_state != "rejected":
-                self._apply_amounts(totals, self._snapshot_amounts(snap), -1)
-                self._apply_line_effects(lines, snap, -1)
+                self._apply_snapshot(totals, codes, lines, snap, -1)
         for note in notes.filtered(
             lambda item: item.document_code == "56" and item.fiscal_state == "accepted"
         ):
             target = note.note_target_document_id
             if target and target.document_code == "61" and target.id in by_id:
-                target_snapshot = by_id[target.id]
-                self._apply_amounts(totals, self._snapshot_amounts(target_snapshot), 1)
-                self._apply_line_effects(lines, target_snapshot, 1)
-        if any(value < 0 for value in totals.values()) or any(
-            value < 0 for values in lines.values() for value in values.values()
+                self._apply_snapshot(totals, codes, lines, by_id[target.id], 1)
+        if (
+            any(value < 0 for value in totals.values())
+            or any(value < 0 for value in codes.values())
+            or any(value < 0 for values in lines.values() for value in values.values())
         ):
             raise ValidationError(
                 _("Existing DTE adjustments exceed the original fiscal amount.")
             )
         return {
             **{key: int(value) for key, value in totals.items()},
+            "additional_taxes": {code: int(value) for code, value in codes.items()},
             "lines": {
                 ordinal: {
                     **{
@@ -348,6 +356,16 @@ class NoteReferenceService:
                 for ordinal, values in lines.items()
             },
         }
+
+    def _apply_snapshot(self, totals, codes, lines, snapshot, sign):
+        self._apply_amounts(totals, self._snapshot_amounts(snapshot), sign)
+        for code, amount in self._snapshot_codes(snapshot).items():
+            if code not in codes:
+                raise ValidationError(
+                    _("A note carries an additional SII tax absent from its root.")
+                )
+            codes[code] += amount * sign
+        self._apply_line_effects(lines, snapshot, sign)
 
     def build_reference(self, move, target_document):
         """Build the single SII reference and its immutable provenance identifiers."""
@@ -382,54 +400,29 @@ class NoteReferenceService:
             key: Decimal(str(totals.get(key) or 0))
             for key in ("net", "exempt", "vat", "total")
         }
-        if sum(values[key] for key in ("net", "exempt", "vat")) != values["total"]:
-            # Invoice snapshots use net + exempt + VAT; boleta snapshots may omit
-            # net VAT rate.
-            if values["net"] + values["exempt"] + values["vat"] != values["total"]:
-                raise ValidationError(_("The fiscal snapshot totals do not reconcile."))
+        values["additional"] = sum(self._snapshot_codes(snapshot).values(), Decimal(0))
+        # Invoice and note snapshots use net + exempt + VAT + additional taxes;
+        # boleta snapshots may omit the net VAT rate.
+        if (
+            values["net"] + values["exempt"] + values["vat"] + values["additional"]
+            != values["total"]
+        ):
+            raise ValidationError(_("The fiscal snapshot totals do not reconcile."))
         return values
+
+    def _snapshot_codes(self, snapshot):
+        return {
+            item["code"]: Decimal(item["amount"])
+            for item in NoteAdjustmentService.additional_taxes(snapshot["totals"])
+        }
 
     def _apply_amounts(self, target, values, sign):
         for key in target:
             target[key] += values[key] * sign
 
     def _initial_line_amounts(self, snapshot):
-        """Allocate document VAT with deterministic largest remainders."""
-        result = {}
-        taxable = []
-        for ordinal, line in enumerate(snapshot["lines"], start=1):
-            subtotal = Decimal(str(line["subtotal"]))
-            exempt = bool(line.get("exempt"))
-            result[ordinal] = {
-                "net": Decimal(0) if exempt else subtotal,
-                "exempt": subtotal if exempt else Decimal(0),
-                "vat": Decimal(0),
-                "total": subtotal,
-                "quantity": Decimal(str(line.get("quantity") or 0)),
-            }
-            if not exempt and subtotal:
-                taxable.append((ordinal, subtotal))
-        vat_total = Decimal(str(snapshot["totals"].get("vat") or 0))
-        taxable_net = sum((amount for _, amount in taxable), Decimal(0))
-        floors = {}
-        remainders = []
-        assigned = Decimal(0)
-        if taxable_net:
-            for ordinal, amount in taxable:
-                exact = vat_total * amount / taxable_net
-                floor = exact.to_integral_value(rounding="ROUND_FLOOR")
-                floors[ordinal] = floor
-                assigned += floor
-                remainders.append((exact - floor, ordinal))
-            remaining = int(vat_total - assigned)
-            for _, ordinal in sorted(remainders, key=lambda item: (-item[0], item[1]))[
-                :remaining
-            ]:
-                floors[ordinal] += 1
-        for ordinal, amount in floors.items():
-            result[ordinal]["vat"] = amount
-            result[ordinal]["total"] += amount
-        return result
+        """Allocate discounts and taxes with deterministic largest remainders."""
+        return NoteFiscalComponents(self.env).original_lines(snapshot)
 
     def _apply_line_effects(self, available, snapshot, sign):
         for effect in snapshot.get("adjustment", {}).get("line_effects", []):
@@ -444,3 +437,8 @@ class NoteReferenceService:
             target["vat"] += Decimal(str(effect.get("vat") or 0)) * sign
             target["total"] += Decimal(str(effect.get("total") or 0)) * sign
             target["quantity"] += Decimal(str(effect.get("quantity_delta") or 0)) * sign
+            target["gross"] += Decimal(str(effect.get("subtotal") or 0)) * sign
+            target["discount"] += Decimal(str(effect.get("discount") or 0)) * sign
+            target["additional"] += (
+                Decimal(str(effect.get("additional_tax") or 0)) * sign
+            )

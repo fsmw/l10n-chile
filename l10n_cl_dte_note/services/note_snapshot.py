@@ -3,6 +3,7 @@
 
 import hashlib
 import json
+from copy import deepcopy
 from datetime import datetime
 from decimal import Decimal
 from zoneinfo import ZoneInfo
@@ -13,6 +14,7 @@ from odoo.exceptions import ValidationError
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import InvoiceSnapshotService
 
 from .note_adjustment import NoteAdjustmentService
+from .note_fiscal_components import NoteFiscalComponents
 from .note_reference_service import NoteReferenceService
 
 
@@ -163,7 +165,7 @@ class NoteSnapshotService:
         root_totals = self._snapshot_totals(
             reference_service.read_original_snapshot(root)
         )
-        if any(available[key] != value for key, value in root_totals.items()):
+        if not self._is_untouched(root_totals, available):
             raise ValidationError(
                 target.env._(
                     "A full cancellation is unavailable after another "
@@ -180,18 +182,36 @@ class NoteSnapshotService:
             )
         self._assert_full_line_equivalence(effects, target_snapshot)
 
+    @staticmethod
+    def _is_untouched(root_totals, available):
+        """Whether no effective adjustment consumed any root capacity."""
+        for key, value in root_totals.items():
+            if key == "additional_taxes":
+                if any(
+                    available["additional_taxes"].get(item["code"]) != item["amount"]
+                    for item in value
+                ):
+                    return False
+            elif available[key] != value:
+                return False
+        return True
+
     def _validate_partial_credit(self, move, effects, amounts, available):
         self._check_within(amounts, available)
         for effect in effects:
             line_available = available["lines"].get(effect["origin_line_number"])
             if not line_available or any(
-                effect[key] > line_available[component]
+                int(effect.get(key) or 0) > line_available.get(component, 0)
                 for key, component in (
                     ("net", "net"),
                     ("exempt_amount", "exempt"),
                     ("vat", "vat"),
                     ("total", "total"),
+                    ("subtotal", "gross"),
+                    ("discount", "discount"),
+                    ("additional_tax", "additional"),
                 )
+                if key in effect
             ):
                 raise ValidationError(
                     move.env._(
@@ -235,6 +255,7 @@ class NoteSnapshotService:
             raise ValidationError(move.env._("A DTE note supports at most 60 details."))
         now = datetime.now(ZoneInfo("America/Santiago")).strftime("%Y-%m-%dT%H:%M:%S")
         amounts = result["amounts"]
+        global_discounts = self._note_global_discounts(move, source)
         adjustment_effect = (
             "restore_credit"
             if code == "56" and move.dte_note_operation == "cancel"
@@ -274,7 +295,21 @@ class NoteSnapshotService:
                 else None,
                 "serialization_mode": "detail",
             },
-        }
+        } | ({"global_discounts": global_discounts} if global_discounts else {})
+
+    def _note_global_discounts(self, move, source):
+        """Return the DscRcgGlobal rows of the note.
+
+        A full cancellation reproduces the referenced rows verbatim; any other
+        note serializes its own accounting discount lines, whose amounts
+        ``_apply_global_discounts`` already reconciled with the allocation rule.
+        """
+        if not source.get("global_discounts") or self._zero_amount_certification(move):
+            return []
+        if move.dte_note_operation == "cancel":
+            return deepcopy(source["global_discounts"])
+        components = NoteFiscalComponents(move.env)
+        return components.discount_line_values(components.discount_lines(move, source))
 
     def _validate_caf(self, move, document_code):
         caf = move._select_dte_caf(move.company_id.dte_sii_environment, document_code)
@@ -282,6 +317,51 @@ class NoteSnapshotService:
 
     def _move_effects(self, move):
         self.env = move.env
+        if self._zero_amount_certification(move):
+            return [], {"net": 0, "exempt": 0, "vat": 0, "total": 0}
+        lines = move.invoice_line_ids.filtered(
+            lambda line: line.display_type == "product"
+        )
+        if not lines:
+            raise ValidationError(
+                move.env._("A DTE note needs at least one product line.")
+            )
+        source_snapshot = NoteReferenceService(move.env).read_original_snapshot(
+            move.dte_note_target_document_id
+        )
+        original_lines = (
+            source_snapshot.get("adjustment", {}).get("line_effects")
+            or source_snapshot["lines"]
+        )
+        lines_by_number = {
+            int(item.get("origin_line_number", index)): item
+            for index, item in enumerate(original_lines, start=1)
+        }
+        components = NoteFiscalComponents(move.env)
+        discount_lines = components.discount_lines(move, source_snapshot)
+        rates = components.source_rates(source_snapshot)
+        seen_ordinals = set()
+        result = [
+            self._line_effect(move, line, lines_by_number, rates, seen_ordinals)
+            for line in lines - discount_lines
+        ]
+        self._apply_global_discounts(move, result, discount_lines, source_snapshot)
+        additional = self._apply_additional_taxes(move, result, rates)
+        tax_total = self._integer(move.amount_tax, move.env._("tax amount"))
+        additional_total = sum(item["amount"] for item in additional)
+        vat = NoteAdjustmentService(move.env).allocate_vat(
+            tax_total - additional_total, result, weight_key="net"
+        )
+        for item in result:
+            if not item["exempt"]:
+                item["vat"] = vat[item["origin_line_number"]]
+                item["total"] = (
+                    item["net"] + item["vat"] + item.get("additional_tax", 0)
+                )
+        return result, self._note_amounts(move, result, additional)
+
+    def _zero_amount_certification(self, move):
+        """Certification text corrections and their cancellations carry no amount."""
         run_line = (
             move.dte_certification_run_line_id
             if "dte_certification_run_line_id" in move._fields
@@ -294,141 +374,197 @@ class NoteSnapshotService:
             if move.dte_note_target_document_id
             else False
         )
-        if run_line and (
-            move.dte_note_operation == "text"
-            or (
-                move.dte_note_operation == "cancel"
-                and target_line
-                and target_line.snapshot.get("note_operation") == "text"
+        return bool(
+            run_line
+            and (
+                move.dte_note_operation == "text"
+                or (
+                    move.dte_note_operation == "cancel"
+                    and target_line
+                    and target_line.snapshot.get("note_operation") == "text"
+                )
             )
-        ):
-            return [], {"net": 0, "exempt": 0, "vat": 0, "total": 0}
-        lines = move.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product"
         )
-        if not lines:
+
+    def _line_effect(self, move, line, lines_by_number, rates, seen_ordinals):
+        """Validate one note detail against its original line and describe it."""
+        ordinal = line.dte_note_origin_line_number
+        if ordinal < 1 or ordinal not in lines_by_number:
             raise ValidationError(
-                move.env._("A DTE note needs at least one product line.")
+                move.env._(
+                    "A note line cannot be matched to its original fiscal detail."
+                )
             )
-        result = []
-        net = exempt = Decimal(0)
-        source_snapshot = NoteReferenceService(move.env).read_original_snapshot(
-            move.dte_note_target_document_id
+        if ordinal in seen_ordinals:
+            raise ValidationError(
+                move.env._("Use one accounting detail for each original DTE line.")
+            )
+        seen_ordinals.add(ordinal)
+        subtotal = self._integer(line.price_subtotal, move.env._("line amount"))
+        if subtotal <= 0:
+            raise ValidationError(move.env._("Note detail amounts must be positive."))
+        original = lines_by_number[ordinal]
+        self._check_line_operation(move, line, original)
+        is_exempt = bool(original.get("exempt"))
+        code = NoteFiscalComponents(move.env).line_additional_code(
+            line, original, rates
         )
-        original_lines = (
-            source_snapshot.get("adjustment", {}).get("line_effects")
-            or source_snapshot["lines"]
+        line_vat = self._integer(
+            line.price_total - line.price_subtotal, move.env._("line VAT")
         )
-        lines_by_number = {
-            int(item.get("origin_line_number", index)): item
-            for index, item in enumerate(original_lines, start=1)
+        if is_exempt and line_vat:
+            raise ValidationError(move.env._("An exempt note line cannot include VAT."))
+        effect = {
+            "origin_line_number": ordinal,
+            "uom": original.get("uom"),
+            "name": (original.get("name") or "")[:80],
+            "description": (line.name or original.get("description") or "")[:1000],
+            "quantity": format(Decimal(str(line.quantity)).normalize(), "f"),
+            "unit_price": format(Decimal(str(line.price_unit)).normalize(), "f"),
+            "discount_percent": format(Decimal(str(line.discount)).normalize(), "f")
+            if line.discount
+            else None,
+            "subtotal": str(int(subtotal)),
+            "exempt": is_exempt,
+            "net": int(0 if is_exempt else subtotal),
+            "exempt_amount": int(subtotal if is_exempt else 0),
+            "vat": int(line_vat),
+            "total": int(subtotal + line_vat),
+            "quantity_delta": "0"
+            if move.dte_note_operation == "amount"
+            else format(Decimal(str(line.quantity)).normalize(), "f"),
         }
-        seen_ordinals = set()
-        for line in lines:
-            ordinal = line.dte_note_origin_line_number
-            if ordinal < 1 or ordinal not in lines_by_number:
-                raise ValidationError(
-                    move.env._(
-                        "A note line cannot be matched to its original fiscal detail."
-                    )
+        if code:
+            effect["additional_tax_code"] = code
+        return effect
+
+    def _check_line_operation(self, move, line, original):
+        original_quantity = Decimal(str(original.get("quantity") or "0"))
+        quantity = Decimal(str(line.quantity))
+        unit_price = Decimal(str(line.price_unit))
+        original_unit_price = Decimal(str(original.get("unit_price") or "0"))
+        discount = Decimal(str(line.discount or 0))
+        original_discount = Decimal(str(original.get("discount_percent") or 0))
+        if move.dte_note_operation == "return" and (
+            quantity > original_quantity
+            or unit_price != original_unit_price
+            or discount != original_discount
+        ):
+            raise ValidationError(
+                move.env._(
+                    "A goods return must use the original unit price and "
+                    "discount and cannot exceed the original quantity."
                 )
-            if ordinal in seen_ordinals:
-                raise ValidationError(
-                    move.env._("Use one accounting detail for each original DTE line.")
-                )
-            seen_ordinals.add(ordinal)
-            subtotal = self._integer(line.price_subtotal, move.env._("line amount"))
-            if subtotal <= 0:
-                raise ValidationError(
-                    move.env._("Note detail amounts must be positive.")
-                )
-            original = lines_by_number[ordinal]
-            original_quantity = Decimal(str(original.get("quantity") or "0"))
-            quantity = Decimal(str(line.quantity))
-            unit_price = Decimal(str(line.price_unit))
-            original_unit_price = Decimal(str(original.get("unit_price") or "0"))
-            discount = Decimal(str(line.discount or 0))
-            original_discount = Decimal(str(original.get("discount_percent") or 0))
-            if move.dte_note_operation == "return" and (
-                quantity > original_quantity
-                or unit_price != original_unit_price
-                or discount != original_discount
-            ):
-                raise ValidationError(
-                    move.env._(
-                        "A goods return must use the original unit price and "
-                        "discount and cannot exceed the original quantity."
-                    )
-                )
-            if move.dte_note_operation == "amount" and quantity != original_quantity:
-                raise ValidationError(
-                    move.env._(
-                        "An amount correction cannot change the original quantity."
-                    )
-                )
-            is_exempt = bool(original.get("exempt"))
-            if any(
-                tax.amount and (tax.amount_type != "percent" or abs(tax.amount) != 19)
-                for tax in line.tax_ids
-            ):
-                raise ValidationError(
-                    move.env._("DTE notes support only 19% VAT and exempt lines.")
-                )
-            line_vat = self._integer(
-                line.price_total - line.price_subtotal, move.env._("line VAT")
             )
-            if is_exempt:
-                exempt += subtotal
-                if line_vat:
-                    raise ValidationError(
-                        move.env._("An exempt note line cannot include VAT.")
-                    )
-            else:
-                net += subtotal
-            result.append(
-                {
-                    "origin_line_number": ordinal,
-                    "uom": original.get("uom"),
-                    "name": (original.get("name") or "")[:80],
-                    "description": (line.name or original.get("description") or "")[
-                        :1000
-                    ],
-                    "quantity": format(Decimal(str(line.quantity)).normalize(), "f"),
-                    "unit_price": format(
-                        Decimal(str(line.price_unit)).normalize(), "f"
-                    ),
-                    "discount_percent": format(
-                        Decimal(str(line.discount)).normalize(), "f"
-                    )
-                    if line.discount
-                    else None,
-                    "subtotal": str(int(subtotal)),
-                    "exempt": is_exempt,
-                    "net": int(0 if is_exempt else subtotal),
-                    "exempt_amount": int(subtotal if is_exempt else 0),
-                    "vat": int(line_vat),
-                    "total": int(subtotal + line_vat),
-                    "quantity_delta": "0"
-                    if move.dte_note_operation == "amount"
-                    else format(Decimal(str(line.quantity)).normalize(), "f"),
-                }
+        if move.dte_note_operation == "amount" and quantity != original_quantity:
+            raise ValidationError(
+                move.env._("An amount correction cannot change the original quantity.")
             )
-        vat = self._allocate_vat(
-            self._integer(move.amount_tax, move.env._("tax amount")), result
+
+    def _apply_global_discounts(self, move, effects, discount_lines, snapshot):
+        """Allocate the referenced global discounts to the note details."""
+        if not snapshot.get("global_discounts"):
+            return
+        components = NoteFiscalComponents(move.env)
+        rows = components.discount_line_values(discount_lines)
+        shares = self._note_discount_shares(move, effects, snapshot, rows)
+        expected = {False: 0, True: 0}
+        for effect in effects:
+            share = shares[effect["origin_line_number"]]
+            effect["discount"] = share
+            effect["exempt_amount" if effect["exempt"] else "net"] -= share
+            effect["total"] -= share
+            expected[effect["exempt"]] += share
+        actual = {False: 0, True: 0}
+        for row in rows:
+            actual[row["exempt"]] += int(row["value"])
+        if actual != expected:
+            raise ValidationError(
+                move.env._(
+                    "The note global discount lines must total %(taxable)s CLP "
+                    "on taxable details and %(exempt)s CLP on exempt details."
+                )
+                % {"taxable": expected[False], "exempt": expected[True]}
+            )
+
+    def _note_discount_shares(self, move, effects, snapshot, rows):
+        components = NoteFiscalComponents(move.env)
+        if move.dte_note_operation == "cancel":
+            shares = components.target_line_discounts(snapshot)
+            return {
+                effect["origin_line_number"]: shares.get(
+                    effect["origin_line_number"], 0
+                )
+                for effect in effects
+            }
+        if move.l10n_latam_document_type_id.code != "61":
+            if rows:
+                raise ValidationError(
+                    move.env._(
+                        "A debit note that increases amounts cannot carry a "
+                        "global discount."
+                    )
+                )
+            return {effect["origin_line_number"]: 0 for effect in effects}
+        target = move.dte_note_target_document_id
+        available = NoteReferenceService(move.env).calculate_available_amounts(
+            target.note_root_document_id or target
         )
-        for item in result:
-            if not item["exempt"]:
-                item["vat"] = vat[item["origin_line_number"]]
-                item["total"] = int(item["subtotal"]) + item["vat"]
+        shares = {}
+        for effect in effects:
+            remaining = available["lines"].get(effect["origin_line_number"])
+            amount = int(effect["subtotal"])
+            if not remaining or amount > remaining["gross"]:
+                raise ValidationError(
+                    move.env._(
+                        "The note exceeds the available amount for an "
+                        "original detail line."
+                    )
+                )
+            shares[effect["origin_line_number"]] = components.partial_discount(
+                amount, remaining["gross"], remaining["discount"]
+            )
+        return shares
+
+    def _apply_additional_taxes(self, move, effects, rates):
+        """Split the note's posted additional taxes among its details."""
+        components = NoteFiscalComponents(move.env)
+        additional = components.move_additional_taxes(move, rates)
+        if not additional:
+            return additional
+        shares = components.allocate_additional(
+            additional,
+            {
+                effect["origin_line_number"]: (
+                    effect.get("additional_tax_code"),
+                    Decimal(effect["subtotal"]),
+                )
+                for effect in effects
+            },
+        )
+        for effect in effects:
+            if effect.get("additional_tax_code"):
+                effect["additional_tax"] = shares[effect["origin_line_number"]]
+        return additional
+
+    def _note_amounts(self, move, effects, additional):
+        """Return the note totals and check them against the posted entry."""
+        net = sum(effect["net"] for effect in effects)
+        exempt = sum(effect["exempt_amount"] for effect in effects)
+        vat = sum(effect["vat"] for effect in effects if not effect["exempt"])
+        additional_total = sum(item["amount"] for item in additional)
         amount_values = {
             "net": int(net),
             "exempt": int(exempt),
-            "vat": int(sum(vat.values())),
-            "total": int(net + exempt + sum(vat.values())),
+            "vat": int(vat),
+            "total": int(net + exempt + vat + additional_total),
         }
+        if additional:
+            amount_values["additional"] = int(additional_total)
+            amount_values["additional_taxes"] = additional
         if amount_values["total"] != self._integer(
             move.amount_total, move.env._("total amount")
-        ) or amount_values["vat"] != self._integer(
+        ) or vat + additional_total != self._integer(
             move.amount_tax, move.env._("tax amount")
         ):
             raise ValidationError(
@@ -437,7 +573,7 @@ class NoteSnapshotService:
                     "accounting total."
                 )
             )
-        return result, amount_values
+        return amount_values
 
     @staticmethod
     def _certification_run_line(move, document_code):
@@ -495,6 +631,8 @@ class NoteSnapshotService:
                 or Decimal(str(source.get("quantity") or 0))
                 != Decimal(str(effect["quantity"]))
                 or bool(source.get("exempt")) != bool(effect["exempt"])
+                or (source.get("additional_tax_code") or None)
+                != (effect.get("additional_tax_code") or None)
             ):
                 raise ValidationError(
                     self.env._(
@@ -507,11 +645,20 @@ class NoteSnapshotService:
         return NoteAdjustmentService(self.env).format_totals(values)
 
     def _check_within(self, amounts, available):
-        for key in ("net", "exempt", "vat", "total"):
-            if amounts[key] > available[key]:
+        for key in ("net", "exempt", "vat", "total", "additional"):
+            if key in amounts and amounts[key] > available.get(key, 0):
                 raise ValidationError(
                     self.env._("The note exceeds the available %(component)s amount.")
                     % {"component": key}
+                )
+        for item in amounts.get("additional_taxes") or []:
+            if item["amount"] > available["additional_taxes"].get(item["code"], 0):
+                raise ValidationError(
+                    self.env._(
+                        "The note exceeds the available additional SII tax "
+                        "%(code)s amount."
+                    )
+                    % {"code": item["code"]}
                 )
 
     def _integer(self, value, label):

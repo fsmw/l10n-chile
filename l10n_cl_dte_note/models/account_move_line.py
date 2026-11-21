@@ -68,6 +68,10 @@ class AccountMoveLine(models.Model):
                 line.move_id.dte_note_target_document_id
             )
             ordinal = line.dte_note_origin_line_number
+            if not ordinal and line.price_subtotal < 0:
+                if snapshot.get("global_discounts"):
+                    # A global discount line of the note, not a detail.
+                    continue
             if line.move_id.state == "posted" and not ordinal:
                 raise ValidationError(
                     _(

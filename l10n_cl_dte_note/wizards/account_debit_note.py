@@ -98,7 +98,8 @@ class AccountDebitNote(models.TransientModel):
                             "dte_note_origin_line_number": (
                                 line.dte_note_origin_line_number
                             )
-                            or len(vals) + 1,
+                            # Global discount lines keep no detail ordinal.
+                            or (0 if line.price_subtotal < 0 else len(vals) + 1),
                         },
                     )
                 )
@@ -154,6 +155,9 @@ class AccountDebitNote(models.TransientModel):
                     ),
                     start=1,
                 ):
-                    if not line.dte_note_origin_line_number:
+                    if (
+                        not line.dte_note_origin_line_number
+                        and line.price_subtotal >= 0
+                    ):
                         line.dte_note_origin_line_number = ordinal
         return action
