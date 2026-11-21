@@ -37,9 +37,11 @@ class TestDtePayload(TransactionCase):
             "110",
             "111",
             "112",
+            "43",
         ):
             with self.subTest(code=code):
                 name = "Exportaciones" if code in {"110", "111", "112"} else "Documento"
+                name = "Liquidacion" if code == "43" else name
                 root = safe_fromstring(self._xml(code, name))
                 self.assertIs(select_dte_payload(root), root[0])
                 self.assertEqual(root[0].get("ID"), "doc")
@@ -67,6 +69,8 @@ class TestDtePayload(TransactionCase):
             xml.replace(b"<TipoDTE>", b'<TipoDTE xmlns="urn:foreign">'),
             xml.replace(b">110<", b">33<"),
             self._xml("110", "Documento"),
+            self._xml("43", "Documento"),
+            self._xml("33", "Liquidacion"),
             self._xml("999"),
             xml.replace(b">110<", b"><"),
             xml.replace(b"<TipoDTE>110</TipoDTE>", b""),

@@ -8,6 +8,7 @@ SII_NAMESPACE = "http://www.sii.cl/SiiDte"
 _FAMILIES = {
     "Documento": frozenset({"33", "34", "39", "41", "46", "52", "56", "61"}),
     "Exportaciones": frozenset({"110", "111", "112"}),
+    "Liquidacion": frozenset({"43"}),
 }
 
 

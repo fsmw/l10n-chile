@@ -14,7 +14,7 @@ from .sii_gateway import SiiGateway
 # DTE types SII receives individually as one-DTE EnvioDTE uploads. Boletas 39
 # and 41 use the separate SII REST channel.
 SUPPORTED_PRODUCTION_DTE_CODES = frozenset(
-    {"33", "34", "46", "52", "56", "61", "110", "111", "112"}
+    {"33", "34", "43", "46", "52", "56", "61", "110", "111", "112"}
 )
 # Certification (maullin) accepts the same EnvioDTE types as Production.
 SUPPORTED_DTE_CODES = {
