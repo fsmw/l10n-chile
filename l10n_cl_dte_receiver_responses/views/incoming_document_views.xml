@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl> -->
+<!-- License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="incoming_document_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.form.exchange</field>
+        <field name="model">l10n_cl.incoming.dte</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_document_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button
+                    name="action_open_exchange_wizard"
+                    type="object"
+                    string="Email Commercial Result"
+                    context="{'exchange_kind': 'result'}"
+                    invisible="state != 'reviewed'"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
+                <button
+                    name="action_open_exchange_wizard"
+                    type="object"
+                    string="Email Goods Receipt"
+                    context="{'exchange_kind': 'receipt'}"
+                    invisible="state != 'reviewed'"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
+                <button
+                    name="action_send_reception_response"
+                    type="object"
+                    string="Email Reception Response"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Exchange Responses" name="exchange_responses">
+                    <field name="exchange_line_ids">
+                        <list>
+                            <field name="exchange_id" />
+                            <field name="kind" />
+                            <field name="status_code" />
+                            <field name="gloss" />
+                            <field name="exchange_state" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="incoming_import_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.import.form.exchange</field>
+        <field name="model">l10n_cl.incoming.dte.import</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_import_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button
+                        name="action_send_reception_response"
+                        type="object"
+                        string="Email Reception Response"
+                        groups="l10n_cl_dte_core.group_dte_manager"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="exchange_ids" readonly="1">
+                    <list>
+                        <field name="name" />
+                        <field name="recipient_email" />
+                        <field name="state" />
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+    <record id="incoming_response_view_form" model="ir.ui.view">
+        <field name="name">l10n_cl.incoming.dte.response.form.exchange</field>
+        <field name="model">l10n_cl.incoming.dte.response</field>
+        <field name="inherit_id" ref="l10n_cl_dte_inbox.incoming_response_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <field name="exchange_kind" invisible="1" />
+                <field name="exchange_line_id" invisible="1" />
+                <button
+                    name="action_open_exchange_wizard"
+                    type="object"
+                    string="Email Exchange Response"
+                    invisible="state != 'accepted' or not exchange_kind or exchange_line_id"
+                    groups="l10n_cl_dte_core.group_dte_manager"
+                />
+            </xpath>
+        </field>
+    </record>
+    <record id="incoming_document_exchange_wizard_action" model="ir.actions.act_window">
+        <field name="name">Email Exchange Response</field>
+        <field name="res_model">l10n_cl.incoming.dte.exchange.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field
+            name="binding_model_id"
+            ref="l10n_cl_dte_inbox.model_l10n_cl_incoming_dte"
+        />
+        <field name="binding_view_types">list</field>
+        <field
+            name="groups_id"
+            eval="[(4, ref('l10n_cl_dte_core.group_dte_manager'))]"
+        />
+    </record>
+</odoo>

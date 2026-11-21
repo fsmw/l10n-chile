@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_incoming_dte_exchange_user,incoming.dte.exchange.user,model_l10n_cl_incoming_dte_exchange,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_exchange_manager,incoming.dte.exchange.manager,model_l10n_cl_incoming_dte_exchange,l10n_cl_dte_core.group_dte_manager,1,1,0,0
+access_incoming_dte_exchange_line_user,incoming.dte.exchange.line.user,model_l10n_cl_incoming_dte_exchange_line,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_incoming_dte_exchange_wizard_manager,incoming.dte.exchange.wizard.manager,model_l10n_cl_incoming_dte_exchange_wizard,l10n_cl_dte_core.group_dte_manager,1,1,1,1
