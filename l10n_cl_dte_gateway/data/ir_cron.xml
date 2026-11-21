@@ -11,4 +11,13 @@
         <field name="interval_type">minutes</field>
         <field name="active" eval="True" />
     </record>
+    <record id="ir_cron_recover_interrupted_sends" model="ir.cron">
+        <field name="name">DTE: Recover Interrupted SII Sends</field>
+        <field name="model_id" ref="model_l10n_cl_electronic_submission" />
+        <field name="state">code</field>
+        <field name="code">model._cron_recover_interrupted_sends()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True" />
+    </record>
 </odoo>

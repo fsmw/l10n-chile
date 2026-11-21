@@ -218,23 +218,39 @@ class ElectronicSubmission(models.Model):
     def _job_send_to_sii(self):
         """Send once and persist raw response and TrackID where available."""
         self.ensure_one()
+        if not self.is_simulated:
+            # Real SII: the claim must be committed before any upload.
+            return self._job_send_durably()
+        claim = self._claim_send()
+        if not claim:
+            return True
+        attempt_id, request_bytes = claim
+        attempt = self.env["l10n_cl.submission.attempt"].browse(attempt_id)
+        return self._dispatch_send(self._gateway(), attempt, request_bytes)
+
+    def _claim_send(self):
+        """Bind the request and start one send attempt; no network access."""
+        self.ensure_one()
+        self.flush_recordset()
         self.env.cr.execute(
             SQL(
-                "SELECT state FROM %s WHERE id = %s FOR UPDATE",
+                "SELECT state FROM %s WHERE id = %s FOR UPDATE NOWAIT",
                 SQL.identifier(self._table),
                 self.id,
             )
         )
+        if not self.env.cr.fetchone():
+            raise UserError(_("Commit the SII submission before sending it."))
         self.invalidate_recordset(["state"])
         if self.state != "pending":
-            return True
+            return False
         gateway = self._gateway()
-        document = self.document_id
         try:
             request_bytes = self._prepare_send_request(gateway)
         except (UserError, ValidationError) as error:
             # Nothing left this server: keep a retryable error, not ambiguity.
-            return self._record_send_error(error)
+            self._record_send_error(error)
+            return False
         self._write_internal({"state": "sending", "sii_message": False})
         attempt = self.env["l10n_cl.submission.attempt"].create(
             {
@@ -243,8 +259,19 @@ class ElectronicSubmission(models.Model):
                 "request_digest": hashlib.sha256(request_bytes).hexdigest(),
             }
         )
+        return attempt.id, request_bytes
+
+    def _dispatch_send(self, gateway, attempt, request_bytes):
+        """Transmit a claimed request on its channel and record the outcome."""
+        self.ensure_one()
         if self._uses_envelope_upload():
             return self._send_production_request(gateway, attempt, request_bytes)
+        return self._send_document_request(gateway, attempt, request_bytes)
+
+    def _send_document_request(self, gateway, attempt, request_bytes):
+        """Send one document through the adapter's own channel."""
+        self.ensure_one()
+        document = self.document_id
         try:
             result = gateway.send_document(
                 self.company_id,
