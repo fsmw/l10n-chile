@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_move_form_dte_liquidation" model="ir.ui.view">
+        <field name="name">account.move.form.dte.liquidation</field>
+        <field name="model">account.move</field>
+        <field
+            name="inherit_id"
+            ref="l10n_cl_dte_account.view_move_form_dte_issuance"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='invoice_line_ids']/list/field[@name='name']"
+                position="after"
+            >
+                <field
+                    name="dte_settled_document_code"
+                    optional="show"
+                    column_invisible="parent.dte_document_type_code != '43'"
+                    invisible="dte_liquidation_charge"
+                />
+                <field
+                    name="dte_liquidation_charge"
+                    optional="show"
+                    column_invisible="parent.dte_document_type_code != '43'"
+                />
+            </xpath>
+            <xpath expr="//div[@name='dte_issuance_unavailable']" position="after">
+                <div
+                    name="dte_liquidation_issuance_info"
+                    class="alert alert-info"
+                    role="alert"
+                    colspan="2"
+                    invisible="move_type != 'in_invoice' or dte_document_type_code != '43' or dte_document_ids"
+                >
+                    As commission agent, the company issues this settlement invoice
+                    DTE 43 to the principal. Enter the operations made on the
+                    principal's behalf as positive lines with their settled document
+                    type and the 19% purchase VAT or no VAT; enter each commission or
+                    other charge as a negative line flagged as an agent charge, with
+                    the 19% sales VAT or no VAT.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
