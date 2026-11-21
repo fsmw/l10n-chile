@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_f29_box_reader,f29 box reader,model_l10n_cl_f29_box,account.group_account_readonly,1,0,0,0
+access_f29_box_manager,f29 box manager,model_l10n_cl_f29_box,account.group_account_manager,1,1,1,1
+access_f29_report_reader,f29 report reader,model_l10n_cl_f29_report,account.group_account_readonly,1,1,1,1
+access_f29_report_manager,f29 report manager,model_l10n_cl_f29_report,account.group_account_manager,1,1,1,1
+access_f29_report_line_reader,f29 report line reader,model_l10n_cl_f29_report_line,account.group_account_readonly,1,1,1,1
+access_f29_report_line_manager,f29 report line manager,model_l10n_cl_f29_report_line,account.group_account_manager,1,1,1,1
+access_eight_column_reader,eight column balance reader,model_l10n_cl_eight_column_balance,account.group_account_readonly,1,1,1,1
+access_eight_column_manager,eight column balance manager,model_l10n_cl_eight_column_balance,account.group_account_manager,1,1,1,1
+access_eight_column_line_reader,eight column balance line reader,model_l10n_cl_eight_column_balance_line,account.group_account_readonly,1,1,1,1
+access_eight_column_line_manager,eight column balance line manager,model_l10n_cl_eight_column_balance_line,account.group_account_manager,1,1,1,1

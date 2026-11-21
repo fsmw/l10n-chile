@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="action_report_eight_column_balance" model="ir.actions.report">
+        <field name="name">Eight-Column Balance</field>
+        <field name="model">l10n_cl.eight.column.balance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >l10n_cl_dte_tax_reports.report_eight_column_balance</field>
+        <field
+            name="report_file"
+        >l10n_cl_dte_tax_reports.report_eight_column_balance</field>
+        <field name="paperformat_id" ref="base.paperformat_euro" />
+        <field name="binding_type">report</field>
+    </record>
+    <template id="eight_column_balance_amounts">
+        <td
+            class="text-end"
+            t-foreach="columns"
+            t-as="column"
+            t-out="values[column]"
+            t-options="{'widget': 'monetary', 'display_currency': currency}"
+        />
+    </template>
+    <template id="report_eight_column_balance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.internal_layout">
+                    <t
+                        t-set="columns"
+                        t-value="['debit', 'credit', 'debit_balance', 'credit_balance', 'assets', 'liabilities', 'losses', 'gains']"
+                    />
+                    <t t-set="currency" t-value="doc.currency_id" />
+                    <div class="page">
+                        <h4>Eight-Column Balance</h4>
+                        <p>
+                            <span t-field="doc.company_id.name" />:
+                            <span t-field="doc.date_from" /> -
+                            <span t-field="doc.date_to" />
+                        </p>
+                        <table class="table table-sm o_main_table small">
+                            <thead>
+                                <tr>
+                                    <th>Account</th>
+                                    <th class="text-end">Debit</th>
+                                    <th class="text-end">Credit</th>
+                                    <th class="text-end">Debit Balance</th>
+                                    <th class="text-end">Credit Balance</th>
+                                    <th class="text-end">Assets</th>
+                                    <th class="text-end">Liabilities</th>
+                                    <th class="text-end">Losses</th>
+                                    <th class="text-end">Gains</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc._get_subtotal_lines()" t-as="line">
+                                    <td t-out="line.name" />
+                                    <t
+                                        t-call="l10n_cl_dte_tax_reports.eight_column_balance_amounts"
+                                    >
+                                        <t t-set="values" t-value="line" />
+                                    </t>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Subtotal</td>
+                                    <t
+                                        t-call="l10n_cl_dte_tax_reports.eight_column_balance_amounts"
+                                    >
+                                        <t
+                                            t-set="values"
+                                            t-value="{c: sum(doc._get_subtotal_lines().mapped(c)) for c in columns}"
+                                        />
+                                    </t>
+                                </tr>
+                                <tr t-foreach="doc._get_result_line()" t-as="line">
+                                    <td t-out="line.name" />
+                                    <t
+                                        t-call="l10n_cl_dte_tax_reports.eight_column_balance_amounts"
+                                    >
+                                        <t t-set="values" t-value="line" />
+                                    </t>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <td>Total</td>
+                                    <t
+                                        t-call="l10n_cl_dte_tax_reports.eight_column_balance_amounts"
+                                    >
+                                        <t
+                                            t-set="values"
+                                            t-value="{c: doc['total_' + c] for c in columns}"
+                                        />
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

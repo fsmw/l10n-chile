@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Fernando San Martin Woerner <fsanmartin@iternova.cl>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_f29_box_list" model="ir.ui.view">
+        <field name="name">l10n_cl.f29.box.list</field>
+        <field name="model">l10n_cl.f29.box</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="section" />
+                <field name="count_code" />
+                <field name="amount_code" />
+                <field name="move_scope" />
+                <field name="amount_source" />
+                <field name="total_effect" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+    <record id="view_f29_box_form" model="ir.ui.view">
+        <field name="name">l10n_cl.f29.box.form</field>
+        <field name="model">l10n_cl.f29.box</field>
+        <field name="arch" type="xml">
+            <form string="F29 Box">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="section" />
+                            <field name="count_code" />
+                            <field name="amount_code" />
+                            <field name="sequence" />
+                            <field name="active" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group>
+                            <field name="move_scope" />
+                            <field name="document_type_ids" widget="many2many_tags" />
+                            <field name="amount_source" />
+                            <field name="sign" />
+                            <field name="total_effect" />
+                            <field name="apply_proportional_factor" />
+                        </group>
+                    </group>
+                    <group
+                        string="Tax Tags"
+                        invisible="amount_source not in ('tax', 'base')"
+                    >
+                        <field name="tag_names" />
+                        <field name="tag_ids" widget="many2many_tags" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_f29_box" model="ir.actions.act_window">
+        <field name="name">F29 Boxes</field>
+        <field name="res_model">l10n_cl.f29.box</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>
