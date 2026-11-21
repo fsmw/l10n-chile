@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dte_assignment_user,dte.assignment user,model_l10n_cl_dte_assignment,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_dte_assignment_manager,dte.assignment manager,model_l10n_cl_dte_assignment,l10n_cl_dte_core.group_dte_manager,1,1,1,1
+access_dte_assignment_evidence_user,dte.assignment.evidence user,model_l10n_cl_dte_assignment_evidence,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_dte_assignment_evidence_manager,dte.assignment.evidence manager,model_l10n_cl_dte_assignment_evidence,l10n_cl_dte_core.group_dte_manager,1,0,1,0
+access_dte_assignment_attempt_user,dte.assignment.attempt user,model_l10n_cl_dte_assignment_attempt,l10n_cl_dte_core.group_dte_user,1,0,0,0
+access_dte_assignment_attempt_manager,dte.assignment.attempt manager,model_l10n_cl_dte_assignment_attempt,l10n_cl_dte_core.group_dte_manager,1,1,1,0
