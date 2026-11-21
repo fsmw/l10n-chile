@@ -4,7 +4,7 @@
 {
     "name": "Chilean Incoming DTE Vendor Bills",
     "summary": "Prepare reviewed incoming DTEs as vendor bill drafts",
-    "version": "18.0.1.0.0",
+    "version": "18.0.1.1.0",
     "development_status": "Alpha",
     "category": "Accounting/Localizations",
     "author": "Fernando San Martin Woerner,Odoo Community Association (OCA)",

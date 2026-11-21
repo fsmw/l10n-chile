@@ -34,6 +34,9 @@ GLOBAL_DISCOUNT_ORDINAL = 9000
 
 
 class IncomingAccountEvidenceService:
+    # Document codes this reader books; bridges reading other DTEs override it.
+    document_codes = VENDOR_DOCUMENT_CODES
+
     def __init__(self, env):
         self.env = env
 
@@ -90,7 +93,7 @@ class IncomingAccountEvidenceService:
             due_date=id_doc.findtext("s:FchVenc", default="", namespaces=NS),
         )
         if (
-            identity["document_code"] not in VENDOR_DOCUMENT_CODES
+            identity["document_code"] not in self.document_codes
             or not identity["folio"]
         ):
             reject(self.env, "unsupported_feature")

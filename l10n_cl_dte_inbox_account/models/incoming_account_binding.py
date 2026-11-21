@@ -122,7 +122,7 @@ class IncomingDteAccountBinding(models.Model):
             if (
                 incoming.company_id != binding.company_id
                 or move.company_id != binding.company_id
-                or move.move_type != VENDOR_MOVE_TYPES.get(binding.document_code)
+                or move.move_type != binding._expected_move_type()
                 or binding.partner_id != move.commercial_partner_id
                 or binding.issuer_vat != vat(incoming.issuer_vat)
                 or binding.issuer_vat != vat(binding.partner_id.vat)
@@ -133,6 +133,11 @@ class IncomingDteAccountBinding(models.Model):
                 or binding.xml_sha256 != incoming.xml_sha256
             ):
                 reject(self.env, "identity_mismatch")
+
+    def _expected_move_type(self):
+        """The Odoo move type a bound DTE of this document code becomes."""
+        self.ensure_one()
+        return VENDOR_MOVE_TYPES.get(self.document_code)
 
     @api.model_create_multi
     def create(self, vals_list):
