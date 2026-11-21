@@ -169,10 +169,10 @@ class TestPurchaseIssue(DteInvoiceTestCase):
 
     def test_other_withholdings_are_refused(self):
         second_category = self._purchase_tax("Synthetic 2nd category", -15.25, 15)
-        partial = self._purchase_tax("Synthetic partial retention", -8, 32)
+        unsupported = self._purchase_tax("Synthetic retention code 40", -19, 40)
         cases = (
             (self.purchase_vat | second_category, "total VAT retention"),
-            (self.purchase_vat | partial, "Partial VAT retentions"),
+            (self.purchase_vat | unsupported, "code 40 is not supported"),
             (self.purchase_vat, "must carry the total"),
             (self.total_retention, "only to lines with 19% VAT"),
         )
@@ -183,6 +183,83 @@ class TestPurchaseIssue(DteInvoiceTestCase):
                 with self.assertRaisesRegex(ValidationError, message):
                     bill.with_user(self.dte_manager).issue_dte()
                 self.assertFalse(bill.dte_document_ids)
+
+    def _totals(self, root):
+        return root.find("s:Documento/s:Encabezado/s:Totales", NS)
+
+    def _retentions(self, totals):
+        return [
+            (
+                node.findtext("s:TipoImp", namespaces=NS),
+                node.findtext("s:TasaImp", namespaces=NS),
+                node.findtext("s:MontoImp", namespaces=NS),
+            )
+            for node in totals.findall("s:ImptoReten", NS)
+        ]
+
+    def test_total_retention_omits_ivanoret(self):
+        _content, root = self._signed(self._issue(self._retained_bill(), folio=530))
+        self.assertIsNone(self._totals(root).find("s:IVANoRet", NS))
+
+    def test_partial_retention_issues_a_signed_46(self):
+        cattle = self._purchase_tax("Synthetic cattle retention 8%", -8, 32)
+        bill = self._bill([("Ganado", 10, 5000, self.purchase_vat | cattle)])
+        self.assertEqual(bill.amount_total, 55500)
+        content, root = self._signed(self._issue(bill, folio=540))
+        self.assertTrue(DteXmlComposer().validate_document(content, strict_sii=True))
+        totals = self._totals(root)
+        self.assertEqual(totals.findtext("s:MntNeto", namespaces=NS), "50000")
+        self.assertEqual(totals.findtext("s:IVA", namespaces=NS), "9500")
+        self.assertEqual(self._retentions(totals), [("32", "8.00", "4000")])
+        self.assertEqual(totals.findtext("s:IVANoRet", namespaces=NS), "5500")
+        self.assertEqual(totals.findtext("s:MntTotal", namespaces=NS), "55500")
+        detail = root.find("s:Documento/s:Detalle", NS)
+        self.assertEqual(detail.findtext("s:CodImpAdic", namespaces=NS), "32")
+        self.assertIn(b"<MNT>55500</MNT>", content)
+
+    def test_total_and_partial_retentions_can_be_mixed(self):
+        wheat = self._purchase_tax("Synthetic wheat retention 4%", -4, 34)
+        bill = self._bill(
+            [
+                ("Trigo", 1, 10000, self.purchase_vat | wheat),
+                ("Servicio", 1, 20000, self.purchase_vat | self.total_retention),
+            ]
+        )
+        content, root = self._signed(self._issue(bill, folio=550))
+        self.assertTrue(DteXmlComposer().validate_document(content, strict_sii=True))
+        totals = self._totals(root)
+        self.assertEqual(totals.findtext("s:IVA", namespaces=NS), "5700")
+        self.assertEqual(
+            self._retentions(totals),
+            [("15", "19.00", "3800"), ("34", "4.00", "400")],
+        )
+        self.assertEqual(totals.findtext("s:IVANoRet", namespaces=NS), "1500")
+        self.assertEqual(totals.findtext("s:MntTotal", namespaces=NS), "31500")
+        self.assertEqual(bill.amount_total, 31500)
+        codes = [
+            detail.findtext("s:CodImpAdic", namespaces=NS)
+            for detail in root.findall("s:Documento/s:Detalle", NS)
+        ]
+        self.assertEqual(codes, ["34", "15"])
+
+    def test_partial_retention_rate_and_code_are_checked(self):
+        cases = (
+            (self._purchase_tax("Wrong cattle rate", -10, 32), "requires a -8%"),
+            (self._purchase_tax("Gold retention", -19, 46), "46 is not supported"),
+            (self._purchase_tax("Zero retention", -1, 49), "49 is not supported"),
+        )
+        for retention, message in cases:
+            with self.subTest(message=message):
+                bill = self._bill([("Ganado", 1, 1000, self.purchase_vat | retention)])
+                with self.assertRaisesRegex(ValidationError, message):
+                    bill.with_user(self.dte_manager).issue_dte()
+                self.assertFalse(bill.dte_document_ids)
+        wheat = self._purchase_tax("Synthetic wheat 4%", -4, 34)
+        bill = self._bill(
+            [("Trigo", 1, 1000, self.purchase_vat | wheat | self.total_retention)]
+        )
+        with self.assertRaisesRegex(ValidationError, "one VAT retention"):
+            bill.with_user(self.dte_manager).issue_dte()
 
     def test_supplier_without_chilean_rut_is_refused(self):
         foreign = self.env["res.partner"].create(

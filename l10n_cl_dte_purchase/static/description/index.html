@@ -412,13 +412,96 @@ Only for development or testing purpose, do not use in production.
 <li>Give the supplier a valid Chilean RUT, a name, an address and a
 commune.</li>
 <li>Create a vendor bill with document type 46. On each taxable line set
-the 19% purchase VAT and the total VAT withholding of the Chilean
-chart (<tt class="docutils literal">19% WH</tt>, SII code 15). Exempt lines carry no tax.</li>
+the 19% purchase VAT and exactly one VAT retention:<ul>
+<li>the total VAT withholding of the Chilean chart (<tt class="docutils literal">19% WH</tt>, SII
+code 15); or</li>
+<li>a partial (or product) VAT retention tax that you create yourself,
+because the Chilean chart ships none: a purchase tax, percentage,
+with the negative official rate and the SII code below. Exempt
+lines carry no tax.</li>
+</ul>
+</li>
 <li>Confirm the bill and press <strong>Issue DTE</strong>. The company issues and
 signs the DTE 46 and sends it to the SII as it does for customer
 invoices.</li>
 </ol>
-<p>Bills with a partial VAT retention, a second category withholding,
+<p>Supported retention codes and rates (SII “Formato Documentos Tributarios
+Electrónicos” v2.5, 2026-02, section 4):</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="48%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">SII code</th>
+<th class="head">Product</th>
+<th class="head">Tax rate</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>15</td>
+<td>Total retention</td>
+<td>-19%</td>
+</tr>
+<tr><td>30</td>
+<td>Legumes</td>
+<td>-10%</td>
+</tr>
+<tr><td>31</td>
+<td>Wild produce</td>
+<td>-19%</td>
+</tr>
+<tr><td>32</td>
+<td>Cattle</td>
+<td>-8%</td>
+</tr>
+<tr><td>33</td>
+<td>Wood</td>
+<td>-8%</td>
+</tr>
+<tr><td>34</td>
+<td>Wheat</td>
+<td>-4%</td>
+</tr>
+<tr><td>36</td>
+<td>Rice</td>
+<td>-10%</td>
+</tr>
+<tr><td>37</td>
+<td>Hydrobiological</td>
+<td>-10%</td>
+</tr>
+<tr><td>38</td>
+<td>Scrap metal</td>
+<td>-19%</td>
+</tr>
+<tr><td>39</td>
+<td>PPA</td>
+<td>-19%</td>
+</tr>
+<tr><td>41</td>
+<td>Construction</td>
+<td>-19%</td>
+</tr>
+<tr><td>47</td>
+<td>Cardboard</td>
+<td>-19%</td>
+</tr>
+<tr><td>48</td>
+<td>Raspberries</td>
+<td>-14%</td>
+</tr>
+</tbody>
+</table>
+<p>Each line states its code in <tt class="docutils literal">CodImpAdic</tt>; the totals carry one
+<tt class="docutils literal">ImptoReten</tt> per code with its rate and retained amount, <tt class="docutils literal">IVANoRet</tt>
+with the VAT that is not retained (when greater than zero) and
+<tt class="docutils literal">MntTotal</tt> = net + exempt + VAT − total retained. Lines with different
+codes, including code 15, can be mixed.</p>
+<p>Bills with another retention code (35, 40, 42 to 46, 49, the cambio de
+sujeto codes 301, 321, …), a retention whose rate differs from the
+official one, two retentions on one line, a second category withholding,
 another currency or negative lines are refused before a folio is
 reserved.</p>
 </div>

@@ -52,6 +52,8 @@ class DteXmlComposer:
             _add_text(tax, "TipoImp", additional["code"])
             _add_text(tax, "TasaImp", fixed_decimal(additional["rate"], 2))
             _add_text(tax, "MontoImp", additional["amount"])
+        # Purchase invoices: VAT minus the VAT retained by product (if > 0).
+        _add_optional_text(totals, "IVANoRet", totals_data.get("vat_not_retained"))
         _add_text(totals, "MntTotal", totals_data["total"])
 
     @staticmethod

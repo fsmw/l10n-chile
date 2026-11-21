@@ -6,19 +6,30 @@ from odoo.addons.l10n_cl_dte_inbox_account.services.common import (
     decimal,
     diagnostic,
 )
+from odoo.addons.l10n_cl_dte_xml.services import retention_codes
 
 # A purchase invoice the buyer issued to us documents our own sale.
 PURCHASE_CODE = "46"
 SALE_MOVE_TYPE = "out_invoice"
 
 # SII ImptoReten code for VAT retained in full by the buyer, and its rate.
-TOTAL_RETENTION_CODE = "15"
-TOTAL_RETENTION_RATE = 19
-VAT_RATE = 19
+TOTAL_RETENTION_CODE = str(retention_codes.TOTAL_RETENTION_CODE)
+TOTAL_RETENTION_RATE = retention_codes.VAT_RETENTION_RATES[
+    retention_codes.TOTAL_RETENTION_CODE
+]
+VAT_RATE = retention_codes.VAT_RATE
 VAT_SII_CODE = 14
 
-# Partial VAT retention codes (cattle, wood, scrap, ...); out of this slice.
-PARTIAL_RETENTION_CODES = frozenset(str(code) for code in range(30, 49))
+# Product VAT retention codes (legumes, cattle, wood, ...) and the official
+# rate of those this bridge books with a configured sale-side tax.
+PRODUCT_RETENTION_CODES = frozenset(
+    str(code) for code in retention_codes.PRODUCT_RETENTION_CODE_RANGE
+)
+PARTIAL_RETENTION_RATES = {
+    str(code): rate
+    for code, rate in retention_codes.VAT_RETENTION_RATES.items()
+    if code != retention_codes.TOTAL_RETENTION_CODE
+}
 
 
 def received_messages(env):
@@ -29,12 +40,20 @@ def received_messages(env):
             " with a tax account) in the Accounting settings first."
         ),
         "retention_partial": env._(
-            "Partial VAT retention codes (30 to 48) are not supported yet; only"
-            " total retention (code 15) at 19% can be booked."
+            "This SII VAT retention code is not supported on a received purchase"
+            " invoice; supported product codes are %(codes)s besides the total"
+            " retention (code 15).",
+            codes=", ".join(sorted(PARTIAL_RETENTION_RATES, key=int)),
         ),
         "retention_unsupported": env._(
-            "A received purchase invoice must state the total VAT retention"
-            " (code 15) at 19% for exactly its VAT amount."
+            "Each VAT retention of a received purchase invoice must state its"
+            " official SII rate, appear once, and not exceed the VAT; a document"
+            " with only total retentions must retain exactly its VAT."
+        ),
+        "retention_unmapped": env._(
+            "Configure a sale-side retention tax for this SII retention code"
+            " (negative official rate, same SII code, with a tax account) in"
+            " the Accounting settings first."
         ),
         "customer_missing": env._(
             "Create the buyer as a customer with its valid Chilean RUT before"

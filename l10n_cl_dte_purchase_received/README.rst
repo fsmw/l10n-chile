@@ -39,9 +39,11 @@ signed XML:
 
 - revenue lines from the XML detail (net amounts);
 - sales VAT 19% (SII code 14), declared as our output VAT;
-- the VAT the buyer retained in full (``ImptoReten`` code 15) as a
-  sale-side "VAT retained by the buyer" tax, so the receivable equals
-  ``MntTotal``.
+- the VAT the buyer retained (``ImptoReten``) as a sale-side "VAT
+  retained by the buyer" tax: the total retention (code 15) or, per
+  detail, the partial product retention code (30-48) the buyer declared,
+  each booked with the tax configured for that code, so the receivable
+  equals ``MntTotal``.
 
 The draft keeps the buyer's folio and document type 46, is linked to the
 immutable inbox evidence through the shared binding, and is never
@@ -76,9 +78,17 @@ bridge requires an explicit configuration and refuses to prepare a DTE
    code 15, price excluded, whose invoice tax repartition line posts to
    a balance account such as "VAT retained by third parties" (an asset
    that offsets the declared output VAT).
-4. In Accounting settings, under **Incoming Chilean DTE**, select the
-   journal and both taxes. The **Incoming DTE Vendor Bill
-   Configuration** role is required.
+4. For each partial VAT retention code your buyers use, create a sale
+   tax: percent, the negative official rate, the SII code, price
+   excluded, with the same kind of tax account. Supported codes and
+   rates: 30 (-10%), 31 (-19%), 32 (-8%), 33 (-8%), 34 (-4%), 36 (-10%),
+   37 (-10%), 38 (-19%), 39 (-19%), 41 (-19%), 47 (-19%) and 48 (-14%),
+   from the SII "Formato Documentos Tributarios Electrónicos" v2.5
+   (2026-02). The settings refuse a tax whose code is not supported,
+   whose rate is not the official one or whose code is already mapped.
+5. In Accounting settings, under **Incoming Chilean DTE**, select the
+   journal, both taxes and the partial retention taxes. The **Incoming
+   DTE Vendor Bill Configuration** role is required.
 
 Operators need the **Incoming DTE Vendor Bills** role, and the buyer
 must exist as a partner with its valid Chilean RUT and taxpayer type.
@@ -102,13 +112,23 @@ The resulting entry for a 1,000 net sale with total retention is:
 receivable 1,000 debit, VAT retained by the buyer 190 debit, revenue
 1,000 credit and sales VAT 190 credit.
 
+With a partial retention, for example cattle (code 32 at 8%) on a 1,000
+net sale, the receivable is ``MntTotal`` 1,110: receivable 1,110 debit,
+VAT retained by the buyer (code 32) 80 debit, revenue 1,000 credit and
+sales VAT 190 credit. A document whose partial code has no configured
+tax is refused with ``retention_unmapped``; a rate other than the
+official one, an ``IVANoRet`` that is not VAT minus the retentions, or a
+total retention that differs from the VAT is refused before a draft is
+created.
+
 Known issues / Roadmap
 ======================
 
 Roadmap
 =======
 
-- Partial VAT retention codes 30 to 48 (``IVANoRet``) are refused.
+- Retention codes outside the supported list (35, 40, 42 to 46, 49 and
+  the cambio de sujeto codes) are refused.
 - Additional taxes on a DTE 46 are refused.
 - Only new customer invoice drafts are created; linking an existing
   draft is not supported.

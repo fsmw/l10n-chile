@@ -10,7 +10,12 @@ from odoo.addons.l10n_cl_dte_inbox_account.services.common import (
     vat,
 )
 
-from .common import PURCHASE_CODE, SALE_MOVE_TYPE, reject_received
+from .common import (
+    PURCHASE_CODE,
+    SALE_MOVE_TYPE,
+    TOTAL_RETENTION_CODE,
+    reject_received,
+)
 
 
 class ReceivedPurchaseComparisonService:
@@ -58,14 +63,21 @@ class ReceivedPurchaseComparisonService:
         tax_model._round_base_lines_tax_details(bases, company)
         totals = dict(net=Decimal(0), exempt=Decimal(0), vat=Decimal(0))
         totals["retention"] = Decimal(0)
+        totals["retention_by_code"] = {}
+        by_code = totals["retention_by_code"]
         for mapped, base in zip(mapped_lines, bases, strict=True):
             line = mapped["source"]
             amount = currency.round(base["tax_details"]["total_excluded_currency"])
             self._equal(line["amount"], amount, line["ordinal"])
             totals["exempt" if line["exempt"] else "net"] += decimal(amount)
             for tax_data in base["tax_details"]["taxes_data"]:
-                key = "vat" if tax_data["tax"] == config["vat_tax"] else "retention"
-                totals[key] += decimal(tax_data["tax_amount_currency"])
+                tax_amount = decimal(tax_data["tax_amount_currency"])
+                if tax_data["tax"] == config["vat_tax"]:
+                    totals["vat"] += tax_amount
+                    continue
+                totals["retention"] += tax_amount
+                code = str(tax_data["tax"].l10n_cl_sii_code)
+                by_code[code] = by_code.get(code, Decimal(0)) + tax_amount
         summary = tax_model._get_tax_totals_summary(bases, currency, company)
         self._check_totals(document, totals, summary["total_amount_currency"])
         return totals
@@ -77,14 +89,29 @@ class ReceivedPurchaseComparisonService:
         self._equal(source["exempt"], totals["exempt"])
         self._equal(source["vat"], totals["vat"])
         self._equal(-retained, totals["retention"])
+        computed = totals["retention_by_code"]
+        if set(computed) != {item["code"] for item in source["retentions"]}:
+            reject_received(self.env, "retention_unsupported")
+        for item in source["retentions"]:
+            self._equal(-decimal(item["amount"]), computed[item["code"]])
         self._equal(source["total"], total)
 
     @staticmethod
-    def line_taxes(line, config):
-        """Taxable details declare sales VAT and the buyer's total retention."""
+    def retention_tax(code, config):
+        """The sale-side tax that books the VAT retained under an SII code."""
+        if code == TOTAL_RETENTION_CODE:
+            return config["retention_tax"]
+        return config["partial_retention_taxes"].filtered(
+            lambda tax: str(tax.l10n_cl_sii_code) == code
+        )
+
+    @classmethod
+    def line_taxes(cls, line, config):
+        """Taxable details declare sales VAT and the buyer's retention."""
         if line["exempt"]:
             return config["vat_tax"].browse()
-        return config["vat_tax"] | config["retention_tax"]
+        code = line.get("retention_code", TOTAL_RETENTION_CODE)
+        return config["vat_tax"] | cls.retention_tax(code, config)
 
     def compare_move(self, document, move, config, line_map=None):
         """Compare the header, every detail and the journal items."""
@@ -135,6 +162,12 @@ class ReceivedPurchaseComparisonService:
         ):
             reject_received(self.env, "invoice_incompatible")
 
+    @staticmethod
+    def _tax_balance(lines, tax):
+        return sum(
+            lines.filtered(lambda line: line.tax_line_id == tax).mapped("balance")
+        )
+
     def _compare_entry(self, document, move, config):
         """Receivable is MntTotal; VAT is declared and the retention credited."""
         source = document["totals"]
@@ -156,11 +189,14 @@ class ReceivedPurchaseComparisonService:
         self._equal(
             retained,
             sum(
-                lines.filtered(
-                    lambda line: line.tax_line_id == config["retention_tax"]
-                ).mapped("balance")
+                lines.filtered(lambda line: line.tax_line_id.amount < 0).mapped(
+                    "balance"
+                )
             ),
         )
+        for item in source["retentions"]:
+            tax = self.retention_tax(item["code"], config)
+            self._equal(item["amount"], self._tax_balance(lines, tax))
         self._equal(
             -(decimal(source["net"]) + decimal(source["exempt"])),
             sum(

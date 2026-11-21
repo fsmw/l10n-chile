@@ -9,21 +9,24 @@ from odoo.exceptions import ValidationError
 from odoo.addons.l10n_cl_dte_xml.services.invoice_snapshot import (
     InvoiceSnapshotService,
 )
-
-# SII code of the total VAT retention (Retención Total IVA) and its only rate.
-TOTAL_RETENTION_CODE = 15
-TOTAL_RETENTION_RATE = -19
-# SII codes of partial VAT retentions (Retención parcial: legumes, cattle, ...).
-PARTIAL_RETENTION_CODES = frozenset(range(30, 49))
+from odoo.addons.l10n_cl_dte_xml.services.retention_codes import (
+    PRODUCT_RETENTION_CODE_RANGE,
+    TOTAL_RETENTION_CODE,
+    VAT_RATE,
+    VAT_RETENTION_RATES,
+    is_retention_code,
+    official_retention_rate,
+)
 
 
 class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
     """Build the immutable fiscal input of a purchase invoice DTE 46.
 
     The buyer (our company) issues the document on behalf of a seller that
-    does not invoice and retains the whole VAT. The Emisor is the company,
-    the Receptor is the supplier, and the posted vendor bill carries 19% VAT
-    plus the total VAT retention (SII code 15) on each taxable line.
+    does not invoice and retains its VAT. The Emisor is the company, the
+    Receptor is the supplier, and each taxable line of the posted vendor bill
+    carries 19% VAT plus one VAT retention: the total one (SII code 15) or a
+    partial product code (30-48) at its official rate.
     """
 
     SUPPORTED_DOCUMENT_CODES = frozenset({"46"})
@@ -45,7 +48,7 @@ class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
         line_snapshots, taxable_net, exempt_net = self._snapshot_lines(
             self._purchase_lines(move)
         )
-        totals = self._purchase_totals(move, taxable_net, exempt_net)
+        totals = self._purchase_totals(move, line_snapshots, taxable_net, exempt_net)
         current_timestamp = self._chile_timestamp()
         return {
             "company_id": company.id,
@@ -77,16 +80,17 @@ class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
             )
         return lines
 
-    def _purchase_totals(self, move, taxable_net, exempt_net):
+    def _purchase_totals(self, move, line_snapshots, taxable_net, exempt_net):
         """Return Totales: MntTotal is what the buyer pays the seller."""
-        vat_total, retained = self._posted_tax_amounts(move)
-        if taxable_net and (not vat_total or retained != vat_total):
+        vat_total, retained_by_code = self._posted_tax_amounts(move)
+        if taxable_net and not vat_total:
             raise ValidationError(
-                move.env._(
-                    "The total VAT retention of a purchase invoice must equal "
-                    "its posted 19% VAT."
-                )
+                move.env._("A taxable purchase invoice must post its 19% VAT.")
             )
+        retentions = self._retention_totals(
+            move, line_snapshots, vat_total, retained_by_code
+        )
+        retained = sum(Decimal(item["amount"]) for item in retentions)
         total = taxable_net + exempt_net + vat_total - retained
         untaxed = abs(
             self._integer_amount(move.amount_untaxed_signed, "invoice untaxed amount")
@@ -103,36 +107,91 @@ class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
                     "The purchase invoice total does not reconcile to its taxes."
                 )
             )
-        retentions = []
-        if retained:
-            retentions.append(
-                {
-                    "code": str(TOTAL_RETENTION_CODE),
-                    "rate": str(abs(TOTAL_RETENTION_RATE)),
-                    "amount": str(int(retained)),
-                }
-            )
-        return {
+        totals = {
             "net": str(int(taxable_net)) if taxable_net else None,
             "exempt": str(int(exempt_net)) if exempt_net else None,
-            "vat_rate": "19" if taxable_net else None,
+            "vat_rate": str(VAT_RATE) if taxable_net else None,
             "vat": str(int(vat_total)) if taxable_net else None,
             "additional_taxes": retentions,
             "total": str(int(total)),
         }
+        if vat_total - retained > 0:
+            # IVANoRet: the VAT the buyer pays the seller under a partial code.
+            totals["vat_not_retained"] = str(int(vat_total - retained))
+        return totals
+
+    def _retention_totals(self, move, line_snapshots, vat_total, retained_by_code):
+        """Return one ImptoReten per retention code after checking its rate."""
+        bases = self._retention_bases(line_snapshots)
+        if set(bases) != set(retained_by_code):
+            raise ValidationError(
+                move.env._("The posted VAT retentions do not match the invoice lines.")
+            )
+        retained = sum(retained_by_code.values(), Decimal("0"))
+        if all(VAT_RETENTION_RATES[code] == VAT_RATE for code in bases):
+            if retained != vat_total:
+                raise ValidationError(
+                    move.env._(
+                        "The total VAT retention of a purchase invoice must equal "
+                        "its posted 19% VAT."
+                    )
+                )
+        elif retained > vat_total:
+            raise ValidationError(
+                move.env._("The retained VAT cannot exceed the posted 19% VAT.")
+            )
+        retentions = []
+        for code in sorted(bases):
+            count, base = bases[code]
+            rate = VAT_RETENTION_RATES[code]
+            # Each line rounds its retention to the peso at most once.
+            if abs(retained_by_code[code] - base * rate / 100) > count:
+                raise ValidationError(
+                    move.env._(
+                        "The retained VAT of SII code %(code)s does not match its "
+                        "%(rate)s%% rate.",
+                        code=code,
+                        rate=rate,
+                    )
+                )
+            retentions.append(
+                {
+                    "code": str(code),
+                    "rate": str(rate),
+                    "amount": str(int(retained_by_code[code])),
+                }
+            )
+        return retentions
+
+    @staticmethod
+    def _retention_bases(line_snapshots):
+        """Return {code: (line count, net base)} of the retained lines."""
+        bases = {}
+        for line in line_snapshots:
+            code = line["additional_tax_code"]
+            if code:
+                count, base = bases.get(int(code), (0, Decimal("0")))
+                bases[int(code)] = (count + 1, base + Decimal(line["subtotal"]))
+        return bases
 
     def _posted_tax_amounts(self, move):
-        """Return the posted VAT and the retained VAT, both positive."""
-        vat_total = retained = Decimal("0")
+        """Return the posted VAT and the retained VAT per SII code, positive."""
+        vat_total = Decimal("0")
+        retained = {}
         for line in move.line_ids.filtered("tax_line_id"):
             balance = self._decimal(line.balance)
-            if line.tax_line_id.amount < 0:
-                retained -= balance
+            tax = line.tax_line_id
+            if tax.amount < 0:
+                code = tax.l10n_cl_sii_code
+                retained[code] = retained.get(code, Decimal("0")) - balance
             else:
                 vat_total += balance
         return (
             self._integer_amount(vat_total, "invoice tax amount"),
-            self._integer_amount(retained, "retained VAT amount"),
+            {
+                code: self._integer_amount(amount, "retained VAT amount")
+                for code, amount in retained.items()
+            },
         )
 
     def _validate_invoice(self, move, document_code):
@@ -206,7 +265,7 @@ class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
         return subtotal, self._decimal_text(line.price_unit)
 
     def _line_taxes(self, taxes):
-        """Return whether the line bears VAT and its retention code ("15")."""
+        """Return whether the line bears VAT and its SII retention code."""
         retention = self._line_retention(taxes)
         if taxes.filtered(
             lambda tax: tax.l10n_cl_sii_code in self.ADDITIONAL_TAX_CODES
@@ -219,49 +278,60 @@ class PurchaseInvoiceSnapshotService(InvoiceSnapshotService):
         taxable = self._is_taxable_19_percent(taxes - retention)
         if retention and not taxable:
             raise ValidationError(
-                taxes.env._(
-                    "The total VAT retention applies only to lines with 19% VAT."
-                )
+                taxes.env._("A VAT retention applies only to lines with 19% VAT.")
             )
         if taxable and not retention:
             raise ValidationError(
                 taxes.env._(
                     "Each taxable line of a purchase invoice must carry the total "
-                    "VAT retention (SII code 15 at 19%)."
+                    "VAT retention (SII code 15 at 19%) or one supported partial "
+                    "VAT retention."
                 )
             )
-        return taxable, str(TOTAL_RETENTION_CODE) if retention else None
+        return taxable, str(retention.l10n_cl_sii_code) if retention else None
 
     def _line_retention(self, taxes):
-        """Return the total VAT retention and refuse every other withholding."""
+        """Return the line VAT retention: code 15 or one supported product code."""
         withholdings = taxes.filtered(
-            lambda tax: tax.amount < 0
-            or tax.l10n_cl_sii_code == TOTAL_RETENTION_CODE
-            or tax.l10n_cl_sii_code in PARTIAL_RETENTION_CODES
+            lambda tax: tax.amount < 0 or is_retention_code(tax.l10n_cl_sii_code)
         )
-        if withholdings.filtered(
-            lambda tax: tax.l10n_cl_sii_code in PARTIAL_RETENTION_CODES
-        ):
-            raise ValidationError(
-                taxes.env._(
-                    "Partial VAT retentions (SII codes 30 to 48) are not supported "
-                    "on a purchase invoice yet."
-                )
-            )
-        if withholdings.filtered(
-            lambda tax: tax.l10n_cl_sii_code != TOTAL_RETENTION_CODE
-            or tax.amount_type != "percent"
-            or tax.amount != TOTAL_RETENTION_RATE
-        ):
-            raise ValidationError(
-                taxes.env._(
-                    "A purchase invoice supports only the total VAT retention "
-                    "(SII code 15 at 19%); remove other withholdings such as "
-                    "second category taxes."
-                )
-            )
+        for tax in withholdings:
+            self._check_retention_tax(tax)
         if len(withholdings) > 1:
             raise ValidationError(
-                taxes.env._("An invoice line supports one total VAT retention.")
+                taxes.env._("An invoice line supports one VAT retention.")
             )
         return withholdings
+
+    def _check_retention_tax(self, tax):
+        """Refuse withholdings whose SII code or rate is not an official pair."""
+        code = tax.l10n_cl_sii_code
+        rate = official_retention_rate(code)
+        if code != TOTAL_RETENTION_CODE and is_retention_code(code) and not rate:
+            raise ValidationError(
+                tax.env._(
+                    "SII VAT retention code %(code)s is not supported on a purchase "
+                    "invoice. Supported codes: %(codes)s.",
+                    code=code,
+                    codes=", ".join(str(item) for item in sorted(VAT_RETENTION_RATES)),
+                )
+            )
+        if rate and tax.amount_type == "percent" and tax.amount == -rate:
+            return
+        if code in PRODUCT_RETENTION_CODE_RANGE:
+            raise ValidationError(
+                tax.env._(
+                    "SII VAT retention code %(code)s requires a -%(rate)s%% "
+                    "percentage tax; %(tax)s does not match.",
+                    code=code,
+                    rate=rate,
+                    tax=tax.name,
+                )
+            )
+        raise ValidationError(
+            tax.env._(
+                "A purchase invoice supports only the total VAT retention (SII "
+                "code 15 at 19%) or a supported partial VAT retention; remove "
+                "other withholdings such as second category taxes."
+            )
+        )

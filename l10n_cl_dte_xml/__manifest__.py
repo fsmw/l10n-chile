@@ -1,7 +1,7 @@
 {
     "name": "Chile - DTE XML",
     "summary": "Snapshot, compose and validate Chilean DTE XML documents",
-    "version": "18.0.1.1.0",
+    "version": "18.0.1.2.0",
     "category": "Accounting/Localizations",
     "author": "Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-chile",

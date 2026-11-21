@@ -1,6 +1,7 @@
 # Roadmap
 
-- Partial VAT retention codes 30 to 48 (``IVANoRet``) are refused.
+- Retention codes outside the supported list (35, 40, 42 to 46, 49 and the
+  cambio de sujeto codes) are refused.
 - Additional taxes on a DTE 46 are refused.
 - Only new customer invoice drafts are created; linking an existing draft is not
   supported.

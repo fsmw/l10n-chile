@@ -32,6 +32,12 @@
                             name="dte_inbox_account_received46_retention_tax_id"
                             options="{'no_create': True}"
                         />
+                        <label for="dte_inbox_account_received46_partial_tax_ids" />
+                        <field
+                            name="dte_inbox_account_received46_partial_tax_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True}"
+                        />
                     </div>
                 </setting>
             </xpath>
