@@ -2,12 +2,15 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+import hashlib
 from collections.abc import Mapping
+from contextlib import contextmanager
 from copy import deepcopy
+from datetime import timedelta
 
 from lxml import etree
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 from odoo.addons.l10n_cl_dte_signing.services.certificate_identity import normalize_rut
@@ -27,6 +30,10 @@ from ..services.production_response_parser import parse_upload, parse_xml
 
 SII = "{http://www.sii.cl/SiiDte}"
 BINDING = "transport_request_artifact_id"
+# Far beyond one upload with its token retries (60 s read timeouts): a send
+# claim this old belongs to a worker that died, not to an upload in flight.
+STALE_SEND_CLAIM_AGE = timedelta(minutes=30)
+STALE_SEND_BATCH_SIZE = 200
 
 
 def _public_caf_identity(element):
@@ -219,6 +226,109 @@ class ElectronicSubmissionProduction(models.Model):
             submission._write_internal({BINDING: artifact.id})
             submission._verify_production_request()
             return artifact
+
+    @contextmanager
+    def _independent_transaction(self):
+        """Yield this submission in its own transaction, committed on exit.
+
+        An SII upload must never share the job's transaction: if that
+        transaction were lost after SII received the envelope, the DTE would
+        become pending again and a retry would upload it a second time.
+        """
+        if modules.module.current_test:
+            # TransactionCase rows are invisible to other cursors; a savepoint
+            # keeps the same commit-or-rollback boundary inside the test.
+            with self.env.cr.savepoint():
+                yield self
+            return
+        with self.env.registry.cursor() as cr:
+            env = api.Environment(
+                cr, self.env.uid, dict(self.env.context), su=self.env.su
+            )
+            yield self.with_env(env)
+
+    def _job_send_durably(self):
+        """Commit a one-use send claim, then transmit and record in a new one."""
+        self.ensure_one()
+        with self._independent_transaction() as submission:
+            claim = submission._claim_send()
+        self.invalidate_recordset()
+        if not claim:
+            return True
+        attempt_id, request_bytes = claim
+        with self._independent_transaction() as submission:
+            submission._send_claimed(attempt_id, request_bytes)
+        self.invalidate_recordset()
+        self.document_id.invalidate_recordset()
+        return True
+
+    def _send_claimed(self, attempt_id, request_bytes):
+        """Transmit a committed claim once; a stale or foreign claim is ignored."""
+        self.ensure_one()
+        self.invalidate_recordset()
+        attempt = self.env["l10n_cl.submission.attempt"].browse(attempt_id)
+        if (
+            self.state != "sending"
+            or attempt.submission_id != self
+            or attempt.state != "started"
+            or attempt.request_digest != hashlib.sha256(request_bytes).hexdigest()
+        ):
+            return True
+        return self._dispatch_send(self._gateway(), attempt, request_bytes)
+
+    @api.model
+    def _cron_recover_interrupted_sends(self, limit=STALE_SEND_BATCH_SIZE):
+        """Mark sends whose worker died after the claim as unknown; never resend."""
+        cutoff = fields.Datetime.now() - STALE_SEND_CLAIM_AGE
+        attempts = (
+            self.env["l10n_cl.submission.attempt"]
+            .sudo()
+            .search(
+                [
+                    ("operation", "=", "send"),
+                    ("state", "=", "started"),
+                    ("started_at", "<", cutoff),
+                    ("submission_id.state", "=", "sending"),
+                    ("submission_id.environment", "!=", "demo"),
+                ],
+                order="started_at, id",
+                limit=limit,
+            )
+        )
+        for attempt in attempts:
+            attempt.submission_id._recover_interrupted_send(attempt)
+        return True
+
+    def _recover_interrupted_send(self, attempt):
+        self.ensure_one()
+        submission = self.sudo()
+        submission.env.cr.execute(
+            "SELECT state FROM l10n_cl_electronic_submission "
+            "WHERE id = %s FOR UPDATE SKIP LOCKED",
+            [submission.id],
+        )
+        if not submission.env.cr.fetchone():
+            return False
+        submission.invalidate_recordset(["state"])
+        attempt.invalidate_recordset(["state"])
+        if submission.state != "sending" or attempt.state != "started":
+            return False
+        message = _(
+            "The send was interrupted after it was claimed. SII may have "
+            "received the envelope: review the SII portal; automatic resend "
+            "is blocked."
+        )
+        attempt._complete(
+            "unknown", error_code="interrupted_send", error_summary=message
+        )
+        submission._write_internal({"state": "outcome_unknown", "sii_message": message})
+        submission.document_id.action_record_transition(
+            "outcome_unknown",
+            "sii_submission_outcome_unknown",
+            message=message,
+            correlation_key=submission.idempotency_key,
+        )
+        return True
 
     def _parse_production_receipt(self, artifact, request):
         header = parse_xml(request).find(f"{SII}SetDTE/{SII}Caratula")
